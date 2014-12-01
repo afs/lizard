@@ -6,10 +6,10 @@
 *.ear
 
 # Eclipse
-## .classpath
-## .project
-## .settings
-## /classes
+.classpath
+.project
+.settings
+/classes
 
 # maven
 target

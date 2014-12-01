@@ -15,24 +15,22 @@
   limitations under the License.
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
+<project 
+ xmlns="http://maven.apache.org/POM/4.0.0" 
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
-  <groupId>org.seaborne.lizard</groupId>
-  <artifactId>lizard-comms</artifactId>
-  <packaging>jar</packaging>
-  <name>Lizard - Comms</name>
-  <version>0.0.0-SNAPSHOT</version>
 
   <parent>
     <groupId>org.seaborne.lizard</groupId>
     <artifactId>lizard-parent</artifactId>
-    <relativePath>../lz-parent</relativePath>
+    <relativePath>../lizard-parent</relativePath>
     <version>0.0.0-SNAPSHOT</version>
   </parent>
+
+  <artifactId>lizard-comms</artifactId>
+  <name>Lizard - Comms</name>
+  <packaging>jar</packaging>
 
   <licenses>
     <license>

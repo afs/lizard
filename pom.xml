@@ -15,11 +15,10 @@
    limitations under the License.
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation=
-	     "http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
+<project 
+ xmlns="http://maven.apache.org/POM/4.0.0" 
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation= "http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.seaborne.lizard</groupId>
@@ -80,12 +79,12 @@
   -->
 
   <modules>
-    <module>lz-parent</module>
-    <module>lz-comms</module>
-    <module>lz-cluster</module>
-    <module>lz-node-server</module>
-    <module>lz-index-server</module>
-    <module>lz-query-server</module>
+    <module>lizard-parent</module>
+    <module>lizard-comms</module>
+    <module>lizard-cluster</module>
+    <module>lizard-node-server</module>
+    <module>lizard-index-server</module>
+    <module>lizard-query-server</module>
   </modules>
 
 </project>
