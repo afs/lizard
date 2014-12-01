@@ -4,3 +4,32 @@
 *.jar
 *.war
 *.ear
+
+# Eclipse
+## .classpath
+## .project
+## .settings
+## /classes
+
+# maven
+target
+
+# Development
+*.bak
+/dev
+/run
+/webapp
+webapp
+
+# Development Data and Database
+DB*
+D.ttl
+D.trig
+D.nt
+D.nq
+/--mem--
+/classes
+/tmp
+/LZ
+/LZ?
+/lizard.classpath

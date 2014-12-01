@@ -25,4 +25,3 @@ Scaling will happen as a byproduct because more hardware is available.
 Prototype. See the prototype [proto-lizard](https://github.com/afs/proto-lizard).
 
 Lizard is yet not suitable for production use.
-
