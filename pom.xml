@@ -80,11 +80,14 @@
 
   <modules>
     <module>lizard-parent</module>
-    <module>lizard-comms</module>
-    <module>lizard-cluster</module>
+    <module>lizard-base</module>
+
     <module>lizard-node-server</module>
     <module>lizard-index-server</module>
     <module>lizard-query-server</module>
+
+    <module>lizard-cluster</module>
+    <!--<module>lizard-dist</module>-->
   </modules>
 
 </project>
