@@ -87,7 +87,8 @@
     <module>lizard-query-server</module>
 
     <module>lizard-cluster</module>
-    <!--<module>lizard-dist</module>-->
+    <module>lizard-cmds</module>
+    <module>lizard-dist</module>
   </modules>
 
 </project>
