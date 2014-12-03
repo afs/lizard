@@ -30,6 +30,7 @@ import lizard.conf.node.BuildNode ;
 import lizard.conf.node.ConfigNode ;
 import lizard.conf.node.NodeServer ;
 import lizard.index.TServerIndex ;
+import lizard.system.LzLib ;
 import org.apache.jena.atlas.lib.Lib ;
 import org.apache.jena.atlas.logging.LogCtl ;
 import org.apache.jena.riot.RDFDataMgr ;
@@ -51,7 +52,7 @@ import com.hp.hpl.jena.tdb.store.tupletable.TupleIndex ;
 // Query server?
 // Fuseki?
 public class LZ_Deploy extends CmdGeneral {
-    static { LogCtl.setLog4j(); }
+    static { LogCtl.setCmdLogging(); }
     
     public static Logger log        = LoggerFactory.getLogger("Lizard") ;  
     public static Logger logConf    = LoggerFactory.getLogger("Conf") ;
@@ -102,16 +103,9 @@ public class LZ_Deploy extends CmdGeneral {
         public final Collection<IndexServer> indexServers ;
         public final Collection<NodeServer> nodeServers ;
         
-        static Deployment parse(Configuration config, String...files) { 
-            Model model = ModelFactory.createDefaultModel() ;
-            for ( String s : files )
-                try {
-                    RDFDataMgr.read(model, s);
-                } catch (RiotException ex) {
-                    System.err.println("File: "+s) ;
-                    //ex.printStackTrace(System.err) ;
-                    throw ex ;
-                }
+        static Deployment parse(Configuration config, String...files) {
+            Model model = LzLib.readAll(files) ;
+            
             List<NodeServer> nodeServers = ConfigLib.dataServers(model, ":NodeServer").values().stream()
                 .map(ds -> { return config.getConfNode().findNodeServer(ds.resource);})
                 .collect(Collectors.toList()) ;

@@ -18,18 +18,36 @@
 
 package lizard.system;
 
+import java.nio.file.Files ;
+import java.nio.file.Path ;
+import java.nio.file.Paths ;
+
 import org.apache.jena.riot.RDFDataMgr ;
+import org.apache.jena.riot.RiotNotFoundException ;
 
 import com.hp.hpl.jena.rdf.model.Model ;
 import com.hp.hpl.jena.rdf.model.ModelFactory ;
 
+/** General utilities for Lizard.
+ *  Not Lizard specific and might usefully migrate to Jena proper.
+ */
+
 public class LzLib {
     public static Model readAll(String ... files) {
-        Model model = ModelFactory.createDefaultModel() ;
+        return readAll(ModelFactory.createDefaultModel(), files) ;
+    }
+    
+    public static Model readAll(Model model, String ... files) {
+        for ( String fn : files ) {
+            Path p = Paths.get(fn) ; 
+            if ( ! Files.exists(p) ) {
+                throw new RiotNotFoundException("File not found: "+fn) ;
+            }
+        }
+        
         for ( String fn : files ) {
             RDFDataMgr.read(model, fn);    
         }
         return model ;
     }
 }
-

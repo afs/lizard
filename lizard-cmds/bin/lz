@@ -49,6 +49,6 @@ case $SUB in
 	echo "Unknown subcommand: $1"
 esac
 
-java -cp "$CP" $JVM_ARGS lz.$CMD "$@"
+java -cp "$CP" $JVM_ARGS $LOGGING lz.$CMD "$@"
 
 

@@ -16,12 +16,16 @@ Lizard is aimed at medium sized systems - a few machines.
 
 ## Scale
 
-The main objective is fault-tolerance.
+The main objective for the initial phase is fault-tolerance.
 
-Scaling will happen as a byproduct because more hardware is available.
+Scaling will happen in phase 2.
 
 ## Status
 
-Prototype. See the prototype [proto-lizard](https://github.com/afs/proto-lizard).
+Prototype.
 
 Lizard is yet not suitable for production use.
+
+Do not store the only copy of data in the database.  
+Persistent data formats will change; there will be no
+migration path other than to reload the database.

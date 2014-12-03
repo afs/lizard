@@ -35,7 +35,7 @@ import com.hp.hpl.jena.sparql.util.QueryExecUtils ;
 import com.hp.hpl.jena.tdb.TDB ;
 
 public class LZ_Query extends CmdGeneral {
-    static { LogCtl.setLog4j(); }
+    static { LogCtl.setCmdLogging(); }
     
     public static Logger log        = LoggerFactory.getLogger("Lizard") ;  
     public static Logger logConf    = LoggerFactory.getLogger("Conf") ;

@@ -26,18 +26,19 @@ CPFILE="lizard.classpath"
 ##     LIZARD_HOME="$D"
 ## fi
 
-LIZARD_CMDS="$LIZARD_HOME/lizard-cmds"
-
+export LZ_RUN="$LIZARD_HOME/lizard-cmds"
+export LZ_BIN="$LIZARD_HOME/lizard-cmds/bin"
+export LZ_DEV="$LIZARD_HOME/lz-dev"
 ## Build classpath
 
-if [[ ! -s "$LIZARD_CMDS/$CPFILE" ]]
+if [[ ! -s "$LZ_RUN/$CPFILE" ]]
 then
     echo "No classpath file: $CPFILE" 1>&2
-    echo "Run \"(cd $LIZARD_CMDS ; mvn dependency:build-classpath -Dmdep.outputFile=$CPFILE)\"" ; 1>&2
+    echo "Run \"(cd $LZ_RUN ; mvn dependency:build-classpath -Dmdep.outputFile=$CPFILE)\"" ; 1>&2
     exit 2 
 fi
 
-XCP="$(cat $LIZARD_CMDS/$CPFILE)"
+XCP="$(cat $LZ_RUN/$CPFILE)"
 XCP="$(echo $XCP | sed -e s/:/\\n/g)"
 CP=""
 for C in $XCP
@@ -77,5 +78,5 @@ do
     #CP="$LIZARD_HOME/lizard-$X/target/test-classes:$CP"
 done
 
-LIZARD_LOG=${LIZARD_LOG:-} # "-D-Dlog4j.configuration=file:$LIZARD_HOME/log4j.properties"
+LOGGER=${LOGGER:-} # "-D-Dlog4j.configuration=file:$LIZARD_HOME/log4j.properties"
 JVM_ARGS="${JVM_ARGS:--Xmx1200M}"
