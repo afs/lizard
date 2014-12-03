@@ -1,0 +1,3 @@
+#!/bin/bash
+
+../lz deploy --deploy machine-all.ttl conf-* 

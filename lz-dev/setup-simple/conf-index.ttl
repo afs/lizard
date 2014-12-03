@@ -1,0 +1,39 @@
+@base     <urn:lizard:> .
+@prefix : <urn:lizard:> .
+@prefix lizard: <http://jena.apache.org/ns/lizard#> .
+
+@prefix fuseki:  <http://jena.apache.org/fuseki#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix tdb:     <http://jena.hpl.hp.com/2008/tdb#> .
+@prefix ja:      <http://jena.hpl.hp.com/2005/11/Assembler#> .
+
+# 2 services, POS and PSO
+# 2 servers each.
+
+<#index> rdf:type :IndexService ;
+    :name          "IndexPOS" ;
+    :indexOrder    "POS" ;
+    :servers       ( <#index-s1> ) ;
+    .
+
+<#index2> rdf:type :IndexService ;
+    :name          "IndexPSO" ;
+    :indexOrder    "PSO" ;
+    :servers       ( <#index-s2> ) ;
+    .
+
+# 2 servers
+<#index-s1>  a  :IndexServer ;
+    :name       "ServerIndex11" ;
+	:hostname   "localhost" ;
+	:port       4012 ; 
+    :data     	"I1" ;
+    .
+
+<#index-s2>  a  :IndexServer ;
+    :name       "ServerIndex12" ;
+	:hostname   "localhost" ;
+	:port       4014 ; 
+    :data     	"I2" ;
+    .
