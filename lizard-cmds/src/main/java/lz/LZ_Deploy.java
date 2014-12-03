@@ -33,8 +33,6 @@ import lizard.index.TServerIndex ;
 import lizard.system.LzLib ;
 import org.apache.jena.atlas.lib.Lib ;
 import org.apache.jena.atlas.logging.LogCtl ;
-import org.apache.jena.riot.RDFDataMgr ;
-import org.apache.jena.riot.RiotException ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 import arq.cmd.CmdException ;
@@ -42,15 +40,13 @@ import arq.cmdline.ArgDecl ;
 import arq.cmdline.CmdGeneral ;
 
 import com.hp.hpl.jena.rdf.model.Model ;
-import com.hp.hpl.jena.rdf.model.ModelFactory ;
 import com.hp.hpl.jena.tdb.base.file.Location ;
 import com.hp.hpl.jena.tdb.store.tupletable.TupleIndex ;
 
-/** Take a general configuration file and deployment file for this machine 
- *  and build a system to run here.
+/** Take a general configuration file and deployment file for this machine
+ *  build a dataset and run here.
+ *  The lizard version of "arq.sparql". 
  */
-// Query server?
-// Fuseki?
 public class LZ_Deploy extends CmdGeneral {
     static { LogCtl.setCmdLogging(); }
     
