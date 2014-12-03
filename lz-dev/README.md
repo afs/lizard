@@ -1,3 +1,3 @@
-This area does not form part of the Lizard system and it is not a module in the build.
+This area is not a module in the build.
 
-It is used for devlopment and testing.
+It is a scratch pad used for development and testing.
