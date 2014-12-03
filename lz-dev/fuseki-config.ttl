@@ -1,0 +1,125 @@
+base     <urn:lizard:>
+prefix : <urn:lizard:> 
+prefix lizard: <http://jena.apache.org/ns/lizard#> 
+
+prefix fuseki:  <http://jena.apache.org/fuseki#> 
+prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> 
+prefix tdb:     <http://jena.hpl.hp.com/2008/tdb#> 
+prefix ja:      <http://jena.hpl.hp.com/2005/11/Assembler#> 
+
+
+## Lizard
+[] ja:loadClass "lizard.Lizard" .
+lizard:Dataset rdfs:subClassOf  ja:RDFDataset .
+
+[] rdf:type fuseki:Server ;
+   fuseki:services ( 
+         <#service1> 
+      ##   <#service2>
+       ) .
+
+<#service1> rdf:type fuseki:Service ;
+    rdfs:label                      "Lizard" ;
+    fuseki:name                     "lz" ;
+    fuseki:serviceQuery             "query" ;
+    fuseki:serviceQuery             "sparql" ;
+    fuseki:serviceQuery             "query" ;
+    fuseki:serviceUpdate            "update" ;
+    fuseki:serviceUpload            "upload" ;
+    fuseki:serviceReadWriteGraphStore  "data" ;     
+    fuseki:serviceReadGraphStore     "get" ;
+    fuseki:dataset                   <#dataset> ;
+    .
+
+<#service2> rdf:type fuseki:Service ;
+    # URI of the dataset -- http://host:port/ds
+    rdfs:label                         "ds" ;
+    fuseki:name                        "ds" ; 
+    fuseki:serviceQuery                "sparql" ;
+    fuseki:serviceQuery                "query" ;
+    fuseki:serviceUpdate               "update" ;
+    fuseki:serviceUpload               "upload" ;
+    fuseki:serviceReadWriteGraphStore  "data" ;     
+    fuseki:serviceReadGraphStore       "get" ;
+    fuseki:dataset                     <#emptyDataset> ;
+    .
+
+## In-memory, initially empty.
+<#emptyDataset> rdf:type ja:RDFDataset .
+
+## ------------ Lizard
+
+<#dataset> rdf:type lizard:Dataset ;
+    :indexes ( <#index1> <#index2> ) ;
+    :nodetable <#node> ;
+    .
+
+## ------------ Indexes
+
+# 2 services, POS and PSO
+# 2 servers each.
+
+<#index1> rdf:type :IndexService ;
+    :name          "IndexPOS" ;
+    :indexOrder    "POS" ;
+    :servers       ( <#index-11> <#index-12> ) ;
+    .
+
+<#index2> rdf:type :IndexService ;
+    :name          "IndexPSO" ;
+    :indexOrder    "PSO" ;
+    :servers  ( <#index-21> <#index-22> ) ;
+    .
+
+# 4 servers
+<#index-11>  a  :IndexServer ;
+    :name       "ServerIndex11" ;
+	:hostname   "localhost" ;
+	:port       4012 ; 
+    :data     	"I11" ;
+    .
+
+<#index-12>  a  :IndexServer ;
+    :name       "ServerIndex12" ;
+	:hostname   "localhost" ;
+	:port       4014 ; 
+    :data     	"I12" ;
+    .
+
+<#index-21>  a  :IndexServer ;
+    :name       "ServerIndex21" ;
+	:hostname   "localhost" ;
+	:port       4016 ; 
+    :data     	"I21" ;
+    .
+
+<#index-22>  a  :IndexServer ;
+    :name       "ServerIndex22" ;
+	:hostname   "localhost" ;
+	:port       4018 ; 
+    :data     	"I22" ;
+    .
+
+## ------------ Nodes
+
+# 1 service, 2 servers.
+<#node>     a   :NodeService ;
+    :name      "Node" ;
+    :servers  ( <#node-1> <#node-2> ) ;
+    .
+
+# 2 servers, each with one segment.
+<#node-1>  a :NodeServer ;
+    :name       "ServerNode1" ;
+	:hostname   "localhost" ;
+	:port       4011 ; 
+    :data     	"N1" ;
+    .
+
+<#node-2>  a :NodeServer ;
+    :name       "ServerNode2" ;
+	:hostname   "localhost" ;
+	:port       4013 ; 
+    :data     	"N2" ;
+    .

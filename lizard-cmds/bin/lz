@@ -1,0 +1,54 @@
+#!/bin/bash
+
+# Find where the script is
+# If LIZARD_HOME is empty
+if [ -z "$LIZARD_HOME" ]
+then
+    SCRIPT="$0"
+    # Catch common issue: script has been symlinked
+    if [ -L "$SCRIPT" ]
+    then
+	SCRIPT="$(readlink "$0")"
+	# If link is relative
+	case "$SCRIPT" in
+   	    /*) ;; # fine
+	    *) SCRIPT=$( dirname "$0" )/$SCRIPT;; # fix
+	esac
+    fi
+    D="$( cd "$( dirname "$SCRIPT")" && pwd )"
+    # Strip directories from Lizard home to bin directory.
+    D=${D%/bin}
+    D=${D%/lizard-*}
+    LIZARD_HOME="$D"
+fi
+LIZARD_CMDS="$LIZARD_HOME/lizard-cmds"
+
+source "$LIZARD_CMDS/bin/init"
+
+CMD="$(basename $0)"
+
+if [[ ! $PWD =~ $LIZARD_HOME ]]
+then
+    echo "LIZARD_HOME=$LIZARD_HOME"
+fi
+
+if [[ $# = 0 ]]
+then
+    echo "No subcommand: choice of 'deploy', 'query', 'servers'" 2>&1
+    exit 1
+fi
+
+SUB=$1
+shift
+
+case $SUB in
+    servers) exec "$LIZARD_CMDS/bin/lz-servers" ;;
+    deploy)  CMD="LZ_Deploy" ;; 
+    query)   CMD="LZ_Query" ;; 
+    *)
+	echo "Unknown subcommand: $1"
+esac
+
+java -cp "$CP" $JVM_ARGS lz.$CMD "$@"
+
+

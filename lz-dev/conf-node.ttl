@@ -1,0 +1,30 @@
+@base     <urn:lizard:> .
+@prefix : <urn:lizard:> .
+@prefix lizard: <http://jena.apache.org/ns/lizard#> .
+
+@prefix fuseki:  <http://jena.apache.org/fuseki#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix tdb:     <http://jena.hpl.hp.com/2008/tdb#> .
+@prefix ja:      <http://jena.hpl.hp.com/2005/11/Assembler#> .
+
+# 1 service, 2 servers.
+<#node>     a   :NodeService ;
+    :name      "Node" ;
+    :servers  ( <#node-1> <#node-2> ) ;
+    .
+
+# 2 servers, each with one segment.
+<#node-1>  a :NodeServer ;
+    :name       "ServerNode1" ;
+	:hostname   "localhost" ;
+	:port       4011 ; 
+    :data     	"N1" ;
+    .
+
+<#node-2>  a :NodeServer ;
+    :name       "ServerNode2" ;
+	:hostname   "localhost" ;
+	:port       4013 ; 
+    :data     	"N2" ;
+    .

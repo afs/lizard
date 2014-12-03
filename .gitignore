@@ -15,6 +15,9 @@
 target
 
 # Development
+# Emacs files
+\#*
+.#*
 *.bak
 /dev
 /run
@@ -32,4 +35,4 @@ D.nq
 /tmp
 /LZ
 /LZ?
-/lizard.classpath
+/lizard-cmds/lizard.classpath

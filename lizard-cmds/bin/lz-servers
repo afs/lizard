@@ -1,0 +1,25 @@
+#!/bin/bash
+
+export LIZARD_HOME="${LIZARD_HOME:-/home/afs/Projects/proto-lizard}"
+
+SCRIPT="$0"
+if [ -L "$SCRIPT" ]
+then
+    SCRIPT="$(readlink "$0")"
+		# If link is relative
+    case "$SCRIPT" in
+   	/*) ;; # fine
+	*) SCRIPT=$( dirname "$0" )/$SCRIPT;; # fix
+    esac
+fi
+DIR="$( dirname "$SCRIPT")"
+CMD="xterm -fn 6x10 -geometry"
+
+CONF="$LIZARD_HOME/conf-index.ttl $LIZARD_HOME/conf-node.ttl"
+
+cd "$LIZARD_HOME"
+
+$CMD '180x25+1000+020' -e $LIZARD_HOME/lz deploy --deploy $LIZARD_HOME/machine1.ttl $CONF &
+$CMD '180x25+1000+320' -e $LIZARD_HOME/lz deploy --deploy $LIZARD_HOME/machine2.ttl $CONF &
+
+wait

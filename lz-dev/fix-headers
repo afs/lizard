@@ -1,0 +1,8 @@
+#!/bin/bash
+
+FILES=$(find src -name \*.java)
+
+for f in $FILES
+do
+    perl -i.bak fix.pl $f
+done

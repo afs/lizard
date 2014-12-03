@@ -1,0 +1,81 @@
+#!/bin/bash
+
+# Maven repository
+REPO="$HOME/.m2/repo"
+CPFILE="lizard.classpath"
+
+## # Find where the script is
+## # If LIZARD_HOME is empty
+## if [ -z "$LIZARD_HOME" ]
+## then
+##     SCRIPT="$0"
+##     # Catch common issue: script has been symlinked
+##     if [ -L "$SCRIPT" ]
+##     then
+## 	SCRIPT="$(readlink "$0")"
+## 	# If link is relative
+## 	case "$SCRIPT" in
+##    	    /*) ;; # fine
+## 	    *) SCRIPT=$( dirname "$0" )/$SCRIPT;; # fix
+## 	esac
+##     fi
+##     D="$( cd "$( dirname "$SCRIPT")" && pwd )"
+##     # Strip directories from Lizard home to bin directory.
+##     D=${D%/bin}
+##     D=${D%/lizard-*}
+##     LIZARD_HOME="$D"
+## fi
+
+LIZARD_CMDS="$LIZARD_HOME/lizard-cmds"
+
+## Build classpath
+
+if [[ ! -s "$LIZARD_CMDS/$CPFILE" ]]
+then
+    echo "No classpath file: $CPFILE" 1>&2
+    echo "Run \"(cd $LIZARD_CMDS ; mvn dependency:build-classpath -Dmdep.outputFile=$CPFILE)\"" ; 1>&2
+    exit 2 
+fi
+
+XCP="$(cat $LIZARD_CMDS/$CPFILE)"
+XCP="$(echo $XCP | sed -e s/:/\\n/g)"
+CP=""
+for C in $XCP
+do
+    # case?
+    if [[ $C =~ "/org/seaborne/lizard/" ]] ; then continue ; fi
+    if [[ $C =~ "/org/apache/jena/jena-core/" ]] ; then continue ; fi
+    if [[ $C =~ "/org/apache/jena/jena-arq/" ]] ; then continue ; fi
+    if [[ $C =~ "/org/apache/jena/jena-tdb/" ]] ; then continue ; fi
+    if [[ $C =~ "/org/apache/jena/apache-jena-libs/" ]] ; then continue ; fi
+
+    if [[ -z $CP ]]
+    then
+	CP=$C
+    else
+	CP=$CP:$C
+    fi
+done
+
+# Prepend any development directories here
+DEVDIRS="jena-core jena-tdb jena-arq"
+JENA_DEV="$HOME/Jena"
+
+for X in $DEVDIRS
+do
+    CPX="$JENA_DEV/$X/target/classes"
+    if [ -e "$CPX" ]
+    then
+	CP="$CPX:$CP"
+    fi
+done
+
+DEVDIRS="base node-server index-server query-server cluster cmds"
+for X in $DEVDIRS
+do
+    CP="$LIZARD_HOME/lizard-$X/target/classes:$CP"
+    #CP="$LIZARD_HOME/lizard-$X/target/test-classes:$CP"
+done
+
+LIZARD_LOG=${LIZARD_LOG:-} # "-D-Dlog4j.configuration=file:$LIZARD_HOME/log4j.properties"
+JVM_ARGS="${JVM_ARGS:--Xmx1200M}"

@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if (( $# == 0 ))
+then
+    echo "No input files" 1>&2
+    exit 1
+fi
+
+
+PKG="src/main/java/lizard/api/TLZ"
+rm -f $PKG/*.java
+
+thrift -r -out src/main/java -gen java "$@"
+
+for f in $PKG/*.java
+do
+    perl -i.bak -p -e 's/^public (class|enum)/\@SuppressWarnings("all")\npublic $1/' $f
+    rm $f.bak
+done
+
