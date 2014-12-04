@@ -16,11 +16,11 @@
 
 package lz_dev;
 
+import lizard.query.LzDataset ;
 import lizard.system.LizardException ;
 import lizard.cluster.Platform ;
 import lizard.conf.Configuration ;
 import lizard.conf.dataset.ConfigLizardDataset ;
-import lizard.conf.dataset.LizardDataset ;
 import org.apache.jena.riot.RDFDataMgr ;
 
 import com.hp.hpl.jena.query.Dataset ;
@@ -75,7 +75,7 @@ public class Local {
             
         } catch (TypeNotUniqueException ex)
         { throw new ARQException("Multiple types for: "+DatasetAssemblerVocab.tDataset) ; }
-        LizardDataset lzDSG = ConfigLizardDataset.buildDataset(root) ;
+        LzDataset lzDSG = ConfigLizardDataset.buildDataset(root) ;
         lzDSG.start() ;
         DatasetGraph dsg = lzDSG.getDataset() ;
         Dataset ds = DatasetFactory.create(dsg) ;
@@ -83,12 +83,12 @@ public class Local {
         
     }
 
-    public static DatasetGraph buildDataset(String... confDataset) {
+    public static LzDataset buildDataset(String... confDataset) {
         Model m = readAll(confDataset) ;
         ConfigLizardDataset config = new ConfigLizardDataset(m) ;
-        LizardDataset lz = config.buildDataset() ;
+        LzDataset lz = config.buildDataset() ;
         lz.start() ;
-        return lz.getDataset() ;
+        return lz ;
     }
     
     public static Model readAll(String ... files) {

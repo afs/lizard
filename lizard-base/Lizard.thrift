@@ -73,6 +73,7 @@ struct TLZ_NodeRequest {
 3:  optional TLZ_Node       findByNode ;
 4:  optional TLZ_Node       allocNodeId ;
 5:  optional TLZ_NodeId     findByNodeId ;
+6:  optional TLZ_Ping       ping ;
 }
 
 struct TLZ_NodeReply {

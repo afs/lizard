@@ -18,17 +18,17 @@ package lz_dev ;
 
 import java.io.File ;
 
-import lizard.cluster.Platform ;
 import lizard.index.TServerIndex ;
 import lizard.node.ClusterNodeTable ;
+import lizard.node.TServerNode ;
 import lizard.query.LizardQuery ;
-import org.apache.jena.atlas.lib.FileOps ;
+import lizard.query.LzDataset ;
+import lizard.system.Pingable ;
 import org.apache.jena.atlas.lib.Lib ;
 import org.apache.jena.atlas.lib.StrUtils ;
 import org.apache.jena.atlas.logging.LogCtl ;
 import org.apache.jena.engine.explain.ExplainCategory ;
 import org.apache.jena.riot.RDFDataMgr ;
-import org.apache.thrift.server.TServer ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
@@ -36,13 +36,11 @@ import com.hp.hpl.jena.query.* ;
 import com.hp.hpl.jena.sparql.core.DatasetGraph ;
 import com.hp.hpl.jena.sparql.util.QueryExecUtils ;
 import com.hp.hpl.jena.tdb.TDB ;
-import com.hp.hpl.jena.tdb.base.file.Location ;
 
 public class MainLizard {
     
-    static { 
-        LogCtl.setLog4j() ;
-    }
+    static { LogCtl.setLog4j() ; }
+    
     public static Logger log = LoggerFactory.getLogger("Lizard") ;
     
     static String prefixes = StrUtils.strjoinNL(
@@ -53,12 +51,117 @@ public class MainLizard {
         "PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#>",
         "") ;
 
-    static String confNode          = "conf-node.ttl" ;
-    static String confIndex         = "conf-index.ttl" ;
-    static String confDataset       = "conf-dataset.ttl" ;
+    private static ExplainCategory lizardClient    = ExplainCategory.create("lizard-client") ;
+    private static ExplainCategory lizardComms     = ExplainCategory.create("lizard-comms") ;
+    private static ExplainCategory lizardCluster   = ExplainCategory.create("lizard-cluster") ; 
+
+    private static void dev_init() {
+        LizardQuery.init() ;
+    }
     
-    static boolean inProcess = true ;
-    
+    /** Run with in-JVM query engine */
+    public static void main(String ...argv) {
+        dev_init() ;
+        //LogCtl.setWarn(Configuration.logConf.getName());
+
+        String confNode          = filename(Setup.confDir, "conf-node.ttl") ;
+        String confIndex         = filename(Setup.confDir, "conf-index.ttl") ;
+        String confDataset       = filename(Setup.confDir, "conf-dataset.ttl") ;
+
+        try { 
+            runQuery(confDataset, confNode, confIndex) ;
+        }
+        catch (Throwable ex) {
+            ex.printStackTrace(System.err) ;
+            System.exit(0) ;
+        }
+        System.out.println("DONE") ;
+        System.exit(0) ;
+    }
+
+    /** Run a query engine with data servers already running. */
+    static void runQuery(String ... configFiles) {
+        log.info("DATASET") ;
+        LzDataset lz = Local.buildDataset(configFiles) ;
+//        Component: lizard.node.NodeTableRemote
+//        Component: lizard.index.TupleIndexRemote
+//        Component: lizard.index.TupleIndexRemote
+        lz.getComponents().stream().forEach(c -> {
+            //System.out.println("Component: "+c.getClass().getTypeName()) ;
+            if ( c instanceof Pingable ) {
+                Pingable p = (Pingable)c ;
+                p.ping();
+            }
+        }) ;
+        
+        DatasetGraph dsg = lz.getDataset() ; 
+        Dataset ds = DatasetFactory.create(dsg) ;
+
+        log.info("LOAD") ;
+        //ds = (Dataset) AssemblerUtils.build(conffile, VocabLizard.lzDataset) ;
+        if ( Setup.loadData ) {
+            
+            LogCtl.set(ClusterNodeTable.class, "WARN") ;
+            LogCtl.set(TServerNode.class, "WARN") ;
+            LogCtl.set(TServerIndex.class, "WARN") ;
+            
+            RDFDataMgr.read(ds, "D.ttl") ;
+            
+            LogCtl.set(ClusterNodeTable.class, "INFO") ;
+            LogCtl.set(TServerNode.class, "INFO") ;
+            LogCtl.set(TServerIndex.class, "INFO") ;
+            
+            TDB.sync(ds) ;
+        }
+
+        //System.out.println(ds.getContext()) ;
+
+        log.info("QUERY") ;
+        //            Quack.setVerbose(true) ;
+        //            ARQ.setExecutionLogging(InfoLevel.NONE);
+
+        String qs = StrUtils.strjoinNL("PREFIX : <http://example/> SELECT * "
+                                       , "{ :s1 ?p ?o }" 
+                                       //, "{ ?x :k ?k . ?x :p ?v . }"
+                                       //, "{ :x1 :p ?x . ?x :p ?v . }"
+                                       // Filter placement occurs?
+                                       //, "{ ?x :k ?k . ?x :p ?v . FILTER(?k = 2) }"
+                                       //,"ORDER BY ?x"
+            ) ;
+        //"{ ?x :k ?k }" ;
+
+        if ( true ) {
+            LogCtl.set("lizard", "info") ;
+            //                LogCtl.disable("lizard.comms.common.tio") ;
+            //                LogCtl.disable("lizard.comms.server") ;
+            //                LogCtl.disable("lizard.comms.client") ;
+        }
+
+        Query q = QueryFactory.create(qs) ;
+        System.out.println() ;
+        System.out.print(q);
+        System.out.println() ;
+        int N = 1 ;// inProcess ? 1 : 20 ;
+        for ( int i = 0 ; i < N ; i++ ) {
+            doOne("Lizard", ds, q) ;
+            if ( i != N-1 ) Lib.sleep(3000) ;
+        }
+
+        if ( true ) {
+            Dataset dsStd = RDFDataMgr.loadDataset("D.ttl") ;
+            doOne("ARQ", dsStd, q) ;
+        }
+
+    }
+
+    private static void doOne(String label, Dataset ds, Query query) {
+        QueryExecution qExec = QueryExecutionFactory.create(query, ds) ;
+        log.info("---- {}", label) ;
+        QueryExecUtils.executeQuery(query, qExec);
+    }
+
+    /** Recursive "rm -r" */
+    // XXX Move to lizard-base:migrate */
     private static void clearAll(File d) {
         for ( File f : d.listFiles())
         {
@@ -70,105 +173,11 @@ public class MainLizard {
         }
     }
     
-    public static void main(String ...argv) {
-        
-        //LogCtl.setWarn(Configuration.logConf.getName());
-        // Better debugging.
-
-        ExplainCategory lizardClient    = ExplainCategory.create("lizard-client") ;
-        ExplainCategory lizardComms     = ExplainCategory.create("lizard-comms") ;
-        ExplainCategory lizardCluster   = ExplainCategory.create("lizard-cluster") ; 
-        
-        try {
-            LizardQuery.init() ;
-            if ( inProcess ) {
-                LogCtl.set(TServer.class, "WARN") ;
-                LogCtl.set(TServerIndex.class, "WARN") ;
-            }
-
-            Location location = Location.mem();
-            if ( ! inProcess )
-                location = Location.create("LZ") ;
-            
-            if ( ! location.isMem() ) {
-                String dir = location.getDirectoryPath() ;
-                if ( location.exists() ) {
-                    // FileOps.clearDirectory(dir) ;
-                    File d = new File(dir) ;
-                    clearAll(d) ;
-                }
-                
-                else
-                    FileOps.ensureDir(dir) ;
-            }
-
-            log.info("SERVERS") ;
-
-            Platform platform = Local.buildServers(location, confNode, confIndex) ;
-            platform.start() ;
-            
-            log.info("DATASET") ;
-            DatasetGraph dsg = Local.buildDataset(confDataset, confNode, confIndex) ;
-            Dataset ds = DatasetFactory.create(dsg) ;
-
-            log.info("LOAD") ;
-            //ds = (Dataset) AssemblerUtils.build(conffile, VocabLizard.lzDataset) ;
-            if ( inProcess ) {
-                LogCtl.set(ClusterNodeTable.class, "WARN") ;
-                RDFDataMgr.read(ds, "D.ttl") ;
-                LogCtl.set(ClusterNodeTable.class, "INFO") ;
-                TDB.sync(ds) ;
-            }
-            
-            //System.out.println(ds.getContext()) ;
-            
-            log.info("QUERY") ;
-//            Quack.setVerbose(true) ;
-//            ARQ.setExecutionLogging(InfoLevel.NONE);
-
-            String qs = StrUtils.strjoinNL("PREFIX : <http://example/> SELECT * "
-                                           , "{ :s1 ?p ?o }" 
-                                           //, "{ ?x :k ?k . ?x :p ?v . }"
-                                           //, "{ :x1 :p ?x . ?x :p ?v . }"
-                                           // Filter placement occurs?
-                                           //, "{ ?x :k ?k . ?x :p ?v . FILTER(?k = 2) }"
-                                           //,"ORDER BY ?x"
-                ) ;
-            //"{ ?x :k ?k }" ;
-
-            if ( true ) {
-                LogCtl.set("lizard", "info") ;
-//                LogCtl.disable("lizard.comms.common.tio") ;
-//                LogCtl.disable("lizard.comms.server") ;
-//                LogCtl.disable("lizard.comms.client") ;
-            }
-            
-            Query q = QueryFactory.create(qs) ;
-            System.out.println() ;
-            System.out.print(q);
-            System.out.println() ;
-            int N = inProcess ? 1 : 20 ;
-            for ( int i = 0 ; i < N ; i++ ) {
-                doOne("Lizard", ds, q) ;
-                if ( i != N-1 ) Lib.sleep(3000) ;
-            }
-
-            if ( true ) {
-                Dataset dsStd = RDFDataMgr.loadDataset("D.ttl") ;
-                doOne("ARQ", dsStd, q) ;
-            }
-
-        } catch (Exception ex ) {
-            ex.printStackTrace(System.err) ;
-            System.exit(0) ;
-        }
-        System.out.println("DONE") ;
-        System.exit(0) ;
-    }
-
-    private static void doOne(String label, Dataset ds, Query query) {
-        QueryExecution qExec = QueryExecutionFactory.create(query, ds) ;
-        log.info("---- {}", label) ;
-        QueryExecUtils.executeQuery(query, qExec);
+    static String filename(String dir, String fn) {
+        if ( dir == null ) 
+            return fn ;
+        if ( ! dir.endsWith("/") )
+            dir = dir + "/" ;
+        return dir+fn ;
     }
 }

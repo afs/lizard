@@ -18,10 +18,23 @@ package lz_dev ;
 
 public class PROJECT_Lizard {
     /*
-     * LZ_Deploy 
-     * LZ_Query --query --data : see arq.sparql
+     * Sort out : 
+     *    Build, LzBuild, Local
+     *    LZ_Query --query --data : see arq.sparql
+     *    
+     *  index, node "clear"
+     *  
+     *  Ping does not ping every sever (does it matter?) 
+     *  README to wiki
+     *  Documentation
+     *  Running with different config files.
+     *    lz server --deploy $LZ_DEPLOY $LZ_CONF  
+     *    LZ_CONF LZ_DEPLOY
+     *    
+     *  lizard_cmds - deployed version
+     *  lz-dev/bin
+     *    Dev more => $LIZARD_HOME/lz-dev exists
      */
-    
     
     /*
      * Project setup:

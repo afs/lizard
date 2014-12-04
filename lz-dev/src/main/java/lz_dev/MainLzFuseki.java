@@ -24,7 +24,7 @@ import org.apache.jena.fuseki.server.FusekiServer ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
-public class MainQueryServer {
+public class MainLzFuseki {
     static { LogCtl.setLog4j() ; }
     
     public static Logger log        = LoggerFactory.getLogger("Lizard") ;  

@@ -8,26 +8,38 @@ export LIZARD_HOME="${LIZARD_HOME:-$HOME/Lizard}"
 
 # Or 7x14
 FONT="7x13"
-GEO1='180x25+1000+020'
-GEO2='180x25+1000+520'
+declare -a GEO
+GEO=('180x25+800+020' '180x25+800+420' '180x25+800+820')
 
 CMD="xterm -fn $FONT -geometry"
 
 cd "$LZ_DEV"
-CONF="conf-index.ttl conf-node.ttl"
+
+LZ_CONF="${LZ_CONF:-conf-index.ttl conf-node.ttl}"
+LZ_DEPLOY="${LZ_DEPLOY:-machine1.ttl machine2.ttl}"
 
 
 echo "LIZARD_HOME=$LIZARD_HOME"
-echo "LZ_RUN=$LZ_RUN"
-echo "LZ_BIN=$LZ_BIN"
-echo "LZ_DEV=$LZ_DEV"
+if [[ $LZ_DEBUG == 1 ]]
+then
+    echo "LZ_RUN    = $LZ_RUN"
+    echo "LZ_BIN    = $LZ_BIN"
+    echo "LZ_DEV    = $LZ_DEV"
+fi 
+
+echo "LZ_CONF   = $LZ_CONF"
+echo "LZ_DEPLOY = $LZ_DEPLOY"
 
 echo "Deployment:"
-echo "   lz deploy --deploy machine1.ttl $CONF"
-echo "   lz deploy --deploy machine2.ttl $CONF"
 
-
-$CMD "$GEO1" -e $LZ_BIN/lz deploy --deploy machine1.ttl $CONF &
-$CMD "$GEO2" -e $LZ_BIN/lz deploy --deploy machine2.ttl $CONF &
+declare -i I=0
+for D in $LZ_DEPLOY
+do
+    G=${GEO[$I]}
+    echo "   lz deploy --deploy $D $LZ_CONF"
+    $CMD "$G" -e $LZ_BIN/lz deploy --deploy $D $LZ_CONF &
+    #echo "$D $G"
+    ((I++))
+done
 
 wait

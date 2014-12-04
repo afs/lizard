@@ -4,6 +4,7 @@
 REPO="$HOME/.m2/repo"
 CPFILE="lizard.classpath"
 
+# This file is 'sourced' so playing hunt the HOME does not work.
 ## # Find where the script is
 ## # If LIZARD_HOME is empty
 ## if [ -z "$LIZARD_HOME" ]
@@ -26,9 +27,18 @@ CPFILE="lizard.classpath"
 ##     LIZARD_HOME="$D"
 ## fi
 
-export LZ_RUN="$LIZARD_HOME/lizard-cmds"
-export LZ_BIN="$LIZARD_HOME/lizard-cmds/bin"
-export LZ_DEV="$LIZARD_HOME/lz-dev"
+export LZ_RUN="${LZ_RUN:-$LIZARD_HOME/lizard-cmds}"
+export LZ_BIN="${LZ_BIN:-$LIZARD_HOME/lizard-cmds/bin}"
+export LZ_DEV="${LZ_DEV:-$LIZARD_HOME/lz-dev}"
+
+if [[ $LZ_DEBUG == 1 ]]
+then
+    echo "LIZARD_HOME=$LIZARD_HOME"
+    echo "LZ_RUN=$LZ_RUN"
+    echo "LZ_BIN=$LZ_BIN"
+    echo "LZ_DEV=$LZ_DEV"
+fi
+
 ## Build classpath
 
 if [[ ! -s "$LZ_RUN/$CPFILE" ]]

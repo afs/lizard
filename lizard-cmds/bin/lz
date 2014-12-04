@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Find where the script is
+# Find where the script is and set LIZARD_HOME
 # If LIZARD_HOME is empty
 if [ -z "$LIZARD_HOME" ]
 then
@@ -21,9 +21,9 @@ then
     D=${D%/lizard-*}
     LIZARD_HOME="$D"
 fi
-LIZARD_CMDS="$LIZARD_HOME/lizard-cmds"
+LZ_CMDS="$LIZARD_HOME/lizard-cmds"
 
-source "$LIZARD_CMDS/bin/init"
+source "$LZ_CMDS/bin/init"
 
 CMD="$(basename $0)"
 
@@ -42,7 +42,7 @@ SUB=$1
 shift
 
 case $SUB in
-    servers) exec "$LIZARD_CMDS/bin/lz-servers" ;;
+    servers) exec "$LZ_CMDS/bin/lz-servers" ;;
     deploy)  CMD="LZ_Deploy" ;; 
     query)   CMD="LZ_Query" ;; 
     *)
