@@ -91,7 +91,7 @@ public class TServerIndex extends ComponentBase
                     }
                     long id = request.getRequestId() ;
                     FmtLog.info(log, "[%d] Index request : %s", id, request) ;
-                    execute(request, reply) ;
+                    execute(id, request, reply) ;
                     reply.setRequestId(id) ;
                     reply.write(protocol) ;
                     // XXX !!!!
@@ -107,17 +107,17 @@ public class TServerIndex extends ComponentBase
             }
         }
         
-        private void execute(TLZ_IdxRequest request, TLZ_IdxReply reply) {
+        private void execute(long id, TLZ_IdxRequest request, TLZ_IdxReply reply) {
             TLZ_ShardIndex ref = request.getIndex() ;
             if ( index == null ) {
-                FmtLog.error(log, "No index table here for %s", ref) ;
+                FmtLog.error(log, "[%d] No index table here for %s", id, ref) ;
                 return ; 
             }
             
             if ( request.isSetPattern() ) {
                 Tuple<NodeId> pattern = TLZlib.build(request.getPattern()) ;
                 
-                FmtLog.info(log, "find %s [%s]", index.getName(), index.getName()) ;
+                FmtLog.info(log, "[%d] find %s [%s]", id, index.getName(), index.getName()) ;
                 Iterator<Tuple<NodeId>> iter = index.find(pattern) ;
 
                 int count = 0 ;
@@ -134,7 +134,6 @@ public class TServerIndex extends ComponentBase
                 
                 return ;
             }
-
             
             if ( request.isSetAddTuple() ) {
                 Tuple<NodeId> tuple = TLZlib.build(request.getAddTuple()) ;
@@ -149,7 +148,11 @@ public class TServerIndex extends ComponentBase
                 return ;
             }
             
-            FmtLog.error(log, "execute: Unrecognized request: %s", request) ;
+            if ( request.isSetPing() ) {
+                FmtLog.info(log, "[%d] ping", id) ;
+                return ;
+            }
+            FmtLog.error(log, "[%d] execute: Unrecognized request: %s", id, request) ;
         }
     }
 }

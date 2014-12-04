@@ -23,6 +23,7 @@ import lizard.api.TLZ.TLZ_IndexName ;
 import lizard.comms.ConnState ;
 import lizard.system.Component ;
 import lizard.system.ComponentBase ;
+import lizard.system.Pingable ;
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.NotImplemented ;
 import org.apache.jena.atlas.lib.Tuple ;
@@ -33,7 +34,7 @@ import com.hp.hpl.jena.tdb.store.NodeId ;
 import com.hp.hpl.jena.tdb.store.tupletable.TupleIndexBase ;
 
 /** Client side of a remote index */
-public class TupleIndexRemote extends TupleIndexBase implements Component
+public class TupleIndexRemote extends TupleIndexBase implements Component, Pingable
 {
     public static TupleIndexRemote create(String hostname, int port, String indexStr, ColumnMap cmap) {
         TClientIndex client = TClientIndex.create(hostname, port, indexStr, cmap) ;
@@ -139,5 +140,8 @@ public class TupleIndexRemote extends TupleIndexBase implements Component
     }
 
     @Override
-    public void setLabel(String label) { component.setLabel(label) ; } 
+    public void setLabel(String label) { component.setLabel(label) ; }
+
+    @Override
+    public void ping() { client.ping(); }
 }

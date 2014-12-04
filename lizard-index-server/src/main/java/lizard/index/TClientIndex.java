@@ -26,6 +26,7 @@ import lizard.comms.ConnState ;
 import lizard.comms.Connection ;
 import lizard.comms.thrift.ThriftClient ;
 import lizard.system.ComponentBase ;
+import lizard.system.Pingable ;
 import org.apache.jena.atlas.iterator.Iter ;
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.Tuple ;
@@ -36,7 +37,7 @@ import org.slf4j.LoggerFactory ;
 
 import com.hp.hpl.jena.tdb.store.NodeId ;
 
-class TClientIndex extends ComponentBase implements Connection 
+class TClientIndex extends ComponentBase implements Connection, Pingable 
 {
     private static Logger log = LoggerFactory.getLogger(TClientIndex.class) ;
     private final ThriftClient client ;
@@ -67,6 +68,13 @@ class TClientIndex extends ComponentBase implements Connection
         client.start() ;
         super.start() ; 
         connState = ConnState.OK ;
+    }
+    
+    
+    @Override
+    public void stop() {
+        close() ;
+        super.stop() ;
     }
     
     private final TLZ_IdxRequest request = new TLZ_IdxRequest() ;
@@ -149,20 +157,35 @@ class TClientIndex extends ComponentBase implements Connection
     @Override
     public void setConnectionStatus(ConnState status) { connState = status ; }
 
+    private static TLZ_Ping tlzPing = new TLZ_Ping(9999) ;
+    @Override
+    public void ping() {
+        TLZ_IdxRequest request = new TLZ_IdxRequest() ;
+        TLZ_IdxReply reply = new TLZ_IdxReply() ;
+        long requestId = ++counter ;
+        request.setRequestId(requestId) ;
+        request.setIndex(shard) ;
+        request.setPing(tlzPing) ;
+
+        try {
+            request.write(client.protocol()) ;
+            client.protocol().getTransport().flush() ;
+            reply.read(client.protocol()) ;
+            if ( ! reply.isSetRequestId() )
+                FmtLog.error(log, "ping: requestId not set in reply") ;
+            else if ( reply.getRequestId() != requestId )
+                FmtLog.error(log, "ping: requestId does not match that sent") ;
+        } catch (TException ex) {
+            FmtLog.error(log, ex, "ping") ;
+        }
+    }
+
     @Override
     public void close() {
         client.close() ;
         connState = ConnState.CLOSED ;
     }
     
-    
-    @Override
-    public void stop() {
-        close() ;
-        super.stop() ;
-    }
-    
-
 }
 
     
