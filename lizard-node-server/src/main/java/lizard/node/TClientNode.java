@@ -16,14 +16,12 @@
 
 package lizard.node;
 
-import lizard.api.TLZ.TLZ_Node ;
-import lizard.api.TLZ.TLZ_NodeId ;
-import lizard.api.TLZ.TLZ_NodeReply ;
-import lizard.api.TLZ.TLZ_NodeRequest ;
+import lizard.api.TLZ.* ;
 import lizard.comms.ConnState ;
 import lizard.comms.Connection ;
 import lizard.comms.thrift.ThriftClient ;
 import lizard.system.ComponentBase ;
+import lizard.system.Pingable ;
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.riot.out.NodeFmtLib ;
 import org.apache.thrift.TException ;
@@ -34,7 +32,7 @@ import com.hp.hpl.jena.graph.Node ;
 import com.hp.hpl.jena.sparql.sse.SSE ;
 import com.hp.hpl.jena.tdb.store.NodeId ;
  
-public class TClientNode extends ComponentBase implements Connection
+public class TClientNode extends ComponentBase implements Connection, Pingable
 {
     private static Logger log = LoggerFactory.getLogger(TClientNode.class) ;
     private final ThriftClient client ;
@@ -138,6 +136,27 @@ public class TClientNode extends ComponentBase implements Connection
 
     @Override
     public void setConnectionStatus(ConnState status) { connState = status ; }
+
+    private static TLZ_Ping tlzPing = new TLZ_Ping(8888) ;
+    @Override
+    public void ping() {
+        TLZ_NodeRequest request = new TLZ_NodeRequest() ;
+        TLZ_NodeReply reply = new TLZ_NodeReply() ;
+        long requestId = ++counter ;
+        request.setRequestId(requestId) ;
+        request.setPing(tlzPing) ;
+        try {
+            request.write(client.protocol()) ;
+            client.protocol().getTransport().flush() ;
+            reply.read(client.protocol()) ;
+            if ( ! reply.isSetRequestId() )
+                FmtLog.error(log, "ping: requestId not set in reply") ;
+            else if ( reply.getRequestId() != requestId )
+                FmtLog.error(log, "ping: requestId does not match that sent (%d,%d)", reply.getRequestId(), requestId) ;
+        } catch (TException ex) {
+            FmtLog.error(log, ex, "ping") ;
+        }
+    }
 
     @Override
     public void close() {

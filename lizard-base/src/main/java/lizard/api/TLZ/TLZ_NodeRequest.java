@@ -40,6 +40,7 @@ public class TLZ_NodeRequest implements org.apache.thrift.TBase<TLZ_NodeRequest,
   private static final org.apache.thrift.protocol.TField FIND_BY_NODE_FIELD_DESC = new org.apache.thrift.protocol.TField("findByNode", org.apache.thrift.protocol.TType.STRUCT, (short)3);
   private static final org.apache.thrift.protocol.TField ALLOC_NODE_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("allocNodeId", org.apache.thrift.protocol.TType.STRUCT, (short)4);
   private static final org.apache.thrift.protocol.TField FIND_BY_NODE_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("findByNodeId", org.apache.thrift.protocol.TType.STRUCT, (short)5);
+  private static final org.apache.thrift.protocol.TField PING_FIELD_DESC = new org.apache.thrift.protocol.TField("ping", org.apache.thrift.protocol.TType.STRUCT, (short)6);
 
   private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
   static {
@@ -51,13 +52,15 @@ public class TLZ_NodeRequest implements org.apache.thrift.TBase<TLZ_NodeRequest,
   public TLZ_Node findByNode; // optional
   public TLZ_Node allocNodeId; // optional
   public TLZ_NodeId findByNodeId; // optional
+  public TLZ_Ping ping; // optional
 
   /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
   public enum _Fields implements org.apache.thrift.TFieldIdEnum {
     REQUEST_ID((short)1, "requestId"),
     FIND_BY_NODE((short)3, "findByNode"),
     ALLOC_NODE_ID((short)4, "allocNodeId"),
-    FIND_BY_NODE_ID((short)5, "findByNodeId");
+    FIND_BY_NODE_ID((short)5, "findByNodeId"),
+    PING((short)6, "ping");
 
     private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -80,6 +83,8 @@ public class TLZ_NodeRequest implements org.apache.thrift.TBase<TLZ_NodeRequest,
           return ALLOC_NODE_ID;
         case 5: // FIND_BY_NODE_ID
           return FIND_BY_NODE_ID;
+        case 6: // PING
+          return PING;
         default:
           return null;
       }
@@ -122,7 +127,7 @@ public class TLZ_NodeRequest implements org.apache.thrift.TBase<TLZ_NodeRequest,
   // isset id assignments
   private static final int __REQUESTID_ISSET_ID = 0;
   private byte __isset_bitfield = 0;
-  private _Fields optionals[] = {_Fields.FIND_BY_NODE,_Fields.ALLOC_NODE_ID,_Fields.FIND_BY_NODE_ID};
+  private _Fields optionals[] = {_Fields.FIND_BY_NODE,_Fields.ALLOC_NODE_ID,_Fields.FIND_BY_NODE_ID,_Fields.PING};
   public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
   static {
     Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
@@ -134,6 +139,8 @@ public class TLZ_NodeRequest implements org.apache.thrift.TBase<TLZ_NodeRequest,
         new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_Node.class)));
     tmpMap.put(_Fields.FIND_BY_NODE_ID, new org.apache.thrift.meta_data.FieldMetaData("findByNodeId", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
         new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_NodeId.class)));
+    tmpMap.put(_Fields.PING, new org.apache.thrift.meta_data.FieldMetaData("ping", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
+        new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_Ping.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMap);
     org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(TLZ_NodeRequest.class, metaDataMap);
   }
@@ -164,6 +171,9 @@ public class TLZ_NodeRequest implements org.apache.thrift.TBase<TLZ_NodeRequest,
     if (other.isSetFindByNodeId()) {
       this.findByNodeId = new TLZ_NodeId(other.findByNodeId);
     }
+    if (other.isSetPing()) {
+      this.ping = new TLZ_Ping(other.ping);
+    }
   }
 
   public TLZ_NodeRequest deepCopy() {
@@ -177,6 +187,7 @@ public class TLZ_NodeRequest implements org.apache.thrift.TBase<TLZ_NodeRequest,
     this.findByNode = null;
     this.allocNodeId = null;
     this.findByNodeId = null;
+    this.ping = null;
   }
 
   public long getRequestId() {
@@ -274,6 +285,30 @@ public class TLZ_NodeRequest implements org.apache.thrift.TBase<TLZ_NodeRequest,
     }
   }
 
+  public TLZ_Ping getPing() {
+    return this.ping;
+  }
+
+  public TLZ_NodeRequest setPing(TLZ_Ping ping) {
+    this.ping = ping;
+    return this;
+  }
+
+  public void unsetPing() {
+    this.ping = null;
+  }
+
+  /** Returns true if field ping is set (has been assigned a value) and false otherwise */
+  public boolean isSetPing() {
+    return this.ping != null;
+  }
+
+  public void setPingIsSet(boolean value) {
+    if (!value) {
+      this.ping = null;
+    }
+  }
+
   public void setFieldValue(_Fields field, Object value) {
     switch (field) {
     case REQUEST_ID:
@@ -308,6 +343,14 @@ public class TLZ_NodeRequest implements org.apache.thrift.TBase<TLZ_NodeRequest,
       }
       break;
 
+    case PING:
+      if (value == null) {
+        unsetPing();
+      } else {
+        setPing((TLZ_Ping)value);
+      }
+      break;
+
     }
   }
 
@@ -324,6 +367,9 @@ public class TLZ_NodeRequest implements org.apache.thrift.TBase<TLZ_NodeRequest,
 
     case FIND_BY_NODE_ID:
       return getFindByNodeId();
+
+    case PING:
+      return getPing();
 
     }
     throw new IllegalStateException();
@@ -344,6 +390,8 @@ public class TLZ_NodeRequest implements org.apache.thrift.TBase<TLZ_NodeRequest,
       return isSetAllocNodeId();
     case FIND_BY_NODE_ID:
       return isSetFindByNodeId();
+    case PING:
+      return isSetPing();
     }
     throw new IllegalStateException();
   }
@@ -394,6 +442,15 @@ public class TLZ_NodeRequest implements org.apache.thrift.TBase<TLZ_NodeRequest,
       if (!(this_present_findByNodeId && that_present_findByNodeId))
         return false;
       if (!this.findByNodeId.equals(that.findByNodeId))
+        return false;
+    }
+
+    boolean this_present_ping = true && this.isSetPing();
+    boolean that_present_ping = true && that.isSetPing();
+    if (this_present_ping || that_present_ping) {
+      if (!(this_present_ping && that_present_ping))
+        return false;
+      if (!this.ping.equals(that.ping))
         return false;
     }
 
@@ -453,6 +510,16 @@ public class TLZ_NodeRequest implements org.apache.thrift.TBase<TLZ_NodeRequest,
         return lastComparison;
       }
     }
+    lastComparison = Boolean.valueOf(isSetPing()).compareTo(other.isSetPing());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSetPing()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.ping, other.ping);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
     return 0;
   }
 
@@ -506,6 +573,16 @@ public class TLZ_NodeRequest implements org.apache.thrift.TBase<TLZ_NodeRequest,
       }
       first = false;
     }
+    if (isSetPing()) {
+      if (!first) sb.append(", ");
+      sb.append("ping:");
+      if (this.ping == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.ping);
+      }
+      first = false;
+    }
     sb.append(")");
     return sb.toString();
   }
@@ -522,6 +599,9 @@ public class TLZ_NodeRequest implements org.apache.thrift.TBase<TLZ_NodeRequest,
     }
     if (findByNodeId != null) {
       findByNodeId.validate();
+    }
+    if (ping != null) {
+      ping.validate();
     }
   }
 
@@ -596,6 +676,15 @@ public class TLZ_NodeRequest implements org.apache.thrift.TBase<TLZ_NodeRequest,
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
+          case 6: // PING
+            if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+              struct.ping = new TLZ_Ping();
+              struct.ping.read(iprot);
+              struct.setPingIsSet(true);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+            }
+            break;
           default:
             org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
         }
@@ -638,6 +727,13 @@ public class TLZ_NodeRequest implements org.apache.thrift.TBase<TLZ_NodeRequest,
           oprot.writeFieldEnd();
         }
       }
+      if (struct.ping != null) {
+        if (struct.isSetPing()) {
+          oprot.writeFieldBegin(PING_FIELD_DESC);
+          struct.ping.write(oprot);
+          oprot.writeFieldEnd();
+        }
+      }
       oprot.writeFieldStop();
       oprot.writeStructEnd();
     }
@@ -666,7 +762,10 @@ public class TLZ_NodeRequest implements org.apache.thrift.TBase<TLZ_NodeRequest,
       if (struct.isSetFindByNodeId()) {
         optionals.set(2);
       }
-      oprot.writeBitSet(optionals, 3);
+      if (struct.isSetPing()) {
+        optionals.set(3);
+      }
+      oprot.writeBitSet(optionals, 4);
       if (struct.isSetFindByNode()) {
         struct.findByNode.write(oprot);
       }
@@ -676,6 +775,9 @@ public class TLZ_NodeRequest implements org.apache.thrift.TBase<TLZ_NodeRequest,
       if (struct.isSetFindByNodeId()) {
         struct.findByNodeId.write(oprot);
       }
+      if (struct.isSetPing()) {
+        struct.ping.write(oprot);
+      }
     }
 
     @Override
@@ -683,7 +785,7 @@ public class TLZ_NodeRequest implements org.apache.thrift.TBase<TLZ_NodeRequest,
       TTupleProtocol iprot = (TTupleProtocol) prot;
       struct.requestId = iprot.readI64();
       struct.setRequestIdIsSet(true);
-      BitSet incoming = iprot.readBitSet(3);
+      BitSet incoming = iprot.readBitSet(4);
       if (incoming.get(0)) {
         struct.findByNode = new TLZ_Node();
         struct.findByNode.read(iprot);
@@ -698,6 +800,11 @@ public class TLZ_NodeRequest implements org.apache.thrift.TBase<TLZ_NodeRequest,
         struct.findByNodeId = new TLZ_NodeId();
         struct.findByNodeId.read(iprot);
         struct.setFindByNodeIdIsSet(true);
+      }
+      if (incoming.get(3)) {
+        struct.ping = new TLZ_Ping();
+        struct.ping.read(iprot);
+        struct.setPingIsSet(true);
       }
     }
   }

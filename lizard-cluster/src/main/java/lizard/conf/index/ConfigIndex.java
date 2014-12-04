@@ -117,7 +117,7 @@ public class ConfigIndex {
         FmtLog.info(logConf, "buildIndexServer: %s %s %s", indexOrder, ds.port, loc) ;
         if ( indexOrder.length() != 3 ) 
             throw new LizardException("Not a triple index") ;
-        TupleIndex index = Build.openTupleIndex(loc, indexOrder, Names.primaryIndexTriples, "Idx"+indexOrder) ;
+        TupleIndex index = Build.openTupleIndex(loc, "Idx"+indexOrder, Names.primaryIndexTriples, indexOrder) ;
         TServerIndex serverIdx = TServerIndex.create(ds.port, index) ;
         return serverIdx ; 
     }

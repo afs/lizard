@@ -24,6 +24,7 @@ import lizard.conf.LzBuild ;
 import lizard.conf.index.ConfigIndex ;
 import lizard.conf.index.IndexService ;
 import lizard.conf.node.ConfigNode ;
+import lizard.query.LzDataset ;
 import lizard.system.Component ;
 import lizard.system.LizardException ;
 import migrate.Q ;
@@ -78,11 +79,11 @@ public class ConfigLizardDataset {
 //      LizardDataset lzDSG = ConfigLizardDataset.buildDataset(root) ;
     }
 
-    public LizardDataset buildDataset() {
+    public LzDataset buildDataset() {
         return buildDataset(root) ;
     }
     
-    public static LizardDataset buildDataset(Resource lzdsgRoot) {
+    public static LzDataset buildDataset(Resource lzdsgRoot) {
         Model m = lzdsgRoot.getModel() ;
     
         String qsIndexServices = StrUtils.strjoinNL(Config.prefixes,
@@ -91,7 +92,7 @@ public class ConfigLizardDataset {
                                                     "    OPTIONAL { ?lz :indexes ?indexList }",
                                                     "    OPTIONAL { ?lz :nodetable   ?nodes }",
                                                     "}") ;
-        LizardDataset lizard = null ;
+        LzDataset lizard = null ;
         
         for ( QuerySolution row : Q.queryToList(m, qsIndexServices, "lz", lzdsgRoot) ) {
             if ( lizard != null )
@@ -128,7 +129,7 @@ public class ConfigLizardDataset {
             //System.out.println(nodes) ;
             
             DatasetGraph dsg = LzBuild.createDataset(Location.mem(), indexes, nt) ;
-            lizard = new LizardDataset(dsg, startables) ;
+            lizard = new LzDataset(dsg, startables) ;
         }
         
         if ( lizard == null )

@@ -20,6 +20,7 @@ import java.util.Iterator ;
 
 import lizard.comms.ConnState ;
 import lizard.system.Component ;
+import lizard.system.Pingable ;
 import org.apache.jena.atlas.lib.NotImplemented ;
 import org.apache.jena.atlas.lib.Pair ;
 import org.slf4j.Logger ;
@@ -30,7 +31,7 @@ import com.hp.hpl.jena.tdb.store.NodeId ;
 import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
 
 /** NodeTbale interface to a remote node table server */
-public class NodeTableRemote implements Component, NodeTable {
+public class NodeTableRemote implements Component, NodeTable, Pingable {
 
     public static NodeTableRemote create(String hostname, int port) {
         TClientNode remote = TClientNode.create(hostname, port) ;
@@ -135,5 +136,10 @@ public class NodeTableRemote implements Component, NodeTable {
     @Override
     public NodeTable wrapped() {
         return null ;
+    }
+
+    @Override
+    public void ping() {
+        conn.ping() ;
     }
 }

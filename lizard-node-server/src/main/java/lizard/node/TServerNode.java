@@ -93,6 +93,7 @@ public class TServerNode extends ComponentBase
                     long id = request.getRequestId() ;
                     //FmtLog.info(log, "[%d] Node request : %s", id, request) ;
                     execute(id, request, reply) ;
+                    reply.setRequestId(id) ;
                     reply.write(protocol) ;
                     protocol.getTransport().flush();
                     request.clear() ; 
@@ -146,6 +147,11 @@ public class TServerNode extends ComponentBase
                 FmtLog.info(log, "[%d] NodeId get request : %s => %s", id, nid, n) ;
                 return ;
             }
+            if ( request.isSetPing() ) {
+                FmtLog.info(log, "[%d] ping", id) ;
+                return ; 
+            }
+                
             FmtLog.error(log, "execute: Unrecognized request: %s", request) ;
         }
     }
