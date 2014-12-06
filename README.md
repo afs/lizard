@@ -44,4 +44,7 @@ To build Lizard:
 1. Build and install the related "[quack](https://github.com/afs/quack)" query library.
   1. Get the source.
   1. `mvn clean install`
-1. Build.install Lizard locally: `mvn clean install`
+1. Build and install Lizard locally: `mvn clean install`
+
+## Run 
+
