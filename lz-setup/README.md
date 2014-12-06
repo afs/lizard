@@ -10,3 +10,4 @@ for m in lizard-* lz-*
 do 
    cp $LIZARD_HOME/lz-setup/org.eclipse.jdt.ui.prefs $m/.settings
 done
+

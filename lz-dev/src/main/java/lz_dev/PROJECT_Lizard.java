@@ -21,6 +21,8 @@ public class PROJECT_Lizard {
      * Sort out : 
      *    Build, LzBuild, Local
      *    LZ_Query --query --data : see arq.sparql
+     *  
+     *  Thrift server/RPC
      *    
      *  index, node "clear"
      *  

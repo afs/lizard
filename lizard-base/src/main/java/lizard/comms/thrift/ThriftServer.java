@@ -55,16 +55,24 @@ public class ThriftServer extends ComponentBase implements Component {
         }
         log.debug("Start: port = "+port) ;
         new Thread(() -> server(serverTransport)).start() ;
+        super.start() ; 
     }
     
-    public void server(TServerTransport serverTransport) {
+    @Override
+    public void stop() {
+        serverTransport.close() ;
+        super.stop() ;
+    }
+
+        public void server(TServerTransport serverTransport) {
         for ( ;; ) 
             try {
                 TTransport transport = serverTransport.accept() ;
                 log.debug("Connection: "+transport) ;
                 new Thread(()->handler.handle(transport)).start() ;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            } 
+            catch (TException e) {}
+            catch (Exception e) { e.printStackTrace(); }
+
     }
 }
