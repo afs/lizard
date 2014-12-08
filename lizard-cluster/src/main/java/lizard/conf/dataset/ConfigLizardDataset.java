@@ -68,7 +68,7 @@ public class ConfigLizardDataset {
     }
     
     private Resource findRoot(Model model2) {
-        Resource lzType = model.createResource("http://jena.apache.org/ns/lizard#Dataset") ;
+        Resource lzType = model.createResource("urn:lizard:ns#Dataset") ;
         try {
             Resource root = GraphUtils.findRootByType(model, lzType) ;
             if ( root == null )
