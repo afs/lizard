@@ -29,12 +29,12 @@
   </parent>
 
   <artifactId>lizard-base</artifactId>
-  <name>Lizard - Base, wire API and comms</name>
+  <!-- <name>Lizard - Base, wire API and comms</name> -->
   <packaging>jar</packaging>
 
   <licenses>
     <license>
-      <name>Apache 2.0 License</name>
+      <!-- <name>Apache 2.0 License</name> -->
       <url>http://www.apache.org/licenses/LICENSE-2.0</url>
     </license>
   </licenses>

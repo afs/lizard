@@ -29,12 +29,12 @@
   </parent>
 
   <artifactId>lizard-cluster</artifactId>
-  <name>Lizard - Cluster, Configuration and Build</name>
+  <!-- <name>Lizard - Cluster, Configuration and Build</name> -->
   <packaging>jar</packaging>
 
   <licenses>
     <license>
-      <name>Apache 2.0 License</name>
+      <!-- <name>Apache 2.0 License</name> -->
       <url>http://www.apache.org/licenses/LICENSE-2.0</url>
     </license>
   </licenses>

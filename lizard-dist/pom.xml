@@ -29,12 +29,12 @@
   </parent>
 
   <artifactId>lizard-dist</artifactId>
-  <name>Lizard - Distribution</name>
+  <!-- <name>Lizard - Distribution</name> -->
   <packaging>jar</packaging>
 
   <licenses>
     <license>
-      <name>Apache 2.0 License</name>
+      <!-- <name>Apache 2.0 License</name> -->
       <url>http://www.apache.org/licenses/LICENSE-2.0</url>
     </license>
   </licenses>

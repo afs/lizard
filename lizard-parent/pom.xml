@@ -25,13 +25,13 @@
   <groupId>org.seaborne.lizard</groupId>
   <artifactId>lizard-parent</artifactId>
   <packaging>pom</packaging>
-  <name>Lizard - Parent</name>
+  <!-- <name>Lizard - Parent</name> -->
   <url>https://afs.github.io/lizard/</url>
   <version>0.0.0-SNAPSHOT</version>
 
   <licenses>
     <license>
-      <name>Apache 2.0 License</name>
+      <!-- <name>Apache 2.0 License</name> -->
       <url>http://www.apache.org/licenses/LICENSE-2.0</url>
     </license>
   </licenses>
@@ -180,7 +180,7 @@
     <!-- apache-repository-snapshots -->
     <repository>
       <id>apache-repository-snapshots</id>
-      <name>Apache Snapshot Repository</name>
+      <!-- <name>Apache Snapshot Repository</name> -->
       <url>https://repository.apache.org/snapshots</url>
       <releases>
 	<enabled>false</enabled>

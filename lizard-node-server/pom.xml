@@ -29,12 +29,12 @@ limitations under the License.
   </parent>
 
   <artifactId>lizard-node-server</artifactId>
-  <name>Lizard - Node Server</name>
+  <!-- <name>Lizard - Node Server</name> -->
   <packaging>jar</packaging>
 
   <licenses>
     <license>
-      <name>Apache 2.0 License</name>
+      <!-- <name>Apache 2.0 License</name> -->
       <url>http://www.apache.org/licenses/LICENSE-2.0</url>
     </license>
   </licenses>
