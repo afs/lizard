@@ -24,7 +24,7 @@
   <groupId>org.seaborne.lizard</groupId>
   <artifactId>lizard</artifactId>
   <packaging>pom</packaging>
-  <name>Lizard</name>
+  <name>Lizard - Main</name>
   <url>https://afs.github.io/lizard/</url>
   <version>0.0.0-SNAPSHOT</version>
 
