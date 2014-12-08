@@ -1,6 +1,6 @@
 @base     <urn:lizard:> .
 @prefix : <urn:lizard:> .
-@prefix lizard: <http://jena.apache.org/ns/lizard#> .
+@prefix lizard: <urn:lizard:ns#> .
 
 @prefix fuseki:  <http://jena.apache.org/fuseki#> .
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
