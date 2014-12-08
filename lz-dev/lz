@@ -1,1 +1,3 @@
-../lizard-cmds/bin/lz
+#!/bin/bash
+# Temp fix until egit/jgit gets symbolic link handling
+${LIZARD_HOME:-/home/afs/Lizard}/lizard-cmds/bin/lz "$@"
