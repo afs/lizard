@@ -151,11 +151,9 @@
 
       <dependency>
 	<groupId>org.apache.curator</groupId>
-	<!--<artifactId>curator-recipes</artifactId>-->
 	<artifactId>curator-framework</artifactId>
 	<version>${ver.curator}</version>
       </dependency>
-
       <dependency>
 	<groupId>org.apache.curator</groupId>
 	<artifactId>curator-recipes</artifactId>
@@ -166,13 +164,12 @@
 	<artifactId>curator-test</artifactId>
 	<version>${ver.curator}</version>
       </dependency>
-      <!--
-	<dependency>
+      <dependency>
 	<groupId>org.apache.curator</groupId>
 	<artifactId>curator-x-discovery</artifactId>
 	<version>${ver.curator}</version>
-	</dependency>
-      -->
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
