@@ -20,26 +20,17 @@ import java.io.File ;
 
 import lizard.cluster.Platform ;
 import lizard.index.TServerIndex ;
-import lizard.node.ClusterNodeTable ;
 import lizard.query.LizardQuery ;
-import lizard.query.LzDataset ;
-import lizard.system.Pingable ;
 import org.apache.jena.atlas.lib.FileOps ;
-import org.apache.jena.atlas.lib.Lib ;
 import org.apache.jena.atlas.lib.StrUtils ;
 import org.apache.jena.atlas.logging.LogCtl ;
-import org.apache.jena.engine.explain.ExplainCategory ;
-import org.apache.jena.riot.RDFDataMgr ;
 import org.apache.thrift.server.TServer ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
-import com.hp.hpl.jena.query.* ;
-import com.hp.hpl.jena.sparql.core.DatasetGraph ;
-import com.hp.hpl.jena.sparql.util.QueryExecUtils ;
-import com.hp.hpl.jena.tdb.TDB ;
 import com.hp.hpl.jena.tdb.base.file.Location ;
 
+/** Run data serers and dataset locally */
 public class MainLocalLizard {
     
     static { LogCtl.setLog4j() ; }

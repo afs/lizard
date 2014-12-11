@@ -16,11 +16,11 @@
 
 package lz_dev;
 
-import lizard.query.LzDataset ;
-import lizard.system.LizardException ;
 import lizard.cluster.Platform ;
 import lizard.conf.Configuration ;
 import lizard.conf.dataset.ConfigLizardDataset ;
+import lizard.query.LzDataset ;
+import lizard.system.LizardException ;
 import org.apache.jena.riot.RDFDataMgr ;
 
 import com.hp.hpl.jena.query.Dataset ;
@@ -35,7 +35,7 @@ import com.hp.hpl.jena.sparql.util.TypeNotUniqueException ;
 import com.hp.hpl.jena.sparql.util.graph.GraphUtils ;
 import com.hp.hpl.jena.tdb.base.file.Location ;
 
-/** Setup both query engine and servers, which if that are "localhost" means everything is on one machine */  
+/** Setup for query engine and servers */  
 public class Local {
     
     /** Build locally (but do not start) servers needed. 

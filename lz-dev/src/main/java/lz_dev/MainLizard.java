@@ -37,6 +37,7 @@ import com.hp.hpl.jena.sparql.core.DatasetGraph ;
 import com.hp.hpl.jena.sparql.util.QueryExecUtils ;
 import com.hp.hpl.jena.tdb.TDB ;
 
+/** Run lizartd dataset, external data servers */
 public class MainLizard {
     
     static { LogCtl.setLog4j() ; }
