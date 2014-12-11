@@ -1,3 +1,7 @@
 #!/bin/bash
+
+# May need to add in development specific setup here.
+
+# For now:
 # Temp fix until egit/jgit gets symbolic link handling
-${LIZARD_HOME:-/home/afs/Lizard}/lizard-cmds/bin/lz "$@"
+${LIZARD_HOME:-${HOME}/afs/Lizard}/lizard-cmds/bin/lz "$@"

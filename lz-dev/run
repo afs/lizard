@@ -1,0 +1,25 @@
+#!/bin/bash
+
+LIZARD_HOME="${LIZARD_HOME:-$HOME/Lizard}"
+LZ_CMDS="$LIZARD_HOME/lizard-cmds"
+source "$LZ_CMDS/bin/init"
+
+if [[ $# = 0 ]]
+then
+    echo "No main given" 2>&1
+    exit 1
+fi
+
+MAIN=$1
+shift
+
+# lz-dev special jars
+## CPX2="${M2_REPO}/org/apache/curator/curator-x-discovery/2.7.0/curator-x-discovery-2.7.0.jar"
+## CPX="$CPX1:$CPX2"
+
+if [[ $CPX != "" ]]
+then
+    CP="$LIZARD_HOME/lz-dev/target/classes:$CPX:$CP"
+fi
+
+java -cp "$CP" $JVM_ARGS $LOGGING lz_dev.$MAIN "$@"
