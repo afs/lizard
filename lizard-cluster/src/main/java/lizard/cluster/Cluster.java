@@ -16,322 +16,213 @@
 
 package lizard.cluster ;
 
+import java.util.HashSet ;
 import java.util.List ;
+import java.util.Set ;
 import java.util.concurrent.atomic.AtomicBoolean ;
 
 import org.apache.curator.RetryPolicy ;
 import org.apache.curator.framework.CuratorFramework ;
 import org.apache.curator.framework.CuratorFrameworkFactory ;
-import org.apache.curator.framework.api.CuratorListener ;
-import org.apache.curator.framework.api.CuratorWatcher ;
 import org.apache.curator.retry.ExponentialBackoffRetry ;
-import org.apache.jena.atlas.lib.Lib ;
-import org.apache.jena.atlas.logging.LogCtl ;
 import org.apache.zookeeper.CreateMode ;
-import org.apache.zookeeper.Watcher.Event.EventType ;
 import org.apache.zookeeper.data.Stat ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
-/** Cluster management */
+/** Cluster management.
+ * One instance of this class per JVM.
+ */
 public class Cluster {
-    static { LogCtl.setLog4j(); }
+
+    /** Create this JVM cluster management instance */
+    public static synchronized void createSystem(String connectString) {
+        if ( instance != null )
+            return ;
+
+        try { instance = new Cluster$(connectString) ; } 
+        catch (Exception e) {
+            log.error("Failed: "+connectString, e) ;
+        }
+    }
+
+    /** Start a monitor - this logs changes to the membership */  
+    public static void monitor() { ClusterMonitor.start(); }
+
+    /** Add member : the servce name is a path component (no "/")
+     * identifiying the service type.  
+     */
+    public static String addMember(String serviceName) {
+        checkActive() ;
+        synchronized(instance) {
+            String x = instance.addMember(serviceName) ;
+            return x ; 
+            // record registrations?
+        }
+    }
+
+    /** remove a member - pass in the strign returned by {@linkplain #addMember} */
+    public static void removeMember(String serviceName) {
+        checkActive() ;
+        synchronized(instance) {
+            instance.removeMember(serviceName) ;
+        }
+    }
+
+    /** Return the current membership (this contacts the zookeeper service */ 
+    public static List<String> members() {
+        checkActive() ;
+        return instance.members() ;
+    }
+    
+//    public static void watch(String path) {
+//        checkActive() ;
+//        instance.watch(path, new ClusterWatcher());
+//    }
+
+    private static void checkActive() {
+        if ( instance == null )
+            log.error("Not initialized") ;
+    }
+
+    public static synchronized void close() {
+        if ( instance != null ) {
+            instance.close() ;
+        }
+    }
+    
+    /** The underlying CuratorFramework */ 
+    public static synchronized CuratorFramework getClient() {
+        checkActive() ;
+        return instance.client ;
+    }
+
+    
+//    /** Watch a key's children */ 
+//    public static void watch(CuratorWatcher watcher, String key) {
+//        //log.info("Watch: "+key) ;
+//        checkActive() ;
+//        try {
+//            List<String> children = instance.client.getChildren().usingWatcher(watcher).forPath(key) ;
+//        }
+//        catch (Exception e) {
+//            log.error("Failed: watch("+key+")", e) ;
+//        } 
+//    }
+
+    // ----------------------------------
+    // Public interface
+    private static Cluster$ instance = null ;
+
     private static Logger log = LoggerFactory.getLogger(Cluster.class) ;
-    
-    private static String namespace = "/lizard" ;
-    public static String keyMembers = "/lizard/members" ;
-    //private static String keyElements = "/lizard/members/active" ;
-    
+
     private static byte[] zeroBytes = new byte[0] ;
-    
-    private CuratorFramework client = null ;
-    private String self = null ;
-    private AtomicBoolean active = new AtomicBoolean(false) ;
-    
-    private CuratorListener listener = (client, event) -> {
-        switch (event.getType()) {
-            case CHILDREN :
-                break ;
-            case CLOSING :
-                break ;
-            case CREATE :
-                break ;
-            case DELETE :
-                break ;
-            case EXISTS :
-                break ;
-            case GET_ACL :
-                break ;
-            case GET_DATA :
-                break ;
-            case SET_ACL :
-                break ;
-            case SET_DATA :
-                break ;
-            case SYNC :
-                break ;
-            case WATCHED :
-                break ;
-            default :
-                break ;
-        }            
-        System.out.println("LISTEN: type = " + event.getType()) ;
-        System.out.println("LISTEN: name = " + event.getName()) ;
-        System.out.println("LISTEN: path = " + event.getPath()) ;
-        // reload.
-        if ( active.get() )
-            watch(keyMembers) ;
-    } ;
 
-    public static void main(String... argv) throws Exception {
-        String connect = "localhost:2181" ;
-        log.info(connect) ;
-        Cluster cluster1 = Cluster.createSystem(connect) ;
-        log.info("add") ;
-        cluster1.addMember("system") ;
-        log.info("members") ;
-        cluster1.members().forEach(System.out::println) ;
-        
-        cluster1.members().forEach( x -> {
-            String y = keyMembers+"/"+x ;
-            cluster1.watch(y) ;
-        }) ;
+    static class Cluster$ {
 
-//        Cluster cluster2 = Cluster.createSystem(connect) ;
-//        cluster2.addMember() ;
-//        cluster2.members().forEach(System.out::println) ;
+        private CuratorFramework client = null ;
+        private Set<String> registrations = new HashSet<>() ;
+        private AtomicBoolean active = new AtomicBoolean(false) ;
+//        private String self = null ;
         
-        log.info("sleep") ;
-        Lib.sleep(5000) ;
-        log.info("close") ;
-        cluster1.close() ;
-    }
-
-    public void close() {
-        log.info("Close : "+self) ;
-        active.set(false) ;
-        delete(self) ;
-        client.close() ;
-        log.info("Closed") ;
-    }
-    
-    public String addMember(String baseName) {
-        return addMember(baseName, zeroBytes) ; 
-    }
-    
-    /** Add this into the zookeep pool using the given string as base name.
-     * Only the first registration causes a change.
-     * Returns the actual ephemeral sequentional znode name.
-     */  
-    public String addMember(String baseName, byte[] data) {
-        if ( baseName.startsWith("/") )
-            throw new IllegalArgumentException("Base name starts with '/': " +baseName) ;
-        String k = keyMembers+"/"+baseName ;
-        if ( ! k.endsWith("-") )
-            k = k + "-" ;
-        if ( data == null )
-            data = zeroBytes ;
-        
-        synchronized(this) {
-            if ( self != null ) {
-                log.info("Existing registration: "+self) ;
-                return self ;
-            }
+        private Cluster$(String connectString) {
             try {
-                if ( ! baseName.startsWith("/") )
-                    
-                self = client.create().withMode(CreateMode.EPHEMERAL_SEQUENTIAL).forPath(k, data) ;
-                log.info("Registered as: "+self) ;
+                RetryPolicy policy = new ExponentialBackoffRetry(10000, 5) ;
+                client = CuratorFrameworkFactory.builder()
+                    /*.namespace(namespace)*/
+                    .connectString(connectString)
+                    .retryPolicy(policy)
+                    .build() ;
+                client.start() ;
+        
+                client.blockUntilConnected() ;
+                
+            }
+            catch (Exception e) {
+                log.error("Failed: "+connectString, e) ;
+                client = null ;
+            }
+            ensure(ClusterCtl.namespace) ;
+            ensure(ClusterCtl.members) ;
+            active.set(true) ;
+        }
+
+        public String addMember(String baseName) {
+            return addMember(baseName, zeroBytes) ; 
+        }
+
+        /** Add this into the zookeeper pool using the given string as base name.
+         * Only the first registration causes a change.
+         * Returns the actual ephemeral sequentional znode name.
+         */  
+        public String addMember(String baseName, byte[] data) {
+            if ( baseName.startsWith("/") )
+                throw new IllegalArgumentException("Base name starts with '/': " +baseName) ;
+            String k = ClusterCtl.members+"/"+baseName ;
+            if ( ! k.endsWith("-") )
+                k = k + "-" ;
+            if ( data == null )
+                data = zeroBytes ;
+
+            try {
+                String x = client.create().withMode(CreateMode.EPHEMERAL_SEQUENTIAL).forPath(k, data) ;
+                log.info("Registered as: "+x) ;
+                registrations.add(x) ;
+                return x ; 
             } catch (Exception e) {
                 log.error("Failed: addMember("+k+")") ;
+                return null ; 
             }
         }
-        return self ;
-    }
 
-    public List<String> members() {
-        try {
-            return client.getChildren().forPath(keyMembers) ;
-            // Filter for key3?
-        } catch (Exception e) {
-            log.error("Failed: members("+keyMembers+")") ;
-            return null ;
+        public List<String> members() {
+            try {
+                return client.getChildren().forPath(ClusterCtl.members) ;
+                // Filter for key3?
+            } catch (Exception e) {
+                log.error("Failed: members("+ClusterCtl.members+")") ;
+                return null ;
+            }
         }
-    }
-    
-//    @SuppressWarnings("resource")
-//    public static Cluster createLocal() {
-//        TestingServer server ;
-//        String connectString = null ;
-//        
-//        try {
-//            server = new TestingServer() ;
-//        } catch (Exception e) {
-//            log.error("Failed: "+connectString, e) ;
-//            return null ;
-//        }
-//    
-//        return createSystem(server.getConnectString()) ;
-//    }
 
-    public static Cluster createSystem(String connectString) {
-        try {
-            return new Cluster(connectString) ; 
-        } catch (Exception e) {
-            log.error("Failed: "+connectString, e) ;
-            return null ;
-        }
-    }
-
-    private Cluster(String connectString) {
-        try {
-            RetryPolicy policy = new ExponentialBackoffRetry(1000, 3) ;
-            client = CuratorFrameworkFactory.builder()/*.names    private void watch(String key) {
-    
-pace(namespace)*/.connectString(connectString).retryPolicy(policy).build() ;
-            client.start() ;
-            
-            client.blockUntilConnected() ;
-            client.getCuratorListenable().addListener(listener) ;
-            
-        }
-        catch (Exception e) {
-            log.error("Failed: "+connectString, e) ;
+        public void close() {
+            log.info("Close") ;
+            active.set(false) ;
+            registrations.forEach(x -> removeMember(x)) ;
+            client.close() ;
             client = null ;
+            log.info("Closed") ;
         }
-        ensure(namespace) ;
-        ensure(keyMembers) ;
-        watch(keyMembers) ;
-        ///watch(key) ;
-    }
-    
-    private CuratorWatcher w = (x) -> {
-        if ( x.getType() == EventType.NodeChildrenChanged )
-            System.out.println("WATCH: " + x) ;
-    } ;
-    
-    
-    
-    private void watch(String key) {
-        log.info("W: "+key) ;
-        try {
-            List<String> x = client.getChildren().watched().inBackground().forPath(key) ;
-            log.info("Watch: "+x) ;
-        }
-        catch (Exception e) {
-            log.error("Failed: watch("+key+")", e) ;
-        } 
-    }
 
-    private void ensure(String key) {
-        try {
-            Stat stat = client.checkExists().forPath(key) ;
-            if ( stat == null )
-                create(key, new byte[0]) ;
+        private void ensure(String key) {
+            try {
+                Stat stat = client.checkExists().forPath(key) ;
+                if ( stat == null )
+                    create(key, new byte[0]) ;
+            }
+            catch (Exception e) {
+                log.error("Failed: ensure("+key+")", e) ;
+            } 
         }
-        catch (Exception e) {
-            log.error("Failed: ensure("+key+")", e) ;
-        } 
-    }
 
-    private void create(String key, byte[] data) {
-        // Ignore if present.
-        try {
-            String x = client.create().withMode(CreateMode.PERSISTENT).forPath(key, data) ;
-            log.info(x) ;
-        } catch (Exception e) {
-            log.error("Failed: create("+key+")") ;
+        private void create(String key, byte[] data) {
+            // Ignore if present.
+            try {
+                String x = client.create().withMode(CreateMode.PERSISTENT).forPath(key, data) ;
+                log.info(x) ;
+            } catch (Exception e) {
+                log.error("Failed: create("+key+")") ;
+            }
+        }
+
+        private void removeMember(String key) {
+            try {
+                client.delete().forPath(key) ;
+                registrations.remove(key) ;
+                log.info("Delete "+key) ;
+            } catch (Exception e) {
+                log.error("Failed: delete("+key+")") ;
+            }
         }
     }
-    
-    private void delete(String key) {
-        try {
-            client.delete().forPath(key) ;
-            log.info("Delete "+key) ;
-        } catch (Exception e) {
-            log.error("Failed: delete("+key+")") ;
-        }
-    }
-
-    //    public static void init() throws Exception {
-    //        // TestingServer server = new TestingServer();
-    //
-    ////        TestingServer server = new TestingServer() ;
-    ////        server.start(); 
-    //        try {
-    //            //String connect = server.getConnectString() ;
-    //            String connect = "localhost:2181" ;
-    //            RetryPolicy policy = new ExponentialBackoffRetry(1000, 3) ;
-    //            CuratorFramework client = CuratorFrameworkFactory.newClient(connect, policy) ;
-    //            client.start() ;
-    //            client.blockUntilConnected(); 
-    //            System.out.println() ;
-    //            
-    //            list(client, key) ;
-    //            
-    //            //client.blockUntilConnected();
-    //            byte[] data = Bytes.string2bytes("AFS:"+new Date()) ;
-    //            client.create()
-    //                .withMode(CreateMode.EPHEMERAL_SEQUENTIAL)
-    //                .forPath(key2, data) ;
-    //            
-    //            System.out.println() ;
-    //
-    //            list(client, key) ;
-    ////            
-    ////            byte[] data2 = client
-    ////                .getData()
-    ////                .forPath(key) ;
-    ////            String x = Bytes.bytes2string(data2) ;
-    ////            System.out.println(":"+x+":") ;
-    //            Lib.sleep(10*1000) ;
-    //            System.exit(0) ;
-    //
-    //        }
-    //        catch (Exception ex) {
-    //            ex.printStackTrace(System.err) ;
-    //        }
-    //    }
-
-//    public static void init() throws Exception {
-//        // TestingServer server = new TestingServer();
-//
-////        TestingServer server = new TestingServer() ;
-////        server.start(); 
-//        try {
-//            //String connect = server.getConnectString() ;
-//            String connect = "localhost:2181" ;
-//            RetryPolicy policy = new ExponentialBackoffRetry(1000, 3) ;
-//            CuratorFramework client = CuratorFrameworkFactory.newClient(connect, policy) ;
-//            client.start() ;
-//            client.blockUntilConnected(); 
-//            System.out.println() ;
-//            
-//            list(client, key) ;
-//            
-//            //client.blockUntilConnected();
-//            byte[] data = Bytes.string2bytes("AFS:"+new Date()) ;
-//            client.create()
-//                .withMode(CreateMode.EPHEMERAL_SEQUENTIAL)
-//                .forPath(key2, data) ;
-//            
-//            System.out.println() ;
-//
-//            list(client, key) ;
-////            
-////            byte[] data2 = client
-////                .getData()
-////                .forPath(key) ;
-////            String x = Bytes.bytes2string(data2) ;
-////            System.out.println(":"+x+":") ;
-//            Lib.sleep(10*1000) ;
-//            System.exit(0) ;
-//
-//        }
-//        catch (Exception ex) {
-//            ex.printStackTrace(System.err) ;
-//        }
-//    }
-
-
 }

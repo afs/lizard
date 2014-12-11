@@ -29,6 +29,9 @@ import lizard.system.LizardException ;
  */
 public class ClusterCtl {
     private static Cluster current = null ;
+    
+    public final static String namespace = "/lizard" ;
+    public final static String members   = "/lizard/members" ;
 
     public static Cluster get() { 
         if ( current == null )
