@@ -26,17 +26,21 @@ import org.apache.zookeeper.WatchedEvent ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
-/*8 Utility to watch the cluster membership and log changes */ 
+/** Utility to watch the cluster membership and log changes */ 
 public class ClusterMonitor {
     
     private static Logger log = LoggerFactory.getLogger(ClusterMonitor.class) ;
     private static boolean watching = true ;
     // A view of the clutser (mainly for logging/debugging).
        
+
+    /** Start monitoring */ 
     public static void start() {
+        log.info("Watching ...") ;
         new Watcher().arm() ;
     }
     
+    /** Stop monitoring (actually switches off at the next watch event) */ 
     public static void stop() {
         watching = false ;
     }
@@ -73,8 +77,8 @@ public class ClusterMonitor {
             Set<String> leavers = SetUtils.difference(current, current2) ;
             Set<String> arrivals = SetUtils.difference(current2, current) ;
 
-            leavers.forEach(s ->  log.info("  Leave:   " +s));
-            arrivals.forEach(s -> log.info("  Arrival: " +s));
+            leavers.forEach(s ->  log.info("Leave:   " +s));
+            arrivals.forEach(s -> log.info("Arrival: " +s));
             current = current2 ;
             arm() ;
         }

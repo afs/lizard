@@ -44,7 +44,7 @@ public class MainZk {
         Cluster.members().forEach(System.out::println);
         String x2 = Cluster.addMember("MySelf") ;
         log.info("Self :: "+x2);
-        Lib.sleep(2000);
+        //Lib.sleep(2000);
         String x1 = Cluster.addMember("me!") ;
         log.info("Self :: "+x1);
         Lib.sleep(2000);

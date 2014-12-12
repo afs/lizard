@@ -29,7 +29,6 @@ import arq.cmdline.CmdGeneral ;
 
 import com.hp.hpl.jena.query.* ;
 import com.hp.hpl.jena.rdf.model.Model ;
-import com.hp.hpl.jena.rdf.model.ModelFactory ;
 import com.hp.hpl.jena.sparql.core.DatasetGraph ;
 import com.hp.hpl.jena.sparql.util.QueryExecUtils ;
 import com.hp.hpl.jena.tdb.TDB ;
@@ -53,21 +52,12 @@ public class LZ_Query extends CmdGeneral {
 
     @Override
     protected String getSummary() {
-        return null ;
+        return "query" ;
     }
 
     @Override
     protected void processModulesAndArgs() {
         
-    }
-
-    // XXX Move somewhere
-    public static Model readAll(String ... files) {
-        Model model = ModelFactory.createDefaultModel() ;
-        for ( String fn : files ) {
-            RDFDataMgr.read(model, fn);    
-        }
-        return model ;
     }
 
     @Override

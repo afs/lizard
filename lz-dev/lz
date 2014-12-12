@@ -4,4 +4,6 @@
 
 # For now:
 # Temp fix until egit/jgit gets symbolic link handling
-${LIZARD_HOME:-${HOME}/afs/Lizard}/lizard-cmds/bin/lz "$@"
+LIZARD_HOME=${LIZARD_HOME:-${HOME}/Lizard}
+
+${LIZARD_HOME}/lizard-cmds/bin/lz "$@"
