@@ -6,7 +6,10 @@ source "$LZ_CMDS/bin/init"
 
 CP="$CP:$HOME/Projects/quack/target/classes"
 VER_FU=2.0.0-beta-1-SNAPSHOT
+
 CP="$CP:${M2_REPO}/org/apache/jena/jena-fuseki/${VER_FU}/jena-fuseki-${VER_FU}-server.jar"
+# Remove slf4j (inside fuseki server)
+CP="$(echo $CP | perl -p -e 's!:[^:]*/org/slf4j/[^:]*!:!g')"
 
 FUSEKI_LOG=${FUSEKI_LOG:-}
 JVM_ARGS="${JVM_ARGS:--Xmx1200M}"
