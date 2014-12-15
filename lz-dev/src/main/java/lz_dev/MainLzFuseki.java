@@ -16,11 +16,8 @@
 
 package lz_dev;
 
-import java.nio.file.Paths ;
-
 import org.apache.jena.atlas.logging.LogCtl ;
 import org.apache.jena.fuseki.FusekiCmd ;
-import org.apache.jena.fuseki.server.FusekiServer ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
@@ -34,10 +31,12 @@ public class MainLzFuseki {
     static String confDataset       = "conf-dataset.ttl" ;
     
     public static void main(String...argv) {
-        FusekiServer.FUSEKI_HOME = Paths.get("") ;
-        FusekiServer.FUSEKI_BASE = Paths.get("run") ;
-        
+        //String pwd = System.getProperty("user.dir") ;
+        System.setProperty("FUSEKI_HOME", "/home/afs/Jena/jena-fuseki2") ;
+        System.setProperty("FUSEKI_BASE", "run") ;
+//        FusekiServer.FUSEKI_HOME = Paths.get("/home/afs/Jena/jena-fuseki2") ;
+//        FusekiServer.FUSEKI_BASE = Paths.get("run").toAbsolutePath() ;
+//        lizard.sys.Lizard.init() ;
         FusekiCmd.main("-v","--conf=fuseki-config.ttl") ;
-        
     }
 }

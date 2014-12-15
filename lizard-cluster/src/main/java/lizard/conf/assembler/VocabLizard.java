@@ -22,7 +22,7 @@ import com.hp.hpl.jena.rdf.model.Resource ;
 import com.hp.hpl.jena.tdb.assembler.Vocab ;
 
 public class VocabLizard {
-    public final static String namespace = "http://jena.apache.org/ns/lizard#" ;
+    public final static String namespace = "urn:lizard:ns#" ;
     private static final String NS = namespace ;
 
     public static String getURI() { return NS ; } 

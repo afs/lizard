@@ -20,7 +20,8 @@ import lizard.conf.assembler.VocabLizard ;
 import lizard.query.LizardQuery ;
 
 public class Lizard {
-    public synchronized void init() {
+    static { init() ; } // Via assembler.
+    public synchronized static void init() {
         VocabLizard.init();
         LizardQuery.init(); 
     }
