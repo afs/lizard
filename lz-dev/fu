@@ -1,22 +1,18 @@
 #!/bin/bash
 
-LIZARD_HOME="${LIZARD_HOME:-/home/afs/Projects/proto-lizard}"
+LIZARD_HOME="${LIZARD_HOME:-$HOME/Lizard}"
+LZ_CMDS="$LIZARD_HOME/lizard-cmds"
+source "$LZ_CMDS/bin/init"
+
+CP="$CP:$HOME/Projects/quack/target/classes"
+VER_FU=2.0.0-beta-1-SNAPSHOT
+CP="$CP:${M2_REPO}/org/apache/jena/jena-fuseki/${VER_FU}/jena-fuseki-${VER_FU}-server.jar"
 
 FUSEKI_LOG=${FUSEKI_LOG:-}
 JVM_ARGS="${JVM_ARGS:--Xmx1200M}"
 
-export FUSEKI_HOME=$PWD
+export FUSEKI_HOME=$HOME/Jena/jena-fuseki2
 export FUSEKI_BASE=$PWD/run
-
-VER_FU=2.0.0-beta-1-SNAPSHOT
-CP=/home/afs/.m2/repo/org/apache/jena/jena-fuseki/${VER_FU}/jena-fuseki-${VER_FU}-server.jar
-if [[ ! -e "$CP" ]]
-then
-    echo "No Fuseki server jar" 1>&2 
-    exit 1
-fi
-
-CP="$LIZARD_HOME/../quack/target/classes:$CP"
-CP="$LIZARD_HOME/target/classes:$CP"
+[[ -e $FUSEKI_BASE ]] || mkdir -p $FUSEKI_BASE
 
 exec java -cp "$CP" $JVM_ARGS $FUSEKI_LOG org.apache.jena.fuseki.FusekiCmd "$@"

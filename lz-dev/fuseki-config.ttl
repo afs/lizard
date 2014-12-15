@@ -10,7 +10,7 @@ prefix ja:      <http://jena.hpl.hp.com/2005/11/Assembler#>
 
 
 ## Lizard
-[] ja:loadClass "lizard.Lizard" .
+[] ja:loadClass "lizard.sys.Lizard" .
 lizard:Dataset rdfs:subClassOf  ja:RDFDataset .
 
 [] rdf:type fuseki:Server ;

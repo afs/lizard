@@ -18,7 +18,7 @@
 
 package lizard.query;
 
-import org.apache.jena.engine.Quack ;
+
 import org.apache.jena.engine.Quack2 ;
 
 public class LizardQuery {
@@ -39,6 +39,6 @@ public class LizardQuery {
     }
     
     /** called when Fuseki integrates Lizard */
-    public static void init() { } 
+    public static void init() { }
 }
 
