@@ -35,7 +35,7 @@ public class LizardQuery {
         // query engine.
         Quack2.init() ;
         // This would be global and all TDB. 
-        Quack.setOpExecutorFactory(null) ;
+        //Quack.setOpExecutorFactory(null) ;
     }
     
     /** called when Fuseki integrates Lizard */

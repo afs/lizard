@@ -20,7 +20,6 @@ import lizard.conf.dataset.DatasetBuilderLizard ;
 import lizard.query.QuackLizard ;
 import lizard.system.LzLog ;
 import org.apache.jena.atlas.lib.ColumnMap ;
-import org.apache.jena.atlas.lib.FileOps ;
 import org.apache.jena.atlas.lib.StrUtils ;
 import org.apache.jena.atlas.logging.FmtLog ;
 

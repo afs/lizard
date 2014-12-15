@@ -38,7 +38,7 @@ import com.hp.hpl.jena.sparql.sse.SSE ;
 import com.hp.hpl.jena.tdb.store.NodeId ;
 import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
 
-// XXX Needs efficiency attention.s
+// XXX Needs efficiency attention.
 public class TServerNode extends ComponentBase
 {
     private static Logger log = LoggerFactory.getLogger(TServerNode.class) ;
