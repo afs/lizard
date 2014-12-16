@@ -64,7 +64,7 @@ public class LZ_Deploy extends CmdGeneral {
     
     @Override
     protected String getSummary() {
-        return "deploy: --deploy config ... other config files ..." ;
+        return "deploy: --deploy=deploymentFile configFiles ..." ;
     }
 
     @Override
@@ -94,7 +94,6 @@ public class LZ_Deploy extends CmdGeneral {
             System.exit(0) ;
         }
     }
-
 
     @Override
     protected String getCommandName() {
