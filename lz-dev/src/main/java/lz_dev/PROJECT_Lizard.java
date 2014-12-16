@@ -18,24 +18,17 @@ package lz_dev ;
 
 public class PROJECT_Lizard {
     /*
-     * Sort out : 
-     *    Build, LzBuild, Local
-     *    LZ_Query --query --data : see arq.sparql
-     *  
-     *  Thrift server/RPC
-     *    
      *  index, node "clear"
      *  
-     *  Ping does not ping every sever (does it matter?) 
+     *  Ping does not ping every server (does it matter?) 
      *  README to wiki
      *  Documentation
      *  Running with different config files.
      *    lz server --deploy $LZ_DEPLOY $LZ_CONF  
      *    LZ_CONF LZ_DEPLOY
      *    
-     *  lizard_cmds - deployed version
+     *  lizard-cmds - deployed version
      *  lz-dev/bin
-     *    Dev more => $LIZARD_HOME/lz-dev exists
      */
     
     /*
@@ -45,18 +38,8 @@ public class PROJECT_Lizard {
      * Data access (index, quack-like)
      *   Where does this go? -> Index?
      *   
-     * Should the client side of node/index actually be in query-server?
-     *   No - isolated testing for node and index need the client side.
-     *   Yes - no need for index-server to depend on quack
-     *   Or quack should be split?
-     *   Or More of the Index table client shoud be in query-server.
-     *     Too many modules results in opaque chaos. 
-     * 
      * Failures
      *   Protocol message "go away" to simulate failures 
-     * 
-     * lizard-config and build
-     *   In lizard-cluster? Separate?
      * 
      * ** Sharding - need a better bit mixer.
      *    Fnv 
