@@ -32,22 +32,32 @@ then
     echo "LIZARD_HOME=$LIZARD_HOME"
 fi
 
+usage() {
+    echo "Usage: $(basename $0) subcmd" 2>&1
+    echo "   Subcommands: 'deploy', 'query', 'servers', 'monitor', 'shard', 'split'" 2>&1
+}
+
 if [[ $# = 0 ]]
 then
-    echo "No subcommand: choice of 'deploy', 'query', 'servers'" 2>&1
-    exit 1
+    usage
 fi
 
 SUB=$1
 shift
 
 case $SUB in
+    help)    usage ; exit 0 ;;
     servers) exec "$LZ_CMDS/bin/lz-servers" ;;
     deploy)  CMD="LZ_Deploy" ;; 
     query)   CMD="LZ_Query" ;; 
-    monitor) CMD="LZ_Monitor" ;; 
+    monitor) CMD="LZ_Monitor" ;;
+    shard)   CMD="LZ_ShardIndex" ;;
+    split)   CMD="LZ_SplitDB" ;;
     *)
-	echo "Unknown subcommand: $1"
+	echo "Unknown subcommand: $SUB"
+	usage
+	exit 1
+	;;
 esac
 
 if [[ -e log4j.properties ]]

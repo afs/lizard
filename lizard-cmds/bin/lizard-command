@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Symbolically link to this script and 
+# Sets up enviroment and calls "$0-cmd"
+
+## Set SCRIPT 
+## Set SCRIPT_DIR
+SCRIPT="${BASH_SOURCE[0]}";
+SCRIPT_DIR="$(dirname "$SCRIPT")"
+while[[ -L "${SCRIPT_DIR}" ]] ; do SCRIPT_DIR="$(readlink "${SCRIPT_DIR}")"; done
+SCRIPT="$(basename "$SCRIPT")"
+
+# Lizard
+if [[ -z "$LIZARD_HOME" ]]
+then 
+    # Assume command in ${LIZARD_HOME}/lizard-cmds/bin
+    LIZARD_HOME="${SCRIPT_DIR%/bin}"
+    LIZARD_HOME="${SCRIPT_DIR%/lizard-*}"    
+fi
+
+LZ_CMDS="$LIZARD_HOME/lizard-cmds"
+CMD="$SCRIPT_DIR/$SCRIPT"
+
+source "$LZ_CMDS/bin/init"
+
+# If linking:
+## exec "${CMD}-cmd" "$@"
+# If copy template:
+

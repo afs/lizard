@@ -1,1 +1,19 @@
+# Speciifc Lizard environments (local to machine)
+setup-*
+!setup-simple
+# Fuseki run area
 run/
+
+# Databases
+DB*
+
+# During initial development, allow small data test files.
+## D.ttl
+## D.trig
+## D.nt
+## D.nq
+/--mem--
+/classes
+/tmp
+/LZ
+/LZ?

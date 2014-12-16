@@ -1,31 +1,16 @@
 #!/bin/bash
 
+## Assumes LIZARD_HOME is set
+## Sets:
+##   LZ_RUN
+##   LZ_BIN
+##   LZ_DEV
+##   LZ_CP (lizard classpath)
+## Merges to form CP (classpath to use)
+
 # Maven repository
 REPO="$HOME/.m2/repo"
 CPFILE="lizard.classpath"
-
-# This file is 'sourced' so playing hunt the HOME does not work.
-## # Find where the script is
-## # If LIZARD_HOME is empty
-## if [ -z "$LIZARD_HOME" ]
-## then
-##     SCRIPT="$0"
-##     # Catch common issue: script has been symlinked
-##     if [ -L "$SCRIPT" ]
-##     then
-## 	SCRIPT="$(readlink "$0")"
-## 	# If link is relative
-## 	case "$SCRIPT" in
-##    	    /*) ;; # fine
-## 	    *) SCRIPT=$( dirname "$0" )/$SCRIPT;; # fix
-## 	esac
-##     fi
-##     D="$( cd "$( dirname "$SCRIPT")" && pwd )"
-##     # Strip directories from Lizard home to bin directory.
-##     D=${D%/bin}
-##     D=${D%/lizard-*}
-##     LIZARD_HOME="$D"
-## fi
 
 export LZ_RUN="${LZ_RUN:-$LIZARD_HOME/lizard-cmds}"
 export LZ_BIN="${LZ_BIN:-$LIZARD_HOME/lizard-cmds/bin}"
@@ -48,9 +33,21 @@ then
     exit 2 
 fi
 
+
+## Accumulate LZ_CP
+accLZCP() {
+    local C="$1"
+    if [[ -z $LZ_CP ]]
+    then
+	LZ_CP=$C
+    else
+	LZ_CP=$LZ_CP:$C
+    fi
+}
+
 XCP="$(cat $LZ_RUN/$CPFILE)"
 XCP="$(echo $XCP | sed -e s/:/\\n/g)"
-CP=""
+LZ_CP=""
 for C in $XCP
 do
     if [[ $C =~ "/org/seaborne/lizard/" ]] ; then continue ; fi
@@ -58,13 +55,7 @@ do
     if [[ $C =~ "/org/apache/jena/jena-arq/" ]] ; then continue ; fi
     if [[ $C =~ "/org/apache/jena/jena-tdb/" ]] ; then continue ; fi
     if [[ $C =~ "/org/apache/jena/apache-jena-libs/" ]] ; then continue ; fi
-
-    if [[ -z $CP ]]
-    then
-	CP=$C
-    else
-	CP=$CP:$C
-    fi
+    accLZCP "$C"
 done
 
 # Prepend any development directories here
@@ -76,16 +67,23 @@ do
     CPX="$JENA_DEV/$X/target/classes"
     if [ -e "$CPX" ]
     then
-	CP="$CPX:$CP"
+	accLZCP "$CPX"
     fi
 done
 
 DEVDIRS="base node-server index-server query-server cluster cmds"
 for X in $DEVDIRS
 do
-    CP="$LIZARD_HOME/lizard-$X/target/classes:$CP"
-    #CP="$LIZARD_HOME/lizard-$X/target/test-classes:$CP"
+    accLZCP "$LIZARD_HOME/lizard-$X/target/classes"
+    #accLZCP "$LIZARD_HOME/lizard-$X/target/test-classes"
 done
 
 LOGGER=${LOGGER:-} # "-D-Dlog4j.configuration=file:$LIZARD_HOME/log4j.properties"
 JVM_ARGS="${JVM_ARGS:--Xmx1200M}"
+
+if [[ -z $CP ]]
+then
+    CP="$LZ_CP"
+else
+    CP="$CP:$LZ_CP"
+fi

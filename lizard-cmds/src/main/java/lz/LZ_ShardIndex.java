@@ -41,18 +41,18 @@ import com.hp.hpl.jena.tdb.store.NodeId ;
 import com.hp.hpl.jena.tdb.store.tupletable.TupleIndex ;
 
 /** Shard a TDB index. */
-public class indexshard extends CmdARQ {
+public class LZ_ShardIndex extends CmdARQ {
     static { LogCtl.setCmdLogging() ; }
-    static Logger log = LoggerFactory.getLogger(indexshard.class) ;
+    static Logger log = LoggerFactory.getLogger(LZ_ShardIndex.class) ;
 
     static final ArgDecl argLocation = new ArgDecl(true, "loc", "location") ;
 
     static public void main(String... argv) {
         TDB.setOptimizerWarningFlag(false) ;
-        new indexshard(argv).mainRun() ;
+        new LZ_ShardIndex(argv).mainRun() ;
     }
 
-    protected indexshard(String[] argv) {
+    protected LZ_ShardIndex(String[] argv) {
         super(argv) ;
         super.modVersion.addClass(ARQ.class) ;
         super.modVersion.addClass(RIOT.class) ;

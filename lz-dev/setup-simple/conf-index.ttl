@@ -1,6 +1,5 @@
 @base     <urn:lizard:> .
 @prefix : <urn:lizard:> .
-@prefix lizard: <urn:lizard:ns#> .
 
 @prefix fuseki:  <http://jena.apache.org/fuseki#> .
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -11,7 +10,7 @@
 # 2 services, POS and PSO
 # 2 servers each.
 
-<#index> rdf:type :IndexService ;
+<#index1> rdf:type :IndexService ;
     :name          "IndexPOS" ;
     :indexOrder    "POS" ;
     :servers       ( <#index-s1> ) ;
@@ -25,15 +24,13 @@
 
 # 2 servers
 <#index-s1>  a  :IndexServer ;
-    :name       "ServerIndex11" ;
+    :name       "ServerIndex-s1" ;
 	:hostname   "localhost" ;
 	:port       4012 ; 
-    :data     	"I1" ;
     .
 
 <#index-s2>  a  :IndexServer ;
-    :name       "ServerIndex12" ;
+    :name       "ServerIndex-s2" ;
 	:hostname   "localhost" ;
 	:port       4014 ; 
-    :data     	"I2" ;
     .

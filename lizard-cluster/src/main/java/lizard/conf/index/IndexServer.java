@@ -23,8 +23,8 @@ import com.hp.hpl.jena.rdf.model.Resource ;
 public class IndexServer extends DataServer {
     public final IndexService indexService ;
 
-    public IndexServer(Resource r, String name, IndexService indexService, String hostname, int port) {
-        super(r, name, hostname, port, null) ;
+    public IndexServer(Resource r, String name, IndexService indexService, String hostname, int port, String data) {
+        super(r, name, hostname, port, data) ;
         this.indexService = indexService ;
     }
 }

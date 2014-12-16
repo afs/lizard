@@ -25,7 +25,7 @@ public class Config {
     
     public static final String prefixes = StrUtils.strjoinNL
         ("PREFIX :          <urn:lizard:>",
-         "PREFIX lizard:    <urn:lizard:ns#>",
+         "PREFIX lizard:    <http://jena.apache.org/ns/lizard#>",
          "PREFIX list:      <http://jena.hpl.hp.com/ARQ/list#>" ,
          "PREFIX xsd:       <http://www.w3.org/2001/XMLSchema#>",
          "PREFIX rdf:       <http://www.w3.org/1999/02/22-rdf-syntax-ns#>",

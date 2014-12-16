@@ -16,12 +16,18 @@
 
 package lizard.conf;
 
+import lizard.cluster.Platform ;
 import lizard.conf.dataset.DatasetBuilderLizard ;
+import lizard.conf.index.IndexServer ;
+import lizard.conf.node.NodeServer ;
+import lizard.index.TServerIndex ;
+import lizard.node.TServerNode ;
 import lizard.query.QuackLizard ;
 import lizard.system.LzLog ;
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.StrUtils ;
 import org.apache.jena.atlas.logging.FmtLog ;
+import org.slf4j.Logger ;
 
 import com.hp.hpl.jena.query.ARQ ;
 import com.hp.hpl.jena.sparql.engine.main.QC ;
@@ -45,6 +51,7 @@ import com.hp.hpl.jena.tdb.sys.Names ;
 /** Build a dataset */
 public class LzBuild
 {
+    static Logger logConf = Config.logConf ;
     // XXX 
     // *** To be replaced 
     private static ObjectFileBuilder objectFileBuilder     = new BuilderStdDB.ObjectFileBuilderStd() ;
@@ -114,5 +121,24 @@ public class LzBuild
         dsg.getContext().set(ARQ.optFilterPlacementBGP, false);
         QC.setFactory(dsg.getContext(), QuackLizard.factoryLizard) ;
         return dsg ;
+    }
+    
+    /** Build index server, locally */ 
+    public static void buildIndexServer(IndexServer idxSvc, Platform platform) {
+        Location location = Location.create(idxSvc.data) ;
+        FmtLog.info(logConf, "BuildIndexServer: %s %s", idxSvc.port, location) ;
+        String indexOrder = idxSvc.indexService.indexOrder ;
+        TupleIndex index = LzBuild.createTupleIndex(location, indexOrder, "Idx"+indexOrder) ;
+        TServerIndex serverIdx = TServerIndex.create(idxSvc.port, index) ;
+        platform.add(serverIdx) ;
+    }
+    
+    /** Build noder server, locally */
+    public static void buildNodeServer(NodeServer ns, Platform platform) {
+        Location location = Location.create(ns.data) ;
+        FmtLog.info(logConf, "buildNodeServer: %s %s", ns.port, location) ;
+        NodeTable nt = LzBuild.createNodeTable(location) ;
+        TServerNode serverNode = TServerNode.create(ns.port, nt) ;
+        platform.add(serverNode) ;
     }
 }

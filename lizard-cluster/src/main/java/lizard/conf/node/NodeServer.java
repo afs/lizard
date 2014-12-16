@@ -23,8 +23,8 @@ import com.hp.hpl.jena.rdf.model.Resource ;
 public class NodeServer extends DataServer {
     public final NodeService nodeService ;
 
-    public NodeServer(Resource r, String name, NodeService nodeService, String hostname, int port) {
-        super(r, name, hostname, port, null) ;
+    public NodeServer(Resource r, String name, NodeService nodeService, String hostname, int port, String data) {
+        super(r, name, hostname, port, data) ;
         this.nodeService = nodeService ;
     }
 }

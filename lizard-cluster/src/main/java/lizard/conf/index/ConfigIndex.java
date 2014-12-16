@@ -147,16 +147,20 @@ public class ConfigIndex {
     }
     
     private static Map<Resource, IndexService> findIndexServices(Model m) {
+        //RDFDataMgr.write(System.out, m, Lang.TTL) ;
+        
         String qsIndexServices = StrUtils.strjoinNL(Config.prefixes,
                                                     "SELECT * {",
                                                     " ?svc a :IndexService ;",
                                                     "    OPTIONAL { ?svc :name       ?name }",
                                                     "    OPTIONAL { ?svc :indexOrder ?indexOrder }",
                                                     "    OPTIONAL { ?svc :servers    ?sList }",
+                                                    "    OPTIONAL { ?svc :data       ?data }",
                                                     "}") ;
         Map<Resource, IndexService> svcs = new LinkedHashMap<>() ;
         for ( QuerySolution row : Q.queryToList(m, qsIndexServices) ) {
             Resource svc = row.getResource("svc") ;
+            //System.out.println(row) ;
             if ( svcs.containsKey(svc) )
                 throw new LizardException("Malform declaration for: "+svc) ;
             String name = Q.getStringOrNull(row, "name") ;
@@ -168,9 +172,17 @@ public class ConfigIndex {
             String indexOrder = Q.getStringOrNull(row, "indexOrder") ;
             if ( indexOrder == null ) 
                 throw new LizardException(name+" : No index order for IndexService") ;
+            String dataDir = Q.getStringOrNull(row, "data") ;
+            
             List<Resource> sList = Q.listResources(list) ;
             IndexService nSvc = new IndexService(svc, name, indexOrder, sList) ;
-            FmtLog.debug(logConf, "Index service %s", nSvc.name) ;
+            
+            if ( logConf.isDebugEnabled() ) {
+                if ( dataDir == null )
+                    FmtLog.debug(logConf, "Index server: %s", nSvc.name) ;
+                else
+                    FmtLog.debug(logConf, "Index server: %s [%s]", nSvc.name, dataDir) ;
+            }
             svcs.put(svc, nSvc) ;
         }
         return svcs ; 
@@ -185,6 +197,7 @@ public class ConfigIndex {
                                                   // Unnecessary - in the deployment file.
                                                   "    OPTIONAL { ?idxServer :hostname ?hostname }",    
                                                   "    OPTIONAL { ?idxServer :port ?port }",
+                                                  "    OPTIONAL { ?idxServer :data ?data }",
                                                   "}") ;
         Map<Resource, IndexServer> indexServers = new LinkedHashMap<>() ;
         for ( QuerySolution row : Q.queryToList(m, qsIndexServers) ) {
@@ -203,7 +216,11 @@ public class ConfigIndex {
             IndexService indexService = findIndexService(indexServiceDecl, idxServer) ;
             if ( indexService == null )
                 throw new LizardException("No IndexService for IndexServer: "+idxServer) ;
-            IndexServer indexServer  = new IndexServer(idxServer, name, indexService, hostname, port.intValue()) ;
+            
+            // Optional
+            String dataDir = Q.getStringOrNull(row, "data") ;
+            
+            IndexServer indexServer  = new IndexServer(idxServer, name, indexService, hostname, port.intValue(), dataDir) ;
             FmtLog.debug(logConf, "Node server: %s", indexServer) ;
             indexServers.put(idxServer, indexServer) ;
         }

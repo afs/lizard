@@ -19,21 +19,6 @@ target
 \#*
 .#*
 *.bak
-/dev
-/run
-/webapp
-webapp
 
-# Development Data and Database
-DB*
-# Durecing initial development, allow small data test files.
-## D.ttl
-## D.trig
-## D.nt
-## D.nq
-/--mem--
-/classes
-/tmp
-/LZ
-/LZ?
+# Cached classpath information
 /lizard-cmds/lizard.classpath

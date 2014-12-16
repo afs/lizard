@@ -26,10 +26,10 @@ import lizard.conf.Configuration ;
 import lizard.conf.LzBuild ;
 import lizard.conf.index.ConfigIndex ;
 import lizard.conf.index.IndexServer ;
-import lizard.conf.node.BuildNode ;
 import lizard.conf.node.ConfigNode ;
 import lizard.conf.node.NodeServer ;
-import lizard.index.TServerIndex ;
+import lizard.sys.Deploy ;
+import lizard.sys.Deployment ;
 import lizard.system.LzLib ;
 import org.apache.jena.atlas.lib.Lib ;
 import org.apache.jena.atlas.logging.LogCtl ;
@@ -40,8 +40,6 @@ import arq.cmdline.ArgDecl ;
 import arq.cmdline.CmdGeneral ;
 
 import com.hp.hpl.jena.rdf.model.Model ;
-import com.hp.hpl.jena.tdb.base.file.Location ;
-import com.hp.hpl.jena.tdb.store.tupletable.TupleIndex ;
 
 /** Take a general configuration file and deployment file for this machine
  *  build a dataset and run here.
@@ -52,19 +50,12 @@ public class LZ_Deploy extends CmdGeneral {
     
     public static Logger log        = LoggerFactory.getLogger("Lizard") ;  
     public static Logger logConf    = LoggerFactory.getLogger("Conf") ;
-    static String confNode          = "conf-node.ttl" ;
-    static String confIndex         = "conf-index.ttl" ;
-    static String confDataset       = "conf-dataset.ttl" ;
+    protected ArgDecl argDeploy     = new ArgDecl(ArgDecl.HasValue, "deploy", "server") ;
+    private Deployment deployment = null ;
     
     public static void main(String ...args) {
         new LZ_Deploy(args).mainRun() ;
     }
-    
-    protected ArgDecl argDeploy     = new ArgDecl(ArgDecl.HasValue, "deploy", "server") ;
-    
-    private ConfigNode configNode = null ;
-    private ConfigIndex configIndex = null ;
-    private Deployment deployment = null ;
     
     protected LZ_Deploy(String[] argv) {
         super(argv) ;
@@ -85,81 +76,28 @@ public class LZ_Deploy extends CmdGeneral {
             throw new CmdException("Required: exactly one --deploy") ;
 
         String deploymentFile = super.getValue(argDeploy) ;
-        
-        // Parse
         String [] a = super.getPositional().toArray(new String[0]) ;
         Configuration config = Configuration.fromFile(a) ;
-        
         deployment = Deployment.parse(config, deploymentFile) ; 
-        configIndex = config.getConfIndex() ;
-        configNode = config.getConfNode() ;
-    }
-
-    static class Deployment {
-        public final Collection<IndexServer> indexServers ;
-        public final Collection<NodeServer> nodeServers ;
-        
-        static Deployment parse(Configuration config, String...files) {
-            Model model = LzLib.readAll(files) ;
-            
-            List<NodeServer> nodeServers = ConfigLib.dataServers(model, ":NodeServer").values().stream()
-                .map(ds -> { return config.getConfNode().findNodeServer(ds.resource);})
-                .collect(Collectors.toList()) ;
-            List<IndexServer> indexServers = ConfigLib.dataServers(model, ":IndexServer").values().stream()
-                .map(ds -> { return config.getConfIndex().findIndexServer(ds.resource);})
-                .collect(Collectors.toList()) ;
-            return new Deployment(indexServers, nodeServers) ;
-        }
-        
-        private Deployment(Collection<IndexServer> indexServers, Collection<NodeServer> nodeServers) {
-            this.indexServers = indexServers ;
-            this.nodeServers = nodeServers ;
-        }
     }
 
     @Override
     protected void exec() {
-        
-        try { 
-            deploy(deployment) ;
+        try {
+            Deploy.deploy(deployment) ;
+            while (true) {
+                Lib.sleep(10000) ;
+            }
+        } catch (Throwable th) {
+            th.printStackTrace(System.err) ;
+        } finally {
+            System.exit(0) ;
         }
-        catch (Throwable th) { th.printStackTrace(System.err) ; }
-        finally { System.exit(0) ; }
-        // TODO Auto-generated constructor stub
-
     }
 
 
     @Override
     protected String getCommandName() {
         return "lz-deploy" ;
-    }
-
-
-    public static void deploy(Deployment deployment) {
-        Platform platform = new Platform() ;
-        Location location = Location.mem();
-
-        deployment.nodeServers.stream().forEach(ns -> {
-            log.info("Build N: " + ns.resource) ;
-            BuildNode.buildNodeServer(ns, platform, location) ;
-        }) ;
-
-        deployment.indexServers.forEach(idx -> {
-            log.info("Build I: " + idx.resource) ;
-            /* BuildIndex. */buildIndexServer(idx, platform, location) ;
-        }) ;
-
-        platform.start() ;
-        while(true) {
-            Lib.sleep(10000) ;
-        }
-    }
-    
-    private static void buildIndexServer(IndexServer idxSvc, Platform platform, Location location) {
-        String indexOrder = idxSvc.indexService.indexOrder ;
-        TupleIndex index = LzBuild.createTupleIndex(location, indexOrder, "Idx"+indexOrder) ;
-        TServerIndex serverIdx = TServerIndex.create(idxSvc.port, index) ;
-        platform.add(serverIdx) ;
     }
 }

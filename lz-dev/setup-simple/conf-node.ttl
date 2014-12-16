@@ -1,6 +1,5 @@
 @base     <urn:lizard:> .
 @prefix : <urn:lizard:> .
-@prefix lizard: <urn:lizard:ns#> .
 
 @prefix fuseki:  <http://jena.apache.org/fuseki#> .
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -18,5 +17,4 @@
     :name       "ServerNode" ;
 	:hostname   "localhost" ;
 	:port       4011 ; 
-    :data     	"N" ;
     .

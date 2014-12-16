@@ -23,11 +23,9 @@ import lizard.conf.index.ConfigIndex ;
 import lizard.conf.index.IndexService ;
 import lizard.conf.node.ConfigNode ;
 import lizard.system.Component ;
-import org.apache.jena.riot.RDFDataMgr ;
-import org.apache.jena.riot.RiotException ;
+import migrate.Q ;
 
 import com.hp.hpl.jena.rdf.model.Model ;
-import com.hp.hpl.jena.rdf.model.ModelFactory ;
 import com.hp.hpl.jena.tdb.base.file.Location ;
 import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
 import com.hp.hpl.jena.tdb.store.nodetupletable.NodeTupleTable ;
@@ -39,17 +37,13 @@ import com.hp.hpl.jena.tdb.sys.DatasetControlMRSW ;
  * not the (stateless) query server. 
  */
 public class Configuration {
-
+    
     public static Configuration fromFile(String... conffile) {
-        Model model = ModelFactory.createDefaultModel() ;
-        for ( String s : conffile )
-            try {
-                RDFDataMgr.read(model, s);
-            } catch (RiotException ex) {
-                System.err.println("File: "+s) ;
-                //ex.printStackTrace(System.err) ;
-                throw ex ;
-            }
+        Model model = Q.readAll(conffile) ;
+        return new Configuration(model) ;
+    }
+    
+    public static Configuration fromModel(Model model) {
         return new Configuration(model) ;
     }
     

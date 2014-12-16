@@ -16,6 +16,7 @@
 
 package lz_dev;
 
+
 public class Setup {
     /** Location of the configuration files */
     public static String confDir           = "setup-simple" ;

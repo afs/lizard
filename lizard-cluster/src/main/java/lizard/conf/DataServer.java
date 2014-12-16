@@ -35,5 +35,9 @@ public class DataServer {
     }
     
     @Override
-    public String toString() { return name ; } 
+    public String toString() {
+        if ( data == null )
+            return name ;
+        return name+" ["+data+"]" ;
+    } 
 }

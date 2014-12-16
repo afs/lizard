@@ -170,6 +170,7 @@ public class ConfigNode {
                                                     // Unnecessary - in the deployment file.
                                                     "    OPTIONAL { ?nServer :hostname ?hostname }",
                                                     "    OPTIONAL { ?nServer :port ?port }",
+                                                    "    OPTIONAL { ?nServer :data ?data }",
                                                     "}") ;
         Map<Resource, NodeServer> nodeServers = new LinkedHashMap<>() ;
         for ( QuerySolution row : Q.queryToList(m, qsNodeServers) ) {
@@ -185,11 +186,14 @@ public class ConfigNode {
             Long port = Q.getIntegerOrNull(row, "port") ;
             if ( port == null)
                 throw new LizardException("No port for NodeServer: "+nServer) ;
+            // Optional
+            String dataDir = Q.getStringOrNull(row, "data") ;
             
             NodeService nodeService = findNodeService(nodeServiceDecl, nServer) ;
             if ( nodeService == null )
                 throw new LizardException("No NodeService for NodeServer: "+nServer) ;
-            NodeServer nodeServer  = new NodeServer(nServer, name, nodeService, hostname, port.intValue()) ;
+            
+            NodeServer nodeServer  = new NodeServer(nServer, name, nodeService, hostname, port.intValue(), dataDir) ;
             FmtLog.debug(logConf, "Node server: %s", nodeServer) ;
             nodeServers.put(nServer, nodeServer) ;
         }

@@ -16,18 +16,14 @@
 
 package migrate;
 
-import java.util.ArrayList ;
-import java.util.LinkedHashSet ;
-import java.util.List ;
-import java.util.Set ;
+import java.io.File ;
+import java.util.* ;
 
 import org.apache.jena.atlas.iterator.Iter ;
+import org.apache.jena.riot.RDFDataMgr ;
 
 import com.hp.hpl.jena.query.* ;
-import com.hp.hpl.jena.rdf.model.Literal ;
-import com.hp.hpl.jena.rdf.model.Model ;
-import com.hp.hpl.jena.rdf.model.RDFNode ;
-import com.hp.hpl.jena.rdf.model.Resource ;
+import com.hp.hpl.jena.rdf.model.* ;
 
 public class Q {
 
@@ -119,5 +115,38 @@ public class Q {
         else
             return QueryExecutionFactory.create(q, m, init) ;
     }
+    
+    /** Filename from directory name and basename */
+    public static String filename(String dir, String fn) {
+        if ( dir == null ) 
+            return fn ;
+        if ( ! dir.endsWith("/") )
+            dir = dir + "/" ;
+        return dir+fn ;
+    }
+    
+    /** Recursive "rm -r" */
+    public static void clearAll(File d) {
+        for ( File f : d.listFiles())
+        {
+            if ( ".".equals(f.getName()) || "..".equals(f.getName()) )
+                continue ;
+            if ( f.isDirectory() )
+                clearAll(f) ;
+            f.delete() ;
+        }
+    }
 
+    /** Read all the files into a Model - check each file occurs only once */
+    public static Model readAll(String... files) {
+        Set<String> readSoFar = new HashSet<>() ;
+        Model model = ModelFactory.createDefaultModel() ;
+        for ( String s : files ) {
+            if ( readSoFar.contains(s) ) {
+                System.err.println("Duplicate file: " + s) ;
+            }
+            RDFDataMgr.read(model, s) ;
+        }
+        return model ;
+    }
 }

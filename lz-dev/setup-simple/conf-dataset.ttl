@@ -1,6 +1,6 @@
 base     <urn:lizard:>
 prefix : <urn:lizard:> 
-prefix lizard: <urn:lizard:ns#> 
+prefix lizard: <http://jena.apache.org/ns/lizard#> 
 
 prefix fuseki:  <http://jena.apache.org/fuseki#> 
 prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
@@ -24,6 +24,6 @@ lizard:Dataset rdfs:subClassOf  ja:RDFDataset .
 ## Query engine / dataset
 
 <#dataset> rdf:type lizard:Dataset ;
-    :indexes ( <#index> ) ;
+    :indexes ( <#index1> <#index2> ) ;
     :nodetable <#node> ;
     .

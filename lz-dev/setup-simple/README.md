@@ -1,5 +1,5 @@
-This runs Lizard with one node server and one index server on two machines,
-with no index sharding.
+This runs Lizard with one node server and one index server on 
+two machines, with no index sharding.
 
 It is not fault tolerant.
 
