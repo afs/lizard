@@ -1,6 +1,6 @@
 # Speciifc Lizard environments (local to machine)
-setup-*
-!setup-simple
+##setup-*
+##!setup-simple
 # Fuseki run area
 run/
 
