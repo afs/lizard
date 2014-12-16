@@ -16,21 +16,9 @@
 
 package lz;
 
-import java.util.Collection ;
-import java.util.List ;
-import java.util.stream.Collectors ;
-
-import lizard.cluster.Platform ;
-import lizard.conf.ConfigLib ;
 import lizard.conf.Configuration ;
-import lizard.conf.LzBuild ;
-import lizard.conf.index.ConfigIndex ;
-import lizard.conf.index.IndexServer ;
-import lizard.conf.node.ConfigNode ;
-import lizard.conf.node.NodeServer ;
 import lizard.sys.Deploy ;
 import lizard.sys.Deployment ;
-import lizard.system.LzLib ;
 import org.apache.jena.atlas.lib.Lib ;
 import org.apache.jena.atlas.logging.LogCtl ;
 import org.slf4j.Logger ;
@@ -39,11 +27,8 @@ import arq.cmd.CmdException ;
 import arq.cmdline.ArgDecl ;
 import arq.cmdline.CmdGeneral ;
 
-import com.hp.hpl.jena.rdf.model.Model ;
-
-/** Take a general configuration file and deployment file for this machine
- *  build a dataset and run here.
- *  The lizard version of "arq.sparql". 
+/** Take a general configuration file and deployment file
+ *  for this machine, build servers and run here.
  */
 public class LZ_Deploy extends CmdGeneral {
     static { LogCtl.setCmdLogging(); }
