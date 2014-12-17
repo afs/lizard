@@ -18,10 +18,12 @@ package lizard.sys;
 
 import lizard.conf.assembler.VocabLizard ;
 import lizard.query.LizardQuery ;
+import lizard.system.LzLog ;
 
 public class Lizard {
     static { init() ; } // Via assembler.
     public synchronized static void init() {
+        LzLog.logSystem.info("Lizard.init") ;
         VocabLizard.init();
         LizardQuery.init(); 
     }

@@ -16,15 +16,21 @@
 
 package lizard.conf.dataset ;
 
+import java.util.List ;
+
 import com.hp.hpl.jena.rdf.model.Resource ;
 
-public class QueryServer {
+public class LzDatasetDesc {
     public final Resource                 resource ;
     public final String                   name ;
+    public final List<Resource>          indexes ;
+    public final List<Resource>          nodes ;    
 
-    public QueryServer(Resource r, String name) {
+    public LzDatasetDesc(Resource r, String name, List<Resource> indexes, List<Resource> nodes) {
         this.resource = r ;
         this.name = name ;
+        this.indexes = indexes ;
+        this.nodes = nodes ;
     }
     
     @Override

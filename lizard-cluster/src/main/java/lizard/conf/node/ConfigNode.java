@@ -207,12 +207,6 @@ public class ConfigNode {
             .findFirst().orElse(null) ;
     }
     
-
-    
-    private Map<Resource, DataServer> findNodeDataServers(Model m) {
-        return ConfigLib.dataServers(m, ":NodeServer") ;
-    }
-    
     /** Check NodeService, NodeServer declarations link up */ 
     private static void checkNodeServices(Map<Resource, NodeService> nodeServiceDecl,
                                           Map<Resource, NodeServer> nodeServerDecl) {
@@ -262,8 +256,8 @@ public class ConfigNode {
         
     public static void print(ConfigNode conf) {
         System.out.println("Node services: ") ;
-        ConfigLib.printMap(conf.nodeServiceDecl) ;
+        Q.printMap(conf.nodeServiceDecl) ;
         System.out.println("Node servers: ") ;
-        ConfigLib.printMap(conf.nodeServerDecl) ;
+        Q.printMap(conf.nodeServerDecl) ;
     }
 }

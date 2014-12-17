@@ -279,8 +279,8 @@ public class ConfigIndex {
         
     public static void print(ConfigIndex conf) {
         System.out.println("Index services:") ;
-        ConfigLib.printMap(conf.indexServiceDecl) ;
+        Q.printMap(conf.indexServiceDecl) ;
         System.out.println("Index servers:") ;
-        ConfigLib.printMap(conf.indexServers) ;
+        Q.printMap(conf.indexServers) ;
     }
 }

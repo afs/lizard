@@ -40,8 +40,8 @@ public class Deploy {
         platform.start() ;
     }
 
-    /*8 Deploy data servers */
-    public static void deplyServers(Configuration config, String deploymentFile) {
+    /** Deploy data servers */
+    public static void deployServers(Configuration config, String deploymentFile) {
         Deployment deployment = Deployment.parse(config, deploymentFile) ;
         //System.out.println(deployment.indexServers) ;
         //System.out.println(deployment.nodeServers) ;

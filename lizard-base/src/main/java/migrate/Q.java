@@ -116,6 +116,14 @@ public class Q {
             return QueryExecutionFactory.create(q, m, init) ;
     }
     
+    /** Print a  Map<Resource, ?>.
+     * Helper for logging, development and debugging */ 
+    public static void printMap(Map<Resource, ?> map) {
+        map.entrySet().stream().forEach(
+           e -> System.out.printf("  %s:\"%s\"\n", "<"+e.getKey()+">", e.getValue())
+        ) ;
+    }
+    
     /** Filename from directory name and basename */
     public static String filename(String dir, String fn) {
         if ( dir == null ) 

@@ -19,21 +19,20 @@ package lizard.conf;
 import java.util.HashMap ;
 import java.util.List ;
 import java.util.Map ;
-import java.util.Set ;
 
+import lizard.conf.dataset.LzDatasetDesc ;
 import lizard.system.LizardException ;
 import migrate.Q ;
 import org.apache.jena.atlas.lib.StrUtils ;
 
 import com.hp.hpl.jena.query.QuerySolution ;
 import com.hp.hpl.jena.rdf.model.Model ;
-import com.hp.hpl.jena.rdf.model.RDFNode ;
 import com.hp.hpl.jena.rdf.model.Resource ;
 
 /** Configuration helper functions */
 public class ConfigLib {
 
-    /** Data servers */
+    /** Extract all data servers */
     public static Map<Resource, DataServer> dataServers(Model model, String resourceType) {
         String qs = StrUtils.strjoinNL(Config.prefixes,
                                        "SELECT * {",
@@ -65,18 +64,42 @@ public class ConfigLib {
         }
         return servers ;
     }
+     
+    /** Extract all dataset declarations (often and normally, one) */
+    public static Map<Resource, LzDatasetDesc> datasets(Model model) {
+
+        String qsDatasets = StrUtils.strjoinNL(Config.prefixes,
+                                               "SELECT * {",
+                                               // lizard: <urn:lizard:ns#>
+                                               " ?lz a lizard:Dataset ;",
+                                               "    OPTIONAL { ?lz :name      ?name }",
+                                               "    OPTIONAL { ?lz :indexes   ?indexes }",
+                                               "    OPTIONAL { ?lz :nodetable ?nodes }",
+                                               "}") ;
         
-
-    /** All resources */
-    public static Set<RDFNode> resources(Model m, String queryString, String varName) {
-        List<QuerySolution> x = Q.queryToList(m, queryString) ;
-        return Q.project(x, varName) ;
+        Map<Resource, LzDatasetDesc> datasets = new HashMap<>() ;
+        for ( QuerySolution row : Q.queryToList(model, qsDatasets) ) {
+            Resource lz = row.getResource("lz") ;
+            if ( datasets.containsKey(lz) )
+                throw new LizardException("Multiple rows about "+lz) ;
+            String name = Q.getStringOrNull(row, "name") ;
+            if ( name == null ) {
+                if ( lz.isAnon() )
+                    name = "ds-"+(datasets.size()+1) ;
+                else 
+                    name = lz.getLocalName() ;
+            }
+            List<Resource> indexes = Q.getListResourceOrNull(row, "indexes") ;
+            if ( indexes == null )
+                throw new LizardException("No :indexes in lizard:Dataset description") ;
+            List<Resource> nodes = Q.getListResourceOrNull(row, "nodes") ;
+            if ( nodes == null )
+                throw new LizardException("No :nodes in lizard:Dataset description") ;
+            
+            LzDatasetDesc desc = new LzDatasetDesc(lz, name, indexes, nodes) ;
+            datasets.put(lz, desc) ;
+        }
+        
+        return datasets ;
     }
-    
-    public static void printMap(Map<Resource, ?> map) {
-        map.entrySet().stream().forEach(
-           e -> System.out.printf("  %s:\"%s\"\n", "<"+e.getKey()+">", e.getValue())
-        ) ;
-    }
-
 }
