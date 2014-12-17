@@ -64,7 +64,7 @@ public class ConfigLib {
         }
         return servers ;
     }
-     
+
     /** Extract all dataset declarations (often and normally, one) */
     public static Map<Resource, LzDatasetDesc> datasets(Model model) {
 

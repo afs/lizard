@@ -46,7 +46,11 @@ public class LzDataset implements LifeCycle {
 
     @Override
     public void start() {
-        components.stream().forEach(s -> s.start());
+        components.stream().forEach(s -> {
+                                    System.out.println(s) ;
+                                    s.start() ;
+                                    }
+                                    );
         started = true ;
     }
 

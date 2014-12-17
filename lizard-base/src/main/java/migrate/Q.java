@@ -78,7 +78,6 @@ public class Q {
         return elts ;
     }
 
-
     public static List<RDFNode> listMembers(Resource r) {
         String qs = "PREFIX list: <http://jena.hpl.hp.com/ARQ/list#> SELECT * { ?r list:index (?idx ?member) }" ;
         List<QuerySolution> rows = queryToList(r.getModel(), qs, "r", r) ;

@@ -16,15 +16,21 @@
 
 package lz;
 
+import java.util.List ;
+
 import lizard.conf.dataset.ConfigLizardDataset ;
+import lizard.query.LzDataset ;
+import lizard.system.LizardException ;
 import lizard.system.LzLib ;
 import org.apache.jena.atlas.lib.Lib ;
 import org.apache.jena.atlas.lib.StrUtils ;
 import org.apache.jena.atlas.logging.LogCtl ;
 import org.apache.jena.engine.explain.ExplainCategory ;
+import org.apache.jena.riot.Lang ;
 import org.apache.jena.riot.RDFDataMgr ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
+import arq.cmd.CmdException ;
 import arq.cmdline.CmdGeneral ;
 
 import com.hp.hpl.jena.query.* ;
@@ -38,9 +44,8 @@ public class LZ_Query extends CmdGeneral {
     
     public static Logger log        = LoggerFactory.getLogger("Lizard") ;  
     public static Logger logConf    = LoggerFactory.getLogger("Conf") ;
-    static String confNode          = "conf-node.ttl" ;
-    static String confIndex         = "conf-index.ttl" ;
-    static String confDataset       = "conf-dataset.ttl" ;
+    
+    private List<String> confFiles  = null ; 
     
     public static void main(String ...args) {
         new LZ_Query(args).mainRun();
@@ -57,7 +62,9 @@ public class LZ_Query extends CmdGeneral {
 
     @Override
     protected void processModulesAndArgs() {
-        
+        confFiles = super.getPositional() ;
+        if ( confFiles.size() == 0 )
+            throw new CmdException("No configuration provided") ;
     }
 
     @Override
@@ -69,11 +76,21 @@ public class LZ_Query extends CmdGeneral {
         try {
             log.info("DATASET") ;
             
-            Model m = LzLib.readAll(confDataset, confNode, confIndex) ;
             
-            ConfigLizardDataset cf = new ConfigLizardDataset(m) ;
+            Model m = LzLib.readAll(confFiles) ;
+            ConfigLizardDataset cf ;
+            try {
+                cf = new ConfigLizardDataset(m) ;
+            } catch (LizardException ex) {
+                RDFDataMgr.write(System.err, m, Lang.TTL) ;
+                System.exit(1) ;
+                return ;
+            }
             
-            DatasetGraph dsg = cf.buildDataset().getDataset() ;
+            LzDataset lzdsg = cf.buildDataset() ;
+            lzdsg.start() ;
+            // "start" in getDataset?
+            DatasetGraph dsg = lzdsg.getDataset() ;
             Dataset ds = DatasetFactory.create(dsg) ;
 
             log.info("LOAD") ;

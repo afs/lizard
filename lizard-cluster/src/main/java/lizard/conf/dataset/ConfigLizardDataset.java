@@ -24,6 +24,7 @@ import java.util.Map.Entry ;
 import lizard.conf.Config ;
 import lizard.conf.ConfigLib ;
 import lizard.conf.LzBuild ;
+import lizard.conf.assembler.VocabLizard ;
 import lizard.conf.index.ConfigIndex ;
 import lizard.conf.index.IndexService ;
 import lizard.conf.node.ConfigNode ;
@@ -55,9 +56,8 @@ public class ConfigLizardDataset {
     }
     
     private Resource findRoot(Model model2) {
-        Resource lzType = model.createResource("urn:lizard:ns#Dataset") ;
         try {
-            Resource root = GraphUtils.findRootByType(model, lzType) ;
+            Resource root = GraphUtils.findRootByType(model, VocabLizard.lzDataset) ;
             if ( root == null )
                 throw new LizardException("No lizard:Dataset") ;
             return root ;

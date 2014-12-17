@@ -51,7 +51,7 @@ public class MainDeploy {
     
     public static void main(String[] args) {
         log.info("SERVERS") ;
-        Deploy.deplyServers(config, deploymentFile);
+        Deploy.deployServers(config, deploymentFile);
 
         log.info("DATASET") ;
         Dataset ds = queryEngine(config, "D.ttl") ;

@@ -21,6 +21,8 @@ package lizard.system;
 import java.nio.file.Files ;
 import java.nio.file.Path ;
 import java.nio.file.Paths ;
+import java.util.Arrays ;
+import java.util.List ;
 
 import org.apache.jena.riot.RDFDataMgr ;
 import org.apache.jena.riot.RiotNotFoundException ;
@@ -34,10 +36,14 @@ import com.hp.hpl.jena.rdf.model.ModelFactory ;
 
 public class LzLib {
     public static Model readAll(String ... files) {
+        return readAll(Arrays.asList(files)) ;
+    }
+
+    public static Model readAll(List<String> files) {
         return readAll(ModelFactory.createDefaultModel(), files) ;
     }
     
-    public static Model readAll(Model model, String ... files) {
+    public static Model readAll(Model model, List<String> files) {
         for ( String fn : files ) {
             Path p = Paths.get(fn) ; 
             if ( ! Files.exists(p) ) {
