@@ -16,34 +16,38 @@
 
 package lz;
 
+import java.io.File ;
+import java.io.FilenameFilter ;
+import java.nio.file.FileSystems ;
+import java.nio.file.PathMatcher ;
+import java.nio.file.Paths ;
+import java.util.ArrayList ;
+import java.util.Arrays ;
 import java.util.List ;
 
 import lizard.conf.dataset.ConfigLizardDataset ;
 import lizard.query.LzDataset ;
 import lizard.system.LizardException ;
 import lizard.system.LzLib ;
-import org.apache.jena.atlas.lib.Lib ;
-import org.apache.jena.atlas.lib.StrUtils ;
 import org.apache.jena.atlas.logging.LogCtl ;
 import org.apache.jena.engine.explain.ExplainCategory ;
 import org.apache.jena.riot.Lang ;
 import org.apache.jena.riot.RDFDataMgr ;
-import org.slf4j.Logger ;
-import org.slf4j.LoggerFactory ;
 import arq.cmd.CmdException ;
+import arq.cmdline.ArgDecl ;
 import arq.cmdline.CmdGeneral ;
+import arq.cmdline.ModQueryIn ;
 
 import com.hp.hpl.jena.query.* ;
 import com.hp.hpl.jena.rdf.model.Model ;
 import com.hp.hpl.jena.sparql.core.DatasetGraph ;
 import com.hp.hpl.jena.sparql.util.QueryExecUtils ;
-import com.hp.hpl.jena.tdb.TDB ;
 
 public class LZ_Query extends CmdGeneral {
     static { LogCtl.setCmdLogging(); }
-    
-    public static Logger log        = LoggerFactory.getLogger("Lizard") ;  
-    public static Logger logConf    = LoggerFactory.getLogger("Conf") ;
+    protected ModQueryIn modQuery   = new ModQueryIn(Syntax.syntaxARQ) ;
+    // May be repeated.
+    protected ArgDecl argConf       = new ArgDecl(ArgDecl.HasValue, "--conf") ;
     
     private List<String> confFiles  = null ; 
     
@@ -53,18 +57,38 @@ public class LZ_Query extends CmdGeneral {
     
     protected LZ_Query(String[] argv) {
         super(argv) ;
+        super.add(argConf) ;
+        super.addModule(modQuery) ;
     }
 
     @Override
     protected String getSummary() {
-        return "query" ;
+        return "lz query --conf 1*configFiles ['query'|--query QueryFile]" ;
+    }
+
+    @Override
+    protected String getCommandName() {
+        return "lz query" ;
     }
 
     @Override
     protected void processModulesAndArgs() {
-        confFiles = super.getPositional() ;
+        if ( ! super.contains(argConf) )
+            throw new CmdException("No configuration provided (--conf expected)") ;
+        confFiles = new ArrayList<>() ;
+        super.getValues(argConf).forEach( a -> {
+            PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + a);
+            FilenameFilter ff = (d,p) -> {
+                if ( p.equals(".") || p.equals("..") )
+                    return false ;
+                return matcher.matches(Paths.get(p)) ;
+            } ;
+            confFiles.addAll(Arrays.asList(new File(".").list(ff))) ;
+        }) ;
         if ( confFiles.size() == 0 )
             throw new CmdException("No configuration provided") ;
+        if ( modQuery.getQuery() == null )
+            throw new CmdException("No query provided") ;
     }
 
     @Override
@@ -74,9 +98,6 @@ public class LZ_Query extends CmdGeneral {
         ExplainCategory lizardCluster   = ExplainCategory.create("lizard-cluster") ; 
         
         try {
-            log.info("DATASET") ;
-            
-            
             Model m = LzLib.readAll(confFiles) ;
             ConfigLizardDataset cf ;
             try {
@@ -93,70 +114,18 @@ public class LZ_Query extends CmdGeneral {
             DatasetGraph dsg = lzdsg.getDataset() ;
             Dataset ds = DatasetFactory.create(dsg) ;
 
-            log.info("LOAD") ;
-            //ds = (Dataset) AssemblerUtils.build(conffile, VocabLizard.lzDataset) ;
-            if ( true ) {
-                //LogCtl.set(ClusterNodeTable.class, "WARN") ;
-                RDFDataMgr.read(ds, "D.ttl") ;
-                //LogCtl.set(ClusterNodeTable.class, "INFO") ;
-                TDB.sync(ds) ;
-            }
-            
-            log.info("QUERY") ;
-//            Quack.setVerbose(true) ;
-//            ARQ.setExecutionLogging(InfoLevel.NONE);
-
-            String qs = StrUtils.strjoinNL("PREFIX : <http://example/> SELECT * "
-                                           , "{ :s1 ?p ?o }" 
-                                           //, "{ ?x :k ?k . ?x :p ?v . }"
-                                           //, "{ :x1 :p ?x . ?x :p ?v . }"
-                                           // Filter placement occurs?
-                                           //, "{ ?x :k ?k . ?x :p ?v . FILTER(?k = 2) }"
-                                           //,"ORDER BY ?x"
-                ) ;
-            //"{ ?x :k ?k }" ;
-
-            if ( true ) {
-                LogCtl.set("lizard", "info") ;
-                // LogCtl.disable("lizard.comms.common.tio") ;
-                // LogCtl.disable("lizard.comms.server") ;
-                // LogCtl.disable("lizard.comms.client") ;
-            }
-
-            Query q = QueryFactory.create(qs) ;
-            System.out.println() ;
-            System.out.print(q);
-            System.out.println() ;
-            int N = true ? 3 : 20 ;
-            for ( int i = 0 ; i < N ; i++ ) {
-                doOne("Lizard", ds, q) ;
-                if ( i != N-1 ) Lib.sleep(3000) ;
-            }
-
-            if ( true ) {
-                Dataset dsStd = RDFDataMgr.loadDataset("D.ttl") ;
-                doOne("ARQ", dsStd, q) ;
-            }
-
+            Query query = modQuery.getQuery() ;
+            if ( super.isVerbose() )
+                System.out.println(query) ;
+            QueryExecution qExec = QueryExecutionFactory.create(query, ds) ;
+            QueryExecUtils.executeQuery(query, qExec);
         } catch (Exception ex ) {
             ex.printStackTrace(System.err) ;
             System.exit(0) ;
         }
-        System.out.println("DONE") ;
 //        while(true) {
 //            Lib.sleep (10000) ;
 //        }
-    }
-
-    private static void doOne(String label, Dataset ds, Query query) {
-        QueryExecution qExec = QueryExecutionFactory.create(query, ds) ;
-        log.info("---- {}", label) ;
-        QueryExecUtils.executeQuery(query, qExec);
-    }
-    
-    @Override
-    protected String getCommandName() {
-        return null ;
     }
 
 }
