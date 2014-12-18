@@ -62,9 +62,8 @@
     </dependency>
 
     <dependency>
-      <groupId>org.seaborne.lizard</groupId>
-      <artifactId>lizard-test</artifactId>
-      <version>${project.version}</version>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
 
