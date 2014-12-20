@@ -21,6 +21,8 @@ import java.util.Map.Entry ;
 
 import lizard.cluster.Platform ;
 import lizard.conf.Config ;
+import lizard.conf.ConfigLib ;
+import lizard.conf.DataServer ;
 import lizard.conf.LzBuild ;
 import lizard.node.ClusterNodeTable ;
 import lizard.node.DistributorNodesReplicate ;
@@ -159,45 +161,55 @@ public class ConfigNode {
         return svcs ; 
     }
 
-    // XXX See ConfigIndex.findIndexServer
     private Map<Resource, NodeServer> findNodeServers(Map<Resource, NodeService> nodeServiceDecl, Model m) {
-        String qsNodeServers= StrUtils.strjoinNL(prefixes,
-                                                   "SELECT * {",
-                                                    "  ?nServer a :NodeServer ;",
-                                                    "    OPTIONAL { ?nServer :name ?name }",
-                                                    // Unnecessary - in the deployment file.
-                                                    "    OPTIONAL { ?nServer :hostname ?hostname }",
-                                                    "    OPTIONAL { ?nServer :port ?port }",
-                                                    "    OPTIONAL { ?nServer :data ?data }",
-                                                    "}") ;
+        Map<Resource, DataServer> dataserver = ConfigLib.dataServers(m, ":NodeServer") ;
         Map<Resource, NodeServer> nodeServers = new LinkedHashMap<>() ;
-        for ( QuerySolution row : Q.queryToList(m, qsNodeServers) ) {
-            Resource nServer = row.getResource("nServer") ;
-            if ( nodeServers.containsKey(nServer) )
-                throw new LizardException("Malform declaration for: "+nServer) ;
-            String name = Q.getStringOrNull(row, "name") ;
-            if ( name == null)
-                throw new LizardException("No name for NodeServer: "+nServer) ;
-            String hostname = Q.getStringOrNull(row, "hostname") ;
-            if ( hostname == null)
-                throw new LizardException("No hostname for NodeServer: "+nServer) ;
-            Long port = Q.getIntegerOrNull(row, "port") ;
-            if ( port == null)
-                throw new LizardException("No port for NodeServer: "+nServer) ;
-            // Optional
-            String dataDir = Q.getStringOrNull(row, "data") ;
-            
-            NodeService nodeService = findNodeService(nodeServiceDecl, nServer) ;
-            if ( nodeService == null )
-                throw new LizardException("No NodeService for NodeServer: "+nServer) ;
-            
-            NodeServer nodeServer  = new NodeServer(nServer, name, nodeService, hostname, port.intValue(), dataDir) ;
-            FmtLog.debug(logConf, "Node server: %s", nodeServer) ;
-            nodeServers.put(nServer, nodeServer) ;
-        }
- 
-        return nodeServers ; 
+
+        dataserver.forEach((r,ds) -> {
+            NodeService ns = findNodeService(nodeServiceDecl, r) ; 
+            NodeServer nodeServer  = new NodeServer(r, ds.name, ns, ds.hostname, ds.port, ds.data) ;
+            nodeServers.put(r, nodeServer) ;
+        });
+        return nodeServers ;
     }
+    
+//    private Map<Resource, NodeServer> findNodeServers(Map<Resource, NodeService> nodeServiceDecl, Model m) {
+//        String qsNodeServers= StrUtils.strjoinNL(prefixes,
+//                                                   "SELECT * {",
+//                                                    "  ?nServer a :NodeServer ;",
+//                                                    "    OPTIONAL { ?nServer :name ?name }",
+//                                                    // Unnecessary - in the deployment file.
+//                                                    "    OPTIONAL { ?nServer :hostname ?hostname }",
+//                                                    "    OPTIONAL { ?nServer :port ?port }",
+//                                                    "    OPTIONAL { ?nServer :data ?data }",
+//                                                    "}") ;
+//        for ( QuerySolution row : Q.queryToList(m, qsNodeServers) ) {
+//            Resource nServer = row.getResource("nServer") ;
+//            if ( nodeServers.containsKey(nServer) )
+//                throw new LizardException("Malform declaration for: "+nServer) ;
+//            String name = Q.getStringOrNull(row, "name") ;
+//            if ( name == null)
+//                throw new LizardException("No name for NodeServer: "+nServer) ;
+//            String hostname = Q.getStringOrNull(row, "hostname") ;
+//            if ( hostname == null)
+//                throw new LizardException("No hostname for NodeServer: "+nServer) ;
+//            Long port = Q.getIntegerOrNull(row, "port") ;
+//            if ( port == null)
+//                throw new LizardException("No port for NodeServer: "+nServer) ;
+//            // Optional
+//            String dataDir = Q.getStringOrNull(row, "data") ;
+//            
+//            NodeService nodeService = findNodeService(nodeServiceDecl, nServer) ;
+//            if ( nodeService == null )
+//                throw new LizardException("No NodeService for NodeServer: "+nServer) ;
+//            
+//            NodeServer nodeServer  = new NodeServer(nServer, name, nodeService, hostname, port.intValue(), dataDir) ;
+//            FmtLog.debug(logConf, "Node server: %s", nodeServer) ;
+//            nodeServers.put(nServer, nodeServer) ;
+//        }
+// 
+//        return nodeServers ; 
+//    }
     
     private static NodeService findNodeService(Map<Resource, NodeService> nodeServiceDecl, Resource nodeServer) {
         return nodeServiceDecl.values().stream()

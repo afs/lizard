@@ -36,15 +36,15 @@ public class ConfigLib {
     public static Map<Resource, DataServer> dataServers(Model model, String resourceType) {
         String qs = StrUtils.strjoinNL(Config.prefixes,
                                        "SELECT * {",
-                                       " ?svr a "+resourceType ,
-                                       "    OPTIONAL { ?svr :name     ?name }",
-                                       "    OPTIONAL { ?svr :hostname ?host }",
-                                       "    OPTIONAL { ?svr :port     ?port }",
-                                       "    OPTIONAL { ?svr :data     ?data }",
+                                       " ?nServer a "+resourceType ,
+                                       "    OPTIONAL { ?nServer :name     ?name }",
+                                       "    OPTIONAL { ?nServer :hostname ?host }",
+                                       "    OPTIONAL { ?nServer :port     ?port }",
+                                       "    OPTIONAL { ?nServer :data     ?data }",
                                        "}") ;
         Map<Resource, DataServer> servers = new HashMap<>() ;
         for ( QuerySolution row : Q.queryToList(model, qs) ) {
-            Resource svr = row.getResource("svr") ;
+            Resource svr = row.getResource("nServer") ;
             String name = Q.getStringOrNull(row, "name") ;
             if ( name == null )
                 throw new LizardException("No name for "+svr) ;
