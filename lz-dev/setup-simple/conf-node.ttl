@@ -17,4 +17,5 @@
     :name       "ServerNode" ;
 	:hostname   "localhost" ;
 	:port       4011 ; 
+    :data       "--mem--" ;
     .
