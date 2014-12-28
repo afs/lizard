@@ -22,7 +22,7 @@ import lizard.system.LizardException ;
  * 
  * There is one cluster configuration reprenting the current cluster
  * and this class provides operations on the current cluster via a global
- * singleton {@linkplain Cluster}.
+ * singleton {@link Cluster}.
  * 
  * There may be other "cluster" as changes are prepared but only one
  * is active for query and update, as defined by this class.

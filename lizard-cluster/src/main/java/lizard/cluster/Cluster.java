@@ -61,7 +61,7 @@ public class Cluster {
         }
     }
 
-    /** Remove a member - pass in the string returned by {@linkplain #addMember} */
+    /** Remove a member - pass in the string returned by {@link #addMember} */
     public static void removeMember(String serviceName) {
         checkActive() ;
         synchronized(instance) {
@@ -71,7 +71,7 @@ public class Cluster {
 
     /** Return the current membership.
      * This contacts the zookeeper service.
-     * See {@linkplain ClusterMonitor} 
+     * See {@link ClusterMonitor} 
      */
     public static List<String> members() {
         checkActive() ;

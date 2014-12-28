@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory ;
 /** Utility to watch the cluster membership and log changes.
  * This class does <b>not</b> promise an up-to-date or consistent view of
  * the cluster.  A consistent snapshot can be obtained by
- * {@linkplain Cluster#members} which directly contacts the
+ * {@link Cluster#members} which directly contacts the
  * zookeeper service. 
  */ 
 public class ClusterMonitor {

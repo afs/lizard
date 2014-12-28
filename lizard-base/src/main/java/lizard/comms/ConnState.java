@@ -18,7 +18,7 @@ package lizard.comms;
 
 import lizard.system.Component ;
 
-/** The state of a connection - not to be confused with {@linkplain Component}.
+/** The state of a connection - not to be confused with {@link Component}.
  * A LifeCycle is for a component - you can have an {@code OK} component with a
  * {@code DEAD} connection because the {@code DEAD} connection may be actively
  * restarted or rebound by the component. 

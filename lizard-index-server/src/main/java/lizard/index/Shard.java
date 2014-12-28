@@ -31,7 +31,7 @@ public class Shard {
     public static final long NO_SHARD = -1 ;  
 
     /** Calculate the chard for this tuple or tuple pattern.
-     * Return {@linkplain #NO_SHARD} for "any"
+     * Return {@link #NO_SHARD} for "any"
      * @param tuple
      * @return int
      */

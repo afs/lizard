@@ -33,7 +33,7 @@ import com.hp.hpl.jena.tdb.store.tupletable.TupleIndex ;
 import com.hp.hpl.jena.tdb.store.tupletable.TupleIndexBase ;
 
 /**
- * A {@linkplain TupleIndex} that deals with the cluster
+ * A {@link TupleIndex} that deals with the cluster
  * e.g. going to multiple places to perform a <tt>find</tt>,
  * coping with link failure, and storing in multiple locations.    
  */
