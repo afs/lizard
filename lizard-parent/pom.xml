@@ -40,7 +40,7 @@
     <this.root>${project.artifactId}-${project.version}</this.root>
     <ver.jena>2.12.2-SNAPSHOT</ver.jena>
     <ver.tdb>1.1.2-SNAPSHOT</ver.tdb>
-    <ver.fuseki>2.0.0-beta-1-SNAPSHOT</ver.fuseki>
+    <ver.fuseki>2.0.0-SNAPSHOT</ver.fuseki>
 
     <ver.junit>4.12-beta-2</ver.junit>
     <ver.slf4j>1.7.7</ver.slf4j>
@@ -82,16 +82,8 @@
       <!-- Fuseki: causes Eclipse to link to the project if present -->
       <dependency>
 	<groupId>org.apache.jena</groupId>
-	<artifactId>jena-fuseki</artifactId>
+	<artifactId>jena-fuseki-server</artifactId>
 	<version>${ver.fuseki}</version>
-      </dependency>
-
-      <!-- Fuseki, prebuilt -->
-      <dependency>
-	<groupId>org.apache.jena</groupId>
-	<artifactId>jena-fuseki</artifactId>
-	<version>${ver.fuseki}</version>
-	<classifier>server</classifier>
       </dependency>
 
        <dependency>

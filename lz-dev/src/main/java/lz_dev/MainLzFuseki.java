@@ -17,7 +17,7 @@
 package lz_dev;
 
 import org.apache.jena.atlas.logging.LogCtl ;
-import org.apache.jena.fuseki.FusekiCmd ;
+import org.apache.jena.fuseki.cmd.FusekiCmd ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
