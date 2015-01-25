@@ -14,7 +14,9 @@ generate malicious information.  No [Byzantine fault tolerance]
 
 ## License
 
-[Apache License](http://www.apache.org/licenses/LICENSE-2.0)
+License: Apache Software License 
+
+See [LICENSE](LICENSE) and [NOTICE](NOTICE) for details.
 
 ## Status
 
@@ -41,7 +43,7 @@ Lizard requires Java 8.
 To build Lizard:
 
 1. Get the source: `git clone https://github.com/afs/lizard/`.
-1. Build and install the related "[quack](https://github.com/afs/quack)" query library.
+1. Build and install the related "[Mantis](https://github.com/afs/mantis)" library.
   1. Get the source.
   1. `mvn clean install`
 1. Build and install Lizard locally: `mvn clean install`
