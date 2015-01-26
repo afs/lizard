@@ -22,7 +22,7 @@ import java.util.Iterator ;
 import java.util.List ;
 
 import org.apache.jena.atlas.lib.Tuple ;
-import org.apache.jena.engine.access.AccessorBase ;
+import org.seaborne.jena.engine.access.AccessorBase ;
 
 import com.hp.hpl.jena.tdb.store.NodeId ;
 

@@ -20,14 +20,14 @@ package lizard.query;
 import java.util.Iterator ;
 
 import org.apache.jena.atlas.lib.Tuple ;
-import org.apache.jena.engine.PredicateObjectList ;
-import org.apache.jena.engine.Row ;
-import org.apache.jena.engine.Slot ;
-import org.apache.jena.engine.access.Accessor ;
-import org.apache.jena.engine.access.AccessorBase ;
-import org.apache.jena.engine.tdb.AccessorTDB ;
-import org.apache.jena.engine.tdb.AccessorTDBDebug ;
-import org.apache.jena.engine.tdb.StorageTDB ;
+import org.seaborne.jena.engine.PredicateObjectList ;
+import org.seaborne.jena.engine.Row ;
+import org.seaborne.jena.engine.Slot ;
+import org.seaborne.jena.engine.access.Accessor ;
+import org.seaborne.jena.engine.access.AccessorBase ;
+import org.seaborne.jena.engine.tdb.AccessorTDB ;
+import org.seaborne.jena.engine.tdb.AccessorTDBDebug ;
+import org.seaborne.jena.engine.tdb.StorageTDB ;
 
 import com.hp.hpl.jena.tdb.store.NodeId ;
 

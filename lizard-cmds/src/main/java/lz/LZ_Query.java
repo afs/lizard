@@ -31,7 +31,7 @@ import lizard.query.LzDataset ;
 import lizard.system.LizardException ;
 import lizard.system.LzLib ;
 import org.apache.jena.atlas.logging.LogCtl ;
-import org.apache.jena.engine.explain.ExplainCategory ;
+import org.seaborne.jena.engine.explain.ExplainCategory ;
 import org.apache.jena.riot.Lang ;
 import org.apache.jena.riot.RDFDataMgr ;
 import arq.cmd.CmdException ;

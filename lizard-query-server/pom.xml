@@ -55,8 +55,8 @@
     </dependency>
 
     <dependency>
-      <groupId>org.seaborne.quack</groupId>
-      <artifactId>quack</artifactId>
+      <groupId>org.seaborne.mantis</groupId>
+      <artifactId>dboe-quack</artifactId>
     </dependency>
 
   </dependencies>

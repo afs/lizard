@@ -17,8 +17,7 @@
 
 package lizard.query;
 
-
-import org.apache.jena.engine.Quack2 ;
+import org.seaborne.jena.engine.Quack2 ;
 
 public class LizardQuery {
     
