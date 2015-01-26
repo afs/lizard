@@ -17,10 +17,10 @@
 
 package lizard.query;
 
-import org.seaborne.jena.engine.Quack ;
-import org.seaborne.jena.engine.explain.Explain2 ;
-import org.seaborne.jena.engine.tdb.* ;
-import org.seaborne.jena.engine.tdb.OpExecutorQuackTDB.OpExecSetup ;
+import org.seaborne.dboe.engine.Quack ;
+import org.seaborne.dboe.engine.explain.Explain2 ;
+import org.seaborne.dboe.engine.tdb.* ;
+import org.seaborne.dboe.engine.tdb.OpExecutorQuackTDB.OpExecSetup ;
 
 import com.hp.hpl.jena.sparql.engine.ExecutionContext ;
 import com.hp.hpl.jena.sparql.engine.main.OpExecutor ;

@@ -20,7 +20,7 @@ package lizard.index;
 import java.util.Iterator ;
 
 import org.apache.jena.atlas.lib.Tuple ;
-import org.seaborne.jena.engine.access.AccessData ;
+import org.seaborne.dboe.engine.access.AccessData ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
