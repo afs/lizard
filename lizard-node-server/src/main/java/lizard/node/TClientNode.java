@@ -17,11 +17,14 @@
 
 package lizard.node;
 
+import java.util.concurrent.atomic.AtomicLong ;
+
 import lizard.api.TLZ.* ;
 import lizard.comms.ConnState ;
 import lizard.comms.Connection ;
 import lizard.comms.thrift.ThriftClient ;
 import lizard.system.ComponentBase ;
+import lizard.system.LizardException ;
 import lizard.system.Pingable ;
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.riot.out.NodeFmtLib ;
@@ -61,70 +64,59 @@ public class TClientNode extends ComponentBase implements Connection, Pingable
         connState = ConnState.OK ;
     }
     
-    // Parallel?
-    private final TLZ_NodeRequest request = new TLZ_NodeRequest() ;
-    private final TLZ_NodeReply reply = new TLZ_NodeReply() ;
-    private static int counter = 0;
+    private static AtomicLong counter = new AtomicLong(0) ;
     
     public NodeId getAllocateNodeId(Node node) {
+        TLZ_NodeRequest request = new TLZ_NodeRequest() ;
+        TLZ_NodeReply reply = new TLZ_NodeReply() ;
         String x =  NodeFmtLib.str(node) ;
         TLZ_Node lzn = new TLZ_Node().setNodeStr(x) ; 
         request.setAllocNodeId(lzn) ;
-        
-        try {
-            sendReceive() ;
-        } catch (TException ex) {
-            FmtLog.error(log, ex, "getAllocateNodeId") ;
-        }
-        
+        sendReceive("getAllocateNodeId", request, reply) ;
         TLZ_NodeId tlzNodeId = reply.getAllocId() ;
         
         long idval = reply.getAllocId().getNodeId() ;
         NodeId nid = NodeId.create(idval) ;
-        request.clear() ;
-        reply.clear() ;
         return nid ; 
     }
 
     public NodeId getNodeIdForNode(Node node) {
+        TLZ_NodeRequest request = new TLZ_NodeRequest() ;
+        TLZ_NodeReply reply = new TLZ_NodeReply() ;
         String x =  NodeFmtLib.str(node) ;
         TLZ_Node lzn = new TLZ_Node().setNodeStr(x) ; 
         request.setFindByNode(lzn) ;
-        try {
-            sendReceive() ;
-        } catch (TException ex) {
-            FmtLog.error(log, ex, "getNodeIdForNode") ;
-        }
-        
+        sendReceive("getNodeIdForNode", request, reply) ;
         long idval = reply.getAllocId().getNodeId() ;
         NodeId nid = NodeId.create(idval) ;
-        request.clear() ;
-        reply.clear() ;
         return nid ; 
     }
     
     public Node getNodeForNodeId(NodeId id) {
+        TLZ_NodeRequest request = new TLZ_NodeRequest() ;
+        TLZ_NodeReply reply = new TLZ_NodeReply() ;
         TLZ_NodeId lznid = new TLZ_NodeId().setNodeId(id.getId()) ; 
         request.setFindByNodeId(lznid) ;
-        try {
-            sendReceive() ;
-        } catch (TException ex) {
-            FmtLog.error(log, ex, "getNodeForNodeId") ;
-        }
+        sendReceive("getNodeForNodeId", request, reply) ;
         String x = reply.getFoundNode().getNodeStr() ;
         Node n = SSE.parseNode(x) ;
-        request.clear() ;
-        reply.clear() ;
         return n ; 
     }
     
-    private void sendReceive() throws TException {
-        request.setRequestId(++counter) ;
-        request.write(client.protocol()) ;
-        client.protocol().getTransport().flush() ;
-        reply.read(client.protocol()) ;
+    private void sendReceive(String caller, TLZ_NodeRequest request, TLZ_NodeReply reply) {
+        try { 
+            request.setRequestId(counter.incrementAndGet()) ;
+            //request.setGeneration(0) ;
+            request.write(client.protocol()) ;
+            client.protocol().getTransport().flush() ;
+            reply.read(client.protocol()) ;
+        }
+        catch (TException ex) {
+            FmtLog.error(log, ex, caller) ;
+            throw new LizardException(ex) ;
+        }
     }
-
+    
     @Override
     public ConnState getConnectionStatus() {
         return connState ;
@@ -143,7 +135,7 @@ public class TClientNode extends ComponentBase implements Connection, Pingable
     public void ping() {
         TLZ_NodeRequest request = new TLZ_NodeRequest() ;
         TLZ_NodeReply reply = new TLZ_NodeReply() ;
-        long requestId = ++counter ;
+        long requestId = counter.incrementAndGet() ;
         request.setRequestId(requestId) ;
         request.setPing(tlzPing) ;
         try {

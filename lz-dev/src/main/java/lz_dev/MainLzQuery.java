@@ -24,7 +24,7 @@ import org.apache.jena.atlas.logging.LogCtl ;
 
 import com.hp.hpl.jena.rdf.model.Model ;
 
-/** Run a query agains a deployed set of servers */
+/** Run a query against a deployed set of servers */
 public class MainLzQuery {
     static { LogCtl.setLog4j(); }
     

@@ -14,6 +14,24 @@ struct TLZ_Ping {
 1: required i64 marker ;
 }
 
+// ---- Transaction
+
+struct TLZ_TxnBegin {
+1: required i64              generation ;
+}
+
+struct TLZ_TxnPrepare {
+1: required i64              generation ;
+}
+
+struct TLZ_TxnCommit {
+1: required i64              generation ;
+}
+
+struct TLZ_TxnEnd {
+1: required i64              generation ;
+}
+
 // ---- Index
 // -- Index Request
 
@@ -34,12 +52,13 @@ struct TLZ_SubjectPredicateList {
 
 struct TLZ_IdxRequest {
 1: required i64              requestId ;
-2: required TLZ_ShardIndex   index ;
-3: optional TLZ_TupleNodeId  pattern ;
-4: optional TLZ_SubjectPredicateList subPreds ;
-5: optional TLZ_TupleNodeId  addTuple ;
-6: optional TLZ_TupleNodeId  deleteTuple ;
-7: optional TLZ_Ping         ping ;
+2: required i64              generation ;
+3: required TLZ_ShardIndex   index ;
+4: optional TLZ_TupleNodeId  pattern ;
+5: optional TLZ_SubjectPredicateList subPreds ;
+6: optional TLZ_TupleNodeId  addTuple ;
+7: optional TLZ_TupleNodeId  deleteTuple ;
+8: optional TLZ_Ping         ping ;
 }
 
 // -- IndexReply
@@ -70,6 +89,7 @@ struct TLZ_NodeId {
 
 struct TLZ_NodeRequest {
 1:  required i64            requestId ;
+2:  required i64            generation ;
 3:  optional TLZ_Node       findByNode ;
 4:  optional TLZ_Node       allocNodeId ;
 5:  optional TLZ_NodeId     findByNodeId ;
@@ -77,9 +97,9 @@ struct TLZ_NodeRequest {
 }
 
 struct TLZ_NodeReply {
-1: required i64 requestId ;
-2: optional TLZ_NodeId allocId ;
-3: optional TLZ_Node   foundNode ;
+1: required i64             requestId ;
+2: optional TLZ_NodeId      allocId ;
+3: optional TLZ_Node        foundNode ;
 }
 
 // Local Variables:

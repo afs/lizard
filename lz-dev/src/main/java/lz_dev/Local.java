@@ -39,7 +39,7 @@ public class Local {
         if ( false )
             RDFDataMgr.write(System.out, model, Lang.TTL);
         
-        Resource lzType = model.createResource("http://jena.apache.org/ns/lizard#Dataset") ;
+        Resource lzType = model.createResource("urn:lizard:ns#Dataset") ;
         Resource root = null ;
         try {
             root = GraphUtils.findRootByType(model, lzType) ;
@@ -52,7 +52,7 @@ public class Local {
         lzDSG.start() ;
         return lzDSG ;
     }
-    /** Duild (and start) a dataset */
+    /** Build (and start) a dataset */
     public static LzDataset buildDataset(String... confDataset) {
         Model m = Q.readAll(confDataset) ;
         ConfigLizardDataset config = new ConfigLizardDataset(m) ;

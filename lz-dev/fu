@@ -1,13 +1,14 @@
 #!/bin/bash
+# Run Fuseki 
 
 LIZARD_HOME="${LIZARD_HOME:-$HOME/Lizard}"
 LZ_CMDS="$LIZARD_HOME/lizard-cmds"
 source "$LZ_CMDS/bin/init"
 
 CP="$CP:$HOME/Projects/quack/target/classes"
-VER_FU=2.0.0-beta-1-SNAPSHOT
+VER_FU=2.0.0-SNAPSHOT
 
-CP="$CP:${M2_REPO}/org/apache/jena/jena-fuseki/${VER_FU}/jena-fuseki-${VER_FU}-server.jar"
+CP="$CP:${M2_REPO}/org/apache/jena/jena-fuseki-server/${VER_FU}/jena-fuseki-server-${VER_FU}.jar"
 # Remove slf4j (inside fuseki server)
 CP="$(echo $CP | perl -p -e 's!:[^:]*/org/slf4j/[^:]*!:!g')"
 

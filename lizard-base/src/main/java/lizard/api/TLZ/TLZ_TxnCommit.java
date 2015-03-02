@@ -33,22 +33,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("all")
-public class TLZ_Ping implements org.apache.thrift.TBase<TLZ_Ping, TLZ_Ping._Fields>, java.io.Serializable, Cloneable, Comparable<TLZ_Ping> {
-  private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("TLZ_Ping");
+public class TLZ_TxnCommit implements org.apache.thrift.TBase<TLZ_TxnCommit, TLZ_TxnCommit._Fields>, java.io.Serializable, Cloneable, Comparable<TLZ_TxnCommit> {
+  private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("TLZ_TxnCommit");
 
-  private static final org.apache.thrift.protocol.TField MARKER_FIELD_DESC = new org.apache.thrift.protocol.TField("marker", org.apache.thrift.protocol.TType.I64, (short)1);
+  private static final org.apache.thrift.protocol.TField GENERATION_FIELD_DESC = new org.apache.thrift.protocol.TField("generation", org.apache.thrift.protocol.TType.I64, (short)1);
 
   private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
   static {
-    schemes.put(StandardScheme.class, new TLZ_PingStandardSchemeFactory());
-    schemes.put(TupleScheme.class, new TLZ_PingTupleSchemeFactory());
+    schemes.put(StandardScheme.class, new TLZ_TxnCommitStandardSchemeFactory());
+    schemes.put(TupleScheme.class, new TLZ_TxnCommitTupleSchemeFactory());
   }
 
-  public long marker; // required
+  public long generation; // required
 
   /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
   public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-    MARKER((short)1, "marker");
+    GENERATION((short)1, "generation");
 
     private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -63,8 +63,8 @@ public class TLZ_Ping implements org.apache.thrift.TBase<TLZ_Ping, TLZ_Ping._Fie
      */
     public static _Fields findByThriftId(int fieldId) {
       switch(fieldId) {
-        case 1: // MARKER
-          return MARKER;
+        case 1: // GENERATION
+          return GENERATION;
         default:
           return null;
       }
@@ -105,76 +105,76 @@ public class TLZ_Ping implements org.apache.thrift.TBase<TLZ_Ping, TLZ_Ping._Fie
   }
 
   // isset id assignments
-  private static final int __MARKER_ISSET_ID = 0;
+  private static final int __GENERATION_ISSET_ID = 0;
   private byte __isset_bitfield = 0;
   public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
   static {
     Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-    tmpMap.put(_Fields.MARKER, new org.apache.thrift.meta_data.FieldMetaData("marker", org.apache.thrift.TFieldRequirementType.REQUIRED, 
+    tmpMap.put(_Fields.GENERATION, new org.apache.thrift.meta_data.FieldMetaData("generation", org.apache.thrift.TFieldRequirementType.REQUIRED, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
     metaDataMap = Collections.unmodifiableMap(tmpMap);
-    org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(TLZ_Ping.class, metaDataMap);
+    org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(TLZ_TxnCommit.class, metaDataMap);
   }
 
-  public TLZ_Ping() {
+  public TLZ_TxnCommit() {
   }
 
-  public TLZ_Ping(
-    long marker)
+  public TLZ_TxnCommit(
+    long generation)
   {
     this();
-    this.marker = marker;
-    setMarkerIsSet(true);
+    this.generation = generation;
+    setGenerationIsSet(true);
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public TLZ_Ping(TLZ_Ping other) {
+  public TLZ_TxnCommit(TLZ_TxnCommit other) {
     __isset_bitfield = other.__isset_bitfield;
-    this.marker = other.marker;
+    this.generation = other.generation;
   }
 
-  public TLZ_Ping deepCopy() {
-    return new TLZ_Ping(this);
+  public TLZ_TxnCommit deepCopy() {
+    return new TLZ_TxnCommit(this);
   }
 
   @Override
   public void clear() {
-    setMarkerIsSet(false);
-    this.marker = 0;
+    setGenerationIsSet(false);
+    this.generation = 0;
   }
 
-  public long getMarker() {
-    return this.marker;
+  public long getGeneration() {
+    return this.generation;
   }
 
-  public TLZ_Ping setMarker(long marker) {
-    this.marker = marker;
-    setMarkerIsSet(true);
+  public TLZ_TxnCommit setGeneration(long generation) {
+    this.generation = generation;
+    setGenerationIsSet(true);
     return this;
   }
 
-  public void unsetMarker() {
-    __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __MARKER_ISSET_ID);
+  public void unsetGeneration() {
+    __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __GENERATION_ISSET_ID);
   }
 
-  /** Returns true if field marker is set (has been assigned a value) and false otherwise */
-  public boolean isSetMarker() {
-    return EncodingUtils.testBit(__isset_bitfield, __MARKER_ISSET_ID);
+  /** Returns true if field generation is set (has been assigned a value) and false otherwise */
+  public boolean isSetGeneration() {
+    return EncodingUtils.testBit(__isset_bitfield, __GENERATION_ISSET_ID);
   }
 
-  public void setMarkerIsSet(boolean value) {
-    __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __MARKER_ISSET_ID, value);
+  public void setGenerationIsSet(boolean value) {
+    __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __GENERATION_ISSET_ID, value);
   }
 
   public void setFieldValue(_Fields field, Object value) {
     switch (field) {
-    case MARKER:
+    case GENERATION:
       if (value == null) {
-        unsetMarker();
+        unsetGeneration();
       } else {
-        setMarker((Long)value);
+        setGeneration((Long)value);
       }
       break;
 
@@ -183,8 +183,8 @@ public class TLZ_Ping implements org.apache.thrift.TBase<TLZ_Ping, TLZ_Ping._Fie
 
   public Object getFieldValue(_Fields field) {
     switch (field) {
-    case MARKER:
-      return Long.valueOf(getMarker());
+    case GENERATION:
+      return Long.valueOf(getGeneration());
 
     }
     throw new IllegalStateException();
@@ -197,8 +197,8 @@ public class TLZ_Ping implements org.apache.thrift.TBase<TLZ_Ping, TLZ_Ping._Fie
     }
 
     switch (field) {
-    case MARKER:
-      return isSetMarker();
+    case GENERATION:
+      return isSetGeneration();
     }
     throw new IllegalStateException();
   }
@@ -207,21 +207,21 @@ public class TLZ_Ping implements org.apache.thrift.TBase<TLZ_Ping, TLZ_Ping._Fie
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof TLZ_Ping)
-      return this.equals((TLZ_Ping)that);
+    if (that instanceof TLZ_TxnCommit)
+      return this.equals((TLZ_TxnCommit)that);
     return false;
   }
 
-  public boolean equals(TLZ_Ping that) {
+  public boolean equals(TLZ_TxnCommit that) {
     if (that == null)
       return false;
 
-    boolean this_present_marker = true;
-    boolean that_present_marker = true;
-    if (this_present_marker || that_present_marker) {
-      if (!(this_present_marker && that_present_marker))
+    boolean this_present_generation = true;
+    boolean that_present_generation = true;
+    if (this_present_generation || that_present_generation) {
+      if (!(this_present_generation && that_present_generation))
         return false;
-      if (this.marker != that.marker)
+      if (this.generation != that.generation)
         return false;
     }
 
@@ -234,19 +234,19 @@ public class TLZ_Ping implements org.apache.thrift.TBase<TLZ_Ping, TLZ_Ping._Fie
   }
 
   @Override
-  public int compareTo(TLZ_Ping other) {
+  public int compareTo(TLZ_TxnCommit other) {
     if (!getClass().equals(other.getClass())) {
       return getClass().getName().compareTo(other.getClass().getName());
     }
 
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetMarker()).compareTo(other.isSetMarker());
+    lastComparison = Boolean.valueOf(isSetGeneration()).compareTo(other.isSetGeneration());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    if (isSetMarker()) {
-      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.marker, other.marker);
+    if (isSetGeneration()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.generation, other.generation);
       if (lastComparison != 0) {
         return lastComparison;
       }
@@ -268,11 +268,11 @@ public class TLZ_Ping implements org.apache.thrift.TBase<TLZ_Ping, TLZ_Ping._Fie
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder("TLZ_Ping(");
+    StringBuilder sb = new StringBuilder("TLZ_TxnCommit(");
     boolean first = true;
 
-    sb.append("marker:");
-    sb.append(this.marker);
+    sb.append("generation:");
+    sb.append(this.generation);
     first = false;
     sb.append(")");
     return sb.toString();
@@ -280,7 +280,7 @@ public class TLZ_Ping implements org.apache.thrift.TBase<TLZ_Ping, TLZ_Ping._Fie
 
   public void validate() throws org.apache.thrift.TException {
     // check for required fields
-    // alas, we cannot check 'marker' because it's a primitive and you chose the non-beans generator.
+    // alas, we cannot check 'generation' because it's a primitive and you chose the non-beans generator.
     // check for sub-struct validity
   }
 
@@ -302,15 +302,15 @@ public class TLZ_Ping implements org.apache.thrift.TBase<TLZ_Ping, TLZ_Ping._Fie
     }
   }
 
-  private static class TLZ_PingStandardSchemeFactory implements SchemeFactory {
-    public TLZ_PingStandardScheme getScheme() {
-      return new TLZ_PingStandardScheme();
+  private static class TLZ_TxnCommitStandardSchemeFactory implements SchemeFactory {
+    public TLZ_TxnCommitStandardScheme getScheme() {
+      return new TLZ_TxnCommitStandardScheme();
     }
   }
 
-  private static class TLZ_PingStandardScheme extends StandardScheme<TLZ_Ping> {
+  private static class TLZ_TxnCommitStandardScheme extends StandardScheme<TLZ_TxnCommit> {
 
-    public void read(org.apache.thrift.protocol.TProtocol iprot, TLZ_Ping struct) throws org.apache.thrift.TException {
+    public void read(org.apache.thrift.protocol.TProtocol iprot, TLZ_TxnCommit struct) throws org.apache.thrift.TException {
       org.apache.thrift.protocol.TField schemeField;
       iprot.readStructBegin();
       while (true)
@@ -320,10 +320,10 @@ public class TLZ_Ping implements org.apache.thrift.TBase<TLZ_Ping, TLZ_Ping._Fie
           break;
         }
         switch (schemeField.id) {
-          case 1: // MARKER
+          case 1: // GENERATION
             if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
-              struct.marker = iprot.readI64();
-              struct.setMarkerIsSet(true);
+              struct.generation = iprot.readI64();
+              struct.setGenerationIsSet(true);
             } else { 
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
@@ -336,18 +336,18 @@ public class TLZ_Ping implements org.apache.thrift.TBase<TLZ_Ping, TLZ_Ping._Fie
       iprot.readStructEnd();
 
       // check for required fields of primitive type, which can't be checked in the validate method
-      if (!struct.isSetMarker()) {
-        throw new org.apache.thrift.protocol.TProtocolException("Required field 'marker' was not found in serialized data! Struct: " + toString());
+      if (!struct.isSetGeneration()) {
+        throw new org.apache.thrift.protocol.TProtocolException("Required field 'generation' was not found in serialized data! Struct: " + toString());
       }
       struct.validate();
     }
 
-    public void write(org.apache.thrift.protocol.TProtocol oprot, TLZ_Ping struct) throws org.apache.thrift.TException {
+    public void write(org.apache.thrift.protocol.TProtocol oprot, TLZ_TxnCommit struct) throws org.apache.thrift.TException {
       struct.validate();
 
       oprot.writeStructBegin(STRUCT_DESC);
-      oprot.writeFieldBegin(MARKER_FIELD_DESC);
-      oprot.writeI64(struct.marker);
+      oprot.writeFieldBegin(GENERATION_FIELD_DESC);
+      oprot.writeI64(struct.generation);
       oprot.writeFieldEnd();
       oprot.writeFieldStop();
       oprot.writeStructEnd();
@@ -355,25 +355,25 @@ public class TLZ_Ping implements org.apache.thrift.TBase<TLZ_Ping, TLZ_Ping._Fie
 
   }
 
-  private static class TLZ_PingTupleSchemeFactory implements SchemeFactory {
-    public TLZ_PingTupleScheme getScheme() {
-      return new TLZ_PingTupleScheme();
+  private static class TLZ_TxnCommitTupleSchemeFactory implements SchemeFactory {
+    public TLZ_TxnCommitTupleScheme getScheme() {
+      return new TLZ_TxnCommitTupleScheme();
     }
   }
 
-  private static class TLZ_PingTupleScheme extends TupleScheme<TLZ_Ping> {
+  private static class TLZ_TxnCommitTupleScheme extends TupleScheme<TLZ_TxnCommit> {
 
     @Override
-    public void write(org.apache.thrift.protocol.TProtocol prot, TLZ_Ping struct) throws org.apache.thrift.TException {
+    public void write(org.apache.thrift.protocol.TProtocol prot, TLZ_TxnCommit struct) throws org.apache.thrift.TException {
       TTupleProtocol oprot = (TTupleProtocol) prot;
-      oprot.writeI64(struct.marker);
+      oprot.writeI64(struct.generation);
     }
 
     @Override
-    public void read(org.apache.thrift.protocol.TProtocol prot, TLZ_Ping struct) throws org.apache.thrift.TException {
+    public void read(org.apache.thrift.protocol.TProtocol prot, TLZ_TxnCommit struct) throws org.apache.thrift.TException {
       TTupleProtocol iprot = (TTupleProtocol) prot;
-      struct.marker = iprot.readI64();
-      struct.setMarkerIsSet(true);
+      struct.generation = iprot.readI64();
+      struct.setGenerationIsSet(true);
     }
   }
 

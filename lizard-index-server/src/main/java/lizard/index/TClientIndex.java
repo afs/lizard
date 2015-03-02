@@ -19,6 +19,7 @@ package lizard.index;
 
 import java.util.Iterator ;
 import java.util.List ;
+import java.util.concurrent.atomic.AtomicLong ;
 import java.util.stream.Collectors ;
 
 import lizard.api.TLZlib ;
@@ -78,58 +79,39 @@ class TClientIndex extends ComponentBase implements Connection, Pingable
         super.stop() ;
     }
     
-    private final TLZ_IdxRequest request = new TLZ_IdxRequest() ;
-    private final TLZ_IdxReply reply = new TLZ_IdxReply() ;
-    private static int counter = 0;
+    private static AtomicLong counter = new AtomicLong(0) ;
     
     /** Insert a tuple - return true if it was really added, false if it was a duplicate */
     public boolean add(Tuple<NodeId> tuple) {
+        TLZ_IdxRequest request = new TLZ_IdxRequest() ;
+        TLZ_IdxReply reply = new TLZ_IdxReply() ;
         TLZ_TupleNodeId x = TLZlib.build(tuple) ;
         request.setAddTuple(x) ;
-        try {
-            sendReceive() ;
-        } catch (TException ex) {
-            FmtLog.error(log, ex, "add(Tuple)") ;
-        }
-        boolean b = reply.isYesOrNo() ;
-        request.clear() ;
-        reply.clear() ;
-        return b ;
+        sendReceive("add(Tuple)", request, reply) ;
+        return reply.isYesOrNo() ;
     }
 
     /** Delete a tuple - return true if it was deleted, false if it didn't exist */
     public boolean delete(Tuple<NodeId> tuple)  { 
+        TLZ_IdxRequest request = new TLZ_IdxRequest() ;
+        TLZ_IdxReply reply = new TLZ_IdxReply() ;
         TLZ_TupleNodeId x = TLZlib.build(tuple) ;
         request.setDeleteTuple(x) ;
-        try {
-            sendReceive() ;
-        } catch (TException ex) {
-            FmtLog.error(log, ex, "add(Tuple)") ;
-        }
-        boolean b = reply.isYesOrNo() ;
-        request.clear() ;
-        reply.clear() ;
-        return b ;
+        sendReceive("delete(Tuple)", request, reply) ;
+        return reply.isYesOrNo() ;
     }
     
     public Iterator<Tuple<NodeId>> find(Tuple<NodeId> pattern) { 
+        TLZ_IdxRequest request = new TLZ_IdxRequest() ;
+        TLZ_IdxReply reply = new TLZ_IdxReply() ;
         TLZ_TupleNodeId x = TLZlib.build(pattern) ;
         request.setPattern(x) ;
-        try {
-            sendReceive() ;
-        } catch (TException ex) {
-            FmtLog.error(log, ex, "add(Tuple)") ;
-        }
-        
-        if ( reply.getTuples() == null ) {
-            request.clear() ;
-            reply.clear() ;
+        sendReceive("find(Tuple)", request, reply) ;
+
+        if ( reply.getTuples() == null )
             return Iter.nullIterator() ;
-        }
         
         List<Tuple<NodeId>> rows = reply.getTuples().stream().map(z -> TLZlib.build(z)).collect(Collectors.toList()) ;
-        request.clear() ;
-        reply.clear() ;
         return rows.iterator() ;
     }
         
@@ -139,12 +121,17 @@ class TClientIndex extends ComponentBase implements Connection, Pingable
     /** return an iterator of everything */
     public Iterator<Tuple<NodeId>> all()                        { return find(tupleAny3) ; }  
     
-    private void sendReceive() throws TException {
-        request.setRequestId(++counter) ;
+    private void sendReceive(String caller, TLZ_IdxRequest request, TLZ_IdxReply reply ) {
+        try {
+        request.setRequestId(counter.incrementAndGet()) ;
+        request.setGeneration(9) ;
         request.setIndex(shard) ;
         request.write(client.protocol()) ;
         client.protocol().getTransport().flush() ;
         reply.read(client.protocol()) ;
+        } catch (TException ex) {
+            FmtLog.error(log, ex, caller);
+        }
     }
 
     @Override
@@ -163,7 +150,7 @@ class TClientIndex extends ComponentBase implements Connection, Pingable
     public void ping() {
         TLZ_IdxRequest request = new TLZ_IdxRequest() ;
         TLZ_IdxReply reply = new TLZ_IdxReply() ;
-        long requestId = ++counter ;
+        long requestId = counter.incrementAndGet() ;
         request.setRequestId(requestId) ;
         request.setIndex(shard) ;
         request.setPing(tlzPing) ;
