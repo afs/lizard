@@ -106,7 +106,8 @@ public class TClientNode extends ComponentBase implements Connection, Pingable
     private void sendReceive(String caller, TLZ_NodeRequest request, TLZ_NodeReply reply) {
         try { 
             request.setRequestId(counter.incrementAndGet()) ;
-            //request.setGeneration(0) ;
+            if ( ! request.isSetGeneration() ) 
+                request.setGeneration(0) ;
             request.write(client.protocol()) ;
             client.protocol().getTransport().flush() ;
             reply.read(client.protocol()) ;
@@ -135,20 +136,14 @@ public class TClientNode extends ComponentBase implements Connection, Pingable
     public void ping() {
         TLZ_NodeRequest request = new TLZ_NodeRequest() ;
         TLZ_NodeReply reply = new TLZ_NodeReply() ;
-        long requestId = counter.incrementAndGet() ;
-        request.setRequestId(requestId) ;
         request.setPing(tlzPing) ;
-        try {
-            request.write(client.protocol()) ;
-            client.protocol().getTransport().flush() ;
-            reply.read(client.protocol()) ;
-            if ( ! reply.isSetRequestId() )
-                FmtLog.error(log, "ping: requestId not set in reply") ;
-            else if ( reply.getRequestId() != requestId )
-                FmtLog.error(log, "ping: requestId does not match that sent (%d,%d)", reply.getRequestId(), requestId) ;
-        } catch (TException ex) {
-            FmtLog.error(log, ex, "ping") ;
-        }
+        request.setGeneration(-1) ;
+        sendReceive("ping", request, reply);
+        long requestId = request.getRequestId() ;
+        if ( ! reply.isSetRequestId() )
+            FmtLog.error(log, "ping: requestId not set in reply") ;
+        else if ( reply.getRequestId() != requestId )
+            FmtLog.error(log, "ping: requestId does not match that sent (%d,%d)", reply.getRequestId(), requestId) ;
     }
 
     @Override

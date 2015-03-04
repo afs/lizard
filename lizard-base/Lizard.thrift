@@ -28,6 +28,10 @@ struct TLZ_TxnCommit {
 1: required i64              generation ;
 }
 
+struct TLZ_TxnAbort {
+1: required i64              generation ;
+}
+
 struct TLZ_TxnEnd {
 1: required i64              generation ;
 }

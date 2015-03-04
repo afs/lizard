@@ -132,17 +132,18 @@ public class TServerIndex extends ComponentBase
             }
             
             if ( request.isSetSubPreds() ) {
-                
                 return ;
             }
-            
+
             if ( request.isSetAddTuple() ) {
+                // Replace
                 Tuple<NodeId> tuple = TLZlib.build(request.getAddTuple()) ;
                 boolean b = index.add(tuple) ;
                 reply.setYesOrNo(b) ;
                 return ;
             }
             if ( request.isSetDeleteTuple() ) {
+                // Replace
                 Tuple<NodeId> tuple = TLZlib.build(request.getAddTuple()) ;
                 boolean b = index.delete(tuple) ;
                 reply.setYesOrNo(b) ;
@@ -153,6 +154,7 @@ public class TServerIndex extends ComponentBase
                 FmtLog.info(log, "[%d] ping", id) ;
                 return ;
             }
+            
             FmtLog.error(log, "[%d] execute: Unrecognized request: %s", id, request) ;
         }
     }

@@ -152,6 +152,7 @@ class TClientIndex extends ComponentBase implements Connection, Pingable
         TLZ_IdxReply reply = new TLZ_IdxReply() ;
         long requestId = counter.incrementAndGet() ;
         request.setRequestId(requestId) ;
+        request.setGeneration(-1) ;
         request.setIndex(shard) ;
         request.setPing(tlzPing) ;
 
