@@ -44,6 +44,13 @@ public class TLZ_IdxRequest implements org.apache.thrift.TBase<TLZ_IdxRequest, T
   private static final org.apache.thrift.protocol.TField ADD_TUPLE_FIELD_DESC = new org.apache.thrift.protocol.TField("addTuple", org.apache.thrift.protocol.TType.STRUCT, (short)6);
   private static final org.apache.thrift.protocol.TField DELETE_TUPLE_FIELD_DESC = new org.apache.thrift.protocol.TField("deleteTuple", org.apache.thrift.protocol.TType.STRUCT, (short)7);
   private static final org.apache.thrift.protocol.TField PING_FIELD_DESC = new org.apache.thrift.protocol.TField("ping", org.apache.thrift.protocol.TType.STRUCT, (short)8);
+  private static final org.apache.thrift.protocol.TField PATCH_FIELD_DESC = new org.apache.thrift.protocol.TField("patch", org.apache.thrift.protocol.TType.STRUCT, (short)9);
+  private static final org.apache.thrift.protocol.TField TXN_BEGIN_READ_FIELD_DESC = new org.apache.thrift.protocol.TField("txnBeginRead", org.apache.thrift.protocol.TType.STRUCT, (short)20);
+  private static final org.apache.thrift.protocol.TField TXN_BEGIN_WRITE_FIELD_DESC = new org.apache.thrift.protocol.TField("txnBeginWrite", org.apache.thrift.protocol.TType.STRUCT, (short)21);
+  private static final org.apache.thrift.protocol.TField TXN_PREPARE_FIELD_DESC = new org.apache.thrift.protocol.TField("txnPrepare", org.apache.thrift.protocol.TType.STRUCT, (short)22);
+  private static final org.apache.thrift.protocol.TField TXN_COMMIT_FIELD_DESC = new org.apache.thrift.protocol.TField("txnCommit", org.apache.thrift.protocol.TType.STRUCT, (short)23);
+  private static final org.apache.thrift.protocol.TField TXN_ABORT_FIELD_DESC = new org.apache.thrift.protocol.TField("txnAbort", org.apache.thrift.protocol.TType.STRUCT, (short)24);
+  private static final org.apache.thrift.protocol.TField TXN_END_FIELD_DESC = new org.apache.thrift.protocol.TField("txnEnd", org.apache.thrift.protocol.TType.STRUCT, (short)25);
 
   private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
   static {
@@ -59,6 +66,13 @@ public class TLZ_IdxRequest implements org.apache.thrift.TBase<TLZ_IdxRequest, T
   public TLZ_TupleNodeId addTuple; // optional
   public TLZ_TupleNodeId deleteTuple; // optional
   public TLZ_Ping ping; // optional
+  public TLZ_Patch patch; // optional
+  public TLZ_TxnBeginRead txnBeginRead; // optional
+  public TLZ_TxnBeginWrite txnBeginWrite; // optional
+  public TLZ_TxnPrepare txnPrepare; // optional
+  public TLZ_TxnCommit txnCommit; // optional
+  public TLZ_TxnAbort txnAbort; // optional
+  public TLZ_TxnEnd txnEnd; // optional
 
   /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
   public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -69,7 +83,14 @@ public class TLZ_IdxRequest implements org.apache.thrift.TBase<TLZ_IdxRequest, T
     SUB_PREDS((short)5, "subPreds"),
     ADD_TUPLE((short)6, "addTuple"),
     DELETE_TUPLE((short)7, "deleteTuple"),
-    PING((short)8, "ping");
+    PING((short)8, "ping"),
+    PATCH((short)9, "patch"),
+    TXN_BEGIN_READ((short)20, "txnBeginRead"),
+    TXN_BEGIN_WRITE((short)21, "txnBeginWrite"),
+    TXN_PREPARE((short)22, "txnPrepare"),
+    TXN_COMMIT((short)23, "txnCommit"),
+    TXN_ABORT((short)24, "txnAbort"),
+    TXN_END((short)25, "txnEnd");
 
     private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -100,6 +121,20 @@ public class TLZ_IdxRequest implements org.apache.thrift.TBase<TLZ_IdxRequest, T
           return DELETE_TUPLE;
         case 8: // PING
           return PING;
+        case 9: // PATCH
+          return PATCH;
+        case 20: // TXN_BEGIN_READ
+          return TXN_BEGIN_READ;
+        case 21: // TXN_BEGIN_WRITE
+          return TXN_BEGIN_WRITE;
+        case 22: // TXN_PREPARE
+          return TXN_PREPARE;
+        case 23: // TXN_COMMIT
+          return TXN_COMMIT;
+        case 24: // TXN_ABORT
+          return TXN_ABORT;
+        case 25: // TXN_END
+          return TXN_END;
         default:
           return null;
       }
@@ -143,7 +178,7 @@ public class TLZ_IdxRequest implements org.apache.thrift.TBase<TLZ_IdxRequest, T
   private static final int __REQUESTID_ISSET_ID = 0;
   private static final int __GENERATION_ISSET_ID = 1;
   private byte __isset_bitfield = 0;
-  private _Fields optionals[] = {_Fields.PATTERN,_Fields.SUB_PREDS,_Fields.ADD_TUPLE,_Fields.DELETE_TUPLE,_Fields.PING};
+  private _Fields optionals[] = {_Fields.PATTERN,_Fields.SUB_PREDS,_Fields.ADD_TUPLE,_Fields.DELETE_TUPLE,_Fields.PING,_Fields.PATCH,_Fields.TXN_BEGIN_READ,_Fields.TXN_BEGIN_WRITE,_Fields.TXN_PREPARE,_Fields.TXN_COMMIT,_Fields.TXN_ABORT,_Fields.TXN_END};
   public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
   static {
     Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
@@ -163,6 +198,20 @@ public class TLZ_IdxRequest implements org.apache.thrift.TBase<TLZ_IdxRequest, T
         new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_TupleNodeId.class)));
     tmpMap.put(_Fields.PING, new org.apache.thrift.meta_data.FieldMetaData("ping", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
         new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_Ping.class)));
+    tmpMap.put(_Fields.PATCH, new org.apache.thrift.meta_data.FieldMetaData("patch", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
+        new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_Patch.class)));
+    tmpMap.put(_Fields.TXN_BEGIN_READ, new org.apache.thrift.meta_data.FieldMetaData("txnBeginRead", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
+        new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_TxnBeginRead.class)));
+    tmpMap.put(_Fields.TXN_BEGIN_WRITE, new org.apache.thrift.meta_data.FieldMetaData("txnBeginWrite", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
+        new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_TxnBeginWrite.class)));
+    tmpMap.put(_Fields.TXN_PREPARE, new org.apache.thrift.meta_data.FieldMetaData("txnPrepare", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
+        new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_TxnPrepare.class)));
+    tmpMap.put(_Fields.TXN_COMMIT, new org.apache.thrift.meta_data.FieldMetaData("txnCommit", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
+        new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_TxnCommit.class)));
+    tmpMap.put(_Fields.TXN_ABORT, new org.apache.thrift.meta_data.FieldMetaData("txnAbort", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
+        new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_TxnAbort.class)));
+    tmpMap.put(_Fields.TXN_END, new org.apache.thrift.meta_data.FieldMetaData("txnEnd", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
+        new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_TxnEnd.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMap);
     org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(TLZ_IdxRequest.class, metaDataMap);
   }
@@ -208,6 +257,27 @@ public class TLZ_IdxRequest implements org.apache.thrift.TBase<TLZ_IdxRequest, T
     if (other.isSetPing()) {
       this.ping = new TLZ_Ping(other.ping);
     }
+    if (other.isSetPatch()) {
+      this.patch = new TLZ_Patch(other.patch);
+    }
+    if (other.isSetTxnBeginRead()) {
+      this.txnBeginRead = new TLZ_TxnBeginRead(other.txnBeginRead);
+    }
+    if (other.isSetTxnBeginWrite()) {
+      this.txnBeginWrite = new TLZ_TxnBeginWrite(other.txnBeginWrite);
+    }
+    if (other.isSetTxnPrepare()) {
+      this.txnPrepare = new TLZ_TxnPrepare(other.txnPrepare);
+    }
+    if (other.isSetTxnCommit()) {
+      this.txnCommit = new TLZ_TxnCommit(other.txnCommit);
+    }
+    if (other.isSetTxnAbort()) {
+      this.txnAbort = new TLZ_TxnAbort(other.txnAbort);
+    }
+    if (other.isSetTxnEnd()) {
+      this.txnEnd = new TLZ_TxnEnd(other.txnEnd);
+    }
   }
 
   public TLZ_IdxRequest deepCopy() {
@@ -226,6 +296,13 @@ public class TLZ_IdxRequest implements org.apache.thrift.TBase<TLZ_IdxRequest, T
     this.addTuple = null;
     this.deleteTuple = null;
     this.ping = null;
+    this.patch = null;
+    this.txnBeginRead = null;
+    this.txnBeginWrite = null;
+    this.txnPrepare = null;
+    this.txnCommit = null;
+    this.txnAbort = null;
+    this.txnEnd = null;
   }
 
   public long getRequestId() {
@@ -418,6 +495,174 @@ public class TLZ_IdxRequest implements org.apache.thrift.TBase<TLZ_IdxRequest, T
     }
   }
 
+  public TLZ_Patch getPatch() {
+    return this.patch;
+  }
+
+  public TLZ_IdxRequest setPatch(TLZ_Patch patch) {
+    this.patch = patch;
+    return this;
+  }
+
+  public void unsetPatch() {
+    this.patch = null;
+  }
+
+  /** Returns true if field patch is set (has been assigned a value) and false otherwise */
+  public boolean isSetPatch() {
+    return this.patch != null;
+  }
+
+  public void setPatchIsSet(boolean value) {
+    if (!value) {
+      this.patch = null;
+    }
+  }
+
+  public TLZ_TxnBeginRead getTxnBeginRead() {
+    return this.txnBeginRead;
+  }
+
+  public TLZ_IdxRequest setTxnBeginRead(TLZ_TxnBeginRead txnBeginRead) {
+    this.txnBeginRead = txnBeginRead;
+    return this;
+  }
+
+  public void unsetTxnBeginRead() {
+    this.txnBeginRead = null;
+  }
+
+  /** Returns true if field txnBeginRead is set (has been assigned a value) and false otherwise */
+  public boolean isSetTxnBeginRead() {
+    return this.txnBeginRead != null;
+  }
+
+  public void setTxnBeginReadIsSet(boolean value) {
+    if (!value) {
+      this.txnBeginRead = null;
+    }
+  }
+
+  public TLZ_TxnBeginWrite getTxnBeginWrite() {
+    return this.txnBeginWrite;
+  }
+
+  public TLZ_IdxRequest setTxnBeginWrite(TLZ_TxnBeginWrite txnBeginWrite) {
+    this.txnBeginWrite = txnBeginWrite;
+    return this;
+  }
+
+  public void unsetTxnBeginWrite() {
+    this.txnBeginWrite = null;
+  }
+
+  /** Returns true if field txnBeginWrite is set (has been assigned a value) and false otherwise */
+  public boolean isSetTxnBeginWrite() {
+    return this.txnBeginWrite != null;
+  }
+
+  public void setTxnBeginWriteIsSet(boolean value) {
+    if (!value) {
+      this.txnBeginWrite = null;
+    }
+  }
+
+  public TLZ_TxnPrepare getTxnPrepare() {
+    return this.txnPrepare;
+  }
+
+  public TLZ_IdxRequest setTxnPrepare(TLZ_TxnPrepare txnPrepare) {
+    this.txnPrepare = txnPrepare;
+    return this;
+  }
+
+  public void unsetTxnPrepare() {
+    this.txnPrepare = null;
+  }
+
+  /** Returns true if field txnPrepare is set (has been assigned a value) and false otherwise */
+  public boolean isSetTxnPrepare() {
+    return this.txnPrepare != null;
+  }
+
+  public void setTxnPrepareIsSet(boolean value) {
+    if (!value) {
+      this.txnPrepare = null;
+    }
+  }
+
+  public TLZ_TxnCommit getTxnCommit() {
+    return this.txnCommit;
+  }
+
+  public TLZ_IdxRequest setTxnCommit(TLZ_TxnCommit txnCommit) {
+    this.txnCommit = txnCommit;
+    return this;
+  }
+
+  public void unsetTxnCommit() {
+    this.txnCommit = null;
+  }
+
+  /** Returns true if field txnCommit is set (has been assigned a value) and false otherwise */
+  public boolean isSetTxnCommit() {
+    return this.txnCommit != null;
+  }
+
+  public void setTxnCommitIsSet(boolean value) {
+    if (!value) {
+      this.txnCommit = null;
+    }
+  }
+
+  public TLZ_TxnAbort getTxnAbort() {
+    return this.txnAbort;
+  }
+
+  public TLZ_IdxRequest setTxnAbort(TLZ_TxnAbort txnAbort) {
+    this.txnAbort = txnAbort;
+    return this;
+  }
+
+  public void unsetTxnAbort() {
+    this.txnAbort = null;
+  }
+
+  /** Returns true if field txnAbort is set (has been assigned a value) and false otherwise */
+  public boolean isSetTxnAbort() {
+    return this.txnAbort != null;
+  }
+
+  public void setTxnAbortIsSet(boolean value) {
+    if (!value) {
+      this.txnAbort = null;
+    }
+  }
+
+  public TLZ_TxnEnd getTxnEnd() {
+    return this.txnEnd;
+  }
+
+  public TLZ_IdxRequest setTxnEnd(TLZ_TxnEnd txnEnd) {
+    this.txnEnd = txnEnd;
+    return this;
+  }
+
+  public void unsetTxnEnd() {
+    this.txnEnd = null;
+  }
+
+  /** Returns true if field txnEnd is set (has been assigned a value) and false otherwise */
+  public boolean isSetTxnEnd() {
+    return this.txnEnd != null;
+  }
+
+  public void setTxnEndIsSet(boolean value) {
+    if (!value) {
+      this.txnEnd = null;
+    }
+  }
+
   public void setFieldValue(_Fields field, Object value) {
     switch (field) {
     case REQUEST_ID:
@@ -484,6 +729,62 @@ public class TLZ_IdxRequest implements org.apache.thrift.TBase<TLZ_IdxRequest, T
       }
       break;
 
+    case PATCH:
+      if (value == null) {
+        unsetPatch();
+      } else {
+        setPatch((TLZ_Patch)value);
+      }
+      break;
+
+    case TXN_BEGIN_READ:
+      if (value == null) {
+        unsetTxnBeginRead();
+      } else {
+        setTxnBeginRead((TLZ_TxnBeginRead)value);
+      }
+      break;
+
+    case TXN_BEGIN_WRITE:
+      if (value == null) {
+        unsetTxnBeginWrite();
+      } else {
+        setTxnBeginWrite((TLZ_TxnBeginWrite)value);
+      }
+      break;
+
+    case TXN_PREPARE:
+      if (value == null) {
+        unsetTxnPrepare();
+      } else {
+        setTxnPrepare((TLZ_TxnPrepare)value);
+      }
+      break;
+
+    case TXN_COMMIT:
+      if (value == null) {
+        unsetTxnCommit();
+      } else {
+        setTxnCommit((TLZ_TxnCommit)value);
+      }
+      break;
+
+    case TXN_ABORT:
+      if (value == null) {
+        unsetTxnAbort();
+      } else {
+        setTxnAbort((TLZ_TxnAbort)value);
+      }
+      break;
+
+    case TXN_END:
+      if (value == null) {
+        unsetTxnEnd();
+      } else {
+        setTxnEnd((TLZ_TxnEnd)value);
+      }
+      break;
+
     }
   }
 
@@ -513,6 +814,27 @@ public class TLZ_IdxRequest implements org.apache.thrift.TBase<TLZ_IdxRequest, T
     case PING:
       return getPing();
 
+    case PATCH:
+      return getPatch();
+
+    case TXN_BEGIN_READ:
+      return getTxnBeginRead();
+
+    case TXN_BEGIN_WRITE:
+      return getTxnBeginWrite();
+
+    case TXN_PREPARE:
+      return getTxnPrepare();
+
+    case TXN_COMMIT:
+      return getTxnCommit();
+
+    case TXN_ABORT:
+      return getTxnAbort();
+
+    case TXN_END:
+      return getTxnEnd();
+
     }
     throw new IllegalStateException();
   }
@@ -540,6 +862,20 @@ public class TLZ_IdxRequest implements org.apache.thrift.TBase<TLZ_IdxRequest, T
       return isSetDeleteTuple();
     case PING:
       return isSetPing();
+    case PATCH:
+      return isSetPatch();
+    case TXN_BEGIN_READ:
+      return isSetTxnBeginRead();
+    case TXN_BEGIN_WRITE:
+      return isSetTxnBeginWrite();
+    case TXN_PREPARE:
+      return isSetTxnPrepare();
+    case TXN_COMMIT:
+      return isSetTxnCommit();
+    case TXN_ABORT:
+      return isSetTxnAbort();
+    case TXN_END:
+      return isSetTxnEnd();
     }
     throw new IllegalStateException();
   }
@@ -626,6 +962,69 @@ public class TLZ_IdxRequest implements org.apache.thrift.TBase<TLZ_IdxRequest, T
       if (!(this_present_ping && that_present_ping))
         return false;
       if (!this.ping.equals(that.ping))
+        return false;
+    }
+
+    boolean this_present_patch = true && this.isSetPatch();
+    boolean that_present_patch = true && that.isSetPatch();
+    if (this_present_patch || that_present_patch) {
+      if (!(this_present_patch && that_present_patch))
+        return false;
+      if (!this.patch.equals(that.patch))
+        return false;
+    }
+
+    boolean this_present_txnBeginRead = true && this.isSetTxnBeginRead();
+    boolean that_present_txnBeginRead = true && that.isSetTxnBeginRead();
+    if (this_present_txnBeginRead || that_present_txnBeginRead) {
+      if (!(this_present_txnBeginRead && that_present_txnBeginRead))
+        return false;
+      if (!this.txnBeginRead.equals(that.txnBeginRead))
+        return false;
+    }
+
+    boolean this_present_txnBeginWrite = true && this.isSetTxnBeginWrite();
+    boolean that_present_txnBeginWrite = true && that.isSetTxnBeginWrite();
+    if (this_present_txnBeginWrite || that_present_txnBeginWrite) {
+      if (!(this_present_txnBeginWrite && that_present_txnBeginWrite))
+        return false;
+      if (!this.txnBeginWrite.equals(that.txnBeginWrite))
+        return false;
+    }
+
+    boolean this_present_txnPrepare = true && this.isSetTxnPrepare();
+    boolean that_present_txnPrepare = true && that.isSetTxnPrepare();
+    if (this_present_txnPrepare || that_present_txnPrepare) {
+      if (!(this_present_txnPrepare && that_present_txnPrepare))
+        return false;
+      if (!this.txnPrepare.equals(that.txnPrepare))
+        return false;
+    }
+
+    boolean this_present_txnCommit = true && this.isSetTxnCommit();
+    boolean that_present_txnCommit = true && that.isSetTxnCommit();
+    if (this_present_txnCommit || that_present_txnCommit) {
+      if (!(this_present_txnCommit && that_present_txnCommit))
+        return false;
+      if (!this.txnCommit.equals(that.txnCommit))
+        return false;
+    }
+
+    boolean this_present_txnAbort = true && this.isSetTxnAbort();
+    boolean that_present_txnAbort = true && that.isSetTxnAbort();
+    if (this_present_txnAbort || that_present_txnAbort) {
+      if (!(this_present_txnAbort && that_present_txnAbort))
+        return false;
+      if (!this.txnAbort.equals(that.txnAbort))
+        return false;
+    }
+
+    boolean this_present_txnEnd = true && this.isSetTxnEnd();
+    boolean that_present_txnEnd = true && that.isSetTxnEnd();
+    if (this_present_txnEnd || that_present_txnEnd) {
+      if (!(this_present_txnEnd && that_present_txnEnd))
+        return false;
+      if (!this.txnEnd.equals(that.txnEnd))
         return false;
     }
 
@@ -725,6 +1124,76 @@ public class TLZ_IdxRequest implements org.apache.thrift.TBase<TLZ_IdxRequest, T
         return lastComparison;
       }
     }
+    lastComparison = Boolean.valueOf(isSetPatch()).compareTo(other.isSetPatch());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSetPatch()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.patch, other.patch);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetTxnBeginRead()).compareTo(other.isSetTxnBeginRead());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSetTxnBeginRead()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.txnBeginRead, other.txnBeginRead);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetTxnBeginWrite()).compareTo(other.isSetTxnBeginWrite());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSetTxnBeginWrite()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.txnBeginWrite, other.txnBeginWrite);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetTxnPrepare()).compareTo(other.isSetTxnPrepare());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSetTxnPrepare()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.txnPrepare, other.txnPrepare);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetTxnCommit()).compareTo(other.isSetTxnCommit());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSetTxnCommit()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.txnCommit, other.txnCommit);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetTxnAbort()).compareTo(other.isSetTxnAbort());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSetTxnAbort()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.txnAbort, other.txnAbort);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetTxnEnd()).compareTo(other.isSetTxnEnd());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSetTxnEnd()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.txnEnd, other.txnEnd);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
     return 0;
   }
 
@@ -810,6 +1279,76 @@ public class TLZ_IdxRequest implements org.apache.thrift.TBase<TLZ_IdxRequest, T
       }
       first = false;
     }
+    if (isSetPatch()) {
+      if (!first) sb.append(", ");
+      sb.append("patch:");
+      if (this.patch == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.patch);
+      }
+      first = false;
+    }
+    if (isSetTxnBeginRead()) {
+      if (!first) sb.append(", ");
+      sb.append("txnBeginRead:");
+      if (this.txnBeginRead == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.txnBeginRead);
+      }
+      first = false;
+    }
+    if (isSetTxnBeginWrite()) {
+      if (!first) sb.append(", ");
+      sb.append("txnBeginWrite:");
+      if (this.txnBeginWrite == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.txnBeginWrite);
+      }
+      first = false;
+    }
+    if (isSetTxnPrepare()) {
+      if (!first) sb.append(", ");
+      sb.append("txnPrepare:");
+      if (this.txnPrepare == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.txnPrepare);
+      }
+      first = false;
+    }
+    if (isSetTxnCommit()) {
+      if (!first) sb.append(", ");
+      sb.append("txnCommit:");
+      if (this.txnCommit == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.txnCommit);
+      }
+      first = false;
+    }
+    if (isSetTxnAbort()) {
+      if (!first) sb.append(", ");
+      sb.append("txnAbort:");
+      if (this.txnAbort == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.txnAbort);
+      }
+      first = false;
+    }
+    if (isSetTxnEnd()) {
+      if (!first) sb.append(", ");
+      sb.append("txnEnd:");
+      if (this.txnEnd == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.txnEnd);
+      }
+      first = false;
+    }
     sb.append(")");
     return sb.toString();
   }
@@ -839,6 +1378,27 @@ public class TLZ_IdxRequest implements org.apache.thrift.TBase<TLZ_IdxRequest, T
     }
     if (ping != null) {
       ping.validate();
+    }
+    if (patch != null) {
+      patch.validate();
+    }
+    if (txnBeginRead != null) {
+      txnBeginRead.validate();
+    }
+    if (txnBeginWrite != null) {
+      txnBeginWrite.validate();
+    }
+    if (txnPrepare != null) {
+      txnPrepare.validate();
+    }
+    if (txnCommit != null) {
+      txnCommit.validate();
+    }
+    if (txnAbort != null) {
+      txnAbort.validate();
+    }
+    if (txnEnd != null) {
+      txnEnd.validate();
     }
   }
 
@@ -948,6 +1508,69 @@ public class TLZ_IdxRequest implements org.apache.thrift.TBase<TLZ_IdxRequest, T
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
+          case 9: // PATCH
+            if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+              struct.patch = new TLZ_Patch();
+              struct.patch.read(iprot);
+              struct.setPatchIsSet(true);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+            }
+            break;
+          case 20: // TXN_BEGIN_READ
+            if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+              struct.txnBeginRead = new TLZ_TxnBeginRead();
+              struct.txnBeginRead.read(iprot);
+              struct.setTxnBeginReadIsSet(true);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+            }
+            break;
+          case 21: // TXN_BEGIN_WRITE
+            if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+              struct.txnBeginWrite = new TLZ_TxnBeginWrite();
+              struct.txnBeginWrite.read(iprot);
+              struct.setTxnBeginWriteIsSet(true);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+            }
+            break;
+          case 22: // TXN_PREPARE
+            if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+              struct.txnPrepare = new TLZ_TxnPrepare();
+              struct.txnPrepare.read(iprot);
+              struct.setTxnPrepareIsSet(true);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+            }
+            break;
+          case 23: // TXN_COMMIT
+            if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+              struct.txnCommit = new TLZ_TxnCommit();
+              struct.txnCommit.read(iprot);
+              struct.setTxnCommitIsSet(true);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+            }
+            break;
+          case 24: // TXN_ABORT
+            if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+              struct.txnAbort = new TLZ_TxnAbort();
+              struct.txnAbort.read(iprot);
+              struct.setTxnAbortIsSet(true);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+            }
+            break;
+          case 25: // TXN_END
+            if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+              struct.txnEnd = new TLZ_TxnEnd();
+              struct.txnEnd.read(iprot);
+              struct.setTxnEndIsSet(true);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+            }
+            break;
           default:
             org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
         }
@@ -1015,6 +1638,55 @@ public class TLZ_IdxRequest implements org.apache.thrift.TBase<TLZ_IdxRequest, T
           oprot.writeFieldEnd();
         }
       }
+      if (struct.patch != null) {
+        if (struct.isSetPatch()) {
+          oprot.writeFieldBegin(PATCH_FIELD_DESC);
+          struct.patch.write(oprot);
+          oprot.writeFieldEnd();
+        }
+      }
+      if (struct.txnBeginRead != null) {
+        if (struct.isSetTxnBeginRead()) {
+          oprot.writeFieldBegin(TXN_BEGIN_READ_FIELD_DESC);
+          struct.txnBeginRead.write(oprot);
+          oprot.writeFieldEnd();
+        }
+      }
+      if (struct.txnBeginWrite != null) {
+        if (struct.isSetTxnBeginWrite()) {
+          oprot.writeFieldBegin(TXN_BEGIN_WRITE_FIELD_DESC);
+          struct.txnBeginWrite.write(oprot);
+          oprot.writeFieldEnd();
+        }
+      }
+      if (struct.txnPrepare != null) {
+        if (struct.isSetTxnPrepare()) {
+          oprot.writeFieldBegin(TXN_PREPARE_FIELD_DESC);
+          struct.txnPrepare.write(oprot);
+          oprot.writeFieldEnd();
+        }
+      }
+      if (struct.txnCommit != null) {
+        if (struct.isSetTxnCommit()) {
+          oprot.writeFieldBegin(TXN_COMMIT_FIELD_DESC);
+          struct.txnCommit.write(oprot);
+          oprot.writeFieldEnd();
+        }
+      }
+      if (struct.txnAbort != null) {
+        if (struct.isSetTxnAbort()) {
+          oprot.writeFieldBegin(TXN_ABORT_FIELD_DESC);
+          struct.txnAbort.write(oprot);
+          oprot.writeFieldEnd();
+        }
+      }
+      if (struct.txnEnd != null) {
+        if (struct.isSetTxnEnd()) {
+          oprot.writeFieldBegin(TXN_END_FIELD_DESC);
+          struct.txnEnd.write(oprot);
+          oprot.writeFieldEnd();
+        }
+      }
       oprot.writeFieldStop();
       oprot.writeStructEnd();
     }
@@ -1051,7 +1723,28 @@ public class TLZ_IdxRequest implements org.apache.thrift.TBase<TLZ_IdxRequest, T
       if (struct.isSetPing()) {
         optionals.set(4);
       }
-      oprot.writeBitSet(optionals, 5);
+      if (struct.isSetPatch()) {
+        optionals.set(5);
+      }
+      if (struct.isSetTxnBeginRead()) {
+        optionals.set(6);
+      }
+      if (struct.isSetTxnBeginWrite()) {
+        optionals.set(7);
+      }
+      if (struct.isSetTxnPrepare()) {
+        optionals.set(8);
+      }
+      if (struct.isSetTxnCommit()) {
+        optionals.set(9);
+      }
+      if (struct.isSetTxnAbort()) {
+        optionals.set(10);
+      }
+      if (struct.isSetTxnEnd()) {
+        optionals.set(11);
+      }
+      oprot.writeBitSet(optionals, 12);
       if (struct.isSetPattern()) {
         struct.pattern.write(oprot);
       }
@@ -1067,6 +1760,27 @@ public class TLZ_IdxRequest implements org.apache.thrift.TBase<TLZ_IdxRequest, T
       if (struct.isSetPing()) {
         struct.ping.write(oprot);
       }
+      if (struct.isSetPatch()) {
+        struct.patch.write(oprot);
+      }
+      if (struct.isSetTxnBeginRead()) {
+        struct.txnBeginRead.write(oprot);
+      }
+      if (struct.isSetTxnBeginWrite()) {
+        struct.txnBeginWrite.write(oprot);
+      }
+      if (struct.isSetTxnPrepare()) {
+        struct.txnPrepare.write(oprot);
+      }
+      if (struct.isSetTxnCommit()) {
+        struct.txnCommit.write(oprot);
+      }
+      if (struct.isSetTxnAbort()) {
+        struct.txnAbort.write(oprot);
+      }
+      if (struct.isSetTxnEnd()) {
+        struct.txnEnd.write(oprot);
+      }
     }
 
     @Override
@@ -1079,7 +1793,7 @@ public class TLZ_IdxRequest implements org.apache.thrift.TBase<TLZ_IdxRequest, T
       struct.index = new TLZ_ShardIndex();
       struct.index.read(iprot);
       struct.setIndexIsSet(true);
-      BitSet incoming = iprot.readBitSet(5);
+      BitSet incoming = iprot.readBitSet(12);
       if (incoming.get(0)) {
         struct.pattern = new TLZ_TupleNodeId();
         struct.pattern.read(iprot);
@@ -1104,6 +1818,41 @@ public class TLZ_IdxRequest implements org.apache.thrift.TBase<TLZ_IdxRequest, T
         struct.ping = new TLZ_Ping();
         struct.ping.read(iprot);
         struct.setPingIsSet(true);
+      }
+      if (incoming.get(5)) {
+        struct.patch = new TLZ_Patch();
+        struct.patch.read(iprot);
+        struct.setPatchIsSet(true);
+      }
+      if (incoming.get(6)) {
+        struct.txnBeginRead = new TLZ_TxnBeginRead();
+        struct.txnBeginRead.read(iprot);
+        struct.setTxnBeginReadIsSet(true);
+      }
+      if (incoming.get(7)) {
+        struct.txnBeginWrite = new TLZ_TxnBeginWrite();
+        struct.txnBeginWrite.read(iprot);
+        struct.setTxnBeginWriteIsSet(true);
+      }
+      if (incoming.get(8)) {
+        struct.txnPrepare = new TLZ_TxnPrepare();
+        struct.txnPrepare.read(iprot);
+        struct.setTxnPrepareIsSet(true);
+      }
+      if (incoming.get(9)) {
+        struct.txnCommit = new TLZ_TxnCommit();
+        struct.txnCommit.read(iprot);
+        struct.setTxnCommitIsSet(true);
+      }
+      if (incoming.get(10)) {
+        struct.txnAbort = new TLZ_TxnAbort();
+        struct.txnAbort.read(iprot);
+        struct.setTxnAbortIsSet(true);
+      }
+      if (incoming.get(11)) {
+        struct.txnEnd = new TLZ_TxnEnd();
+        struct.txnEnd.read(iprot);
+        struct.setTxnEndIsSet(true);
       }
     }
   }

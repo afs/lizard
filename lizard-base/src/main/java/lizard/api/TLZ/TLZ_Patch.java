@@ -33,22 +33,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("all")
-public class TLZ_TxnBegin implements org.apache.thrift.TBase<TLZ_TxnBegin, TLZ_TxnBegin._Fields>, java.io.Serializable, Cloneable, Comparable<TLZ_TxnBegin> {
-  private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("TLZ_TxnBegin");
+public class TLZ_Patch implements org.apache.thrift.TBase<TLZ_Patch, TLZ_Patch._Fields>, java.io.Serializable, Cloneable, Comparable<TLZ_Patch> {
+  private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("TLZ_Patch");
 
-  private static final org.apache.thrift.protocol.TField GENERATION_FIELD_DESC = new org.apache.thrift.protocol.TField("generation", org.apache.thrift.protocol.TType.I64, (short)1);
+  private static final org.apache.thrift.protocol.TField ENTITIES_FIELD_DESC = new org.apache.thrift.protocol.TField("entities", org.apache.thrift.protocol.TType.LIST, (short)1);
 
   private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
   static {
-    schemes.put(StandardScheme.class, new TLZ_TxnBeginStandardSchemeFactory());
-    schemes.put(TupleScheme.class, new TLZ_TxnBeginTupleSchemeFactory());
+    schemes.put(StandardScheme.class, new TLZ_PatchStandardSchemeFactory());
+    schemes.put(TupleScheme.class, new TLZ_PatchTupleSchemeFactory());
   }
 
-  public long generation; // required
+  public List<TLZ_PatchEntry> entities; // required
 
   /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
   public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-    GENERATION((short)1, "generation");
+    ENTITIES((short)1, "entities");
 
     private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -63,8 +63,8 @@ public class TLZ_TxnBegin implements org.apache.thrift.TBase<TLZ_TxnBegin, TLZ_T
      */
     public static _Fields findByThriftId(int fieldId) {
       switch(fieldId) {
-        case 1: // GENERATION
-          return GENERATION;
+        case 1: // ENTITIES
+          return ENTITIES;
         default:
           return null;
       }
@@ -105,76 +105,94 @@ public class TLZ_TxnBegin implements org.apache.thrift.TBase<TLZ_TxnBegin, TLZ_T
   }
 
   // isset id assignments
-  private static final int __GENERATION_ISSET_ID = 0;
-  private byte __isset_bitfield = 0;
   public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
   static {
     Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-    tmpMap.put(_Fields.GENERATION, new org.apache.thrift.meta_data.FieldMetaData("generation", org.apache.thrift.TFieldRequirementType.REQUIRED, 
-        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+    tmpMap.put(_Fields.ENTITIES, new org.apache.thrift.meta_data.FieldMetaData("entities", org.apache.thrift.TFieldRequirementType.REQUIRED, 
+        new org.apache.thrift.meta_data.ListMetaData(org.apache.thrift.protocol.TType.LIST, 
+            new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_PatchEntry.class))));
     metaDataMap = Collections.unmodifiableMap(tmpMap);
-    org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(TLZ_TxnBegin.class, metaDataMap);
+    org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(TLZ_Patch.class, metaDataMap);
   }
 
-  public TLZ_TxnBegin() {
+  public TLZ_Patch() {
   }
 
-  public TLZ_TxnBegin(
-    long generation)
+  public TLZ_Patch(
+    List<TLZ_PatchEntry> entities)
   {
     this();
-    this.generation = generation;
-    setGenerationIsSet(true);
+    this.entities = entities;
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public TLZ_TxnBegin(TLZ_TxnBegin other) {
-    __isset_bitfield = other.__isset_bitfield;
-    this.generation = other.generation;
+  public TLZ_Patch(TLZ_Patch other) {
+    if (other.isSetEntities()) {
+      List<TLZ_PatchEntry> __this__entities = new ArrayList<TLZ_PatchEntry>(other.entities.size());
+      for (TLZ_PatchEntry other_element : other.entities) {
+        __this__entities.add(new TLZ_PatchEntry(other_element));
+      }
+      this.entities = __this__entities;
+    }
   }
 
-  public TLZ_TxnBegin deepCopy() {
-    return new TLZ_TxnBegin(this);
+  public TLZ_Patch deepCopy() {
+    return new TLZ_Patch(this);
   }
 
   @Override
   public void clear() {
-    setGenerationIsSet(false);
-    this.generation = 0;
+    this.entities = null;
   }
 
-  public long getGeneration() {
-    return this.generation;
+  public int getEntitiesSize() {
+    return (this.entities == null) ? 0 : this.entities.size();
   }
 
-  public TLZ_TxnBegin setGeneration(long generation) {
-    this.generation = generation;
-    setGenerationIsSet(true);
+  public java.util.Iterator<TLZ_PatchEntry> getEntitiesIterator() {
+    return (this.entities == null) ? null : this.entities.iterator();
+  }
+
+  public void addToEntities(TLZ_PatchEntry elem) {
+    if (this.entities == null) {
+      this.entities = new ArrayList<TLZ_PatchEntry>();
+    }
+    this.entities.add(elem);
+  }
+
+  public List<TLZ_PatchEntry> getEntities() {
+    return this.entities;
+  }
+
+  public TLZ_Patch setEntities(List<TLZ_PatchEntry> entities) {
+    this.entities = entities;
     return this;
   }
 
-  public void unsetGeneration() {
-    __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __GENERATION_ISSET_ID);
+  public void unsetEntities() {
+    this.entities = null;
   }
 
-  /** Returns true if field generation is set (has been assigned a value) and false otherwise */
-  public boolean isSetGeneration() {
-    return EncodingUtils.testBit(__isset_bitfield, __GENERATION_ISSET_ID);
+  /** Returns true if field entities is set (has been assigned a value) and false otherwise */
+  public boolean isSetEntities() {
+    return this.entities != null;
   }
 
-  public void setGenerationIsSet(boolean value) {
-    __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __GENERATION_ISSET_ID, value);
+  public void setEntitiesIsSet(boolean value) {
+    if (!value) {
+      this.entities = null;
+    }
   }
 
   public void setFieldValue(_Fields field, Object value) {
     switch (field) {
-    case GENERATION:
+    case ENTITIES:
       if (value == null) {
-        unsetGeneration();
+        unsetEntities();
       } else {
-        setGeneration((Long)value);
+        setEntities((List<TLZ_PatchEntry>)value);
       }
       break;
 
@@ -183,8 +201,8 @@ public class TLZ_TxnBegin implements org.apache.thrift.TBase<TLZ_TxnBegin, TLZ_T
 
   public Object getFieldValue(_Fields field) {
     switch (field) {
-    case GENERATION:
-      return Long.valueOf(getGeneration());
+    case ENTITIES:
+      return getEntities();
 
     }
     throw new IllegalStateException();
@@ -197,8 +215,8 @@ public class TLZ_TxnBegin implements org.apache.thrift.TBase<TLZ_TxnBegin, TLZ_T
     }
 
     switch (field) {
-    case GENERATION:
-      return isSetGeneration();
+    case ENTITIES:
+      return isSetEntities();
     }
     throw new IllegalStateException();
   }
@@ -207,21 +225,21 @@ public class TLZ_TxnBegin implements org.apache.thrift.TBase<TLZ_TxnBegin, TLZ_T
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof TLZ_TxnBegin)
-      return this.equals((TLZ_TxnBegin)that);
+    if (that instanceof TLZ_Patch)
+      return this.equals((TLZ_Patch)that);
     return false;
   }
 
-  public boolean equals(TLZ_TxnBegin that) {
+  public boolean equals(TLZ_Patch that) {
     if (that == null)
       return false;
 
-    boolean this_present_generation = true;
-    boolean that_present_generation = true;
-    if (this_present_generation || that_present_generation) {
-      if (!(this_present_generation && that_present_generation))
+    boolean this_present_entities = true && this.isSetEntities();
+    boolean that_present_entities = true && that.isSetEntities();
+    if (this_present_entities || that_present_entities) {
+      if (!(this_present_entities && that_present_entities))
         return false;
-      if (this.generation != that.generation)
+      if (!this.entities.equals(that.entities))
         return false;
     }
 
@@ -234,19 +252,19 @@ public class TLZ_TxnBegin implements org.apache.thrift.TBase<TLZ_TxnBegin, TLZ_T
   }
 
   @Override
-  public int compareTo(TLZ_TxnBegin other) {
+  public int compareTo(TLZ_Patch other) {
     if (!getClass().equals(other.getClass())) {
       return getClass().getName().compareTo(other.getClass().getName());
     }
 
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetGeneration()).compareTo(other.isSetGeneration());
+    lastComparison = Boolean.valueOf(isSetEntities()).compareTo(other.isSetEntities());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    if (isSetGeneration()) {
-      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.generation, other.generation);
+    if (isSetEntities()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.entities, other.entities);
       if (lastComparison != 0) {
         return lastComparison;
       }
@@ -268,11 +286,15 @@ public class TLZ_TxnBegin implements org.apache.thrift.TBase<TLZ_TxnBegin, TLZ_T
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder("TLZ_TxnBegin(");
+    StringBuilder sb = new StringBuilder("TLZ_Patch(");
     boolean first = true;
 
-    sb.append("generation:");
-    sb.append(this.generation);
+    sb.append("entities:");
+    if (this.entities == null) {
+      sb.append("null");
+    } else {
+      sb.append(this.entities);
+    }
     first = false;
     sb.append(")");
     return sb.toString();
@@ -280,7 +302,9 @@ public class TLZ_TxnBegin implements org.apache.thrift.TBase<TLZ_TxnBegin, TLZ_T
 
   public void validate() throws org.apache.thrift.TException {
     // check for required fields
-    // alas, we cannot check 'generation' because it's a primitive and you chose the non-beans generator.
+    if (entities == null) {
+      throw new org.apache.thrift.protocol.TProtocolException("Required field 'entities' was not present! Struct: " + toString());
+    }
     // check for sub-struct validity
   }
 
@@ -294,23 +318,21 @@ public class TLZ_TxnBegin implements org.apache.thrift.TBase<TLZ_TxnBegin, TLZ_T
 
   private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
     try {
-      // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
-      __isset_bitfield = 0;
       read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
     } catch (org.apache.thrift.TException te) {
       throw new java.io.IOException(te);
     }
   }
 
-  private static class TLZ_TxnBeginStandardSchemeFactory implements SchemeFactory {
-    public TLZ_TxnBeginStandardScheme getScheme() {
-      return new TLZ_TxnBeginStandardScheme();
+  private static class TLZ_PatchStandardSchemeFactory implements SchemeFactory {
+    public TLZ_PatchStandardScheme getScheme() {
+      return new TLZ_PatchStandardScheme();
     }
   }
 
-  private static class TLZ_TxnBeginStandardScheme extends StandardScheme<TLZ_TxnBegin> {
+  private static class TLZ_PatchStandardScheme extends StandardScheme<TLZ_Patch> {
 
-    public void read(org.apache.thrift.protocol.TProtocol iprot, TLZ_TxnBegin struct) throws org.apache.thrift.TException {
+    public void read(org.apache.thrift.protocol.TProtocol iprot, TLZ_Patch struct) throws org.apache.thrift.TException {
       org.apache.thrift.protocol.TField schemeField;
       iprot.readStructBegin();
       while (true)
@@ -320,10 +342,21 @@ public class TLZ_TxnBegin implements org.apache.thrift.TBase<TLZ_TxnBegin, TLZ_T
           break;
         }
         switch (schemeField.id) {
-          case 1: // GENERATION
-            if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
-              struct.generation = iprot.readI64();
-              struct.setGenerationIsSet(true);
+          case 1: // ENTITIES
+            if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
+              {
+                org.apache.thrift.protocol.TList _list8 = iprot.readListBegin();
+                struct.entities = new ArrayList<TLZ_PatchEntry>(_list8.size);
+                for (int _i9 = 0; _i9 < _list8.size; ++_i9)
+                {
+                  TLZ_PatchEntry _elem10;
+                  _elem10 = new TLZ_PatchEntry();
+                  _elem10.read(iprot);
+                  struct.entities.add(_elem10);
+                }
+                iprot.readListEnd();
+              }
+              struct.setEntitiesIsSet(true);
             } else { 
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
@@ -336,44 +369,66 @@ public class TLZ_TxnBegin implements org.apache.thrift.TBase<TLZ_TxnBegin, TLZ_T
       iprot.readStructEnd();
 
       // check for required fields of primitive type, which can't be checked in the validate method
-      if (!struct.isSetGeneration()) {
-        throw new org.apache.thrift.protocol.TProtocolException("Required field 'generation' was not found in serialized data! Struct: " + toString());
-      }
       struct.validate();
     }
 
-    public void write(org.apache.thrift.protocol.TProtocol oprot, TLZ_TxnBegin struct) throws org.apache.thrift.TException {
+    public void write(org.apache.thrift.protocol.TProtocol oprot, TLZ_Patch struct) throws org.apache.thrift.TException {
       struct.validate();
 
       oprot.writeStructBegin(STRUCT_DESC);
-      oprot.writeFieldBegin(GENERATION_FIELD_DESC);
-      oprot.writeI64(struct.generation);
-      oprot.writeFieldEnd();
+      if (struct.entities != null) {
+        oprot.writeFieldBegin(ENTITIES_FIELD_DESC);
+        {
+          oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.entities.size()));
+          for (TLZ_PatchEntry _iter11 : struct.entities)
+          {
+            _iter11.write(oprot);
+          }
+          oprot.writeListEnd();
+        }
+        oprot.writeFieldEnd();
+      }
       oprot.writeFieldStop();
       oprot.writeStructEnd();
     }
 
   }
 
-  private static class TLZ_TxnBeginTupleSchemeFactory implements SchemeFactory {
-    public TLZ_TxnBeginTupleScheme getScheme() {
-      return new TLZ_TxnBeginTupleScheme();
+  private static class TLZ_PatchTupleSchemeFactory implements SchemeFactory {
+    public TLZ_PatchTupleScheme getScheme() {
+      return new TLZ_PatchTupleScheme();
     }
   }
 
-  private static class TLZ_TxnBeginTupleScheme extends TupleScheme<TLZ_TxnBegin> {
+  private static class TLZ_PatchTupleScheme extends TupleScheme<TLZ_Patch> {
 
     @Override
-    public void write(org.apache.thrift.protocol.TProtocol prot, TLZ_TxnBegin struct) throws org.apache.thrift.TException {
+    public void write(org.apache.thrift.protocol.TProtocol prot, TLZ_Patch struct) throws org.apache.thrift.TException {
       TTupleProtocol oprot = (TTupleProtocol) prot;
-      oprot.writeI64(struct.generation);
+      {
+        oprot.writeI32(struct.entities.size());
+        for (TLZ_PatchEntry _iter12 : struct.entities)
+        {
+          _iter12.write(oprot);
+        }
+      }
     }
 
     @Override
-    public void read(org.apache.thrift.protocol.TProtocol prot, TLZ_TxnBegin struct) throws org.apache.thrift.TException {
+    public void read(org.apache.thrift.protocol.TProtocol prot, TLZ_Patch struct) throws org.apache.thrift.TException {
       TTupleProtocol iprot = (TTupleProtocol) prot;
-      struct.generation = iprot.readI64();
-      struct.setGenerationIsSet(true);
+      {
+        org.apache.thrift.protocol.TList _list13 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
+        struct.entities = new ArrayList<TLZ_PatchEntry>(_list13.size);
+        for (int _i14 = 0; _i14 < _list13.size; ++_i14)
+        {
+          TLZ_PatchEntry _elem15;
+          _elem15 = new TLZ_PatchEntry();
+          _elem15.read(iprot);
+          struct.entities.add(_elem15);
+        }
+      }
+      struct.setEntitiesIsSet(true);
     }
   }
 

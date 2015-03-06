@@ -16,7 +16,11 @@ struct TLZ_Ping {
 
 // ---- Transaction
 
-struct TLZ_TxnBegin {
+struct TLZ_TxnBeginRead {
+1: required i64              generation ;
+}
+
+struct TLZ_TxnBeginWrite {
 1: required i64              generation ;
 }
 
@@ -53,16 +57,39 @@ struct TLZ_SubjectPredicateList {
 2: list<i64> predicates ;
 }
 
+enum TLZ_PatchAction {
+ ADD, DEL
+}
+
+struct TLZ_PatchEntry {
+1: required TLZ_PatchAction      action ;
+2: required TLZ_TupleNodeId      tuple ;
+}
+
+struct TLZ_Patch {
+1: required list<TLZ_PatchEntry> entities ;
+}
 
 struct TLZ_IdxRequest {
-1: required i64              requestId ;
-2: required i64              generation ;
-3: required TLZ_ShardIndex   index ;
-4: optional TLZ_TupleNodeId  pattern ;
+1: required i64                      requestId ;
+2: required i64                      generation ;
+3: required TLZ_ShardIndex           index ;
+4: optional TLZ_TupleNodeId          pattern ;
 5: optional TLZ_SubjectPredicateList subPreds ;
-6: optional TLZ_TupleNodeId  addTuple ;
-7: optional TLZ_TupleNodeId  deleteTuple ;
-8: optional TLZ_Ping         ping ;
+6: optional TLZ_TupleNodeId          addTuple ;
+7: optional TLZ_TupleNodeId          deleteTuple ;
+8: optional TLZ_Ping                 ping ;
+9: optional TLZ_Patch                patch ;
+
+20: optional TLZ_TxnBeginRead        txnBeginRead ;
+21: optional TLZ_TxnBeginWrite       txnBeginWrite ;
+22: optional TLZ_TxnPrepare          txnPrepare ;
+23: optional TLZ_TxnCommit           txnCommit ;
+24: optional TLZ_TxnAbort            txnAbort ;
+25: optional TLZ_TxnEnd              txnEnd ;
+
+
+
 }
 
 // -- IndexReply

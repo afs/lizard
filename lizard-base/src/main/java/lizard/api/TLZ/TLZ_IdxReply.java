@@ -598,14 +598,14 @@ public class TLZ_IdxReply implements org.apache.thrift.TBase<TLZ_IdxReply, TLZ_I
           case 2: // ENTITIES
             if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
               {
-                org.apache.thrift.protocol.TList _list24 = iprot.readListBegin();
-                struct.entities = new ArrayList<TLZ_SubjectPredicateObjectList>(_list24.size);
-                for (int _i25 = 0; _i25 < _list24.size; ++_i25)
+                org.apache.thrift.protocol.TList _list32 = iprot.readListBegin();
+                struct.entities = new ArrayList<TLZ_SubjectPredicateObjectList>(_list32.size);
+                for (int _i33 = 0; _i33 < _list32.size; ++_i33)
                 {
-                  TLZ_SubjectPredicateObjectList _elem26;
-                  _elem26 = new TLZ_SubjectPredicateObjectList();
-                  _elem26.read(iprot);
-                  struct.entities.add(_elem26);
+                  TLZ_SubjectPredicateObjectList _elem34;
+                  _elem34 = new TLZ_SubjectPredicateObjectList();
+                  _elem34.read(iprot);
+                  struct.entities.add(_elem34);
                 }
                 iprot.readListEnd();
               }
@@ -617,14 +617,14 @@ public class TLZ_IdxReply implements org.apache.thrift.TBase<TLZ_IdxReply, TLZ_I
           case 3: // TUPLES
             if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
               {
-                org.apache.thrift.protocol.TList _list27 = iprot.readListBegin();
-                struct.tuples = new ArrayList<TLZ_TupleNodeId>(_list27.size);
-                for (int _i28 = 0; _i28 < _list27.size; ++_i28)
+                org.apache.thrift.protocol.TList _list35 = iprot.readListBegin();
+                struct.tuples = new ArrayList<TLZ_TupleNodeId>(_list35.size);
+                for (int _i36 = 0; _i36 < _list35.size; ++_i36)
                 {
-                  TLZ_TupleNodeId _elem29;
-                  _elem29 = new TLZ_TupleNodeId();
-                  _elem29.read(iprot);
-                  struct.tuples.add(_elem29);
+                  TLZ_TupleNodeId _elem37;
+                  _elem37 = new TLZ_TupleNodeId();
+                  _elem37.read(iprot);
+                  struct.tuples.add(_elem37);
                 }
                 iprot.readListEnd();
               }
@@ -667,9 +667,9 @@ public class TLZ_IdxReply implements org.apache.thrift.TBase<TLZ_IdxReply, TLZ_I
           oprot.writeFieldBegin(ENTITIES_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.entities.size()));
-            for (TLZ_SubjectPredicateObjectList _iter30 : struct.entities)
+            for (TLZ_SubjectPredicateObjectList _iter38 : struct.entities)
             {
-              _iter30.write(oprot);
+              _iter38.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -681,9 +681,9 @@ public class TLZ_IdxReply implements org.apache.thrift.TBase<TLZ_IdxReply, TLZ_I
           oprot.writeFieldBegin(TUPLES_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.tuples.size()));
-            for (TLZ_TupleNodeId _iter31 : struct.tuples)
+            for (TLZ_TupleNodeId _iter39 : struct.tuples)
             {
-              _iter31.write(oprot);
+              _iter39.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -727,18 +727,18 @@ public class TLZ_IdxReply implements org.apache.thrift.TBase<TLZ_IdxReply, TLZ_I
       if (struct.isSetEntities()) {
         {
           oprot.writeI32(struct.entities.size());
-          for (TLZ_SubjectPredicateObjectList _iter32 : struct.entities)
+          for (TLZ_SubjectPredicateObjectList _iter40 : struct.entities)
           {
-            _iter32.write(oprot);
+            _iter40.write(oprot);
           }
         }
       }
       if (struct.isSetTuples()) {
         {
           oprot.writeI32(struct.tuples.size());
-          for (TLZ_TupleNodeId _iter33 : struct.tuples)
+          for (TLZ_TupleNodeId _iter41 : struct.tuples)
           {
-            _iter33.write(oprot);
+            _iter41.write(oprot);
           }
         }
       }
@@ -755,28 +755,28 @@ public class TLZ_IdxReply implements org.apache.thrift.TBase<TLZ_IdxReply, TLZ_I
       BitSet incoming = iprot.readBitSet(3);
       if (incoming.get(0)) {
         {
-          org.apache.thrift.protocol.TList _list34 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
-          struct.entities = new ArrayList<TLZ_SubjectPredicateObjectList>(_list34.size);
-          for (int _i35 = 0; _i35 < _list34.size; ++_i35)
+          org.apache.thrift.protocol.TList _list42 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
+          struct.entities = new ArrayList<TLZ_SubjectPredicateObjectList>(_list42.size);
+          for (int _i43 = 0; _i43 < _list42.size; ++_i43)
           {
-            TLZ_SubjectPredicateObjectList _elem36;
-            _elem36 = new TLZ_SubjectPredicateObjectList();
-            _elem36.read(iprot);
-            struct.entities.add(_elem36);
+            TLZ_SubjectPredicateObjectList _elem44;
+            _elem44 = new TLZ_SubjectPredicateObjectList();
+            _elem44.read(iprot);
+            struct.entities.add(_elem44);
           }
         }
         struct.setEntitiesIsSet(true);
       }
       if (incoming.get(1)) {
         {
-          org.apache.thrift.protocol.TList _list37 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
-          struct.tuples = new ArrayList<TLZ_TupleNodeId>(_list37.size);
-          for (int _i38 = 0; _i38 < _list37.size; ++_i38)
+          org.apache.thrift.protocol.TList _list45 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
+          struct.tuples = new ArrayList<TLZ_TupleNodeId>(_list45.size);
+          for (int _i46 = 0; _i46 < _list45.size; ++_i46)
           {
-            TLZ_TupleNodeId _elem39;
-            _elem39 = new TLZ_TupleNodeId();
-            _elem39.read(iprot);
-            struct.tuples.add(_elem39);
+            TLZ_TupleNodeId _elem47;
+            _elem47 = new TLZ_TupleNodeId();
+            _elem47.read(iprot);
+            struct.tuples.add(_elem47);
           }
         }
         struct.setTuplesIsSet(true);

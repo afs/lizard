@@ -519,13 +519,13 @@ public class TLZ_SubjectPredicateObjectList implements org.apache.thrift.TBase<T
           case 2: // PREDICATES
             if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
               {
-                org.apache.thrift.protocol.TList _list8 = iprot.readListBegin();
-                struct.predicates = new ArrayList<Long>(_list8.size);
-                for (int _i9 = 0; _i9 < _list8.size; ++_i9)
+                org.apache.thrift.protocol.TList _list16 = iprot.readListBegin();
+                struct.predicates = new ArrayList<Long>(_list16.size);
+                for (int _i17 = 0; _i17 < _list16.size; ++_i17)
                 {
-                  long _elem10;
-                  _elem10 = iprot.readI64();
-                  struct.predicates.add(_elem10);
+                  long _elem18;
+                  _elem18 = iprot.readI64();
+                  struct.predicates.add(_elem18);
                 }
                 iprot.readListEnd();
               }
@@ -537,13 +537,13 @@ public class TLZ_SubjectPredicateObjectList implements org.apache.thrift.TBase<T
           case 3: // OBJECTS
             if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
               {
-                org.apache.thrift.protocol.TList _list11 = iprot.readListBegin();
-                struct.objects = new ArrayList<Long>(_list11.size);
-                for (int _i12 = 0; _i12 < _list11.size; ++_i12)
+                org.apache.thrift.protocol.TList _list19 = iprot.readListBegin();
+                struct.objects = new ArrayList<Long>(_list19.size);
+                for (int _i20 = 0; _i20 < _list19.size; ++_i20)
                 {
-                  long _elem13;
-                  _elem13 = iprot.readI64();
-                  struct.objects.add(_elem13);
+                  long _elem21;
+                  _elem21 = iprot.readI64();
+                  struct.objects.add(_elem21);
                 }
                 iprot.readListEnd();
               }
@@ -577,9 +577,9 @@ public class TLZ_SubjectPredicateObjectList implements org.apache.thrift.TBase<T
         oprot.writeFieldBegin(PREDICATES_FIELD_DESC);
         {
           oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.I64, struct.predicates.size()));
-          for (long _iter14 : struct.predicates)
+          for (long _iter22 : struct.predicates)
           {
-            oprot.writeI64(_iter14);
+            oprot.writeI64(_iter22);
           }
           oprot.writeListEnd();
         }
@@ -589,9 +589,9 @@ public class TLZ_SubjectPredicateObjectList implements org.apache.thrift.TBase<T
         oprot.writeFieldBegin(OBJECTS_FIELD_DESC);
         {
           oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.I64, struct.objects.size()));
-          for (long _iter15 : struct.objects)
+          for (long _iter23 : struct.objects)
           {
-            oprot.writeI64(_iter15);
+            oprot.writeI64(_iter23);
           }
           oprot.writeListEnd();
         }
@@ -626,18 +626,18 @@ public class TLZ_SubjectPredicateObjectList implements org.apache.thrift.TBase<T
       if (struct.isSetPredicates()) {
         {
           oprot.writeI32(struct.predicates.size());
-          for (long _iter16 : struct.predicates)
+          for (long _iter24 : struct.predicates)
           {
-            oprot.writeI64(_iter16);
+            oprot.writeI64(_iter24);
           }
         }
       }
       if (struct.isSetObjects()) {
         {
           oprot.writeI32(struct.objects.size());
-          for (long _iter17 : struct.objects)
+          for (long _iter25 : struct.objects)
           {
-            oprot.writeI64(_iter17);
+            oprot.writeI64(_iter25);
           }
         }
       }
@@ -651,26 +651,26 @@ public class TLZ_SubjectPredicateObjectList implements org.apache.thrift.TBase<T
       BitSet incoming = iprot.readBitSet(2);
       if (incoming.get(0)) {
         {
-          org.apache.thrift.protocol.TList _list18 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.I64, iprot.readI32());
-          struct.predicates = new ArrayList<Long>(_list18.size);
-          for (int _i19 = 0; _i19 < _list18.size; ++_i19)
+          org.apache.thrift.protocol.TList _list26 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.I64, iprot.readI32());
+          struct.predicates = new ArrayList<Long>(_list26.size);
+          for (int _i27 = 0; _i27 < _list26.size; ++_i27)
           {
-            long _elem20;
-            _elem20 = iprot.readI64();
-            struct.predicates.add(_elem20);
+            long _elem28;
+            _elem28 = iprot.readI64();
+            struct.predicates.add(_elem28);
           }
         }
         struct.setPredicatesIsSet(true);
       }
       if (incoming.get(1)) {
         {
-          org.apache.thrift.protocol.TList _list21 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.I64, iprot.readI32());
-          struct.objects = new ArrayList<Long>(_list21.size);
-          for (int _i22 = 0; _i22 < _list21.size; ++_i22)
+          org.apache.thrift.protocol.TList _list29 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.I64, iprot.readI32());
+          struct.objects = new ArrayList<Long>(_list29.size);
+          for (int _i30 = 0; _i30 < _list29.size; ++_i30)
           {
-            long _elem23;
-            _elem23 = iprot.readI64();
-            struct.objects.add(_elem23);
+            long _elem31;
+            _elem31 = iprot.readI64();
+            struct.objects.add(_elem31);
           }
         }
         struct.setObjectsIsSet(true);
