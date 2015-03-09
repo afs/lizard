@@ -15,11 +15,13 @@
  *  information regarding copyright ownership.
  */
 
-package lz_dev;
+package main;
 
 import lizard.conf.Configuration ;
 import lz.LZ_Query ;
+import lz_dev.Setup ;
 import migrate.Q ;
+
 import org.apache.jena.atlas.logging.LogCtl ;
 
 import com.hp.hpl.jena.rdf.model.Model ;

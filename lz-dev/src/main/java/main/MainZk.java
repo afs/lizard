@@ -15,7 +15,7 @@
  *  information regarding copyright ownership.
  */
 
-package lz_dev;
+package main;
 
 import java.util.List ;
 

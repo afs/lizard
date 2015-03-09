@@ -15,7 +15,7 @@
  *  information regarding copyright ownership.
  */
 
-package lz_dev;
+package main;
 
 import org.apache.jena.atlas.logging.LogCtl ;
 import org.apache.jena.fuseki.cmd.FusekiCmd ;
