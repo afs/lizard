@@ -158,6 +158,10 @@ public class TServerIndex extends ComponentBase
             
             if ( request.isSetTxnBeginRead() ) {}
             if ( request.isSetTxnBeginWrite() ) {}
+            if ( request.isSetTxnEnd() ) {}
+            if ( request.isSetTxnPrepare() ) {}
+            if ( request.isSetTxnCommit() ) {}
+            if ( request.isSetTxnAbort() ) {}
             
             FmtLog.error(log, "[%d] execute: Unrecognized request: %s", id, request) ;
         }
