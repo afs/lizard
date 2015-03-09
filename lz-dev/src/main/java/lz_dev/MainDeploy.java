@@ -19,10 +19,12 @@ package lz_dev;
 
 import lizard.conf.Configuration ;
 import lizard.index.TServerIndex ;
+import lizard.index.TupleIndexRemote ;
 import lizard.node.ClusterNodeTable ;
 import lizard.node.TServerNode ;
 import lizard.query.LzDataset ;
 import lizard.sys.Deploy ;
+import lizard.sys.Deployment ;
 import lizard.system.Pingable ;
 import migrate.Q ;
 import org.apache.jena.atlas.lib.Lib ;
@@ -36,6 +38,7 @@ import com.hp.hpl.jena.query.* ;
 import com.hp.hpl.jena.rdf.model.Model ;
 import com.hp.hpl.jena.sparql.core.DatasetGraph ;
 import com.hp.hpl.jena.sparql.util.QueryExecUtils ;
+
 
 public class MainDeploy {
     static { LogCtl.setLog4j(); } 
@@ -52,12 +55,21 @@ public class MainDeploy {
     
     public static void main(String[] args) {
         log.info("SERVERS") ;
-        Deploy.deployServers(config, deploymentFile);
+        Deployment deployment = Deploy.deployServers(config, deploymentFile);
 
         log.info("DATASET") ;
-        Dataset ds = queryEngine(config, "D.ttl") ;
+        LzDataset lz = buildDataset(config) ;
+        Dataset ds = queryEngine(lz, "D.ttl") ;
         
-        log.info("DATASET") ;
+        lz.getComponents().forEach(c->{
+            System.out.println(c) ;
+            System.out.println(c.getClass().getName()) ;
+            if ( c instanceof TupleIndexRemote ) {
+                TupleIndexRemote rIdx = (TupleIndexRemote)c ;
+                rIdx.begin(ReadWrite.READ) ;
+            }
+        });
+        
         performQuery(ds); 
         
         log.info("** Done **") ;
@@ -68,8 +80,12 @@ public class MainDeploy {
     }
 
     // -------- Dataset
-    private static Dataset queryEngine(Configuration config, String data) {
+    private static LzDataset buildDataset(Configuration config) {
         LzDataset lz = Local.buildDataset(configurationModel) ;
+        return lz ;
+    }
+    
+    private static Dataset queryEngine(LzDataset lz, String data) {
         //  Component: lizard.node.NodeTableRemote
         //  Component: lizard.index.TupleIndexRemote
         //  Component: lizard.index.TupleIndexRemote

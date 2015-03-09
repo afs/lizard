@@ -1,4 +1,4 @@
-/*
+/**
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
@@ -15,12 +15,13 @@
  *  information regarding copyright ownership.
  */
 
+
 package lizard.system;
 
+import java.util.UUID ;
 
-/** Any software component that has a start-stop lifecycle  */
+import com.hp.hpl.jena.shared.uuid.JenaUUID ;
 
-public interface Component extends LifeCycle {
-    public String getLabel() ;
-    public void setLabel(String label) ;
+public class LizardConst {
+    public static UUID uuidNil = JenaUUID.nil().asUUID() ;
 }

@@ -1,4 +1,4 @@
-/*
+/**
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
@@ -17,10 +17,20 @@
 
 package lizard.system;
 
+import com.hp.hpl.jena.query.ReadWrite ;
 
-/** Any software component that has a start-stop lifecycle  */
+/** Client-facing compoent transaction interface */
+public interface ComponentTxn {
 
-public interface Component extends LifeCycle {
-    public String getLabel() ;
-    public void setLabel(String label) ;
+    /** begin */
+    public LzTxnId begin(ReadWrite mode) ;
+    /** prepare */
+    public void prepare(LzTxnId txnId) ;
+    /** commit */
+    public void commit(LzTxnId txnId) ;
+    /** abort */
+    public void abort(LzTxnId txnId) ;
+    /** end */
+    public void end(LzTxnId txnId) ;
+
 }

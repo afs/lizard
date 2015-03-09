@@ -18,25 +18,27 @@
 package lizard.index;
 
 import java.util.Iterator ;
+import java.util.Objects ;
 
 import lizard.api.TLZlib ;
 import lizard.api.TLZ.TLZ_IndexName ;
+import lizard.api.TLZ.TLZ_TxnBeginRead ;
 import lizard.comms.ConnState ;
-import lizard.system.Component ;
-import lizard.system.ComponentBase ;
-import lizard.system.Pingable ;
+import lizard.system.* ;
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.NotImplemented ;
 import org.apache.jena.atlas.lib.Tuple ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
+import com.hp.hpl.jena.query.ReadWrite ;
 import com.hp.hpl.jena.tdb.store.NodeId ;
 import com.hp.hpl.jena.tdb.store.tupletable.TupleIndexBase ;
 
 /** Client side of a remote index */
-public class TupleIndexRemote extends TupleIndexBase implements Component, Pingable
+public class TupleIndexRemote extends TupleIndexBase implements Component, ComponentTxn, Pingable
 {
+    // Relationship of  TupleIndexRemote and TClientIndex
     public static TupleIndexRemote create(String hostname, int port, String indexStr, ColumnMap cmap) {
         TClientIndex client = TClientIndex.create(hostname, port, indexStr, cmap) ;
         String name = "Idx"+indexStr+"["+port+"]" ;
@@ -125,6 +127,35 @@ public class TupleIndexRemote extends TupleIndexBase implements Component, Pinga
 
     @Override
     public void stop() { component.stop() ; }
+
+    // ---- Transactions
+    
+    @Override
+    public LzTxnId begin(ReadWrite mode) {
+        return client.begin(mode) ;
+    }
+
+    @Override
+    public void prepare(LzTxnId txnId) {
+        client.prepare(txnId);
+    }
+
+    @Override
+    public void commit(LzTxnId txnId) {
+        client.commit(txnId);
+    }
+
+    @Override
+    public void abort(LzTxnId txnId) {
+        client.abort(txnId);
+    }
+
+    @Override
+    public void end(LzTxnId txnId) {
+        client.end(txnId) ;
+    }
+
+    // ---- Transactions
 
     @Override
     public boolean isRunning() { return component.isRunning() ; }

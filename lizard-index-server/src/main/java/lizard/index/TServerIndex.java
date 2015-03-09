@@ -108,6 +108,7 @@ public class TServerIndex extends ComponentBase
             }
         }
         
+        // Use Thrift RPC?
         private void execute(long id, TLZ_IdxRequest request, TLZ_IdxReply reply) {
             TLZ_ShardIndex ref = request.getIndex() ;
             if ( index == null ) {
@@ -154,6 +155,9 @@ public class TServerIndex extends ComponentBase
                 FmtLog.info(log, "[%d] ping", id) ;
                 return ;
             }
+            
+            if ( request.isSetTxnBeginRead() ) {}
+            if ( request.isSetTxnBeginWrite() ) {}
             
             FmtLog.error(log, "[%d] execute: Unrecognized request: %s", id, request) ;
         }

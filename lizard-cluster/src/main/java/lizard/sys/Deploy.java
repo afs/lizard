@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory ;
 public class Deploy {
     public static Logger log = LoggerFactory.getLogger("Deploy") ;
     /** Deploy a deployment */
-    public static void deploy(Deployment deployment) {
+    public static Platform deploy(Deployment deployment) {
         Platform platform = new Platform() ;
         deployment.nodeServers.stream().forEach(ns -> {
             log.info("Build N: " + ns.resource) ;
@@ -39,14 +39,16 @@ public class Deploy {
         }) ;
 
         platform.start() ;
+        return platform ;
     }
 
     /** Deploy data servers */
-    public static void deployServers(Configuration config, String deploymentFile) {
+    public static Deployment deployServers(Configuration config, String deploymentFile) {
         Deployment deployment = Deployment.parse(config, deploymentFile) ;
         //System.out.println(deployment.indexServers) ;
         //System.out.println(deployment.nodeServers) ;
         deploy(deployment) ;
+        return deployment ;
     }
 
 }
