@@ -18,11 +18,9 @@
 package lizard.index;
 
 import java.util.Iterator ;
-import java.util.Objects ;
 
 import lizard.api.TLZlib ;
 import lizard.api.TLZ.TLZ_IndexName ;
-import lizard.api.TLZ.TLZ_TxnBeginRead ;
 import lizard.comms.ConnState ;
 import lizard.system.* ;
 import org.apache.jena.atlas.lib.ColumnMap ;
@@ -38,7 +36,7 @@ import com.hp.hpl.jena.tdb.store.tupletable.TupleIndexBase ;
 /** Client side of a remote index */
 public class TupleIndexRemote extends TupleIndexBase implements Component, ComponentTxn, Pingable
 {
-    // Relationship of  TupleIndexRemote and TClientIndex
+    // Relationship of TupleIndexRemote and TClientIndex
     public static TupleIndexRemote create(String hostname, int port, String indexStr, ColumnMap cmap) {
         TClientIndex client = TClientIndex.create(hostname, port, indexStr, cmap) ;
         String name = "Idx"+indexStr+"["+port+"]" ;

@@ -35,16 +35,13 @@ public class Platform implements LifeCycle {
     
     @Override
     public void start() {
-        for ( Component s : components ) {
-            s.start() ;
-        }
+        components.forEach(s->s.start()) ;
         lifecycle.start() ;
     }
 
     @Override
     public void stop() {
-        for ( Component s : components )
-            s.stop() ;
+        components.forEach(s->s.stop()) ;
         lifecycle.stop() ;
     }
 

@@ -17,13 +17,17 @@
 
 package rpc;
 
+import java.util.Arrays ;
+
 import lizard.comms.thrift.ThriftLib ;
+import org.apache.jena.atlas.lib.Lib ;
 import org.apache.jena.atlas.logging.LogCtl ;
 import org.apache.thrift.protocol.TCompactProtocol ;
 import org.apache.thrift.protocol.TProtocol ;
 import org.apache.thrift.server.TServer ;
 import org.apache.thrift.server.TThreadPoolServer ;
 import org.apache.thrift.transport.* ;
+import rpc.thrift.Item ;
 import rpc.thrift.S1 ;
 
 public class MainRPC {
@@ -39,15 +43,21 @@ public class MainRPC {
             trans1.open();
 
             S1.Client client = new S1.Client(proto) ;
+            Item item = new Item(Arrays.asList("AAA", "BBB", "CCC")) ;
+            client.deliver(item);
             client.ping(); 
             long x = client.inc(55) ;
             System.out.println("x="+x) ;
+            
+            
             System.out.println("DONE") ;
+
         }
         catch (Exception ex) {
             ex.printStackTrace(System.err) ;
         }
         finally {
+            Lib.sleep(1000);
             System.exit(0) ;
         }
     }

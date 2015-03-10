@@ -33,1203 +33,3064 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("all")
-public class TLZ_IdxRequest implements org.apache.thrift.TBase<TLZ_IdxRequest, TLZ_IdxRequest._Fields>, java.io.Serializable, Cloneable, Comparable<TLZ_IdxRequest> {
-  private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("TLZ_IdxRequest");
+public class TLZ_IdxRequest {
 
-  private static final org.apache.thrift.protocol.TField REQUEST_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("requestId", org.apache.thrift.protocol.TType.I64, (short)1);
-  private static final org.apache.thrift.protocol.TField GENERATION_FIELD_DESC = new org.apache.thrift.protocol.TField("generation", org.apache.thrift.protocol.TType.I64, (short)2);
-  private static final org.apache.thrift.protocol.TField INDEX_FIELD_DESC = new org.apache.thrift.protocol.TField("index", org.apache.thrift.protocol.TType.STRUCT, (short)3);
-  private static final org.apache.thrift.protocol.TField PATTERN_FIELD_DESC = new org.apache.thrift.protocol.TField("pattern", org.apache.thrift.protocol.TType.STRUCT, (short)4);
-  private static final org.apache.thrift.protocol.TField SUB_PREDS_FIELD_DESC = new org.apache.thrift.protocol.TField("subPreds", org.apache.thrift.protocol.TType.STRUCT, (short)5);
-  private static final org.apache.thrift.protocol.TField ADD_TUPLE_FIELD_DESC = new org.apache.thrift.protocol.TField("addTuple", org.apache.thrift.protocol.TType.STRUCT, (short)6);
-  private static final org.apache.thrift.protocol.TField DELETE_TUPLE_FIELD_DESC = new org.apache.thrift.protocol.TField("deleteTuple", org.apache.thrift.protocol.TType.STRUCT, (short)7);
-  private static final org.apache.thrift.protocol.TField PING_FIELD_DESC = new org.apache.thrift.protocol.TField("ping", org.apache.thrift.protocol.TType.STRUCT, (short)8);
-  private static final org.apache.thrift.protocol.TField PATCH_FIELD_DESC = new org.apache.thrift.protocol.TField("patch", org.apache.thrift.protocol.TType.STRUCT, (short)9);
-  private static final org.apache.thrift.protocol.TField TXN_BEGIN_READ_FIELD_DESC = new org.apache.thrift.protocol.TField("txnBeginRead", org.apache.thrift.protocol.TType.STRUCT, (short)20);
-  private static final org.apache.thrift.protocol.TField TXN_BEGIN_WRITE_FIELD_DESC = new org.apache.thrift.protocol.TField("txnBeginWrite", org.apache.thrift.protocol.TType.STRUCT, (short)21);
-  private static final org.apache.thrift.protocol.TField TXN_PREPARE_FIELD_DESC = new org.apache.thrift.protocol.TField("txnPrepare", org.apache.thrift.protocol.TType.STRUCT, (short)22);
-  private static final org.apache.thrift.protocol.TField TXN_COMMIT_FIELD_DESC = new org.apache.thrift.protocol.TField("txnCommit", org.apache.thrift.protocol.TType.STRUCT, (short)23);
-  private static final org.apache.thrift.protocol.TField TXN_ABORT_FIELD_DESC = new org.apache.thrift.protocol.TField("txnAbort", org.apache.thrift.protocol.TType.STRUCT, (short)24);
-  private static final org.apache.thrift.protocol.TField TXN_END_FIELD_DESC = new org.apache.thrift.protocol.TField("txnEnd", org.apache.thrift.protocol.TType.STRUCT, (short)25);
+  public interface Iface {
 
-  private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
-  static {
-    schemes.put(StandardScheme.class, new TLZ_IdxRequestStandardSchemeFactory());
-    schemes.put(TupleScheme.class, new TLZ_IdxRequestTupleSchemeFactory());
+    public void idxPing() throws org.apache.thrift.TException;
+
+    public boolean idxAdd(TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws org.apache.thrift.TException;
+
+    public boolean idxDelete(TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws org.apache.thrift.TException;
+
+    public List<TLZ_TupleNodeId> idxFind(TLZ_ShardIndex shard, TLZ_TupleNodeId pattern) throws org.apache.thrift.TException;
+
   }
 
-  public long requestId; // required
-  public long generation; // required
-  public TLZ_ShardIndex index; // required
-  public TLZ_TupleNodeId pattern; // optional
-  public TLZ_SubjectPredicateList subPreds; // optional
-  public TLZ_TupleNodeId addTuple; // optional
-  public TLZ_TupleNodeId deleteTuple; // optional
-  public TLZ_Ping ping; // optional
-  public TLZ_Patch patch; // optional
-  public TLZ_TxnBeginRead txnBeginRead; // optional
-  public TLZ_TxnBeginWrite txnBeginWrite; // optional
-  public TLZ_TxnPrepare txnPrepare; // optional
-  public TLZ_TxnCommit txnCommit; // optional
-  public TLZ_TxnAbort txnAbort; // optional
-  public TLZ_TxnEnd txnEnd; // optional
+  public interface AsyncIface {
 
-  /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
-  public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-    REQUEST_ID((short)1, "requestId"),
-    GENERATION((short)2, "generation"),
-    INDEX((short)3, "index"),
-    PATTERN((short)4, "pattern"),
-    SUB_PREDS((short)5, "subPreds"),
-    ADD_TUPLE((short)6, "addTuple"),
-    DELETE_TUPLE((short)7, "deleteTuple"),
-    PING((short)8, "ping"),
-    PATCH((short)9, "patch"),
-    TXN_BEGIN_READ((short)20, "txnBeginRead"),
-    TXN_BEGIN_WRITE((short)21, "txnBeginWrite"),
-    TXN_PREPARE((short)22, "txnPrepare"),
-    TXN_COMMIT((short)23, "txnCommit"),
-    TXN_ABORT((short)24, "txnAbort"),
-    TXN_END((short)25, "txnEnd");
+    public void idxPing(org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
-    private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+    public void idxAdd(TLZ_ShardIndex shard, TLZ_TupleNodeId tuple, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
+    public void idxDelete(TLZ_ShardIndex shard, TLZ_TupleNodeId tuple, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
+
+    public void idxFind(TLZ_ShardIndex shard, TLZ_TupleNodeId pattern, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
+
+  }
+
+  public static class Client extends org.apache.thrift.TServiceClient implements Iface {
+    public static class Factory implements org.apache.thrift.TServiceClientFactory<Client> {
+      public Factory() {}
+      public Client getClient(org.apache.thrift.protocol.TProtocol prot) {
+        return new Client(prot);
+      }
+      public Client getClient(org.apache.thrift.protocol.TProtocol iprot, org.apache.thrift.protocol.TProtocol oprot) {
+        return new Client(iprot, oprot);
+      }
+    }
+
+    public Client(org.apache.thrift.protocol.TProtocol prot)
+    {
+      super(prot, prot);
+    }
+
+    public Client(org.apache.thrift.protocol.TProtocol iprot, org.apache.thrift.protocol.TProtocol oprot) {
+      super(iprot, oprot);
+    }
+
+    public void idxPing() throws org.apache.thrift.TException
+    {
+      send_idxPing();
+      recv_idxPing();
+    }
+
+    public void send_idxPing() throws org.apache.thrift.TException
+    {
+      idxPing_args args = new idxPing_args();
+      sendBase("idxPing", args);
+    }
+
+    public void recv_idxPing() throws org.apache.thrift.TException
+    {
+      idxPing_result result = new idxPing_result();
+      receiveBase(result, "idxPing");
+      return;
+    }
+
+    public boolean idxAdd(TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws org.apache.thrift.TException
+    {
+      send_idxAdd(shard, tuple);
+      return recv_idxAdd();
+    }
+
+    public void send_idxAdd(TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws org.apache.thrift.TException
+    {
+      idxAdd_args args = new idxAdd_args();
+      args.setShard(shard);
+      args.setTuple(tuple);
+      sendBase("idxAdd", args);
+    }
+
+    public boolean recv_idxAdd() throws org.apache.thrift.TException
+    {
+      idxAdd_result result = new idxAdd_result();
+      receiveBase(result, "idxAdd");
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "idxAdd failed: unknown result");
+    }
+
+    public boolean idxDelete(TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws org.apache.thrift.TException
+    {
+      send_idxDelete(shard, tuple);
+      return recv_idxDelete();
+    }
+
+    public void send_idxDelete(TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws org.apache.thrift.TException
+    {
+      idxDelete_args args = new idxDelete_args();
+      args.setShard(shard);
+      args.setTuple(tuple);
+      sendBase("idxDelete", args);
+    }
+
+    public boolean recv_idxDelete() throws org.apache.thrift.TException
+    {
+      idxDelete_result result = new idxDelete_result();
+      receiveBase(result, "idxDelete");
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "idxDelete failed: unknown result");
+    }
+
+    public List<TLZ_TupleNodeId> idxFind(TLZ_ShardIndex shard, TLZ_TupleNodeId pattern) throws org.apache.thrift.TException
+    {
+      send_idxFind(shard, pattern);
+      return recv_idxFind();
+    }
+
+    public void send_idxFind(TLZ_ShardIndex shard, TLZ_TupleNodeId pattern) throws org.apache.thrift.TException
+    {
+      idxFind_args args = new idxFind_args();
+      args.setShard(shard);
+      args.setPattern(pattern);
+      sendBase("idxFind", args);
+    }
+
+    public List<TLZ_TupleNodeId> recv_idxFind() throws org.apache.thrift.TException
+    {
+      idxFind_result result = new idxFind_result();
+      receiveBase(result, "idxFind");
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "idxFind failed: unknown result");
+    }
+
+  }
+  public static class AsyncClient extends org.apache.thrift.async.TAsyncClient implements AsyncIface {
+    public static class Factory implements org.apache.thrift.async.TAsyncClientFactory<AsyncClient> {
+      private org.apache.thrift.async.TAsyncClientManager clientManager;
+      private org.apache.thrift.protocol.TProtocolFactory protocolFactory;
+      public Factory(org.apache.thrift.async.TAsyncClientManager clientManager, org.apache.thrift.protocol.TProtocolFactory protocolFactory) {
+        this.clientManager = clientManager;
+        this.protocolFactory = protocolFactory;
+      }
+      public AsyncClient getAsyncClient(org.apache.thrift.transport.TNonblockingTransport transport) {
+        return new AsyncClient(protocolFactory, clientManager, transport);
+      }
+    }
+
+    public AsyncClient(org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.async.TAsyncClientManager clientManager, org.apache.thrift.transport.TNonblockingTransport transport) {
+      super(protocolFactory, clientManager, transport);
+    }
+
+    public void idxPing(org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
+      checkReady();
+      idxPing_call method_call = new idxPing_call(resultHandler, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class idxPing_call extends org.apache.thrift.async.TAsyncMethodCall {
+      public idxPing_call(org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+        super(client, protocolFactory, transport, resultHandler, false);
+      }
+
+      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("idxPing", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        idxPing_args args = new idxPing_args();
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public void getResult() throws org.apache.thrift.TException {
+        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
+          throw new IllegalStateException("Method call not finished!");
+        }
+        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
+        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
+        (new Client(prot)).recv_idxPing();
+      }
+    }
+
+    public void idxAdd(TLZ_ShardIndex shard, TLZ_TupleNodeId tuple, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
+      checkReady();
+      idxAdd_call method_call = new idxAdd_call(shard, tuple, resultHandler, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class idxAdd_call extends org.apache.thrift.async.TAsyncMethodCall {
+      private TLZ_ShardIndex shard;
+      private TLZ_TupleNodeId tuple;
+      public idxAdd_call(TLZ_ShardIndex shard, TLZ_TupleNodeId tuple, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+        super(client, protocolFactory, transport, resultHandler, false);
+        this.shard = shard;
+        this.tuple = tuple;
+      }
+
+      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("idxAdd", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        idxAdd_args args = new idxAdd_args();
+        args.setShard(shard);
+        args.setTuple(tuple);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public boolean getResult() throws org.apache.thrift.TException {
+        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
+          throw new IllegalStateException("Method call not finished!");
+        }
+        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
+        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_idxAdd();
+      }
+    }
+
+    public void idxDelete(TLZ_ShardIndex shard, TLZ_TupleNodeId tuple, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
+      checkReady();
+      idxDelete_call method_call = new idxDelete_call(shard, tuple, resultHandler, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class idxDelete_call extends org.apache.thrift.async.TAsyncMethodCall {
+      private TLZ_ShardIndex shard;
+      private TLZ_TupleNodeId tuple;
+      public idxDelete_call(TLZ_ShardIndex shard, TLZ_TupleNodeId tuple, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+        super(client, protocolFactory, transport, resultHandler, false);
+        this.shard = shard;
+        this.tuple = tuple;
+      }
+
+      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("idxDelete", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        idxDelete_args args = new idxDelete_args();
+        args.setShard(shard);
+        args.setTuple(tuple);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public boolean getResult() throws org.apache.thrift.TException {
+        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
+          throw new IllegalStateException("Method call not finished!");
+        }
+        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
+        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_idxDelete();
+      }
+    }
+
+    public void idxFind(TLZ_ShardIndex shard, TLZ_TupleNodeId pattern, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
+      checkReady();
+      idxFind_call method_call = new idxFind_call(shard, pattern, resultHandler, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class idxFind_call extends org.apache.thrift.async.TAsyncMethodCall {
+      private TLZ_ShardIndex shard;
+      private TLZ_TupleNodeId pattern;
+      public idxFind_call(TLZ_ShardIndex shard, TLZ_TupleNodeId pattern, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+        super(client, protocolFactory, transport, resultHandler, false);
+        this.shard = shard;
+        this.pattern = pattern;
+      }
+
+      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("idxFind", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        idxFind_args args = new idxFind_args();
+        args.setShard(shard);
+        args.setPattern(pattern);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public List<TLZ_TupleNodeId> getResult() throws org.apache.thrift.TException {
+        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
+          throw new IllegalStateException("Method call not finished!");
+        }
+        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
+        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_idxFind();
+      }
+    }
+
+  }
+
+  public static class Processor<I extends Iface> extends org.apache.thrift.TBaseProcessor<I> implements org.apache.thrift.TProcessor {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Processor.class.getName());
+    public Processor(I iface) {
+      super(iface, getProcessMap(new HashMap<String, org.apache.thrift.ProcessFunction<I, ? extends org.apache.thrift.TBase>>()));
+    }
+
+    protected Processor(I iface, Map<String,  org.apache.thrift.ProcessFunction<I, ? extends  org.apache.thrift.TBase>> processMap) {
+      super(iface, getProcessMap(processMap));
+    }
+
+    private static <I extends Iface> Map<String,  org.apache.thrift.ProcessFunction<I, ? extends  org.apache.thrift.TBase>> getProcessMap(Map<String,  org.apache.thrift.ProcessFunction<I, ? extends  org.apache.thrift.TBase>> processMap) {
+      processMap.put("idxPing", new idxPing());
+      processMap.put("idxAdd", new idxAdd());
+      processMap.put("idxDelete", new idxDelete());
+      processMap.put("idxFind", new idxFind());
+      return processMap;
+    }
+
+    public static class idxPing<I extends Iface> extends org.apache.thrift.ProcessFunction<I, idxPing_args> {
+      public idxPing() {
+        super("idxPing");
+      }
+
+      public idxPing_args getEmptyArgsInstance() {
+        return new idxPing_args();
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      public idxPing_result getResult(I iface, idxPing_args args) throws org.apache.thrift.TException {
+        idxPing_result result = new idxPing_result();
+        iface.idxPing();
+        return result;
+      }
+    }
+
+    public static class idxAdd<I extends Iface> extends org.apache.thrift.ProcessFunction<I, idxAdd_args> {
+      public idxAdd() {
+        super("idxAdd");
+      }
+
+      public idxAdd_args getEmptyArgsInstance() {
+        return new idxAdd_args();
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      public idxAdd_result getResult(I iface, idxAdd_args args) throws org.apache.thrift.TException {
+        idxAdd_result result = new idxAdd_result();
+        result.success = iface.idxAdd(args.shard, args.tuple);
+        result.setSuccessIsSet(true);
+        return result;
+      }
+    }
+
+    public static class idxDelete<I extends Iface> extends org.apache.thrift.ProcessFunction<I, idxDelete_args> {
+      public idxDelete() {
+        super("idxDelete");
+      }
+
+      public idxDelete_args getEmptyArgsInstance() {
+        return new idxDelete_args();
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      public idxDelete_result getResult(I iface, idxDelete_args args) throws org.apache.thrift.TException {
+        idxDelete_result result = new idxDelete_result();
+        result.success = iface.idxDelete(args.shard, args.tuple);
+        result.setSuccessIsSet(true);
+        return result;
+      }
+    }
+
+    public static class idxFind<I extends Iface> extends org.apache.thrift.ProcessFunction<I, idxFind_args> {
+      public idxFind() {
+        super("idxFind");
+      }
+
+      public idxFind_args getEmptyArgsInstance() {
+        return new idxFind_args();
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      public idxFind_result getResult(I iface, idxFind_args args) throws org.apache.thrift.TException {
+        idxFind_result result = new idxFind_result();
+        result.success = iface.idxFind(args.shard, args.pattern);
+        return result;
+      }
+    }
+
+  }
+
+  public static class AsyncProcessor<I extends AsyncIface> extends org.apache.thrift.TBaseAsyncProcessor<I> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AsyncProcessor.class.getName());
+    public AsyncProcessor(I iface) {
+      super(iface, getProcessMap(new HashMap<String, org.apache.thrift.AsyncProcessFunction<I, ? extends org.apache.thrift.TBase, ?>>()));
+    }
+
+    protected AsyncProcessor(I iface, Map<String,  org.apache.thrift.AsyncProcessFunction<I, ? extends  org.apache.thrift.TBase, ?>> processMap) {
+      super(iface, getProcessMap(processMap));
+    }
+
+    private static <I extends AsyncIface> Map<String,  org.apache.thrift.AsyncProcessFunction<I, ? extends  org.apache.thrift.TBase,?>> getProcessMap(Map<String,  org.apache.thrift.AsyncProcessFunction<I, ? extends  org.apache.thrift.TBase, ?>> processMap) {
+      processMap.put("idxPing", new idxPing());
+      processMap.put("idxAdd", new idxAdd());
+      processMap.put("idxDelete", new idxDelete());
+      processMap.put("idxFind", new idxFind());
+      return processMap;
+    }
+
+    public static class idxPing<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, idxPing_args, Void> {
+      public idxPing() {
+        super("idxPing");
+      }
+
+      public idxPing_args getEmptyArgsInstance() {
+        return new idxPing_args();
+      }
+
+      public AsyncMethodCallback<Void> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
+        final org.apache.thrift.AsyncProcessFunction fcall = this;
+        return new AsyncMethodCallback<Void>() { 
+          public void onComplete(Void o) {
+            idxPing_result result = new idxPing_result();
+            try {
+              fcall.sendResponse(fb,result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
+              return;
+            } catch (Exception e) {
+              LOGGER.error("Exception writing to internal frame buffer", e);
+            }
+            fb.close();
+          }
+          public void onError(Exception e) {
+            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
+            org.apache.thrift.TBase msg;
+            idxPing_result result = new idxPing_result();
+            {
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = (org.apache.thrift.TBase)new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
+            }
+            try {
+              fcall.sendResponse(fb,msg,msgType,seqid);
+              return;
+            } catch (Exception ex) {
+              LOGGER.error("Exception writing to internal frame buffer", ex);
+            }
+            fb.close();
+          }
+        };
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      public void start(I iface, idxPing_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws TException {
+        iface.idxPing(resultHandler);
+      }
+    }
+
+    public static class idxAdd<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, idxAdd_args, Boolean> {
+      public idxAdd() {
+        super("idxAdd");
+      }
+
+      public idxAdd_args getEmptyArgsInstance() {
+        return new idxAdd_args();
+      }
+
+      public AsyncMethodCallback<Boolean> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
+        final org.apache.thrift.AsyncProcessFunction fcall = this;
+        return new AsyncMethodCallback<Boolean>() { 
+          public void onComplete(Boolean o) {
+            idxAdd_result result = new idxAdd_result();
+            result.success = o;
+            result.setSuccessIsSet(true);
+            try {
+              fcall.sendResponse(fb,result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
+              return;
+            } catch (Exception e) {
+              LOGGER.error("Exception writing to internal frame buffer", e);
+            }
+            fb.close();
+          }
+          public void onError(Exception e) {
+            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
+            org.apache.thrift.TBase msg;
+            idxAdd_result result = new idxAdd_result();
+            {
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = (org.apache.thrift.TBase)new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
+            }
+            try {
+              fcall.sendResponse(fb,msg,msgType,seqid);
+              return;
+            } catch (Exception ex) {
+              LOGGER.error("Exception writing to internal frame buffer", ex);
+            }
+            fb.close();
+          }
+        };
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      public void start(I iface, idxAdd_args args, org.apache.thrift.async.AsyncMethodCallback<Boolean> resultHandler) throws TException {
+        iface.idxAdd(args.shard, args.tuple,resultHandler);
+      }
+    }
+
+    public static class idxDelete<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, idxDelete_args, Boolean> {
+      public idxDelete() {
+        super("idxDelete");
+      }
+
+      public idxDelete_args getEmptyArgsInstance() {
+        return new idxDelete_args();
+      }
+
+      public AsyncMethodCallback<Boolean> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
+        final org.apache.thrift.AsyncProcessFunction fcall = this;
+        return new AsyncMethodCallback<Boolean>() { 
+          public void onComplete(Boolean o) {
+            idxDelete_result result = new idxDelete_result();
+            result.success = o;
+            result.setSuccessIsSet(true);
+            try {
+              fcall.sendResponse(fb,result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
+              return;
+            } catch (Exception e) {
+              LOGGER.error("Exception writing to internal frame buffer", e);
+            }
+            fb.close();
+          }
+          public void onError(Exception e) {
+            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
+            org.apache.thrift.TBase msg;
+            idxDelete_result result = new idxDelete_result();
+            {
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = (org.apache.thrift.TBase)new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
+            }
+            try {
+              fcall.sendResponse(fb,msg,msgType,seqid);
+              return;
+            } catch (Exception ex) {
+              LOGGER.error("Exception writing to internal frame buffer", ex);
+            }
+            fb.close();
+          }
+        };
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      public void start(I iface, idxDelete_args args, org.apache.thrift.async.AsyncMethodCallback<Boolean> resultHandler) throws TException {
+        iface.idxDelete(args.shard, args.tuple,resultHandler);
+      }
+    }
+
+    public static class idxFind<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, idxFind_args, List<TLZ_TupleNodeId>> {
+      public idxFind() {
+        super("idxFind");
+      }
+
+      public idxFind_args getEmptyArgsInstance() {
+        return new idxFind_args();
+      }
+
+      public AsyncMethodCallback<List<TLZ_TupleNodeId>> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
+        final org.apache.thrift.AsyncProcessFunction fcall = this;
+        return new AsyncMethodCallback<List<TLZ_TupleNodeId>>() { 
+          public void onComplete(List<TLZ_TupleNodeId> o) {
+            idxFind_result result = new idxFind_result();
+            result.success = o;
+            try {
+              fcall.sendResponse(fb,result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
+              return;
+            } catch (Exception e) {
+              LOGGER.error("Exception writing to internal frame buffer", e);
+            }
+            fb.close();
+          }
+          public void onError(Exception e) {
+            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
+            org.apache.thrift.TBase msg;
+            idxFind_result result = new idxFind_result();
+            {
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = (org.apache.thrift.TBase)new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
+            }
+            try {
+              fcall.sendResponse(fb,msg,msgType,seqid);
+              return;
+            } catch (Exception ex) {
+              LOGGER.error("Exception writing to internal frame buffer", ex);
+            }
+            fb.close();
+          }
+        };
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      public void start(I iface, idxFind_args args, org.apache.thrift.async.AsyncMethodCallback<List<TLZ_TupleNodeId>> resultHandler) throws TException {
+        iface.idxFind(args.shard, args.pattern,resultHandler);
+      }
+    }
+
+  }
+
+  public static class idxPing_args implements org.apache.thrift.TBase<idxPing_args, idxPing_args._Fields>, java.io.Serializable, Cloneable, Comparable<idxPing_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("idxPing_args");
+
+
+    private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
-      for (_Fields field : EnumSet.allOf(_Fields.class)) {
-        byName.put(field.getFieldName(), field);
+      schemes.put(StandardScheme.class, new idxPing_argsStandardSchemeFactory());
+      schemes.put(TupleScheme.class, new idxPing_argsTupleSchemeFactory());
+    }
+
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+;
+
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
+    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      metaDataMap = Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(idxPing_args.class, metaDataMap);
+    }
+
+    public idxPing_args() {
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public idxPing_args(idxPing_args other) {
+    }
+
+    public idxPing_args deepCopy() {
+      return new idxPing_args(this);
+    }
+
+    @Override
+    public void clear() {
+    }
+
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       }
     }
 
-    /**
-     * Find the _Fields constant that matches fieldId, or null if its not found.
-     */
-    public static _Fields findByThriftId(int fieldId) {
-      switch(fieldId) {
-        case 1: // REQUEST_ID
-          return REQUEST_ID;
-        case 2: // GENERATION
-          return GENERATION;
-        case 3: // INDEX
-          return INDEX;
-        case 4: // PATTERN
-          return PATTERN;
-        case 5: // SUB_PREDS
-          return SUB_PREDS;
-        case 6: // ADD_TUPLE
-          return ADD_TUPLE;
-        case 7: // DELETE_TUPLE
-          return DELETE_TUPLE;
-        case 8: // PING
-          return PING;
-        case 9: // PATCH
-          return PATCH;
-        case 20: // TXN_BEGIN_READ
-          return TXN_BEGIN_READ;
-        case 21: // TXN_BEGIN_WRITE
-          return TXN_BEGIN_WRITE;
-        case 22: // TXN_PREPARE
-          return TXN_PREPARE;
-        case 23: // TXN_COMMIT
-          return TXN_COMMIT;
-        case 24: // TXN_ABORT
-          return TXN_ABORT;
-        case 25: // TXN_END
-          return TXN_END;
-        default:
-          return null;
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
+      }
+      throw new IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new IllegalArgumentException();
+      }
+
+      switch (field) {
+      }
+      throw new IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof idxPing_args)
+        return this.equals((idxPing_args)that);
+      return false;
+    }
+
+    public boolean equals(idxPing_args that) {
+      if (that == null)
+        return false;
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return 0;
+    }
+
+    @Override
+    public int compareTo(idxPing_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("idxPing_args(");
+      boolean first = true;
+
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
       }
     }
 
-    /**
-     * Find the _Fields constant that matches fieldId, throwing an exception
-     * if it is not found.
-     */
-    public static _Fields findByThriftIdOrThrow(int fieldId) {
-      _Fields fields = findByThriftId(fieldId);
-      if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
-      return fields;
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class idxPing_argsStandardSchemeFactory implements SchemeFactory {
+      public idxPing_argsStandardScheme getScheme() {
+        return new idxPing_argsStandardScheme();
+      }
+    }
+
+    private static class idxPing_argsStandardScheme extends StandardScheme<idxPing_args> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, idxPing_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, idxPing_args struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class idxPing_argsTupleSchemeFactory implements SchemeFactory {
+      public idxPing_argsTupleScheme getScheme() {
+        return new idxPing_argsTupleScheme();
+      }
+    }
+
+    private static class idxPing_argsTupleScheme extends TupleScheme<idxPing_args> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, idxPing_args struct) throws org.apache.thrift.TException {
+        TTupleProtocol oprot = (TTupleProtocol) prot;
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, idxPing_args struct) throws org.apache.thrift.TException {
+        TTupleProtocol iprot = (TTupleProtocol) prot;
+      }
+    }
+
+  }
+
+  public static class idxPing_result implements org.apache.thrift.TBase<idxPing_result, idxPing_result._Fields>, java.io.Serializable, Cloneable, Comparable<idxPing_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("idxPing_result");
+
+
+    private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
+    static {
+      schemes.put(StandardScheme.class, new idxPing_resultStandardSchemeFactory());
+      schemes.put(TupleScheme.class, new idxPing_resultTupleSchemeFactory());
+    }
+
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+;
+
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
+    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      metaDataMap = Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(idxPing_result.class, metaDataMap);
+    }
+
+    public idxPing_result() {
     }
 
     /**
-     * Find the _Fields constant that matches name, or null if its not found.
+     * Performs a deep copy on <i>other</i>.
      */
-    public static _Fields findByName(String name) {
-      return byName.get(name);
+    public idxPing_result(idxPing_result other) {
     }
 
-    private final short _thriftId;
-    private final String _fieldName;
-
-    _Fields(short thriftId, String fieldName) {
-      _thriftId = thriftId;
-      _fieldName = fieldName;
+    public idxPing_result deepCopy() {
+      return new idxPing_result(this);
     }
 
-    public short getThriftFieldId() {
-      return _thriftId;
+    @Override
+    public void clear() {
     }
 
-    public String getFieldName() {
-      return _fieldName;
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
+      }
     }
-  }
 
-  // isset id assignments
-  private static final int __REQUESTID_ISSET_ID = 0;
-  private static final int __GENERATION_ISSET_ID = 1;
-  private byte __isset_bitfield = 0;
-  private _Fields optionals[] = {_Fields.PATTERN,_Fields.SUB_PREDS,_Fields.ADD_TUPLE,_Fields.DELETE_TUPLE,_Fields.PING,_Fields.PATCH,_Fields.TXN_BEGIN_READ,_Fields.TXN_BEGIN_WRITE,_Fields.TXN_PREPARE,_Fields.TXN_COMMIT,_Fields.TXN_ABORT,_Fields.TXN_END};
-  public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
-  static {
-    Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-    tmpMap.put(_Fields.REQUEST_ID, new org.apache.thrift.meta_data.FieldMetaData("requestId", org.apache.thrift.TFieldRequirementType.REQUIRED, 
-        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
-    tmpMap.put(_Fields.GENERATION, new org.apache.thrift.meta_data.FieldMetaData("generation", org.apache.thrift.TFieldRequirementType.REQUIRED, 
-        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
-    tmpMap.put(_Fields.INDEX, new org.apache.thrift.meta_data.FieldMetaData("index", org.apache.thrift.TFieldRequirementType.REQUIRED, 
-        new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_ShardIndex.class)));
-    tmpMap.put(_Fields.PATTERN, new org.apache.thrift.meta_data.FieldMetaData("pattern", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
-        new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_TupleNodeId.class)));
-    tmpMap.put(_Fields.SUB_PREDS, new org.apache.thrift.meta_data.FieldMetaData("subPreds", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
-        new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_SubjectPredicateList.class)));
-    tmpMap.put(_Fields.ADD_TUPLE, new org.apache.thrift.meta_data.FieldMetaData("addTuple", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
-        new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_TupleNodeId.class)));
-    tmpMap.put(_Fields.DELETE_TUPLE, new org.apache.thrift.meta_data.FieldMetaData("deleteTuple", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
-        new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_TupleNodeId.class)));
-    tmpMap.put(_Fields.PING, new org.apache.thrift.meta_data.FieldMetaData("ping", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
-        new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_Ping.class)));
-    tmpMap.put(_Fields.PATCH, new org.apache.thrift.meta_data.FieldMetaData("patch", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
-        new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_Patch.class)));
-    tmpMap.put(_Fields.TXN_BEGIN_READ, new org.apache.thrift.meta_data.FieldMetaData("txnBeginRead", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
-        new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_TxnBeginRead.class)));
-    tmpMap.put(_Fields.TXN_BEGIN_WRITE, new org.apache.thrift.meta_data.FieldMetaData("txnBeginWrite", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
-        new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_TxnBeginWrite.class)));
-    tmpMap.put(_Fields.TXN_PREPARE, new org.apache.thrift.meta_data.FieldMetaData("txnPrepare", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
-        new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_TxnPrepare.class)));
-    tmpMap.put(_Fields.TXN_COMMIT, new org.apache.thrift.meta_data.FieldMetaData("txnCommit", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
-        new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_TxnCommit.class)));
-    tmpMap.put(_Fields.TXN_ABORT, new org.apache.thrift.meta_data.FieldMetaData("txnAbort", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
-        new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_TxnAbort.class)));
-    tmpMap.put(_Fields.TXN_END, new org.apache.thrift.meta_data.FieldMetaData("txnEnd", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
-        new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_TxnEnd.class)));
-    metaDataMap = Collections.unmodifiableMap(tmpMap);
-    org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(TLZ_IdxRequest.class, metaDataMap);
-  }
-
-  public TLZ_IdxRequest() {
-  }
-
-  public TLZ_IdxRequest(
-    long requestId,
-    long generation,
-    TLZ_ShardIndex index)
-  {
-    this();
-    this.requestId = requestId;
-    setRequestIdIsSet(true);
-    this.generation = generation;
-    setGenerationIsSet(true);
-    this.index = index;
-  }
-
-  /**
-   * Performs a deep copy on <i>other</i>.
-   */
-  public TLZ_IdxRequest(TLZ_IdxRequest other) {
-    __isset_bitfield = other.__isset_bitfield;
-    this.requestId = other.requestId;
-    this.generation = other.generation;
-    if (other.isSetIndex()) {
-      this.index = new TLZ_ShardIndex(other.index);
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
+      }
+      throw new IllegalStateException();
     }
-    if (other.isSetPattern()) {
-      this.pattern = new TLZ_TupleNodeId(other.pattern);
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new IllegalArgumentException();
+      }
+
+      switch (field) {
+      }
+      throw new IllegalStateException();
     }
-    if (other.isSetSubPreds()) {
-      this.subPreds = new TLZ_SubjectPredicateList(other.subPreds);
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof idxPing_result)
+        return this.equals((idxPing_result)that);
+      return false;
     }
-    if (other.isSetAddTuple()) {
-      this.addTuple = new TLZ_TupleNodeId(other.addTuple);
+
+    public boolean equals(idxPing_result that) {
+      if (that == null)
+        return false;
+
+      return true;
     }
-    if (other.isSetDeleteTuple()) {
-      this.deleteTuple = new TLZ_TupleNodeId(other.deleteTuple);
+
+    @Override
+    public int hashCode() {
+      return 0;
     }
-    if (other.isSetPing()) {
-      this.ping = new TLZ_Ping(other.ping);
+
+    @Override
+    public int compareTo(idxPing_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      return 0;
     }
-    if (other.isSetPatch()) {
-      this.patch = new TLZ_Patch(other.patch);
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
     }
-    if (other.isSetTxnBeginRead()) {
-      this.txnBeginRead = new TLZ_TxnBeginRead(other.txnBeginRead);
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
     }
-    if (other.isSetTxnBeginWrite()) {
-      this.txnBeginWrite = new TLZ_TxnBeginWrite(other.txnBeginWrite);
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
+      }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("idxPing_result(");
+      boolean first = true;
+
+      sb.append(")");
+      return sb.toString();
     }
-    if (other.isSetTxnPrepare()) {
-      this.txnPrepare = new TLZ_TxnPrepare(other.txnPrepare);
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
     }
-    if (other.isSetTxnCommit()) {
-      this.txnCommit = new TLZ_TxnCommit(other.txnCommit);
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
     }
-    if (other.isSetTxnAbort()) {
-      this.txnAbort = new TLZ_TxnAbort(other.txnAbort);
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
     }
-    if (other.isSetTxnEnd()) {
-      this.txnEnd = new TLZ_TxnEnd(other.txnEnd);
+
+    private static class idxPing_resultStandardSchemeFactory implements SchemeFactory {
+      public idxPing_resultStandardScheme getScheme() {
+        return new idxPing_resultStandardScheme();
+      }
     }
-  }
 
-  public TLZ_IdxRequest deepCopy() {
-    return new TLZ_IdxRequest(this);
-  }
+    private static class idxPing_resultStandardScheme extends StandardScheme<idxPing_result> {
 
-  @Override
-  public void clear() {
-    setRequestIdIsSet(false);
-    this.requestId = 0;
-    setGenerationIsSet(false);
-    this.generation = 0;
-    this.index = null;
-    this.pattern = null;
-    this.subPreds = null;
-    this.addTuple = null;
-    this.deleteTuple = null;
-    this.ping = null;
-    this.patch = null;
-    this.txnBeginRead = null;
-    this.txnBeginWrite = null;
-    this.txnPrepare = null;
-    this.txnCommit = null;
-    this.txnAbort = null;
-    this.txnEnd = null;
-  }
+      public void read(org.apache.thrift.protocol.TProtocol iprot, idxPing_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
 
-  public long getRequestId() {
-    return this.requestId;
-  }
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
 
-  public TLZ_IdxRequest setRequestId(long requestId) {
-    this.requestId = requestId;
-    setRequestIdIsSet(true);
-    return this;
-  }
+      public void write(org.apache.thrift.protocol.TProtocol oprot, idxPing_result struct) throws org.apache.thrift.TException {
+        struct.validate();
 
-  public void unsetRequestId() {
-    __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __REQUESTID_ISSET_ID);
-  }
+        oprot.writeStructBegin(STRUCT_DESC);
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
 
-  /** Returns true if field requestId is set (has been assigned a value) and false otherwise */
-  public boolean isSetRequestId() {
-    return EncodingUtils.testBit(__isset_bitfield, __REQUESTID_ISSET_ID);
-  }
-
-  public void setRequestIdIsSet(boolean value) {
-    __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __REQUESTID_ISSET_ID, value);
-  }
-
-  public long getGeneration() {
-    return this.generation;
-  }
-
-  public TLZ_IdxRequest setGeneration(long generation) {
-    this.generation = generation;
-    setGenerationIsSet(true);
-    return this;
-  }
-
-  public void unsetGeneration() {
-    __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __GENERATION_ISSET_ID);
-  }
-
-  /** Returns true if field generation is set (has been assigned a value) and false otherwise */
-  public boolean isSetGeneration() {
-    return EncodingUtils.testBit(__isset_bitfield, __GENERATION_ISSET_ID);
-  }
-
-  public void setGenerationIsSet(boolean value) {
-    __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __GENERATION_ISSET_ID, value);
-  }
-
-  public TLZ_ShardIndex getIndex() {
-    return this.index;
-  }
-
-  public TLZ_IdxRequest setIndex(TLZ_ShardIndex index) {
-    this.index = index;
-    return this;
-  }
-
-  public void unsetIndex() {
-    this.index = null;
-  }
-
-  /** Returns true if field index is set (has been assigned a value) and false otherwise */
-  public boolean isSetIndex() {
-    return this.index != null;
-  }
-
-  public void setIndexIsSet(boolean value) {
-    if (!value) {
-      this.index = null;
     }
+
+    private static class idxPing_resultTupleSchemeFactory implements SchemeFactory {
+      public idxPing_resultTupleScheme getScheme() {
+        return new idxPing_resultTupleScheme();
+      }
+    }
+
+    private static class idxPing_resultTupleScheme extends TupleScheme<idxPing_result> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, idxPing_result struct) throws org.apache.thrift.TException {
+        TTupleProtocol oprot = (TTupleProtocol) prot;
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, idxPing_result struct) throws org.apache.thrift.TException {
+        TTupleProtocol iprot = (TTupleProtocol) prot;
+      }
+    }
+
   }
 
-  public TLZ_TupleNodeId getPattern() {
-    return this.pattern;
+  public static class idxAdd_args implements org.apache.thrift.TBase<idxAdd_args, idxAdd_args._Fields>, java.io.Serializable, Cloneable, Comparable<idxAdd_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("idxAdd_args");
+
+    private static final org.apache.thrift.protocol.TField SHARD_FIELD_DESC = new org.apache.thrift.protocol.TField("shard", org.apache.thrift.protocol.TType.STRUCT, (short)1);
+    private static final org.apache.thrift.protocol.TField TUPLE_FIELD_DESC = new org.apache.thrift.protocol.TField("tuple", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+
+    private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
+    static {
+      schemes.put(StandardScheme.class, new idxAdd_argsStandardSchemeFactory());
+      schemes.put(TupleScheme.class, new idxAdd_argsTupleSchemeFactory());
+    }
+
+    public TLZ_ShardIndex shard; // required
+    public TLZ_TupleNodeId tuple; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      SHARD((short)1, "shard"),
+      TUPLE((short)2, "tuple");
+
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 1: // SHARD
+            return SHARD;
+          case 2: // TUPLE
+            return TUPLE;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SHARD, new org.apache.thrift.meta_data.FieldMetaData("shard", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_ShardIndex.class)));
+      tmpMap.put(_Fields.TUPLE, new org.apache.thrift.meta_data.FieldMetaData("tuple", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_TupleNodeId.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(idxAdd_args.class, metaDataMap);
+    }
+
+    public idxAdd_args() {
+    }
+
+    public idxAdd_args(
+      TLZ_ShardIndex shard,
+      TLZ_TupleNodeId tuple)
+    {
+      this();
+      this.shard = shard;
+      this.tuple = tuple;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public idxAdd_args(idxAdd_args other) {
+      if (other.isSetShard()) {
+        this.shard = new TLZ_ShardIndex(other.shard);
+      }
+      if (other.isSetTuple()) {
+        this.tuple = new TLZ_TupleNodeId(other.tuple);
+      }
+    }
+
+    public idxAdd_args deepCopy() {
+      return new idxAdd_args(this);
+    }
+
+    @Override
+    public void clear() {
+      this.shard = null;
+      this.tuple = null;
+    }
+
+    public TLZ_ShardIndex getShard() {
+      return this.shard;
+    }
+
+    public idxAdd_args setShard(TLZ_ShardIndex shard) {
+      this.shard = shard;
+      return this;
+    }
+
+    public void unsetShard() {
+      this.shard = null;
+    }
+
+    /** Returns true if field shard is set (has been assigned a value) and false otherwise */
+    public boolean isSetShard() {
+      return this.shard != null;
+    }
+
+    public void setShardIsSet(boolean value) {
+      if (!value) {
+        this.shard = null;
+      }
+    }
+
+    public TLZ_TupleNodeId getTuple() {
+      return this.tuple;
+    }
+
+    public idxAdd_args setTuple(TLZ_TupleNodeId tuple) {
+      this.tuple = tuple;
+      return this;
+    }
+
+    public void unsetTuple() {
+      this.tuple = null;
+    }
+
+    /** Returns true if field tuple is set (has been assigned a value) and false otherwise */
+    public boolean isSetTuple() {
+      return this.tuple != null;
+    }
+
+    public void setTupleIsSet(boolean value) {
+      if (!value) {
+        this.tuple = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
+      case SHARD:
+        if (value == null) {
+          unsetShard();
+        } else {
+          setShard((TLZ_ShardIndex)value);
+        }
+        break;
+
+      case TUPLE:
+        if (value == null) {
+          unsetTuple();
+        } else {
+          setTuple((TLZ_TupleNodeId)value);
+        }
+        break;
+
+      }
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
+      case SHARD:
+        return getShard();
+
+      case TUPLE:
+        return getTuple();
+
+      }
+      throw new IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new IllegalArgumentException();
+      }
+
+      switch (field) {
+      case SHARD:
+        return isSetShard();
+      case TUPLE:
+        return isSetTuple();
+      }
+      throw new IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof idxAdd_args)
+        return this.equals((idxAdd_args)that);
+      return false;
+    }
+
+    public boolean equals(idxAdd_args that) {
+      if (that == null)
+        return false;
+
+      boolean this_present_shard = true && this.isSetShard();
+      boolean that_present_shard = true && that.isSetShard();
+      if (this_present_shard || that_present_shard) {
+        if (!(this_present_shard && that_present_shard))
+          return false;
+        if (!this.shard.equals(that.shard))
+          return false;
+      }
+
+      boolean this_present_tuple = true && this.isSetTuple();
+      boolean that_present_tuple = true && that.isSetTuple();
+      if (this_present_tuple || that_present_tuple) {
+        if (!(this_present_tuple && that_present_tuple))
+          return false;
+        if (!this.tuple.equals(that.tuple))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return 0;
+    }
+
+    @Override
+    public int compareTo(idxAdd_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetShard()).compareTo(other.isSetShard());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetShard()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.shard, other.shard);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetTuple()).compareTo(other.isSetTuple());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetTuple()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.tuple, other.tuple);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("idxAdd_args(");
+      boolean first = true;
+
+      sb.append("shard:");
+      if (this.shard == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.shard);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("tuple:");
+      if (this.tuple == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.tuple);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+      if (shard != null) {
+        shard.validate();
+      }
+      if (tuple != null) {
+        tuple.validate();
+      }
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class idxAdd_argsStandardSchemeFactory implements SchemeFactory {
+      public idxAdd_argsStandardScheme getScheme() {
+        return new idxAdd_argsStandardScheme();
+      }
+    }
+
+    private static class idxAdd_argsStandardScheme extends StandardScheme<idxAdd_args> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, idxAdd_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 1: // SHARD
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.shard = new TLZ_ShardIndex();
+                struct.shard.read(iprot);
+                struct.setShardIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 2: // TUPLE
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.tuple = new TLZ_TupleNodeId();
+                struct.tuple.read(iprot);
+                struct.setTupleIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, idxAdd_args struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.shard != null) {
+          oprot.writeFieldBegin(SHARD_FIELD_DESC);
+          struct.shard.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        if (struct.tuple != null) {
+          oprot.writeFieldBegin(TUPLE_FIELD_DESC);
+          struct.tuple.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class idxAdd_argsTupleSchemeFactory implements SchemeFactory {
+      public idxAdd_argsTupleScheme getScheme() {
+        return new idxAdd_argsTupleScheme();
+      }
+    }
+
+    private static class idxAdd_argsTupleScheme extends TupleScheme<idxAdd_args> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, idxAdd_args struct) throws org.apache.thrift.TException {
+        TTupleProtocol oprot = (TTupleProtocol) prot;
+        BitSet optionals = new BitSet();
+        if (struct.isSetShard()) {
+          optionals.set(0);
+        }
+        if (struct.isSetTuple()) {
+          optionals.set(1);
+        }
+        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetShard()) {
+          struct.shard.write(oprot);
+        }
+        if (struct.isSetTuple()) {
+          struct.tuple.write(oprot);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, idxAdd_args struct) throws org.apache.thrift.TException {
+        TTupleProtocol iprot = (TTupleProtocol) prot;
+        BitSet incoming = iprot.readBitSet(2);
+        if (incoming.get(0)) {
+          struct.shard = new TLZ_ShardIndex();
+          struct.shard.read(iprot);
+          struct.setShardIsSet(true);
+        }
+        if (incoming.get(1)) {
+          struct.tuple = new TLZ_TupleNodeId();
+          struct.tuple.read(iprot);
+          struct.setTupleIsSet(true);
+        }
+      }
+    }
+
   }
 
-  public TLZ_IdxRequest setPattern(TLZ_TupleNodeId pattern) {
-    this.pattern = pattern;
-    return this;
+  public static class idxAdd_result implements org.apache.thrift.TBase<idxAdd_result, idxAdd_result._Fields>, java.io.Serializable, Cloneable, Comparable<idxAdd_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("idxAdd_result");
+
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.BOOL, (short)0);
+
+    private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
+    static {
+      schemes.put(StandardScheme.class, new idxAdd_resultStandardSchemeFactory());
+      schemes.put(TupleScheme.class, new idxAdd_resultTupleSchemeFactory());
+    }
+
+    public boolean success; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      SUCCESS((short)0, "success");
+
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 0: // SUCCESS
+            return SUCCESS;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    private static final int __SUCCESS_ISSET_ID = 0;
+    private byte __isset_bitfield = 0;
+    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
+      metaDataMap = Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(idxAdd_result.class, metaDataMap);
+    }
+
+    public idxAdd_result() {
+    }
+
+    public idxAdd_result(
+      boolean success)
+    {
+      this();
+      this.success = success;
+      setSuccessIsSet(true);
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public idxAdd_result(idxAdd_result other) {
+      __isset_bitfield = other.__isset_bitfield;
+      this.success = other.success;
+    }
+
+    public idxAdd_result deepCopy() {
+      return new idxAdd_result(this);
+    }
+
+    @Override
+    public void clear() {
+      setSuccessIsSet(false);
+      this.success = false;
+    }
+
+    public boolean isSuccess() {
+      return this.success;
+    }
+
+    public idxAdd_result setSuccess(boolean success) {
+      this.success = success;
+      setSuccessIsSet(true);
+      return this;
+    }
+
+    public void unsetSuccess() {
+      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __SUCCESS_ISSET_ID);
+    }
+
+    /** Returns true if field success is set (has been assigned a value) and false otherwise */
+    public boolean isSetSuccess() {
+      return EncodingUtils.testBit(__isset_bitfield, __SUCCESS_ISSET_ID);
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __SUCCESS_ISSET_ID, value);
+    }
+
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((Boolean)value);
+        }
+        break;
+
+      }
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
+      case SUCCESS:
+        return Boolean.valueOf(isSuccess());
+
+      }
+      throw new IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new IllegalArgumentException();
+      }
+
+      switch (field) {
+      case SUCCESS:
+        return isSetSuccess();
+      }
+      throw new IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof idxAdd_result)
+        return this.equals((idxAdd_result)that);
+      return false;
+    }
+
+    public boolean equals(idxAdd_result that) {
+      if (that == null)
+        return false;
+
+      boolean this_present_success = true;
+      boolean that_present_success = true;
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (this.success != that.success)
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return 0;
+    }
+
+    @Override
+    public int compareTo(idxAdd_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetSuccess()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
+      }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("idxAdd_result(");
+      boolean first = true;
+
+      sb.append("success:");
+      sb.append(this.success);
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+      try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bitfield = 0;
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class idxAdd_resultStandardSchemeFactory implements SchemeFactory {
+      public idxAdd_resultStandardScheme getScheme() {
+        return new idxAdd_resultStandardScheme();
+      }
+    }
+
+    private static class idxAdd_resultStandardScheme extends StandardScheme<idxAdd_result> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, idxAdd_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 0: // SUCCESS
+              if (schemeField.type == org.apache.thrift.protocol.TType.BOOL) {
+                struct.success = iprot.readBool();
+                struct.setSuccessIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, idxAdd_result struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.isSetSuccess()) {
+          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+          oprot.writeBool(struct.success);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class idxAdd_resultTupleSchemeFactory implements SchemeFactory {
+      public idxAdd_resultTupleScheme getScheme() {
+        return new idxAdd_resultTupleScheme();
+      }
+    }
+
+    private static class idxAdd_resultTupleScheme extends TupleScheme<idxAdd_result> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, idxAdd_result struct) throws org.apache.thrift.TException {
+        TTupleProtocol oprot = (TTupleProtocol) prot;
+        BitSet optionals = new BitSet();
+        if (struct.isSetSuccess()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetSuccess()) {
+          oprot.writeBool(struct.success);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, idxAdd_result struct) throws org.apache.thrift.TException {
+        TTupleProtocol iprot = (TTupleProtocol) prot;
+        BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.success = iprot.readBool();
+          struct.setSuccessIsSet(true);
+        }
+      }
+    }
+
   }
 
-  public void unsetPattern() {
-    this.pattern = null;
+  public static class idxDelete_args implements org.apache.thrift.TBase<idxDelete_args, idxDelete_args._Fields>, java.io.Serializable, Cloneable, Comparable<idxDelete_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("idxDelete_args");
+
+    private static final org.apache.thrift.protocol.TField SHARD_FIELD_DESC = new org.apache.thrift.protocol.TField("shard", org.apache.thrift.protocol.TType.STRUCT, (short)1);
+    private static final org.apache.thrift.protocol.TField TUPLE_FIELD_DESC = new org.apache.thrift.protocol.TField("tuple", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+
+    private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
+    static {
+      schemes.put(StandardScheme.class, new idxDelete_argsStandardSchemeFactory());
+      schemes.put(TupleScheme.class, new idxDelete_argsTupleSchemeFactory());
+    }
+
+    public TLZ_ShardIndex shard; // required
+    public TLZ_TupleNodeId tuple; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      SHARD((short)1, "shard"),
+      TUPLE((short)2, "tuple");
+
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 1: // SHARD
+            return SHARD;
+          case 2: // TUPLE
+            return TUPLE;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SHARD, new org.apache.thrift.meta_data.FieldMetaData("shard", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_ShardIndex.class)));
+      tmpMap.put(_Fields.TUPLE, new org.apache.thrift.meta_data.FieldMetaData("tuple", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_TupleNodeId.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(idxDelete_args.class, metaDataMap);
+    }
+
+    public idxDelete_args() {
+    }
+
+    public idxDelete_args(
+      TLZ_ShardIndex shard,
+      TLZ_TupleNodeId tuple)
+    {
+      this();
+      this.shard = shard;
+      this.tuple = tuple;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public idxDelete_args(idxDelete_args other) {
+      if (other.isSetShard()) {
+        this.shard = new TLZ_ShardIndex(other.shard);
+      }
+      if (other.isSetTuple()) {
+        this.tuple = new TLZ_TupleNodeId(other.tuple);
+      }
+    }
+
+    public idxDelete_args deepCopy() {
+      return new idxDelete_args(this);
+    }
+
+    @Override
+    public void clear() {
+      this.shard = null;
+      this.tuple = null;
+    }
+
+    public TLZ_ShardIndex getShard() {
+      return this.shard;
+    }
+
+    public idxDelete_args setShard(TLZ_ShardIndex shard) {
+      this.shard = shard;
+      return this;
+    }
+
+    public void unsetShard() {
+      this.shard = null;
+    }
+
+    /** Returns true if field shard is set (has been assigned a value) and false otherwise */
+    public boolean isSetShard() {
+      return this.shard != null;
+    }
+
+    public void setShardIsSet(boolean value) {
+      if (!value) {
+        this.shard = null;
+      }
+    }
+
+    public TLZ_TupleNodeId getTuple() {
+      return this.tuple;
+    }
+
+    public idxDelete_args setTuple(TLZ_TupleNodeId tuple) {
+      this.tuple = tuple;
+      return this;
+    }
+
+    public void unsetTuple() {
+      this.tuple = null;
+    }
+
+    /** Returns true if field tuple is set (has been assigned a value) and false otherwise */
+    public boolean isSetTuple() {
+      return this.tuple != null;
+    }
+
+    public void setTupleIsSet(boolean value) {
+      if (!value) {
+        this.tuple = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
+      case SHARD:
+        if (value == null) {
+          unsetShard();
+        } else {
+          setShard((TLZ_ShardIndex)value);
+        }
+        break;
+
+      case TUPLE:
+        if (value == null) {
+          unsetTuple();
+        } else {
+          setTuple((TLZ_TupleNodeId)value);
+        }
+        break;
+
+      }
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
+      case SHARD:
+        return getShard();
+
+      case TUPLE:
+        return getTuple();
+
+      }
+      throw new IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new IllegalArgumentException();
+      }
+
+      switch (field) {
+      case SHARD:
+        return isSetShard();
+      case TUPLE:
+        return isSetTuple();
+      }
+      throw new IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof idxDelete_args)
+        return this.equals((idxDelete_args)that);
+      return false;
+    }
+
+    public boolean equals(idxDelete_args that) {
+      if (that == null)
+        return false;
+
+      boolean this_present_shard = true && this.isSetShard();
+      boolean that_present_shard = true && that.isSetShard();
+      if (this_present_shard || that_present_shard) {
+        if (!(this_present_shard && that_present_shard))
+          return false;
+        if (!this.shard.equals(that.shard))
+          return false;
+      }
+
+      boolean this_present_tuple = true && this.isSetTuple();
+      boolean that_present_tuple = true && that.isSetTuple();
+      if (this_present_tuple || that_present_tuple) {
+        if (!(this_present_tuple && that_present_tuple))
+          return false;
+        if (!this.tuple.equals(that.tuple))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return 0;
+    }
+
+    @Override
+    public int compareTo(idxDelete_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetShard()).compareTo(other.isSetShard());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetShard()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.shard, other.shard);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetTuple()).compareTo(other.isSetTuple());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetTuple()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.tuple, other.tuple);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("idxDelete_args(");
+      boolean first = true;
+
+      sb.append("shard:");
+      if (this.shard == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.shard);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("tuple:");
+      if (this.tuple == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.tuple);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+      if (shard != null) {
+        shard.validate();
+      }
+      if (tuple != null) {
+        tuple.validate();
+      }
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class idxDelete_argsStandardSchemeFactory implements SchemeFactory {
+      public idxDelete_argsStandardScheme getScheme() {
+        return new idxDelete_argsStandardScheme();
+      }
+    }
+
+    private static class idxDelete_argsStandardScheme extends StandardScheme<idxDelete_args> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, idxDelete_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 1: // SHARD
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.shard = new TLZ_ShardIndex();
+                struct.shard.read(iprot);
+                struct.setShardIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 2: // TUPLE
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.tuple = new TLZ_TupleNodeId();
+                struct.tuple.read(iprot);
+                struct.setTupleIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, idxDelete_args struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.shard != null) {
+          oprot.writeFieldBegin(SHARD_FIELD_DESC);
+          struct.shard.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        if (struct.tuple != null) {
+          oprot.writeFieldBegin(TUPLE_FIELD_DESC);
+          struct.tuple.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class idxDelete_argsTupleSchemeFactory implements SchemeFactory {
+      public idxDelete_argsTupleScheme getScheme() {
+        return new idxDelete_argsTupleScheme();
+      }
+    }
+
+    private static class idxDelete_argsTupleScheme extends TupleScheme<idxDelete_args> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, idxDelete_args struct) throws org.apache.thrift.TException {
+        TTupleProtocol oprot = (TTupleProtocol) prot;
+        BitSet optionals = new BitSet();
+        if (struct.isSetShard()) {
+          optionals.set(0);
+        }
+        if (struct.isSetTuple()) {
+          optionals.set(1);
+        }
+        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetShard()) {
+          struct.shard.write(oprot);
+        }
+        if (struct.isSetTuple()) {
+          struct.tuple.write(oprot);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, idxDelete_args struct) throws org.apache.thrift.TException {
+        TTupleProtocol iprot = (TTupleProtocol) prot;
+        BitSet incoming = iprot.readBitSet(2);
+        if (incoming.get(0)) {
+          struct.shard = new TLZ_ShardIndex();
+          struct.shard.read(iprot);
+          struct.setShardIsSet(true);
+        }
+        if (incoming.get(1)) {
+          struct.tuple = new TLZ_TupleNodeId();
+          struct.tuple.read(iprot);
+          struct.setTupleIsSet(true);
+        }
+      }
+    }
+
   }
 
-  /** Returns true if field pattern is set (has been assigned a value) and false otherwise */
-  public boolean isSetPattern() {
-    return this.pattern != null;
+  public static class idxDelete_result implements org.apache.thrift.TBase<idxDelete_result, idxDelete_result._Fields>, java.io.Serializable, Cloneable, Comparable<idxDelete_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("idxDelete_result");
+
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.BOOL, (short)0);
+
+    private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
+    static {
+      schemes.put(StandardScheme.class, new idxDelete_resultStandardSchemeFactory());
+      schemes.put(TupleScheme.class, new idxDelete_resultTupleSchemeFactory());
+    }
+
+    public boolean success; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      SUCCESS((short)0, "success");
+
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 0: // SUCCESS
+            return SUCCESS;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    private static final int __SUCCESS_ISSET_ID = 0;
+    private byte __isset_bitfield = 0;
+    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
+      metaDataMap = Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(idxDelete_result.class, metaDataMap);
+    }
+
+    public idxDelete_result() {
+    }
+
+    public idxDelete_result(
+      boolean success)
+    {
+      this();
+      this.success = success;
+      setSuccessIsSet(true);
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public idxDelete_result(idxDelete_result other) {
+      __isset_bitfield = other.__isset_bitfield;
+      this.success = other.success;
+    }
+
+    public idxDelete_result deepCopy() {
+      return new idxDelete_result(this);
+    }
+
+    @Override
+    public void clear() {
+      setSuccessIsSet(false);
+      this.success = false;
+    }
+
+    public boolean isSuccess() {
+      return this.success;
+    }
+
+    public idxDelete_result setSuccess(boolean success) {
+      this.success = success;
+      setSuccessIsSet(true);
+      return this;
+    }
+
+    public void unsetSuccess() {
+      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __SUCCESS_ISSET_ID);
+    }
+
+    /** Returns true if field success is set (has been assigned a value) and false otherwise */
+    public boolean isSetSuccess() {
+      return EncodingUtils.testBit(__isset_bitfield, __SUCCESS_ISSET_ID);
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __SUCCESS_ISSET_ID, value);
+    }
+
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((Boolean)value);
+        }
+        break;
+
+      }
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
+      case SUCCESS:
+        return Boolean.valueOf(isSuccess());
+
+      }
+      throw new IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new IllegalArgumentException();
+      }
+
+      switch (field) {
+      case SUCCESS:
+        return isSetSuccess();
+      }
+      throw new IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof idxDelete_result)
+        return this.equals((idxDelete_result)that);
+      return false;
+    }
+
+    public boolean equals(idxDelete_result that) {
+      if (that == null)
+        return false;
+
+      boolean this_present_success = true;
+      boolean that_present_success = true;
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (this.success != that.success)
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return 0;
+    }
+
+    @Override
+    public int compareTo(idxDelete_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetSuccess()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
+      }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("idxDelete_result(");
+      boolean first = true;
+
+      sb.append("success:");
+      sb.append(this.success);
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+      try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bitfield = 0;
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class idxDelete_resultStandardSchemeFactory implements SchemeFactory {
+      public idxDelete_resultStandardScheme getScheme() {
+        return new idxDelete_resultStandardScheme();
+      }
+    }
+
+    private static class idxDelete_resultStandardScheme extends StandardScheme<idxDelete_result> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, idxDelete_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 0: // SUCCESS
+              if (schemeField.type == org.apache.thrift.protocol.TType.BOOL) {
+                struct.success = iprot.readBool();
+                struct.setSuccessIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, idxDelete_result struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.isSetSuccess()) {
+          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+          oprot.writeBool(struct.success);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class idxDelete_resultTupleSchemeFactory implements SchemeFactory {
+      public idxDelete_resultTupleScheme getScheme() {
+        return new idxDelete_resultTupleScheme();
+      }
+    }
+
+    private static class idxDelete_resultTupleScheme extends TupleScheme<idxDelete_result> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, idxDelete_result struct) throws org.apache.thrift.TException {
+        TTupleProtocol oprot = (TTupleProtocol) prot;
+        BitSet optionals = new BitSet();
+        if (struct.isSetSuccess()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetSuccess()) {
+          oprot.writeBool(struct.success);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, idxDelete_result struct) throws org.apache.thrift.TException {
+        TTupleProtocol iprot = (TTupleProtocol) prot;
+        BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.success = iprot.readBool();
+          struct.setSuccessIsSet(true);
+        }
+      }
+    }
+
   }
 
-  public void setPatternIsSet(boolean value) {
-    if (!value) {
+  public static class idxFind_args implements org.apache.thrift.TBase<idxFind_args, idxFind_args._Fields>, java.io.Serializable, Cloneable, Comparable<idxFind_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("idxFind_args");
+
+    private static final org.apache.thrift.protocol.TField SHARD_FIELD_DESC = new org.apache.thrift.protocol.TField("shard", org.apache.thrift.protocol.TType.STRUCT, (short)1);
+    private static final org.apache.thrift.protocol.TField PATTERN_FIELD_DESC = new org.apache.thrift.protocol.TField("pattern", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+
+    private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
+    static {
+      schemes.put(StandardScheme.class, new idxFind_argsStandardSchemeFactory());
+      schemes.put(TupleScheme.class, new idxFind_argsTupleSchemeFactory());
+    }
+
+    public TLZ_ShardIndex shard; // required
+    public TLZ_TupleNodeId pattern; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      SHARD((short)1, "shard"),
+      PATTERN((short)2, "pattern");
+
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 1: // SHARD
+            return SHARD;
+          case 2: // PATTERN
+            return PATTERN;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SHARD, new org.apache.thrift.meta_data.FieldMetaData("shard", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_ShardIndex.class)));
+      tmpMap.put(_Fields.PATTERN, new org.apache.thrift.meta_data.FieldMetaData("pattern", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_TupleNodeId.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(idxFind_args.class, metaDataMap);
+    }
+
+    public idxFind_args() {
+    }
+
+    public idxFind_args(
+      TLZ_ShardIndex shard,
+      TLZ_TupleNodeId pattern)
+    {
+      this();
+      this.shard = shard;
+      this.pattern = pattern;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public idxFind_args(idxFind_args other) {
+      if (other.isSetShard()) {
+        this.shard = new TLZ_ShardIndex(other.shard);
+      }
+      if (other.isSetPattern()) {
+        this.pattern = new TLZ_TupleNodeId(other.pattern);
+      }
+    }
+
+    public idxFind_args deepCopy() {
+      return new idxFind_args(this);
+    }
+
+    @Override
+    public void clear() {
+      this.shard = null;
       this.pattern = null;
     }
-  }
 
-  public TLZ_SubjectPredicateList getSubPreds() {
-    return this.subPreds;
-  }
-
-  public TLZ_IdxRequest setSubPreds(TLZ_SubjectPredicateList subPreds) {
-    this.subPreds = subPreds;
-    return this;
-  }
-
-  public void unsetSubPreds() {
-    this.subPreds = null;
-  }
-
-  /** Returns true if field subPreds is set (has been assigned a value) and false otherwise */
-  public boolean isSetSubPreds() {
-    return this.subPreds != null;
-  }
-
-  public void setSubPredsIsSet(boolean value) {
-    if (!value) {
-      this.subPreds = null;
-    }
-  }
-
-  public TLZ_TupleNodeId getAddTuple() {
-    return this.addTuple;
-  }
-
-  public TLZ_IdxRequest setAddTuple(TLZ_TupleNodeId addTuple) {
-    this.addTuple = addTuple;
-    return this;
-  }
-
-  public void unsetAddTuple() {
-    this.addTuple = null;
-  }
-
-  /** Returns true if field addTuple is set (has been assigned a value) and false otherwise */
-  public boolean isSetAddTuple() {
-    return this.addTuple != null;
-  }
-
-  public void setAddTupleIsSet(boolean value) {
-    if (!value) {
-      this.addTuple = null;
-    }
-  }
-
-  public TLZ_TupleNodeId getDeleteTuple() {
-    return this.deleteTuple;
-  }
-
-  public TLZ_IdxRequest setDeleteTuple(TLZ_TupleNodeId deleteTuple) {
-    this.deleteTuple = deleteTuple;
-    return this;
-  }
-
-  public void unsetDeleteTuple() {
-    this.deleteTuple = null;
-  }
-
-  /** Returns true if field deleteTuple is set (has been assigned a value) and false otherwise */
-  public boolean isSetDeleteTuple() {
-    return this.deleteTuple != null;
-  }
-
-  public void setDeleteTupleIsSet(boolean value) {
-    if (!value) {
-      this.deleteTuple = null;
-    }
-  }
-
-  public TLZ_Ping getPing() {
-    return this.ping;
-  }
-
-  public TLZ_IdxRequest setPing(TLZ_Ping ping) {
-    this.ping = ping;
-    return this;
-  }
-
-  public void unsetPing() {
-    this.ping = null;
-  }
-
-  /** Returns true if field ping is set (has been assigned a value) and false otherwise */
-  public boolean isSetPing() {
-    return this.ping != null;
-  }
-
-  public void setPingIsSet(boolean value) {
-    if (!value) {
-      this.ping = null;
-    }
-  }
-
-  public TLZ_Patch getPatch() {
-    return this.patch;
-  }
-
-  public TLZ_IdxRequest setPatch(TLZ_Patch patch) {
-    this.patch = patch;
-    return this;
-  }
-
-  public void unsetPatch() {
-    this.patch = null;
-  }
-
-  /** Returns true if field patch is set (has been assigned a value) and false otherwise */
-  public boolean isSetPatch() {
-    return this.patch != null;
-  }
-
-  public void setPatchIsSet(boolean value) {
-    if (!value) {
-      this.patch = null;
-    }
-  }
-
-  public TLZ_TxnBeginRead getTxnBeginRead() {
-    return this.txnBeginRead;
-  }
-
-  public TLZ_IdxRequest setTxnBeginRead(TLZ_TxnBeginRead txnBeginRead) {
-    this.txnBeginRead = txnBeginRead;
-    return this;
-  }
-
-  public void unsetTxnBeginRead() {
-    this.txnBeginRead = null;
-  }
-
-  /** Returns true if field txnBeginRead is set (has been assigned a value) and false otherwise */
-  public boolean isSetTxnBeginRead() {
-    return this.txnBeginRead != null;
-  }
-
-  public void setTxnBeginReadIsSet(boolean value) {
-    if (!value) {
-      this.txnBeginRead = null;
-    }
-  }
-
-  public TLZ_TxnBeginWrite getTxnBeginWrite() {
-    return this.txnBeginWrite;
-  }
-
-  public TLZ_IdxRequest setTxnBeginWrite(TLZ_TxnBeginWrite txnBeginWrite) {
-    this.txnBeginWrite = txnBeginWrite;
-    return this;
-  }
-
-  public void unsetTxnBeginWrite() {
-    this.txnBeginWrite = null;
-  }
-
-  /** Returns true if field txnBeginWrite is set (has been assigned a value) and false otherwise */
-  public boolean isSetTxnBeginWrite() {
-    return this.txnBeginWrite != null;
-  }
-
-  public void setTxnBeginWriteIsSet(boolean value) {
-    if (!value) {
-      this.txnBeginWrite = null;
-    }
-  }
-
-  public TLZ_TxnPrepare getTxnPrepare() {
-    return this.txnPrepare;
-  }
-
-  public TLZ_IdxRequest setTxnPrepare(TLZ_TxnPrepare txnPrepare) {
-    this.txnPrepare = txnPrepare;
-    return this;
-  }
-
-  public void unsetTxnPrepare() {
-    this.txnPrepare = null;
-  }
-
-  /** Returns true if field txnPrepare is set (has been assigned a value) and false otherwise */
-  public boolean isSetTxnPrepare() {
-    return this.txnPrepare != null;
-  }
-
-  public void setTxnPrepareIsSet(boolean value) {
-    if (!value) {
-      this.txnPrepare = null;
-    }
-  }
-
-  public TLZ_TxnCommit getTxnCommit() {
-    return this.txnCommit;
-  }
-
-  public TLZ_IdxRequest setTxnCommit(TLZ_TxnCommit txnCommit) {
-    this.txnCommit = txnCommit;
-    return this;
-  }
-
-  public void unsetTxnCommit() {
-    this.txnCommit = null;
-  }
-
-  /** Returns true if field txnCommit is set (has been assigned a value) and false otherwise */
-  public boolean isSetTxnCommit() {
-    return this.txnCommit != null;
-  }
-
-  public void setTxnCommitIsSet(boolean value) {
-    if (!value) {
-      this.txnCommit = null;
-    }
-  }
-
-  public TLZ_TxnAbort getTxnAbort() {
-    return this.txnAbort;
-  }
-
-  public TLZ_IdxRequest setTxnAbort(TLZ_TxnAbort txnAbort) {
-    this.txnAbort = txnAbort;
-    return this;
-  }
-
-  public void unsetTxnAbort() {
-    this.txnAbort = null;
-  }
-
-  /** Returns true if field txnAbort is set (has been assigned a value) and false otherwise */
-  public boolean isSetTxnAbort() {
-    return this.txnAbort != null;
-  }
-
-  public void setTxnAbortIsSet(boolean value) {
-    if (!value) {
-      this.txnAbort = null;
-    }
-  }
-
-  public TLZ_TxnEnd getTxnEnd() {
-    return this.txnEnd;
-  }
-
-  public TLZ_IdxRequest setTxnEnd(TLZ_TxnEnd txnEnd) {
-    this.txnEnd = txnEnd;
-    return this;
-  }
-
-  public void unsetTxnEnd() {
-    this.txnEnd = null;
-  }
-
-  /** Returns true if field txnEnd is set (has been assigned a value) and false otherwise */
-  public boolean isSetTxnEnd() {
-    return this.txnEnd != null;
-  }
-
-  public void setTxnEndIsSet(boolean value) {
-    if (!value) {
-      this.txnEnd = null;
-    }
-  }
-
-  public void setFieldValue(_Fields field, Object value) {
-    switch (field) {
-    case REQUEST_ID:
-      if (value == null) {
-        unsetRequestId();
-      } else {
-        setRequestId((Long)value);
-      }
-      break;
-
-    case GENERATION:
-      if (value == null) {
-        unsetGeneration();
-      } else {
-        setGeneration((Long)value);
-      }
-      break;
-
-    case INDEX:
-      if (value == null) {
-        unsetIndex();
-      } else {
-        setIndex((TLZ_ShardIndex)value);
-      }
-      break;
-
-    case PATTERN:
-      if (value == null) {
-        unsetPattern();
-      } else {
-        setPattern((TLZ_TupleNodeId)value);
-      }
-      break;
-
-    case SUB_PREDS:
-      if (value == null) {
-        unsetSubPreds();
-      } else {
-        setSubPreds((TLZ_SubjectPredicateList)value);
-      }
-      break;
-
-    case ADD_TUPLE:
-      if (value == null) {
-        unsetAddTuple();
-      } else {
-        setAddTuple((TLZ_TupleNodeId)value);
-      }
-      break;
-
-    case DELETE_TUPLE:
-      if (value == null) {
-        unsetDeleteTuple();
-      } else {
-        setDeleteTuple((TLZ_TupleNodeId)value);
-      }
-      break;
-
-    case PING:
-      if (value == null) {
-        unsetPing();
-      } else {
-        setPing((TLZ_Ping)value);
-      }
-      break;
-
-    case PATCH:
-      if (value == null) {
-        unsetPatch();
-      } else {
-        setPatch((TLZ_Patch)value);
-      }
-      break;
-
-    case TXN_BEGIN_READ:
-      if (value == null) {
-        unsetTxnBeginRead();
-      } else {
-        setTxnBeginRead((TLZ_TxnBeginRead)value);
-      }
-      break;
-
-    case TXN_BEGIN_WRITE:
-      if (value == null) {
-        unsetTxnBeginWrite();
-      } else {
-        setTxnBeginWrite((TLZ_TxnBeginWrite)value);
-      }
-      break;
-
-    case TXN_PREPARE:
-      if (value == null) {
-        unsetTxnPrepare();
-      } else {
-        setTxnPrepare((TLZ_TxnPrepare)value);
-      }
-      break;
-
-    case TXN_COMMIT:
-      if (value == null) {
-        unsetTxnCommit();
-      } else {
-        setTxnCommit((TLZ_TxnCommit)value);
-      }
-      break;
-
-    case TXN_ABORT:
-      if (value == null) {
-        unsetTxnAbort();
-      } else {
-        setTxnAbort((TLZ_TxnAbort)value);
-      }
-      break;
-
-    case TXN_END:
-      if (value == null) {
-        unsetTxnEnd();
-      } else {
-        setTxnEnd((TLZ_TxnEnd)value);
-      }
-      break;
-
-    }
-  }
-
-  public Object getFieldValue(_Fields field) {
-    switch (field) {
-    case REQUEST_ID:
-      return Long.valueOf(getRequestId());
-
-    case GENERATION:
-      return Long.valueOf(getGeneration());
-
-    case INDEX:
-      return getIndex();
-
-    case PATTERN:
-      return getPattern();
-
-    case SUB_PREDS:
-      return getSubPreds();
-
-    case ADD_TUPLE:
-      return getAddTuple();
-
-    case DELETE_TUPLE:
-      return getDeleteTuple();
-
-    case PING:
-      return getPing();
-
-    case PATCH:
-      return getPatch();
-
-    case TXN_BEGIN_READ:
-      return getTxnBeginRead();
-
-    case TXN_BEGIN_WRITE:
-      return getTxnBeginWrite();
-
-    case TXN_PREPARE:
-      return getTxnPrepare();
-
-    case TXN_COMMIT:
-      return getTxnCommit();
-
-    case TXN_ABORT:
-      return getTxnAbort();
-
-    case TXN_END:
-      return getTxnEnd();
-
-    }
-    throw new IllegalStateException();
-  }
-
-  /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
-  public boolean isSet(_Fields field) {
-    if (field == null) {
-      throw new IllegalArgumentException();
+    public TLZ_ShardIndex getShard() {
+      return this.shard;
     }
 
-    switch (field) {
-    case REQUEST_ID:
-      return isSetRequestId();
-    case GENERATION:
-      return isSetGeneration();
-    case INDEX:
-      return isSetIndex();
-    case PATTERN:
-      return isSetPattern();
-    case SUB_PREDS:
-      return isSetSubPreds();
-    case ADD_TUPLE:
-      return isSetAddTuple();
-    case DELETE_TUPLE:
-      return isSetDeleteTuple();
-    case PING:
-      return isSetPing();
-    case PATCH:
-      return isSetPatch();
-    case TXN_BEGIN_READ:
-      return isSetTxnBeginRead();
-    case TXN_BEGIN_WRITE:
-      return isSetTxnBeginWrite();
-    case TXN_PREPARE:
-      return isSetTxnPrepare();
-    case TXN_COMMIT:
-      return isSetTxnCommit();
-    case TXN_ABORT:
-      return isSetTxnAbort();
-    case TXN_END:
-      return isSetTxnEnd();
+    public idxFind_args setShard(TLZ_ShardIndex shard) {
+      this.shard = shard;
+      return this;
     }
-    throw new IllegalStateException();
-  }
 
-  @Override
-  public boolean equals(Object that) {
-    if (that == null)
+    public void unsetShard() {
+      this.shard = null;
+    }
+
+    /** Returns true if field shard is set (has been assigned a value) and false otherwise */
+    public boolean isSetShard() {
+      return this.shard != null;
+    }
+
+    public void setShardIsSet(boolean value) {
+      if (!value) {
+        this.shard = null;
+      }
+    }
+
+    public TLZ_TupleNodeId getPattern() {
+      return this.pattern;
+    }
+
+    public idxFind_args setPattern(TLZ_TupleNodeId pattern) {
+      this.pattern = pattern;
+      return this;
+    }
+
+    public void unsetPattern() {
+      this.pattern = null;
+    }
+
+    /** Returns true if field pattern is set (has been assigned a value) and false otherwise */
+    public boolean isSetPattern() {
+      return this.pattern != null;
+    }
+
+    public void setPatternIsSet(boolean value) {
+      if (!value) {
+        this.pattern = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
+      case SHARD:
+        if (value == null) {
+          unsetShard();
+        } else {
+          setShard((TLZ_ShardIndex)value);
+        }
+        break;
+
+      case PATTERN:
+        if (value == null) {
+          unsetPattern();
+        } else {
+          setPattern((TLZ_TupleNodeId)value);
+        }
+        break;
+
+      }
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
+      case SHARD:
+        return getShard();
+
+      case PATTERN:
+        return getPattern();
+
+      }
+      throw new IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new IllegalArgumentException();
+      }
+
+      switch (field) {
+      case SHARD:
+        return isSetShard();
+      case PATTERN:
+        return isSetPattern();
+      }
+      throw new IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof idxFind_args)
+        return this.equals((idxFind_args)that);
       return false;
-    if (that instanceof TLZ_IdxRequest)
-      return this.equals((TLZ_IdxRequest)that);
-    return false;
-  }
-
-  public boolean equals(TLZ_IdxRequest that) {
-    if (that == null)
-      return false;
-
-    boolean this_present_requestId = true;
-    boolean that_present_requestId = true;
-    if (this_present_requestId || that_present_requestId) {
-      if (!(this_present_requestId && that_present_requestId))
-        return false;
-      if (this.requestId != that.requestId)
-        return false;
     }
 
-    boolean this_present_generation = true;
-    boolean that_present_generation = true;
-    if (this_present_generation || that_present_generation) {
-      if (!(this_present_generation && that_present_generation))
+    public boolean equals(idxFind_args that) {
+      if (that == null)
         return false;
-      if (this.generation != that.generation)
-        return false;
+
+      boolean this_present_shard = true && this.isSetShard();
+      boolean that_present_shard = true && that.isSetShard();
+      if (this_present_shard || that_present_shard) {
+        if (!(this_present_shard && that_present_shard))
+          return false;
+        if (!this.shard.equals(that.shard))
+          return false;
+      }
+
+      boolean this_present_pattern = true && this.isSetPattern();
+      boolean that_present_pattern = true && that.isSetPattern();
+      if (this_present_pattern || that_present_pattern) {
+        if (!(this_present_pattern && that_present_pattern))
+          return false;
+        if (!this.pattern.equals(that.pattern))
+          return false;
+      }
+
+      return true;
     }
 
-    boolean this_present_index = true && this.isSetIndex();
-    boolean that_present_index = true && that.isSetIndex();
-    if (this_present_index || that_present_index) {
-      if (!(this_present_index && that_present_index))
-        return false;
-      if (!this.index.equals(that.index))
-        return false;
+    @Override
+    public int hashCode() {
+      return 0;
     }
 
-    boolean this_present_pattern = true && this.isSetPattern();
-    boolean that_present_pattern = true && that.isSetPattern();
-    if (this_present_pattern || that_present_pattern) {
-      if (!(this_present_pattern && that_present_pattern))
-        return false;
-      if (!this.pattern.equals(that.pattern))
-        return false;
-    }
+    @Override
+    public int compareTo(idxFind_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
 
-    boolean this_present_subPreds = true && this.isSetSubPreds();
-    boolean that_present_subPreds = true && that.isSetSubPreds();
-    if (this_present_subPreds || that_present_subPreds) {
-      if (!(this_present_subPreds && that_present_subPreds))
-        return false;
-      if (!this.subPreds.equals(that.subPreds))
-        return false;
-    }
+      int lastComparison = 0;
 
-    boolean this_present_addTuple = true && this.isSetAddTuple();
-    boolean that_present_addTuple = true && that.isSetAddTuple();
-    if (this_present_addTuple || that_present_addTuple) {
-      if (!(this_present_addTuple && that_present_addTuple))
-        return false;
-      if (!this.addTuple.equals(that.addTuple))
-        return false;
-    }
-
-    boolean this_present_deleteTuple = true && this.isSetDeleteTuple();
-    boolean that_present_deleteTuple = true && that.isSetDeleteTuple();
-    if (this_present_deleteTuple || that_present_deleteTuple) {
-      if (!(this_present_deleteTuple && that_present_deleteTuple))
-        return false;
-      if (!this.deleteTuple.equals(that.deleteTuple))
-        return false;
-    }
-
-    boolean this_present_ping = true && this.isSetPing();
-    boolean that_present_ping = true && that.isSetPing();
-    if (this_present_ping || that_present_ping) {
-      if (!(this_present_ping && that_present_ping))
-        return false;
-      if (!this.ping.equals(that.ping))
-        return false;
-    }
-
-    boolean this_present_patch = true && this.isSetPatch();
-    boolean that_present_patch = true && that.isSetPatch();
-    if (this_present_patch || that_present_patch) {
-      if (!(this_present_patch && that_present_patch))
-        return false;
-      if (!this.patch.equals(that.patch))
-        return false;
-    }
-
-    boolean this_present_txnBeginRead = true && this.isSetTxnBeginRead();
-    boolean that_present_txnBeginRead = true && that.isSetTxnBeginRead();
-    if (this_present_txnBeginRead || that_present_txnBeginRead) {
-      if (!(this_present_txnBeginRead && that_present_txnBeginRead))
-        return false;
-      if (!this.txnBeginRead.equals(that.txnBeginRead))
-        return false;
-    }
-
-    boolean this_present_txnBeginWrite = true && this.isSetTxnBeginWrite();
-    boolean that_present_txnBeginWrite = true && that.isSetTxnBeginWrite();
-    if (this_present_txnBeginWrite || that_present_txnBeginWrite) {
-      if (!(this_present_txnBeginWrite && that_present_txnBeginWrite))
-        return false;
-      if (!this.txnBeginWrite.equals(that.txnBeginWrite))
-        return false;
-    }
-
-    boolean this_present_txnPrepare = true && this.isSetTxnPrepare();
-    boolean that_present_txnPrepare = true && that.isSetTxnPrepare();
-    if (this_present_txnPrepare || that_present_txnPrepare) {
-      if (!(this_present_txnPrepare && that_present_txnPrepare))
-        return false;
-      if (!this.txnPrepare.equals(that.txnPrepare))
-        return false;
-    }
-
-    boolean this_present_txnCommit = true && this.isSetTxnCommit();
-    boolean that_present_txnCommit = true && that.isSetTxnCommit();
-    if (this_present_txnCommit || that_present_txnCommit) {
-      if (!(this_present_txnCommit && that_present_txnCommit))
-        return false;
-      if (!this.txnCommit.equals(that.txnCommit))
-        return false;
-    }
-
-    boolean this_present_txnAbort = true && this.isSetTxnAbort();
-    boolean that_present_txnAbort = true && that.isSetTxnAbort();
-    if (this_present_txnAbort || that_present_txnAbort) {
-      if (!(this_present_txnAbort && that_present_txnAbort))
-        return false;
-      if (!this.txnAbort.equals(that.txnAbort))
-        return false;
-    }
-
-    boolean this_present_txnEnd = true && this.isSetTxnEnd();
-    boolean that_present_txnEnd = true && that.isSetTxnEnd();
-    if (this_present_txnEnd || that_present_txnEnd) {
-      if (!(this_present_txnEnd && that_present_txnEnd))
-        return false;
-      if (!this.txnEnd.equals(that.txnEnd))
-        return false;
-    }
-
-    return true;
-  }
-
-  @Override
-  public int hashCode() {
-    return 0;
-  }
-
-  @Override
-  public int compareTo(TLZ_IdxRequest other) {
-    if (!getClass().equals(other.getClass())) {
-      return getClass().getName().compareTo(other.getClass().getName());
-    }
-
-    int lastComparison = 0;
-
-    lastComparison = Boolean.valueOf(isSetRequestId()).compareTo(other.isSetRequestId());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    if (isSetRequestId()) {
-      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.requestId, other.requestId);
+      lastComparison = Boolean.valueOf(isSetShard()).compareTo(other.isSetShard());
       if (lastComparison != 0) {
         return lastComparison;
       }
-    }
-    lastComparison = Boolean.valueOf(isSetGeneration()).compareTo(other.isSetGeneration());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    if (isSetGeneration()) {
-      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.generation, other.generation);
+      if (isSetShard()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.shard, other.shard);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetPattern()).compareTo(other.isSetPattern());
       if (lastComparison != 0) {
         return lastComparison;
       }
-    }
-    lastComparison = Boolean.valueOf(isSetIndex()).compareTo(other.isSetIndex());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    if (isSetIndex()) {
-      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.index, other.index);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetPattern()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.pattern, other.pattern);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
+      return 0;
     }
-    lastComparison = Boolean.valueOf(isSetPattern()).compareTo(other.isSetPattern());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    if (isSetPattern()) {
-      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.pattern, other.pattern);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-    }
-    lastComparison = Boolean.valueOf(isSetSubPreds()).compareTo(other.isSetSubPreds());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    if (isSetSubPreds()) {
-      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.subPreds, other.subPreds);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-    }
-    lastComparison = Boolean.valueOf(isSetAddTuple()).compareTo(other.isSetAddTuple());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    if (isSetAddTuple()) {
-      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.addTuple, other.addTuple);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-    }
-    lastComparison = Boolean.valueOf(isSetDeleteTuple()).compareTo(other.isSetDeleteTuple());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    if (isSetDeleteTuple()) {
-      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.deleteTuple, other.deleteTuple);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-    }
-    lastComparison = Boolean.valueOf(isSetPing()).compareTo(other.isSetPing());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    if (isSetPing()) {
-      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.ping, other.ping);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-    }
-    lastComparison = Boolean.valueOf(isSetPatch()).compareTo(other.isSetPatch());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    if (isSetPatch()) {
-      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.patch, other.patch);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-    }
-    lastComparison = Boolean.valueOf(isSetTxnBeginRead()).compareTo(other.isSetTxnBeginRead());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    if (isSetTxnBeginRead()) {
-      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.txnBeginRead, other.txnBeginRead);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-    }
-    lastComparison = Boolean.valueOf(isSetTxnBeginWrite()).compareTo(other.isSetTxnBeginWrite());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    if (isSetTxnBeginWrite()) {
-      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.txnBeginWrite, other.txnBeginWrite);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-    }
-    lastComparison = Boolean.valueOf(isSetTxnPrepare()).compareTo(other.isSetTxnPrepare());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    if (isSetTxnPrepare()) {
-      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.txnPrepare, other.txnPrepare);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-    }
-    lastComparison = Boolean.valueOf(isSetTxnCommit()).compareTo(other.isSetTxnCommit());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    if (isSetTxnCommit()) {
-      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.txnCommit, other.txnCommit);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-    }
-    lastComparison = Boolean.valueOf(isSetTxnAbort()).compareTo(other.isSetTxnAbort());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    if (isSetTxnAbort()) {
-      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.txnAbort, other.txnAbort);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-    }
-    lastComparison = Boolean.valueOf(isSetTxnEnd()).compareTo(other.isSetTxnEnd());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    if (isSetTxnEnd()) {
-      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.txnEnd, other.txnEnd);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-    }
-    return 0;
-  }
 
-  public _Fields fieldForId(int fieldId) {
-    return _Fields.findByThriftId(fieldId);
-  }
-
-  public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
-    schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
-  }
-
-  public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
-    schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder("TLZ_IdxRequest(");
-    boolean first = true;
-
-    sb.append("requestId:");
-    sb.append(this.requestId);
-    first = false;
-    if (!first) sb.append(", ");
-    sb.append("generation:");
-    sb.append(this.generation);
-    first = false;
-    if (!first) sb.append(", ");
-    sb.append("index:");
-    if (this.index == null) {
-      sb.append("null");
-    } else {
-      sb.append(this.index);
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
     }
-    first = false;
-    if (isSetPattern()) {
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("idxFind_args(");
+      boolean first = true;
+
+      sb.append("shard:");
+      if (this.shard == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.shard);
+      }
+      first = false;
       if (!first) sb.append(", ");
       sb.append("pattern:");
       if (this.pattern == null) {
@@ -1238,624 +3099,556 @@ public class TLZ_IdxRequest implements org.apache.thrift.TBase<TLZ_IdxRequest, T
         sb.append(this.pattern);
       }
       first = false;
+      sb.append(")");
+      return sb.toString();
     }
-    if (isSetSubPreds()) {
-      if (!first) sb.append(", ");
-      sb.append("subPreds:");
-      if (this.subPreds == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.subPreds);
-      }
-      first = false;
-    }
-    if (isSetAddTuple()) {
-      if (!first) sb.append(", ");
-      sb.append("addTuple:");
-      if (this.addTuple == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.addTuple);
-      }
-      first = false;
-    }
-    if (isSetDeleteTuple()) {
-      if (!first) sb.append(", ");
-      sb.append("deleteTuple:");
-      if (this.deleteTuple == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.deleteTuple);
-      }
-      first = false;
-    }
-    if (isSetPing()) {
-      if (!first) sb.append(", ");
-      sb.append("ping:");
-      if (this.ping == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.ping);
-      }
-      first = false;
-    }
-    if (isSetPatch()) {
-      if (!first) sb.append(", ");
-      sb.append("patch:");
-      if (this.patch == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.patch);
-      }
-      first = false;
-    }
-    if (isSetTxnBeginRead()) {
-      if (!first) sb.append(", ");
-      sb.append("txnBeginRead:");
-      if (this.txnBeginRead == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.txnBeginRead);
-      }
-      first = false;
-    }
-    if (isSetTxnBeginWrite()) {
-      if (!first) sb.append(", ");
-      sb.append("txnBeginWrite:");
-      if (this.txnBeginWrite == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.txnBeginWrite);
-      }
-      first = false;
-    }
-    if (isSetTxnPrepare()) {
-      if (!first) sb.append(", ");
-      sb.append("txnPrepare:");
-      if (this.txnPrepare == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.txnPrepare);
-      }
-      first = false;
-    }
-    if (isSetTxnCommit()) {
-      if (!first) sb.append(", ");
-      sb.append("txnCommit:");
-      if (this.txnCommit == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.txnCommit);
-      }
-      first = false;
-    }
-    if (isSetTxnAbort()) {
-      if (!first) sb.append(", ");
-      sb.append("txnAbort:");
-      if (this.txnAbort == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.txnAbort);
-      }
-      first = false;
-    }
-    if (isSetTxnEnd()) {
-      if (!first) sb.append(", ");
-      sb.append("txnEnd:");
-      if (this.txnEnd == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.txnEnd);
-      }
-      first = false;
-    }
-    sb.append(")");
-    return sb.toString();
-  }
 
-  public void validate() throws org.apache.thrift.TException {
-    // check for required fields
-    // alas, we cannot check 'requestId' because it's a primitive and you chose the non-beans generator.
-    // alas, we cannot check 'generation' because it's a primitive and you chose the non-beans generator.
-    if (index == null) {
-      throw new org.apache.thrift.protocol.TProtocolException("Required field 'index' was not present! Struct: " + toString());
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+      if (shard != null) {
+        shard.validate();
+      }
+      if (pattern != null) {
+        pattern.validate();
+      }
     }
-    // check for sub-struct validity
-    if (index != null) {
-      index.validate();
-    }
-    if (pattern != null) {
-      pattern.validate();
-    }
-    if (subPreds != null) {
-      subPreds.validate();
-    }
-    if (addTuple != null) {
-      addTuple.validate();
-    }
-    if (deleteTuple != null) {
-      deleteTuple.validate();
-    }
-    if (ping != null) {
-      ping.validate();
-    }
-    if (patch != null) {
-      patch.validate();
-    }
-    if (txnBeginRead != null) {
-      txnBeginRead.validate();
-    }
-    if (txnBeginWrite != null) {
-      txnBeginWrite.validate();
-    }
-    if (txnPrepare != null) {
-      txnPrepare.validate();
-    }
-    if (txnCommit != null) {
-      txnCommit.validate();
-    }
-    if (txnAbort != null) {
-      txnAbort.validate();
-    }
-    if (txnEnd != null) {
-      txnEnd.validate();
-    }
-  }
 
-  private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
-    try {
-      write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
-    } catch (org.apache.thrift.TException te) {
-      throw new java.io.IOException(te);
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
     }
-  }
 
-  private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
-    try {
-      // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
-      __isset_bitfield = 0;
-      read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
-    } catch (org.apache.thrift.TException te) {
-      throw new java.io.IOException(te);
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
     }
-  }
 
-  private static class TLZ_IdxRequestStandardSchemeFactory implements SchemeFactory {
-    public TLZ_IdxRequestStandardScheme getScheme() {
-      return new TLZ_IdxRequestStandardScheme();
+    private static class idxFind_argsStandardSchemeFactory implements SchemeFactory {
+      public idxFind_argsStandardScheme getScheme() {
+        return new idxFind_argsStandardScheme();
+      }
     }
-  }
 
-  private static class TLZ_IdxRequestStandardScheme extends StandardScheme<TLZ_IdxRequest> {
+    private static class idxFind_argsStandardScheme extends StandardScheme<idxFind_args> {
 
-    public void read(org.apache.thrift.protocol.TProtocol iprot, TLZ_IdxRequest struct) throws org.apache.thrift.TException {
-      org.apache.thrift.protocol.TField schemeField;
-      iprot.readStructBegin();
-      while (true)
-      {
-        schemeField = iprot.readFieldBegin();
-        if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
-          break;
+      public void read(org.apache.thrift.protocol.TProtocol iprot, idxFind_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 1: // SHARD
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.shard = new TLZ_ShardIndex();
+                struct.shard.read(iprot);
+                struct.setShardIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 2: // PATTERN
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.pattern = new TLZ_TupleNodeId();
+                struct.pattern.read(iprot);
+                struct.setPatternIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
         }
-        switch (schemeField.id) {
-          case 1: // REQUEST_ID
-            if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
-              struct.requestId = iprot.readI64();
-              struct.setRequestIdIsSet(true);
-            } else { 
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-            }
-            break;
-          case 2: // GENERATION
-            if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
-              struct.generation = iprot.readI64();
-              struct.setGenerationIsSet(true);
-            } else { 
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-            }
-            break;
-          case 3: // INDEX
-            if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-              struct.index = new TLZ_ShardIndex();
-              struct.index.read(iprot);
-              struct.setIndexIsSet(true);
-            } else { 
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-            }
-            break;
-          case 4: // PATTERN
-            if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-              struct.pattern = new TLZ_TupleNodeId();
-              struct.pattern.read(iprot);
-              struct.setPatternIsSet(true);
-            } else { 
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-            }
-            break;
-          case 5: // SUB_PREDS
-            if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-              struct.subPreds = new TLZ_SubjectPredicateList();
-              struct.subPreds.read(iprot);
-              struct.setSubPredsIsSet(true);
-            } else { 
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-            }
-            break;
-          case 6: // ADD_TUPLE
-            if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-              struct.addTuple = new TLZ_TupleNodeId();
-              struct.addTuple.read(iprot);
-              struct.setAddTupleIsSet(true);
-            } else { 
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-            }
-            break;
-          case 7: // DELETE_TUPLE
-            if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-              struct.deleteTuple = new TLZ_TupleNodeId();
-              struct.deleteTuple.read(iprot);
-              struct.setDeleteTupleIsSet(true);
-            } else { 
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-            }
-            break;
-          case 8: // PING
-            if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-              struct.ping = new TLZ_Ping();
-              struct.ping.read(iprot);
-              struct.setPingIsSet(true);
-            } else { 
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-            }
-            break;
-          case 9: // PATCH
-            if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-              struct.patch = new TLZ_Patch();
-              struct.patch.read(iprot);
-              struct.setPatchIsSet(true);
-            } else { 
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-            }
-            break;
-          case 20: // TXN_BEGIN_READ
-            if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-              struct.txnBeginRead = new TLZ_TxnBeginRead();
-              struct.txnBeginRead.read(iprot);
-              struct.setTxnBeginReadIsSet(true);
-            } else { 
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-            }
-            break;
-          case 21: // TXN_BEGIN_WRITE
-            if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-              struct.txnBeginWrite = new TLZ_TxnBeginWrite();
-              struct.txnBeginWrite.read(iprot);
-              struct.setTxnBeginWriteIsSet(true);
-            } else { 
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-            }
-            break;
-          case 22: // TXN_PREPARE
-            if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-              struct.txnPrepare = new TLZ_TxnPrepare();
-              struct.txnPrepare.read(iprot);
-              struct.setTxnPrepareIsSet(true);
-            } else { 
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-            }
-            break;
-          case 23: // TXN_COMMIT
-            if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-              struct.txnCommit = new TLZ_TxnCommit();
-              struct.txnCommit.read(iprot);
-              struct.setTxnCommitIsSet(true);
-            } else { 
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-            }
-            break;
-          case 24: // TXN_ABORT
-            if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-              struct.txnAbort = new TLZ_TxnAbort();
-              struct.txnAbort.read(iprot);
-              struct.setTxnAbortIsSet(true);
-            } else { 
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-            }
-            break;
-          case 25: // TXN_END
-            if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-              struct.txnEnd = new TLZ_TxnEnd();
-              struct.txnEnd.read(iprot);
-              struct.setTxnEndIsSet(true);
-            } else { 
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-            }
-            break;
-          default:
-            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, idxFind_args struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.shard != null) {
+          oprot.writeFieldBegin(SHARD_FIELD_DESC);
+          struct.shard.write(oprot);
+          oprot.writeFieldEnd();
         }
-        iprot.readFieldEnd();
-      }
-      iprot.readStructEnd();
-
-      // check for required fields of primitive type, which can't be checked in the validate method
-      if (!struct.isSetRequestId()) {
-        throw new org.apache.thrift.protocol.TProtocolException("Required field 'requestId' was not found in serialized data! Struct: " + toString());
-      }
-      if (!struct.isSetGeneration()) {
-        throw new org.apache.thrift.protocol.TProtocolException("Required field 'generation' was not found in serialized data! Struct: " + toString());
-      }
-      struct.validate();
-    }
-
-    public void write(org.apache.thrift.protocol.TProtocol oprot, TLZ_IdxRequest struct) throws org.apache.thrift.TException {
-      struct.validate();
-
-      oprot.writeStructBegin(STRUCT_DESC);
-      oprot.writeFieldBegin(REQUEST_ID_FIELD_DESC);
-      oprot.writeI64(struct.requestId);
-      oprot.writeFieldEnd();
-      oprot.writeFieldBegin(GENERATION_FIELD_DESC);
-      oprot.writeI64(struct.generation);
-      oprot.writeFieldEnd();
-      if (struct.index != null) {
-        oprot.writeFieldBegin(INDEX_FIELD_DESC);
-        struct.index.write(oprot);
-        oprot.writeFieldEnd();
-      }
-      if (struct.pattern != null) {
-        if (struct.isSetPattern()) {
+        if (struct.pattern != null) {
           oprot.writeFieldBegin(PATTERN_FIELD_DESC);
           struct.pattern.write(oprot);
           oprot.writeFieldEnd();
         }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
       }
-      if (struct.subPreds != null) {
-        if (struct.isSetSubPreds()) {
-          oprot.writeFieldBegin(SUB_PREDS_FIELD_DESC);
-          struct.subPreds.write(oprot);
-          oprot.writeFieldEnd();
+
+    }
+
+    private static class idxFind_argsTupleSchemeFactory implements SchemeFactory {
+      public idxFind_argsTupleScheme getScheme() {
+        return new idxFind_argsTupleScheme();
+      }
+    }
+
+    private static class idxFind_argsTupleScheme extends TupleScheme<idxFind_args> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, idxFind_args struct) throws org.apache.thrift.TException {
+        TTupleProtocol oprot = (TTupleProtocol) prot;
+        BitSet optionals = new BitSet();
+        if (struct.isSetShard()) {
+          optionals.set(0);
+        }
+        if (struct.isSetPattern()) {
+          optionals.set(1);
+        }
+        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetShard()) {
+          struct.shard.write(oprot);
+        }
+        if (struct.isSetPattern()) {
+          struct.pattern.write(oprot);
         }
       }
-      if (struct.addTuple != null) {
-        if (struct.isSetAddTuple()) {
-          oprot.writeFieldBegin(ADD_TUPLE_FIELD_DESC);
-          struct.addTuple.write(oprot);
-          oprot.writeFieldEnd();
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, idxFind_args struct) throws org.apache.thrift.TException {
+        TTupleProtocol iprot = (TTupleProtocol) prot;
+        BitSet incoming = iprot.readBitSet(2);
+        if (incoming.get(0)) {
+          struct.shard = new TLZ_ShardIndex();
+          struct.shard.read(iprot);
+          struct.setShardIsSet(true);
+        }
+        if (incoming.get(1)) {
+          struct.pattern = new TLZ_TupleNodeId();
+          struct.pattern.read(iprot);
+          struct.setPatternIsSet(true);
         }
       }
-      if (struct.deleteTuple != null) {
-        if (struct.isSetDeleteTuple()) {
-          oprot.writeFieldBegin(DELETE_TUPLE_FIELD_DESC);
-          struct.deleteTuple.write(oprot);
-          oprot.writeFieldEnd();
-        }
-      }
-      if (struct.ping != null) {
-        if (struct.isSetPing()) {
-          oprot.writeFieldBegin(PING_FIELD_DESC);
-          struct.ping.write(oprot);
-          oprot.writeFieldEnd();
-        }
-      }
-      if (struct.patch != null) {
-        if (struct.isSetPatch()) {
-          oprot.writeFieldBegin(PATCH_FIELD_DESC);
-          struct.patch.write(oprot);
-          oprot.writeFieldEnd();
-        }
-      }
-      if (struct.txnBeginRead != null) {
-        if (struct.isSetTxnBeginRead()) {
-          oprot.writeFieldBegin(TXN_BEGIN_READ_FIELD_DESC);
-          struct.txnBeginRead.write(oprot);
-          oprot.writeFieldEnd();
-        }
-      }
-      if (struct.txnBeginWrite != null) {
-        if (struct.isSetTxnBeginWrite()) {
-          oprot.writeFieldBegin(TXN_BEGIN_WRITE_FIELD_DESC);
-          struct.txnBeginWrite.write(oprot);
-          oprot.writeFieldEnd();
-        }
-      }
-      if (struct.txnPrepare != null) {
-        if (struct.isSetTxnPrepare()) {
-          oprot.writeFieldBegin(TXN_PREPARE_FIELD_DESC);
-          struct.txnPrepare.write(oprot);
-          oprot.writeFieldEnd();
-        }
-      }
-      if (struct.txnCommit != null) {
-        if (struct.isSetTxnCommit()) {
-          oprot.writeFieldBegin(TXN_COMMIT_FIELD_DESC);
-          struct.txnCommit.write(oprot);
-          oprot.writeFieldEnd();
-        }
-      }
-      if (struct.txnAbort != null) {
-        if (struct.isSetTxnAbort()) {
-          oprot.writeFieldBegin(TXN_ABORT_FIELD_DESC);
-          struct.txnAbort.write(oprot);
-          oprot.writeFieldEnd();
-        }
-      }
-      if (struct.txnEnd != null) {
-        if (struct.isSetTxnEnd()) {
-          oprot.writeFieldBegin(TXN_END_FIELD_DESC);
-          struct.txnEnd.write(oprot);
-          oprot.writeFieldEnd();
-        }
-      }
-      oprot.writeFieldStop();
-      oprot.writeStructEnd();
     }
 
   }
 
-  private static class TLZ_IdxRequestTupleSchemeFactory implements SchemeFactory {
-    public TLZ_IdxRequestTupleScheme getScheme() {
-      return new TLZ_IdxRequestTupleScheme();
-    }
-  }
+  public static class idxFind_result implements org.apache.thrift.TBase<idxFind_result, idxFind_result._Fields>, java.io.Serializable, Cloneable, Comparable<idxFind_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("idxFind_result");
 
-  private static class TLZ_IdxRequestTupleScheme extends TupleScheme<TLZ_IdxRequest> {
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.LIST, (short)0);
+
+    private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
+    static {
+      schemes.put(StandardScheme.class, new idxFind_resultStandardSchemeFactory());
+      schemes.put(TupleScheme.class, new idxFind_resultTupleSchemeFactory());
+    }
+
+    public List<TLZ_TupleNodeId> success; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      SUCCESS((short)0, "success");
+
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 0: // SUCCESS
+            return SUCCESS;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.ListMetaData(org.apache.thrift.protocol.TType.LIST, 
+              new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_TupleNodeId.class))));
+      metaDataMap = Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(idxFind_result.class, metaDataMap);
+    }
+
+    public idxFind_result() {
+    }
+
+    public idxFind_result(
+      List<TLZ_TupleNodeId> success)
+    {
+      this();
+      this.success = success;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public idxFind_result(idxFind_result other) {
+      if (other.isSetSuccess()) {
+        List<TLZ_TupleNodeId> __this__success = new ArrayList<TLZ_TupleNodeId>(other.success.size());
+        for (TLZ_TupleNodeId other_element : other.success) {
+          __this__success.add(new TLZ_TupleNodeId(other_element));
+        }
+        this.success = __this__success;
+      }
+    }
+
+    public idxFind_result deepCopy() {
+      return new idxFind_result(this);
+    }
 
     @Override
-    public void write(org.apache.thrift.protocol.TProtocol prot, TLZ_IdxRequest struct) throws org.apache.thrift.TException {
-      TTupleProtocol oprot = (TTupleProtocol) prot;
-      oprot.writeI64(struct.requestId);
-      oprot.writeI64(struct.generation);
-      struct.index.write(oprot);
-      BitSet optionals = new BitSet();
-      if (struct.isSetPattern()) {
-        optionals.set(0);
+    public void clear() {
+      this.success = null;
+    }
+
+    public int getSuccessSize() {
+      return (this.success == null) ? 0 : this.success.size();
+    }
+
+    public java.util.Iterator<TLZ_TupleNodeId> getSuccessIterator() {
+      return (this.success == null) ? null : this.success.iterator();
+    }
+
+    public void addToSuccess(TLZ_TupleNodeId elem) {
+      if (this.success == null) {
+        this.success = new ArrayList<TLZ_TupleNodeId>();
       }
-      if (struct.isSetSubPreds()) {
-        optionals.set(1);
-      }
-      if (struct.isSetAddTuple()) {
-        optionals.set(2);
-      }
-      if (struct.isSetDeleteTuple()) {
-        optionals.set(3);
-      }
-      if (struct.isSetPing()) {
-        optionals.set(4);
-      }
-      if (struct.isSetPatch()) {
-        optionals.set(5);
-      }
-      if (struct.isSetTxnBeginRead()) {
-        optionals.set(6);
-      }
-      if (struct.isSetTxnBeginWrite()) {
-        optionals.set(7);
-      }
-      if (struct.isSetTxnPrepare()) {
-        optionals.set(8);
-      }
-      if (struct.isSetTxnCommit()) {
-        optionals.set(9);
-      }
-      if (struct.isSetTxnAbort()) {
-        optionals.set(10);
-      }
-      if (struct.isSetTxnEnd()) {
-        optionals.set(11);
-      }
-      oprot.writeBitSet(optionals, 12);
-      if (struct.isSetPattern()) {
-        struct.pattern.write(oprot);
-      }
-      if (struct.isSetSubPreds()) {
-        struct.subPreds.write(oprot);
-      }
-      if (struct.isSetAddTuple()) {
-        struct.addTuple.write(oprot);
-      }
-      if (struct.isSetDeleteTuple()) {
-        struct.deleteTuple.write(oprot);
-      }
-      if (struct.isSetPing()) {
-        struct.ping.write(oprot);
-      }
-      if (struct.isSetPatch()) {
-        struct.patch.write(oprot);
-      }
-      if (struct.isSetTxnBeginRead()) {
-        struct.txnBeginRead.write(oprot);
-      }
-      if (struct.isSetTxnBeginWrite()) {
-        struct.txnBeginWrite.write(oprot);
-      }
-      if (struct.isSetTxnPrepare()) {
-        struct.txnPrepare.write(oprot);
-      }
-      if (struct.isSetTxnCommit()) {
-        struct.txnCommit.write(oprot);
-      }
-      if (struct.isSetTxnAbort()) {
-        struct.txnAbort.write(oprot);
-      }
-      if (struct.isSetTxnEnd()) {
-        struct.txnEnd.write(oprot);
+      this.success.add(elem);
+    }
+
+    public List<TLZ_TupleNodeId> getSuccess() {
+      return this.success;
+    }
+
+    public idxFind_result setSuccess(List<TLZ_TupleNodeId> success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    /** Returns true if field success is set (has been assigned a value) and false otherwise */
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      if (!value) {
+        this.success = null;
       }
     }
 
-    @Override
-    public void read(org.apache.thrift.protocol.TProtocol prot, TLZ_IdxRequest struct) throws org.apache.thrift.TException {
-      TTupleProtocol iprot = (TTupleProtocol) prot;
-      struct.requestId = iprot.readI64();
-      struct.setRequestIdIsSet(true);
-      struct.generation = iprot.readI64();
-      struct.setGenerationIsSet(true);
-      struct.index = new TLZ_ShardIndex();
-      struct.index.read(iprot);
-      struct.setIndexIsSet(true);
-      BitSet incoming = iprot.readBitSet(12);
-      if (incoming.get(0)) {
-        struct.pattern = new TLZ_TupleNodeId();
-        struct.pattern.read(iprot);
-        struct.setPatternIsSet(true);
-      }
-      if (incoming.get(1)) {
-        struct.subPreds = new TLZ_SubjectPredicateList();
-        struct.subPreds.read(iprot);
-        struct.setSubPredsIsSet(true);
-      }
-      if (incoming.get(2)) {
-        struct.addTuple = new TLZ_TupleNodeId();
-        struct.addTuple.read(iprot);
-        struct.setAddTupleIsSet(true);
-      }
-      if (incoming.get(3)) {
-        struct.deleteTuple = new TLZ_TupleNodeId();
-        struct.deleteTuple.read(iprot);
-        struct.setDeleteTupleIsSet(true);
-      }
-      if (incoming.get(4)) {
-        struct.ping = new TLZ_Ping();
-        struct.ping.read(iprot);
-        struct.setPingIsSet(true);
-      }
-      if (incoming.get(5)) {
-        struct.patch = new TLZ_Patch();
-        struct.patch.read(iprot);
-        struct.setPatchIsSet(true);
-      }
-      if (incoming.get(6)) {
-        struct.txnBeginRead = new TLZ_TxnBeginRead();
-        struct.txnBeginRead.read(iprot);
-        struct.setTxnBeginReadIsSet(true);
-      }
-      if (incoming.get(7)) {
-        struct.txnBeginWrite = new TLZ_TxnBeginWrite();
-        struct.txnBeginWrite.read(iprot);
-        struct.setTxnBeginWriteIsSet(true);
-      }
-      if (incoming.get(8)) {
-        struct.txnPrepare = new TLZ_TxnPrepare();
-        struct.txnPrepare.read(iprot);
-        struct.setTxnPrepareIsSet(true);
-      }
-      if (incoming.get(9)) {
-        struct.txnCommit = new TLZ_TxnCommit();
-        struct.txnCommit.read(iprot);
-        struct.setTxnCommitIsSet(true);
-      }
-      if (incoming.get(10)) {
-        struct.txnAbort = new TLZ_TxnAbort();
-        struct.txnAbort.read(iprot);
-        struct.setTxnAbortIsSet(true);
-      }
-      if (incoming.get(11)) {
-        struct.txnEnd = new TLZ_TxnEnd();
-        struct.txnEnd.read(iprot);
-        struct.setTxnEndIsSet(true);
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((List<TLZ_TupleNodeId>)value);
+        }
+        break;
+
       }
     }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
+      case SUCCESS:
+        return getSuccess();
+
+      }
+      throw new IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new IllegalArgumentException();
+      }
+
+      switch (field) {
+      case SUCCESS:
+        return isSetSuccess();
+      }
+      throw new IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof idxFind_result)
+        return this.equals((idxFind_result)that);
+      return false;
+    }
+
+    public boolean equals(idxFind_result that) {
+      if (that == null)
+        return false;
+
+      boolean this_present_success = true && this.isSetSuccess();
+      boolean that_present_success = true && that.isSetSuccess();
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (!this.success.equals(that.success))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return 0;
+    }
+
+    @Override
+    public int compareTo(idxFind_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetSuccess()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
+      }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("idxFind_result(");
+      boolean first = true;
+
+      sb.append("success:");
+      if (this.success == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.success);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class idxFind_resultStandardSchemeFactory implements SchemeFactory {
+      public idxFind_resultStandardScheme getScheme() {
+        return new idxFind_resultStandardScheme();
+      }
+    }
+
+    private static class idxFind_resultStandardScheme extends StandardScheme<idxFind_result> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, idxFind_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 0: // SUCCESS
+              if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
+                {
+                  org.apache.thrift.protocol.TList _list16 = iprot.readListBegin();
+                  struct.success = new ArrayList<TLZ_TupleNodeId>(_list16.size);
+                  for (int _i17 = 0; _i17 < _list16.size; ++_i17)
+                  {
+                    TLZ_TupleNodeId _elem18;
+                    _elem18 = new TLZ_TupleNodeId();
+                    _elem18.read(iprot);
+                    struct.success.add(_elem18);
+                  }
+                  iprot.readListEnd();
+                }
+                struct.setSuccessIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, idxFind_result struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.success != null) {
+          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+          {
+            oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
+            for (TLZ_TupleNodeId _iter19 : struct.success)
+            {
+              _iter19.write(oprot);
+            }
+            oprot.writeListEnd();
+          }
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class idxFind_resultTupleSchemeFactory implements SchemeFactory {
+      public idxFind_resultTupleScheme getScheme() {
+        return new idxFind_resultTupleScheme();
+      }
+    }
+
+    private static class idxFind_resultTupleScheme extends TupleScheme<idxFind_result> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, idxFind_result struct) throws org.apache.thrift.TException {
+        TTupleProtocol oprot = (TTupleProtocol) prot;
+        BitSet optionals = new BitSet();
+        if (struct.isSetSuccess()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetSuccess()) {
+          {
+            oprot.writeI32(struct.success.size());
+            for (TLZ_TupleNodeId _iter20 : struct.success)
+            {
+              _iter20.write(oprot);
+            }
+          }
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, idxFind_result struct) throws org.apache.thrift.TException {
+        TTupleProtocol iprot = (TTupleProtocol) prot;
+        BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          {
+            org.apache.thrift.protocol.TList _list21 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
+            struct.success = new ArrayList<TLZ_TupleNodeId>(_list21.size);
+            for (int _i22 = 0; _i22 < _list21.size; ++_i22)
+            {
+              TLZ_TupleNodeId _elem23;
+              _elem23 = new TLZ_TupleNodeId();
+              _elem23.read(iprot);
+              struct.success.add(_elem23);
+            }
+          }
+          struct.setSuccessIsSet(true);
+        }
+      }
+    }
+
   }
 
 }
-

@@ -4,7 +4,7 @@
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  *  @generated
  */
-package lizard.api.TLZ;
+package rpc.thrift;
 
 import org.apache.thrift.scheme.IScheme;
 import org.apache.thrift.scheme.SchemeFactory;
@@ -33,22 +33,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("all")
-public class TLZ_TxnBeginWrite implements org.apache.thrift.TBase<TLZ_TxnBeginWrite, TLZ_TxnBeginWrite._Fields>, java.io.Serializable, Cloneable, Comparable<TLZ_TxnBeginWrite> {
-  private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("TLZ_TxnBeginWrite");
+public class Item implements org.apache.thrift.TBase<Item, Item._Fields>, java.io.Serializable, Cloneable, Comparable<Item> {
+  private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("Item");
 
-  private static final org.apache.thrift.protocol.TField GENERATION_FIELD_DESC = new org.apache.thrift.protocol.TField("generation", org.apache.thrift.protocol.TType.I64, (short)1);
+  private static final org.apache.thrift.protocol.TField STRINGS_FIELD_DESC = new org.apache.thrift.protocol.TField("strings", org.apache.thrift.protocol.TType.LIST, (short)2);
 
   private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
   static {
-    schemes.put(StandardScheme.class, new TLZ_TxnBeginWriteStandardSchemeFactory());
-    schemes.put(TupleScheme.class, new TLZ_TxnBeginWriteTupleSchemeFactory());
+    schemes.put(StandardScheme.class, new ItemStandardSchemeFactory());
+    schemes.put(TupleScheme.class, new ItemTupleSchemeFactory());
   }
 
-  public long generation; // required
+  public List<String> strings; // required
 
   /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
   public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-    GENERATION((short)1, "generation");
+    STRINGS((short)2, "strings");
 
     private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -63,8 +63,8 @@ public class TLZ_TxnBeginWrite implements org.apache.thrift.TBase<TLZ_TxnBeginWr
      */
     public static _Fields findByThriftId(int fieldId) {
       switch(fieldId) {
-        case 1: // GENERATION
-          return GENERATION;
+        case 2: // STRINGS
+          return STRINGS;
         default:
           return null;
       }
@@ -105,76 +105,91 @@ public class TLZ_TxnBeginWrite implements org.apache.thrift.TBase<TLZ_TxnBeginWr
   }
 
   // isset id assignments
-  private static final int __GENERATION_ISSET_ID = 0;
-  private byte __isset_bitfield = 0;
   public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
   static {
     Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-    tmpMap.put(_Fields.GENERATION, new org.apache.thrift.meta_data.FieldMetaData("generation", org.apache.thrift.TFieldRequirementType.REQUIRED, 
-        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+    tmpMap.put(_Fields.STRINGS, new org.apache.thrift.meta_data.FieldMetaData("strings", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+        new org.apache.thrift.meta_data.ListMetaData(org.apache.thrift.protocol.TType.LIST, 
+            new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING))));
     metaDataMap = Collections.unmodifiableMap(tmpMap);
-    org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(TLZ_TxnBeginWrite.class, metaDataMap);
+    org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(Item.class, metaDataMap);
   }
 
-  public TLZ_TxnBeginWrite() {
+  public Item() {
   }
 
-  public TLZ_TxnBeginWrite(
-    long generation)
+  public Item(
+    List<String> strings)
   {
     this();
-    this.generation = generation;
-    setGenerationIsSet(true);
+    this.strings = strings;
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public TLZ_TxnBeginWrite(TLZ_TxnBeginWrite other) {
-    __isset_bitfield = other.__isset_bitfield;
-    this.generation = other.generation;
+  public Item(Item other) {
+    if (other.isSetStrings()) {
+      List<String> __this__strings = new ArrayList<String>(other.strings);
+      this.strings = __this__strings;
+    }
   }
 
-  public TLZ_TxnBeginWrite deepCopy() {
-    return new TLZ_TxnBeginWrite(this);
+  public Item deepCopy() {
+    return new Item(this);
   }
 
   @Override
   public void clear() {
-    setGenerationIsSet(false);
-    this.generation = 0;
+    this.strings = null;
   }
 
-  public long getGeneration() {
-    return this.generation;
+  public int getStringsSize() {
+    return (this.strings == null) ? 0 : this.strings.size();
   }
 
-  public TLZ_TxnBeginWrite setGeneration(long generation) {
-    this.generation = generation;
-    setGenerationIsSet(true);
+  public java.util.Iterator<String> getStringsIterator() {
+    return (this.strings == null) ? null : this.strings.iterator();
+  }
+
+  public void addToStrings(String elem) {
+    if (this.strings == null) {
+      this.strings = new ArrayList<String>();
+    }
+    this.strings.add(elem);
+  }
+
+  public List<String> getStrings() {
+    return this.strings;
+  }
+
+  public Item setStrings(List<String> strings) {
+    this.strings = strings;
     return this;
   }
 
-  public void unsetGeneration() {
-    __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __GENERATION_ISSET_ID);
+  public void unsetStrings() {
+    this.strings = null;
   }
 
-  /** Returns true if field generation is set (has been assigned a value) and false otherwise */
-  public boolean isSetGeneration() {
-    return EncodingUtils.testBit(__isset_bitfield, __GENERATION_ISSET_ID);
+  /** Returns true if field strings is set (has been assigned a value) and false otherwise */
+  public boolean isSetStrings() {
+    return this.strings != null;
   }
 
-  public void setGenerationIsSet(boolean value) {
-    __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __GENERATION_ISSET_ID, value);
+  public void setStringsIsSet(boolean value) {
+    if (!value) {
+      this.strings = null;
+    }
   }
 
   public void setFieldValue(_Fields field, Object value) {
     switch (field) {
-    case GENERATION:
+    case STRINGS:
       if (value == null) {
-        unsetGeneration();
+        unsetStrings();
       } else {
-        setGeneration((Long)value);
+        setStrings((List<String>)value);
       }
       break;
 
@@ -183,8 +198,8 @@ public class TLZ_TxnBeginWrite implements org.apache.thrift.TBase<TLZ_TxnBeginWr
 
   public Object getFieldValue(_Fields field) {
     switch (field) {
-    case GENERATION:
-      return Long.valueOf(getGeneration());
+    case STRINGS:
+      return getStrings();
 
     }
     throw new IllegalStateException();
@@ -197,8 +212,8 @@ public class TLZ_TxnBeginWrite implements org.apache.thrift.TBase<TLZ_TxnBeginWr
     }
 
     switch (field) {
-    case GENERATION:
-      return isSetGeneration();
+    case STRINGS:
+      return isSetStrings();
     }
     throw new IllegalStateException();
   }
@@ -207,21 +222,21 @@ public class TLZ_TxnBeginWrite implements org.apache.thrift.TBase<TLZ_TxnBeginWr
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof TLZ_TxnBeginWrite)
-      return this.equals((TLZ_TxnBeginWrite)that);
+    if (that instanceof Item)
+      return this.equals((Item)that);
     return false;
   }
 
-  public boolean equals(TLZ_TxnBeginWrite that) {
+  public boolean equals(Item that) {
     if (that == null)
       return false;
 
-    boolean this_present_generation = true;
-    boolean that_present_generation = true;
-    if (this_present_generation || that_present_generation) {
-      if (!(this_present_generation && that_present_generation))
+    boolean this_present_strings = true && this.isSetStrings();
+    boolean that_present_strings = true && that.isSetStrings();
+    if (this_present_strings || that_present_strings) {
+      if (!(this_present_strings && that_present_strings))
         return false;
-      if (this.generation != that.generation)
+      if (!this.strings.equals(that.strings))
         return false;
     }
 
@@ -234,19 +249,19 @@ public class TLZ_TxnBeginWrite implements org.apache.thrift.TBase<TLZ_TxnBeginWr
   }
 
   @Override
-  public int compareTo(TLZ_TxnBeginWrite other) {
+  public int compareTo(Item other) {
     if (!getClass().equals(other.getClass())) {
       return getClass().getName().compareTo(other.getClass().getName());
     }
 
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetGeneration()).compareTo(other.isSetGeneration());
+    lastComparison = Boolean.valueOf(isSetStrings()).compareTo(other.isSetStrings());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    if (isSetGeneration()) {
-      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.generation, other.generation);
+    if (isSetStrings()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.strings, other.strings);
       if (lastComparison != 0) {
         return lastComparison;
       }
@@ -268,11 +283,15 @@ public class TLZ_TxnBeginWrite implements org.apache.thrift.TBase<TLZ_TxnBeginWr
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder("TLZ_TxnBeginWrite(");
+    StringBuilder sb = new StringBuilder("Item(");
     boolean first = true;
 
-    sb.append("generation:");
-    sb.append(this.generation);
+    sb.append("strings:");
+    if (this.strings == null) {
+      sb.append("null");
+    } else {
+      sb.append(this.strings);
+    }
     first = false;
     sb.append(")");
     return sb.toString();
@@ -280,7 +299,6 @@ public class TLZ_TxnBeginWrite implements org.apache.thrift.TBase<TLZ_TxnBeginWr
 
   public void validate() throws org.apache.thrift.TException {
     // check for required fields
-    // alas, we cannot check 'generation' because it's a primitive and you chose the non-beans generator.
     // check for sub-struct validity
   }
 
@@ -294,23 +312,21 @@ public class TLZ_TxnBeginWrite implements org.apache.thrift.TBase<TLZ_TxnBeginWr
 
   private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
     try {
-      // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
-      __isset_bitfield = 0;
       read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
     } catch (org.apache.thrift.TException te) {
       throw new java.io.IOException(te);
     }
   }
 
-  private static class TLZ_TxnBeginWriteStandardSchemeFactory implements SchemeFactory {
-    public TLZ_TxnBeginWriteStandardScheme getScheme() {
-      return new TLZ_TxnBeginWriteStandardScheme();
+  private static class ItemStandardSchemeFactory implements SchemeFactory {
+    public ItemStandardScheme getScheme() {
+      return new ItemStandardScheme();
     }
   }
 
-  private static class TLZ_TxnBeginWriteStandardScheme extends StandardScheme<TLZ_TxnBeginWrite> {
+  private static class ItemStandardScheme extends StandardScheme<Item> {
 
-    public void read(org.apache.thrift.protocol.TProtocol iprot, TLZ_TxnBeginWrite struct) throws org.apache.thrift.TException {
+    public void read(org.apache.thrift.protocol.TProtocol iprot, Item struct) throws org.apache.thrift.TException {
       org.apache.thrift.protocol.TField schemeField;
       iprot.readStructBegin();
       while (true)
@@ -320,10 +336,20 @@ public class TLZ_TxnBeginWrite implements org.apache.thrift.TBase<TLZ_TxnBeginWr
           break;
         }
         switch (schemeField.id) {
-          case 1: // GENERATION
-            if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
-              struct.generation = iprot.readI64();
-              struct.setGenerationIsSet(true);
+          case 2: // STRINGS
+            if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
+              {
+                org.apache.thrift.protocol.TList _list0 = iprot.readListBegin();
+                struct.strings = new ArrayList<String>(_list0.size);
+                for (int _i1 = 0; _i1 < _list0.size; ++_i1)
+                {
+                  String _elem2;
+                  _elem2 = iprot.readString();
+                  struct.strings.add(_elem2);
+                }
+                iprot.readListEnd();
+              }
+              struct.setStringsIsSet(true);
             } else { 
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
@@ -336,44 +362,75 @@ public class TLZ_TxnBeginWrite implements org.apache.thrift.TBase<TLZ_TxnBeginWr
       iprot.readStructEnd();
 
       // check for required fields of primitive type, which can't be checked in the validate method
-      if (!struct.isSetGeneration()) {
-        throw new org.apache.thrift.protocol.TProtocolException("Required field 'generation' was not found in serialized data! Struct: " + toString());
-      }
       struct.validate();
     }
 
-    public void write(org.apache.thrift.protocol.TProtocol oprot, TLZ_TxnBeginWrite struct) throws org.apache.thrift.TException {
+    public void write(org.apache.thrift.protocol.TProtocol oprot, Item struct) throws org.apache.thrift.TException {
       struct.validate();
 
       oprot.writeStructBegin(STRUCT_DESC);
-      oprot.writeFieldBegin(GENERATION_FIELD_DESC);
-      oprot.writeI64(struct.generation);
-      oprot.writeFieldEnd();
+      if (struct.strings != null) {
+        oprot.writeFieldBegin(STRINGS_FIELD_DESC);
+        {
+          oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.strings.size()));
+          for (String _iter3 : struct.strings)
+          {
+            oprot.writeString(_iter3);
+          }
+          oprot.writeListEnd();
+        }
+        oprot.writeFieldEnd();
+      }
       oprot.writeFieldStop();
       oprot.writeStructEnd();
     }
 
   }
 
-  private static class TLZ_TxnBeginWriteTupleSchemeFactory implements SchemeFactory {
-    public TLZ_TxnBeginWriteTupleScheme getScheme() {
-      return new TLZ_TxnBeginWriteTupleScheme();
+  private static class ItemTupleSchemeFactory implements SchemeFactory {
+    public ItemTupleScheme getScheme() {
+      return new ItemTupleScheme();
     }
   }
 
-  private static class TLZ_TxnBeginWriteTupleScheme extends TupleScheme<TLZ_TxnBeginWrite> {
+  private static class ItemTupleScheme extends TupleScheme<Item> {
 
     @Override
-    public void write(org.apache.thrift.protocol.TProtocol prot, TLZ_TxnBeginWrite struct) throws org.apache.thrift.TException {
+    public void write(org.apache.thrift.protocol.TProtocol prot, Item struct) throws org.apache.thrift.TException {
       TTupleProtocol oprot = (TTupleProtocol) prot;
-      oprot.writeI64(struct.generation);
+      BitSet optionals = new BitSet();
+      if (struct.isSetStrings()) {
+        optionals.set(0);
+      }
+      oprot.writeBitSet(optionals, 1);
+      if (struct.isSetStrings()) {
+        {
+          oprot.writeI32(struct.strings.size());
+          for (String _iter4 : struct.strings)
+          {
+            oprot.writeString(_iter4);
+          }
+        }
+      }
     }
 
     @Override
-    public void read(org.apache.thrift.protocol.TProtocol prot, TLZ_TxnBeginWrite struct) throws org.apache.thrift.TException {
+    public void read(org.apache.thrift.protocol.TProtocol prot, Item struct) throws org.apache.thrift.TException {
       TTupleProtocol iprot = (TTupleProtocol) prot;
-      struct.generation = iprot.readI64();
-      struct.setGenerationIsSet(true);
+      BitSet incoming = iprot.readBitSet(1);
+      if (incoming.get(0)) {
+        {
+          org.apache.thrift.protocol.TList _list5 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, iprot.readI32());
+          struct.strings = new ArrayList<String>(_list5.size);
+          for (int _i6 = 0; _i6 < _list5.size; ++_i6)
+          {
+            String _elem7;
+            _elem7 = iprot.readString();
+            struct.strings.add(_elem7);
+          }
+        }
+        struct.setStringsIsSet(true);
+      }
     }
   }
 

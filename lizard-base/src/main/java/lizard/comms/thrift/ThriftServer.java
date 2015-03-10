@@ -30,6 +30,9 @@ import org.slf4j.LoggerFactory ;
 
 public class ThriftServer extends ComponentBase implements Component {
     
+    // REPLACED by TThreadPoolServer
+    // Until we have streaming server->client.
+    
     /** handle a new conenction */
     public interface Handler { public void handle(TTransport transport) ; }
     

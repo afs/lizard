@@ -18,6 +18,7 @@
 package rpc;
 
 import org.apache.thrift.TException ;
+import rpc.thrift.Item ;
 
 public class S1_Server implements rpc.thrift.S1.Iface{
 
@@ -35,6 +36,11 @@ public class S1_Server implements rpc.thrift.S1.Iface{
     public long inc(long arg) throws TException {
         System.err.println("inc") ;
         return arg + 1 ; 
+    }
+
+    @Override
+    public void deliver(Item item) throws TException {
+        item.strings.forEach((s)-> System.out.println("** "+s));
     }
 
 }
