@@ -20,31 +20,23 @@ package lizard.comms.thrift;
 import lizard.system.Component ;
 import lizard.system.ComponentBase ;
 import lizard.system.LizardException ;
+
 import org.apache.jena.atlas.logging.Log ;
 import org.apache.thrift.TException ;
 import org.apache.thrift.transport.TServerSocket ;
 import org.apache.thrift.transport.TServerTransport ;
-import org.apache.thrift.transport.TTransport ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
+/** Base of all servers */
 public class ThriftServer extends ComponentBase implements Component {
-    
-    // REPLACED by TThreadPoolServer
-    // Until we have streaming server->client.
-    
-    /** handle a new conenction */
-    public interface Handler { public void handle(TTransport transport) ; }
-    
     private static Logger log = LoggerFactory.getLogger(ThriftServer.class) ; 
     
     private final int port ;
-    private final Handler handler ;
-    private final TServerTransport serverTransport ;
+    protected final TServerTransport serverTransport ;
 
-    public ThriftServer(int port, Handler handler) {
+    public ThriftServer(int port) {
         this.port = port;
-        this.handler = handler ;
         try { serverTransport = new TServerSocket(port) ; }
         catch (TException e) { throw new LizardException(e) ; } 
     }
@@ -54,29 +46,15 @@ public class ThriftServer extends ComponentBase implements Component {
     @Override
     public void start() {
         if (super.isRunning() ) {
-            Log.fatal(this, "Already started (port="+getPort()+")") ;
+            Log.fatal(this, "Already started: "+getLabel()) ;
             return ; 
         }
-        log.debug("Start: port = "+port) ;
-        new Thread(() -> server(serverTransport)).start() ;
-        super.start() ; 
+        super.start() ;
     }
     
     @Override
     public void stop() {
-        serverTransport.close() ;
         super.stop() ;
-    }
-
-        public void server(TServerTransport serverTransport) {
-        for ( ;; ) 
-            try {
-                TTransport transport = serverTransport.accept() ;
-                log.debug("Connection: "+transport) ;
-                new Thread(()->handler.handle(transport)).start() ;
-            } 
-            catch (TException e) {}
-            catch (Exception e) { e.printStackTrace(); }
-
+        serverTransport.close() ;
     }
 }

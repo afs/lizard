@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicLong ;
 import java.util.stream.Collectors ;
 
 import lizard.api.TLZlib ;
-import lizard.api.TLZ.TLZ_IdxRequest ;
+import lizard.api.TLZ.TLZ_Index ;
 import lizard.api.TLZ.TLZ_IndexName ;
 import lizard.api.TLZ.TLZ_ShardIndex ;
 import lizard.api.TLZ.TLZ_TupleNodeId ;
@@ -32,20 +32,21 @@ import lizard.comms.ConnState ;
 import lizard.comms.Connection ;
 import lizard.comms.thrift.ThriftClient ;
 import lizard.system.* ;
+
+import com.hp.hpl.jena.query.ReadWrite ;
+import com.hp.hpl.jena.tdb.store.NodeId ;
+
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.Tuple ;
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
-import com.hp.hpl.jena.query.ReadWrite ;
-import com.hp.hpl.jena.tdb.store.NodeId ;
-
 class TClientIndex extends ComponentBase implements Connection, ComponentTxn, Pingable 
 {
     private static Logger log = LoggerFactory.getLogger(TClientIndex.class) ;
     private final ThriftClient client ;
-    private TLZ_IdxRequest.Client rpc ;
+    private TLZ_Index.Client rpc ;
     private ConnState connState ; 
     private final TLZ_IndexName indexName ;
     private final TLZ_ShardIndex shard ;    // remove.
@@ -72,7 +73,7 @@ class TClientIndex extends ComponentBase implements Connection, ComponentTxn, Pi
         FmtLog.debug(log, "Start: %s", getLabel()) ;
         client.start() ;
         // Delay until starting (client.protocol not valid until then).
-        this.rpc = new TLZ_IdxRequest.Client(client.protocol()) ;
+        this.rpc = new TLZ_Index.Client(client.protocol()) ;
         super.start() ; 
         connState = ConnState.OK ;
     }

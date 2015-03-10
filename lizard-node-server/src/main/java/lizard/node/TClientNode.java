@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicLong ;
 
 import lizard.api.TLZ.TLZ_Node ;
 import lizard.api.TLZ.TLZ_NodeId ;
-import lizard.api.TLZ.TLZ_NodeRequest ;
+import lizard.api.TLZ.TLZ_NodeTable ;
 import lizard.comms.ConnState ;
 import lizard.comms.Connection ;
 import lizard.comms.thrift.ThriftClient ;
@@ -42,7 +42,7 @@ public class TClientNode extends ComponentBase implements Connection, Pingable
 {
     private static Logger log = LoggerFactory.getLogger(TClientNode.class) ;
     private final ThriftClient client ;
-    private TLZ_NodeRequest.Client rpc ;
+    private TLZ_NodeTable.Client rpc ;
     private ConnState connState ;
     
     public static TClientNode create(String host, int port) {
@@ -57,14 +57,11 @@ public class TClientNode extends ComponentBase implements Connection, Pingable
     
     @Override
     public void start() {
-        if ( client.isRunning() ) {
-            FmtLog.debug(log, "Already started (%s:%d)", client.getRemoteHost(), client.getRemotePort()) ;
-            return ;
-        }
-        FmtLog.debug(log, "Start: %s", getLabel()) ;
         client.start() ;
+        FmtLog.debug(log, "Start: %s", getLabel()) ;
+        
         // Delay until starting (client.protocol not valid until then).
-        rpc = new TLZ_NodeRequest.Client(client.protocol()) ;
+        rpc = new TLZ_NodeTable.Client(client.protocol()) ;
         super.start() ;
         connState = ConnState.OK ;
     }

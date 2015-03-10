@@ -62,8 +62,8 @@ public class LzDev {
         Dataset ds = queryEngine(lz, "D.ttl") ;
         
         lz.getComponents().forEach(c->{
-            System.out.println(c) ;
-            System.out.println(c.getClass().getName()) ;
+//            System.out.println(c) ;
+//            System.out.println(c.getClass().getName()) ;
             if ( c instanceof TupleIndexRemote ) {
                 TupleIndexRemote rIdx = (TupleIndexRemote)c ;
                 rIdx.begin(ReadWrite.READ) ;

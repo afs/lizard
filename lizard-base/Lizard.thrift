@@ -1,18 +1,12 @@
 namespace java lizard.api.TLZ
 
-// ---- Common
+// ---- Admin 
+service Ping { void ping() }
 
-struct TLZ_TupleNodeId {
-1: required i64 S ;
-2: required i64 P ;
-3: required i64 O ;
-4: optional i64 G ;
+// Used in the standalone server only.
+struct TLZ_Ping {
+1: required i64 marker ;
 }
-
-// This is used in both directions
-struct TLZ_Ping { 1: required i64 marker }
-
-enum ReadWrite { READ, WRITE }
 
 // ---- Transaction
 service TxnCtl {
@@ -25,6 +19,13 @@ service TxnCtl {
 }
 
 // ---- Index
+
+struct TLZ_TupleNodeId {
+1: required i64 S ;
+2: required i64 P ;
+3: required i64 O ;
+4: optional i64 G ;
+}
 
 enum TLZ_IndexName { SPO , POS , PSO , OSP }
 
@@ -50,7 +51,7 @@ struct TLZ_Patch {
 }
 
 // ---- Index
-service TLZ_IdxRequest {
+service TLZ_Index extends TxnCtl {
     void idxPing()    
     bool idxAdd (1: TLZ_ShardIndex shard, 2: TLZ_TupleNodeId tuple)
     bool idxDelete(1: TLZ_ShardIndex shard, 2: TLZ_TupleNodeId tuple)
@@ -69,7 +70,7 @@ struct TLZ_NodeId {
 1: required i64 nodeId ;
 }
 
-service TLZ_NodeRequest {
+service TLZ_NodeTable extends TxnCtl {
     void nodePing() 
     TLZ_NodeId allocNodeId(1: TLZ_Node node)
     TLZ_NodeId findByNode(1: TLZ_Node node)

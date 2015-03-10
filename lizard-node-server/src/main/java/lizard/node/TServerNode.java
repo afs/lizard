@@ -20,32 +20,27 @@ package lizard.node;
 
 import lizard.api.TLZ.TLZ_Node ;
 import lizard.api.TLZ.TLZ_NodeId ;
-import lizard.api.TLZ.TLZ_NodeRequest ;
-import lizard.system.ComponentBase ;
-import lizard.system.LizardException ;
-import org.apache.jena.atlas.logging.FmtLog ;
-import org.apache.jena.riot.out.NodeFmtLib ;
-import org.apache.thrift.TException ;
-import org.apache.thrift.protocol.TCompactProtocol ;
-import org.apache.thrift.server.TServer ;
-import org.apache.thrift.server.TThreadPoolServer ;
-import org.apache.thrift.transport.TServerSocket ;
-import org.apache.thrift.transport.TServerTransport ;
-import org.slf4j.Logger ;
-import org.slf4j.LoggerFactory ;
+import lizard.api.TLZ.TLZ_NodeTable ;
+import lizard.comms.thrift.ThriftServer ;
 
 import com.hp.hpl.jena.graph.Node ;
 import com.hp.hpl.jena.sparql.sse.SSE ;
 import com.hp.hpl.jena.tdb.store.NodeId ;
 import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
 
+import org.apache.jena.atlas.logging.FmtLog ;
+import org.apache.jena.riot.out.NodeFmtLib ;
+import org.apache.thrift.TException ;
+import org.apache.thrift.protocol.TCompactProtocol ;
+import org.apache.thrift.server.TServer ;
+import org.apache.thrift.server.TThreadPoolServer ;
+import org.slf4j.Logger ;
+import org.slf4j.LoggerFactory ;
+
 // XXX Needs efficiency attention.
-public class TServerNode extends ComponentBase
+public class TServerNode extends ThriftServer
 {
     private static Logger log = LoggerFactory.getLogger(TServerNode.class) ;
-    private final int port ;
-    private final TServerTransport serverTransport ;
-//    private final ThriftServer server ;
     private final NodeTable nodeTable ;
     
     public static TServerNode create(int port, NodeTable nodeTable) {
@@ -53,28 +48,19 @@ public class TServerNode extends ComponentBase
     }
     
     private TServerNode(int port, NodeTable nodeTable) {
+        super(port) ;
         setLabel("NodeServer["+port+"]") ;
         //server = new ThriftServer(port, new Handler(getLabel(), nodeTable)) ;
-        this.port = port ;
         this.nodeTable = nodeTable ; 
-        try {
-            this.serverTransport = new TServerSocket(port);
-        } catch (TException ex) {
-            throw new LizardException(ex) ;
-        }
     }
     
     @Override
     public void start() {
-        if ( super.isRunning() ) {
-            FmtLog.debug(log, "Already started (port=%d)", port) ;
-            return ;
-        }
-        FmtLog.info(log, "Start node server, port = %d", port) ;
-        TLZ_NodeRequest.Iface handler = new TServerNode.Handler(getLabel(), nodeTable) ;
-        TLZ_NodeRequest.Processor<TLZ_NodeRequest.Iface> processor = new TLZ_NodeRequest.Processor<TLZ_NodeRequest.Iface>(handler);
+        //FmtLog.debug(log, "Start node server, port = %d", getPort()) ;
+        TLZ_NodeTable.Iface handler = new TServerNode.Handler(getLabel(), nodeTable) ;
+        TLZ_NodeTable.Processor<TLZ_NodeTable.Iface> processor = new TLZ_NodeTable.Processor<TLZ_NodeTable.Iface>(handler);
 
-        // Semapahores to sync.
+        // Semapahores to sync??
         new Thread(()-> {
             try {
                 TThreadPoolServer.Args args = new TThreadPoolServer.Args(serverTransport) ;
@@ -82,17 +68,17 @@ public class TServerNode extends ComponentBase
                 args.inputProtocolFactory(new TCompactProtocol.Factory()) ;
                 args.outputProtocolFactory(new TCompactProtocol.Factory()) ;
                 TServer server = new TThreadPoolServer(args);
-                FmtLog.info(log, "Started index server: port = %d", port) ;
+                FmtLog.info(log, "Started index server: port = %d", getPort()) ;
                 server.serve();
+                FmtLog.info(log, "Finished index server: port = %d", getPort()) ;
               } catch (Exception e) {
                 e.printStackTrace();
               }
         }) .start() ;
         super.start() ;
-
     }
     
-    static class Handler implements TLZ_NodeRequest.Iface {
+    static class Handler implements TLZ_NodeTable.Iface {
         private final NodeTable nodeTable ;
         private final String label ;
 
@@ -138,5 +124,30 @@ public class TServerNode extends ComponentBase
             TLZ_Node nlz = new TLZ_Node().setNodeStr(str) ;
             return nlz ;
         }
+        
+        @Override
+        public long txnBeginRead() throws TException {
+            log.warn("TServerNode:txnBeginRead - not implemented"); 
+            return 0 ;
+        }
+
+        @Override
+        public long txnBeginWrite() throws TException {
+            log.warn("TServerNode:txnBeginWrite - not implemented"); 
+            return 0 ;
+        }
+
+        @Override
+        public void txnPrepare(long txnId) throws TException {}
+
+        @Override
+        public void txnCommit(long txnId) throws TException {}
+
+        @Override
+        public void txnAbort(long txnId) throws TException {}
+
+        @Override
+        public void txnEnd(long txnId) throws TException {}
+
     }
 }

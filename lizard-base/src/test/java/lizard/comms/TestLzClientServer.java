@@ -23,8 +23,8 @@ import java.util.concurrent.atomic.AtomicReference ;
 import lizard.api.TLZ.TLZ_Ping ;
 import lizard.comms.thrift.ThriftClient ;
 import lizard.comms.thrift.ThriftLib ;
-import lizard.comms.thrift.ThriftServer ;
-import lizard.comms.thrift.ThriftServer.Handler ;
+import lizard.comms.thrift.ThriftServerAcceptFork ;
+import lizard.comms.thrift.ThriftServerAcceptFork.Handler ;
 import lizard.test.LzBaseTest ;
 import org.apache.thrift.TException ;
 import org.apache.thrift.protocol.TProtocol ;
@@ -33,7 +33,7 @@ import org.apache.thrift.transport.TTransport ;
 import org.junit.Test ;
 
 /**
- * Test Client/Server
+ * Test Client/Server (not using Thrift services)
  */
 public class TestLzClientServer extends LzBaseTest {
     
@@ -57,7 +57,7 @@ public class TestLzClientServer extends LzBaseTest {
                 }
             }
         };
-        ThriftServer server = new ThriftServer(test_port, handler) ;
+        ThriftServerAcceptFork server = new ThriftServerAcceptFork(test_port, handler) ;
         
         server.start() ;
         
@@ -75,9 +75,6 @@ public class TestLzClientServer extends LzBaseTest {
         server.stop() ;
         
     }
-
-//    ThriftServer
-//    ThriftClient
 
     private static TProtocol protocol() {
         TTransport transport = new TMemoryBuffer(1024) ;

@@ -144,7 +144,7 @@ public class ClusterTupleIndex extends TupleIndexBase
         
         for ( TupleIndexRemote idx : places ) {
             FmtLog.info(log, "  Place: %s %s", idx, tuple) ;
-            idx.find(tuple).forEachRemaining(z -> System.out.println("   " + z)) ;
+            idx.find(tuple).forEachRemaining(z -> FmtLog.info(log, "   %s",z)) ;
         }
         
         

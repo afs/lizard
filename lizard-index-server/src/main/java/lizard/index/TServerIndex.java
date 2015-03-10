@@ -22,31 +22,27 @@ import java.util.Iterator ;
 import java.util.List ;
 
 import lizard.api.TLZlib ;
-import lizard.api.TLZ.TLZ_IdxRequest ;
+import lizard.api.TLZ.TLZ_Index ;
 import lizard.api.TLZ.TLZ_ShardIndex ;
 import lizard.api.TLZ.TLZ_TupleNodeId ;
-import lizard.system.ComponentBase ;
-import lizard.system.LizardException ;
+import lizard.comms.thrift.ThriftServer ;
+
+import com.hp.hpl.jena.tdb.store.NodeId ;
+import com.hp.hpl.jena.tdb.store.tupletable.TupleIndex ;
+
 import org.apache.jena.atlas.lib.Tuple ;
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.thrift.TException ;
 import org.apache.thrift.protocol.TCompactProtocol ;
 import org.apache.thrift.server.TServer ;
 import org.apache.thrift.server.TThreadPoolServer ;
-import org.apache.thrift.transport.TServerSocket ;
-import org.apache.thrift.transport.TServerTransport ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
-import com.hp.hpl.jena.tdb.store.NodeId ;
-import com.hp.hpl.jena.tdb.store.tupletable.TupleIndex ;
 
-
-public class TServerIndex extends ComponentBase
+public class TServerIndex extends ThriftServer
 {
     private static Logger log = LoggerFactory.getLogger(TServerIndex.class) ;
-    private final int port ;
-    private final TServerTransport serverTransport ;
     private TupleIndex index ;
     
     public static TServerIndex create(int port, TupleIndex index) {
@@ -54,47 +50,39 @@ public class TServerIndex extends ComponentBase
     }
 
     private TServerIndex(int port, TupleIndex index) {
+        super(port) ;
         setLabel("IndexServer["+port+"]") ;
-        this.port = port ;
         this.index = index ;
-        try {
-            this.serverTransport = new TServerSocket(port);
-        } catch (TException ex) {
-            throw new LizardException(ex) ;
-        }
-
-        //server = new ThriftServer(port, new Handler(getLabel(), index)) ;
     }
 
     @Override
     public void start() {
-        if ( super.isRunning() ) {
-            FmtLog.debug(log, "Already started (port=%d)", port) ;
-            return ;
-        }
-        FmtLog.info(log, "Start index server: port = %d", port) ;
-        
-        TLZ_IdxRequest.Iface handler = new TServerIndex.Handler(getLabel(), index) ;
-        TLZ_IdxRequest.Processor<TLZ_IdxRequest.Iface> processor = new TLZ_IdxRequest.Processor<TLZ_IdxRequest.Iface>(handler);
-
+        FmtLog.info(log, "Start index server: port = %d", getPort()) ;
         // Semapahores to sync.
+        //Semaphore sema = new Semaphore(0) ;
+        
         new Thread(()-> {
             try {
+                TLZ_Index.Iface handler = new TServerIndex.Handler(getLabel(), index) ;
+                TLZ_Index.Processor<TLZ_Index.Iface> processor = new TLZ_Index.Processor<TLZ_Index.Iface>(handler);
                 TThreadPoolServer.Args args = new TThreadPoolServer.Args(serverTransport) ;
                 args.processor(processor) ;
                 args.inputProtocolFactory(new TCompactProtocol.Factory()) ;
                 args.outputProtocolFactory(new TCompactProtocol.Factory()) ;
                 TServer server = new TThreadPoolServer(args);
-                FmtLog.info(log, "Started index server: port = %d", port) ;
+                FmtLog.info(log, "Started index server: port = %d", getPort()) ;
+                //sema.release(1);
                 server.serve();
+                FmtLog.info(log, "Finished index server: port = %d", getPort()) ;
               } catch (Exception e) {
                 e.printStackTrace();
               }
         }) .start() ;
-        super.start() ;
+        //sema.acquireUninterruptibly(); 
+        super.start();
     }
     
-    static class Handler implements TLZ_IdxRequest.Iface {
+    static class Handler implements TLZ_Index.Iface {
 
         private final TupleIndex index ;
         private final String label ;
@@ -136,6 +124,30 @@ public class TServerIndex extends ComponentBase
             iter.forEachRemaining(t->result.add(TLZlib.build(t))) ;
             return result ;
         }
+
+        @Override
+        public long txnBeginRead() throws TException {
+            log.warn("TServerIndex:txnBeginRead - not implemented"); 
+            return 0 ;
+        }
+
+        @Override
+        public long txnBeginWrite() throws TException {
+            log.warn("TServerIndex:txnBeginWrite - not implemented"); 
+            return 0 ;
+        }
+
+        @Override
+        public void txnPrepare(long txnId) throws TException {}
+
+        @Override
+        public void txnCommit(long txnId) throws TException {}
+
+        @Override
+        public void txnAbort(long txnId) throws TException {}
+
+        @Override
+        public void txnEnd(long txnId) throws TException {}
     }
     
 }

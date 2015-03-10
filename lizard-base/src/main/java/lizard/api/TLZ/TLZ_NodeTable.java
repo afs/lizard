@@ -33,9 +33,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("all")
-public class TLZ_NodeRequest {
+public class TLZ_NodeTable {
 
-  public interface Iface {
+  public interface Iface extends TxnCtl.Iface {
 
     public void nodePing() throws org.apache.thrift.TException;
 
@@ -47,7 +47,7 @@ public class TLZ_NodeRequest {
 
   }
 
-  public interface AsyncIface {
+  public interface AsyncIface extends TxnCtl .AsyncIface {
 
     public void nodePing(org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
@@ -59,7 +59,7 @@ public class TLZ_NodeRequest {
 
   }
 
-  public static class Client extends org.apache.thrift.TServiceClient implements Iface {
+  public static class Client extends TxnCtl.Client implements Iface {
     public static class Factory implements org.apache.thrift.TServiceClientFactory<Client> {
       public Factory() {}
       public Client getClient(org.apache.thrift.protocol.TProtocol prot) {
@@ -168,7 +168,7 @@ public class TLZ_NodeRequest {
     }
 
   }
-  public static class AsyncClient extends org.apache.thrift.async.TAsyncClient implements AsyncIface {
+  public static class AsyncClient extends TxnCtl.AsyncClient implements AsyncIface {
     public static class Factory implements org.apache.thrift.async.TAsyncClientFactory<AsyncClient> {
       private org.apache.thrift.async.TAsyncClientManager clientManager;
       private org.apache.thrift.protocol.TProtocolFactory protocolFactory;
@@ -312,7 +312,7 @@ public class TLZ_NodeRequest {
 
   }
 
-  public static class Processor<I extends Iface> extends org.apache.thrift.TBaseProcessor<I> implements org.apache.thrift.TProcessor {
+  public static class Processor<I extends Iface> extends TxnCtl.Processor<I> implements org.apache.thrift.TProcessor {
     private static final Logger LOGGER = LoggerFactory.getLogger(Processor.class.getName());
     public Processor(I iface) {
       super(iface, getProcessMap(new HashMap<String, org.apache.thrift.ProcessFunction<I, ? extends org.apache.thrift.TBase>>()));
@@ -412,7 +412,7 @@ public class TLZ_NodeRequest {
 
   }
 
-  public static class AsyncProcessor<I extends AsyncIface> extends org.apache.thrift.TBaseAsyncProcessor<I> {
+  public static class AsyncProcessor<I extends AsyncIface> extends TxnCtl.AsyncProcessor<I> {
     private static final Logger LOGGER = LoggerFactory.getLogger(AsyncProcessor.class.getName());
     public AsyncProcessor(I iface) {
       super(iface, getProcessMap(new HashMap<String, org.apache.thrift.AsyncProcessFunction<I, ? extends org.apache.thrift.TBase, ?>>()));

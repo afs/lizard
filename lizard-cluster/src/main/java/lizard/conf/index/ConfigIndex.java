@@ -148,8 +148,6 @@ public class ConfigIndex {
     }
     
     private static Map<Resource, IndexService> findIndexServices(Model m) {
-        //RDFDataMgr.write(System.out, m, Lang.TTL) ;
-        
         String qsIndexServices = StrUtils.strjoinNL(Config.prefixes,
                                                     "SELECT * {",
                                                     " ?svc a :IndexService ;",
@@ -161,7 +159,6 @@ public class ConfigIndex {
         Map<Resource, IndexService> svcs = new LinkedHashMap<>() ;
         for ( QuerySolution row : Q.queryToList(m, qsIndexServices) ) {
             Resource svc = row.getResource("svc") ;
-            //System.out.println(row) ;
             if ( svcs.containsKey(svc) )
                 throw new LizardException("Malform declaration for: "+svc) ;
             String name = Q.getStringOrNull(row, "name") ;
