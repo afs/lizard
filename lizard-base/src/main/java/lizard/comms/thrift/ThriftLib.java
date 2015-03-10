@@ -18,10 +18,7 @@
 package lizard.comms.thrift;
 
 import org.apache.jena.atlas.lib.InternalErrorException ;
-import org.apache.thrift.protocol.TCompactProtocol ;
-import org.apache.thrift.protocol.TJSONProtocol ;
-import org.apache.thrift.protocol.TProtocol ;
-import org.apache.thrift.protocol.TTupleProtocol ;
+import org.apache.thrift.protocol.* ;
 import org.apache.thrift.transport.TTransport ;
 
 public class ThriftLib {
@@ -29,6 +26,7 @@ public class ThriftLib {
     /** Choose the wire-representation : compact is the normal choice */
     public static TProtocol protocol(TTransport transport) {
         if ( true ) return new TCompactProtocol(transport) ;
+        if ( false ) return new TBinaryProtocol(transport) ;
         if ( false ) return new TTupleProtocol(transport) ;
         if ( false ) return new TJSONProtocol(transport) ;
         throw new InternalErrorException("No protocol impl choosen") ;
