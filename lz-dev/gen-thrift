@@ -8,14 +8,14 @@ then
 fi
 
 
-PKG="src/main/java/service"
+PKG="src/main/java/rpc/thrift"
 rm -f $PKG/*.java
 
 thrift -r -out src/main/java -gen java "$@"
 
-## for f in $PKG/*.java
-## do
-##     perl -i.bak -p -e 's/^public (class|enum)/\@SuppressWarnings("all")\npublic $1/' $f
-##     rm $f.bak
-## done
+for f in $PKG/*.java
+do
+    perl -i.bak -p -e 's/^public (class|enum)/\@SuppressWarnings("all")\npublic $1/' $f
+    rm $f.bak
+done
 

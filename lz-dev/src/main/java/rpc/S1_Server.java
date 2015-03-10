@@ -15,23 +15,26 @@
  *  information regarding copyright ownership.
  */
 
-package pingpong;
+package rpc;
 
-import lizard.comms.thrift.ThriftLib ;
+import org.apache.thrift.TException ;
 
-import org.apache.thrift.protocol.TProtocol ;
-import org.apache.thrift.transport.TMemoryBuffer ;
-import org.apache.thrift.transport.TTransport ;
+public class S1_Server implements rpc.thrift.S1.Iface{
 
-public class MainRPC {
+    @Override
+    public void ping() throws TException {
+        System.err.println("Ping") ;
+    }
 
-    public static void main(String[] args) throws Exception {
-        TTransport trans1 = new TMemoryBuffer(1000) ;
-        TProtocol proto = ThriftLib.protocol(trans1) ;
-        
-        S1.Client client = new S1.Client(proto) ;
-        client.ping(); 
-        System.out.println("DONE") ;
+    @Override
+    public long beginRead() throws TException {
+        return 0 ;
+    }
+
+    @Override
+    public long inc(long arg) throws TException {
+        System.err.println("inc") ;
+        return arg + 1 ; 
     }
 
 }
