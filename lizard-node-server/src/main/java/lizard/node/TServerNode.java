@@ -20,17 +20,17 @@ package lizard.node;
 
 import lizard.api.TLZ.TLZ_Node ;
 import lizard.api.TLZ.TLZ_NodeId ;
-import lizard.api.TLZ.TLZ_NodeReply ;
 import lizard.api.TLZ.TLZ_NodeRequest ;
-import lizard.comms.thrift.ThriftLib ;
-import lizard.comms.thrift.ThriftServer ;
 import lizard.system.ComponentBase ;
+import lizard.system.LizardException ;
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.riot.out.NodeFmtLib ;
 import org.apache.thrift.TException ;
-import org.apache.thrift.protocol.TProtocol ;
-import org.apache.thrift.transport.TTransport ;
-import org.apache.thrift.transport.TTransportException ;
+import org.apache.thrift.protocol.TCompactProtocol ;
+import org.apache.thrift.server.TServer ;
+import org.apache.thrift.server.TThreadPoolServer ;
+import org.apache.thrift.transport.TServerSocket ;
+import org.apache.thrift.transport.TServerTransport ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
@@ -43,8 +43,10 @@ import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
 public class TServerNode extends ComponentBase
 {
     private static Logger log = LoggerFactory.getLogger(TServerNode.class) ;
-    
-    private final ThriftServer server ;
+    private final int port ;
+    private final TServerTransport serverTransport ;
+//    private final ThriftServer server ;
+    private final NodeTable nodeTable ;
     
     public static TServerNode create(int port, NodeTable nodeTable) {
         return new TServerNode(port, nodeTable) ;
@@ -52,108 +54,89 @@ public class TServerNode extends ComponentBase
     
     private TServerNode(int port, NodeTable nodeTable) {
         setLabel("NodeServer["+port+"]") ;
-        server = new ThriftServer(port, new Handler(getLabel(), nodeTable)) ;
+        //server = new ThriftServer(port, new Handler(getLabel(), nodeTable)) ;
+        this.port = port ;
+        this.nodeTable = nodeTable ; 
+        try {
+            this.serverTransport = new TServerSocket(port);
+        } catch (TException ex) {
+            throw new LizardException(ex) ;
+        }
     }
     
     @Override
     public void start() {
-        if ( server.isRunning() ) {
-            FmtLog.debug(log, "Already started (port=%d)", server.getPort()) ;
+        if ( super.isRunning() ) {
+            FmtLog.debug(log, "Already started (port=%d)", port) ;
             return ;
         }
-        FmtLog.info(log, "Start node server, port = %d", server.getPort()) ;
-        server.start() ;
-        super.start() ; 
+        FmtLog.info(log, "Start node server, port = %d", port) ;
+        TLZ_NodeRequest.Iface handler = new TServerNode.Handler(getLabel(), nodeTable) ;
+        TLZ_NodeRequest.Processor<TLZ_NodeRequest.Iface> processor = new TLZ_NodeRequest.Processor<TLZ_NodeRequest.Iface>(handler);
+
+        // Semapahores to sync.
+        new Thread(()-> {
+            try {
+                TThreadPoolServer.Args args = new TThreadPoolServer.Args(serverTransport) ;
+                args.processor(processor) ;
+                args.inputProtocolFactory(new TCompactProtocol.Factory()) ;
+                args.outputProtocolFactory(new TCompactProtocol.Factory()) ;
+                TServer server = new TThreadPoolServer(args);
+                FmtLog.info(log, "Started index server: port = %d", port) ;
+                server.serve();
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
+        }) .start() ;
+        super.start() ;
+
     }
     
-    static class Handler implements ThriftServer.Handler {
+    static class Handler implements TLZ_NodeRequest.Iface {
         private final NodeTable nodeTable ;
         private final String label ;
-        
-        public Handler(String label, NodeTable nodeTable) {
-            this.label = label ;
-            this.nodeTable = nodeTable ;
-        }
-        
-        /** Handler for one conenction */ 
-        @Override
-        public void handle(final TTransport transport) {
-            try { 
-                TProtocol protocol = ThriftLib.protocol(transport) ;
-                TLZ_NodeRequest request = new TLZ_NodeRequest() ;
-                TLZ_NodeReply reply = new TLZ_NodeReply() ;
 
-                for(;;) {
-                    try {
-                        request.read(protocol) ;
-                    } catch (TTransportException ex) {
-                        // failed to read a request. Includes the other end going away.
-                        FmtLog.info(log, label+": End TServerNode connection") ;
-                        break ;
-                    }
-                    long id = request.getRequestId() ;
-                    //FmtLog.info(log, "[%d] Node request : %s", id, request) ;
-                    execute(id, request, reply) ;
-                    reply.setRequestId(id) ;
-                    reply.write(protocol) ;
-                    protocol.getTransport().flush();
-                    request.clear() ; 
-                    reply.clear() ;
-                }
-                
-            } catch (TException ex) {
-                FmtLog.error(log, ex, "TException: %s", ex.getMessage()) ;
-            } finally {
-                try { transport.close() ; } catch (Throwable th) {}
-            }
+        public Handler(String label, NodeTable nodeTable) {
+          this.label = label ;
+          this.nodeTable = nodeTable ;
         }
         
-        private void execute(long id, TLZ_NodeRequest request, TLZ_NodeReply reply) {
-            if ( nodeTable == null ) {
-                FmtLog.error(log, "No node table here!") ;
-                return ; 
-            }
-            
-            if ( request.isSetAllocNodeId() ) {
-                TLZ_Node nz = request.getAllocNodeId() ;
-                Node n = SSE.parseNode(nz.getNodeStr()) ;
-                NodeId nid = nodeTable.getAllocateNodeId(n) ;
-                TLZ_NodeId nidz = new TLZ_NodeId() ;
-                nidz.setNodeId(nid.getId()) ;
-                reply.setAllocId(nidz) ;
-                FmtLog.info(log, "[%d] Node alloc request : %s => %s", id, n, nid) ;
-                return ;
-            }
-            if ( request.isSetFindByNode() ) {
-                TLZ_Node nz = request.getFindByNode() ;
-                Node n = SSE.parseNode(nz.getNodeStr()) ;
-                NodeId nid = nodeTable.getNodeIdForNode(n) ;
-                TLZ_NodeId nidz = new TLZ_NodeId() ;
-                nidz.setNodeId(nid.getId()) ;
-                reply.setAllocId(nidz) ;
-                FmtLog.info(log, "[%d] Node get request : %s => %s", id, n, nid) ;
-                return ;
-            }
-            if ( request.isSetFindByNodeId() ) {
-                TLZ_NodeId nz = request.getFindByNodeId() ;
-                NodeId nid = NodeId.create(nz.getNodeId()) ; 
-                
-                Node n = nodeTable.getNodeForNodeId(nid) ;
-                if ( n == null )
-                    FmtLog.error(log, "NodeId not found: "+nid) ;
-                String str = NodeFmtLib.str(n) ;
-                TLZ_Node nlz = new TLZ_Node() ;
-                nlz.setNodeStr(str) ;
-                reply.setFoundNode(nlz) ;
-                FmtLog.info(log, "[%d] NodeId get request : %s => %s", id, nid, n) ;
-                return ;
-            }
-            if ( request.isSetPing() ) {
-                FmtLog.info(log, "[%d] ping", id) ;
-                return ; 
-            }
-                
-            FmtLog.error(log, "execute: Unrecognized request: %s", request) ;
+        @Override
+        public void nodePing() throws TException {
+            log.info("ping") ;
+        }
+
+        @Override
+        public TLZ_NodeId allocNodeId(TLZ_Node nz) throws TException {
+          Node n = SSE.parseNode(nz.getNodeStr()) ;
+          NodeId nid = nodeTable.getAllocateNodeId(n) ;
+          TLZ_NodeId nidz = new TLZ_NodeId() ;
+          nidz.setNodeId(nid.getId()) ;
+          FmtLog.info(log, "[%d] Node alloc request : %s => %s", /*id*/0, n, nid) ;
+          return nidz ; 
+        }
+
+        @Override
+        public TLZ_NodeId findByNode(TLZ_Node nz) throws TException {
+          Node n = SSE.parseNode(nz.getNodeStr()) ;
+          NodeId nid = nodeTable.getNodeIdForNode(n) ;
+          // XXX Remove little structs
+          TLZ_NodeId nidz = new TLZ_NodeId() ;
+          nidz.setNodeId(nid.getId()) ;
+          FmtLog.info(log, "[%d] Node get request : %s => %s", /*id*/0, n, nid) ;
+          return nidz ;
+        }
+
+        @Override
+        public TLZ_Node findByNodeId(TLZ_NodeId nz) throws TException {
+            NodeId nid = NodeId.create(nz.getNodeId()) ; 
+            Node n = nodeTable.getNodeForNodeId(nid) ;
+            if ( n == null )
+                FmtLog.error(log, "NodeId not found: "+nid) ;
+            String str = NodeFmtLib.str(n) ;
+            FmtLog.info(log, "[%d] NodeId get request : %s => %s", /*id*/0, nid, n) ;
+            TLZ_Node nlz = new TLZ_Node().setNodeStr(str) ;
+            return nlz ;
         }
     }
 }

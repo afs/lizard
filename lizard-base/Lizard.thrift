@@ -49,6 +49,7 @@ struct TLZ_Patch {
 1: required list<TLZ_PatchEntry> entities ;
 }
 
+// ---- Index
 service TLZ_IdxRequest {
     void idxPing()    
     bool idxAdd (1: TLZ_ShardIndex shard, 2: TLZ_TupleNodeId tuple)
@@ -57,32 +58,7 @@ service TLZ_IdxRequest {
 
     // TLZ_SubjectPredicateList find(X)
     // patch
-
-// 1: required i64                      requestId ;
-// 2: required i64                      generation ;
-// 3: required TLZ_ShardIndex           index ;
-// 4: optional TLZ_TupleNodeId          pattern ;
-// 5: optional TLZ_SubjectPredicateList subPreds ;
-// 6: optional TLZ_TupleNodeId          addTuple ;
-// 7: optional TLZ_TupleNodeId          deleteTuple ;
-// 8: optional TLZ_Ping                 ping ;
-// 9: optional TLZ_Patch                patch ;
 }
-
-// // -- IndexReply
-// 
-// struct TLZ_SubjectPredicateObjectList {
-// 1: required i64 subject ;
-// 2: list <i64> predicates ;
-// 3: list <i64> objects ;
-// }
-// 
-// struct TLZ_IdxReply {
-// 1: required i64 requestId ;
-// 2: optional list<TLZ_SubjectPredicateObjectList> entities ;
-// 3: optional list<TLZ_TupleNodeId> tuples ;
-// 4: optional bool yesOrNo ;
-// }
 
 // ---- Node
 struct TLZ_Node {
@@ -93,19 +69,11 @@ struct TLZ_NodeId {
 1: required i64 nodeId ;
 }
 
-struct TLZ_NodeRequest {
-1:  required i64            requestId ;
-2:  required i64            generation ;
-3:  optional TLZ_Node       findByNode ;
-4:  optional TLZ_Node       allocNodeId ;
-5:  optional TLZ_NodeId     findByNodeId ;
-6:  optional TLZ_Ping       ping ;
-}
-
-struct TLZ_NodeReply {
-1: required i64             requestId ;
-2: optional TLZ_NodeId      allocId ;
-3: optional TLZ_Node        foundNode ;
+service TLZ_NodeRequest {
+    void nodePing() 
+    TLZ_NodeId allocNodeId(1: TLZ_Node node)
+    TLZ_NodeId findByNode(1: TLZ_Node node)
+    TLZ_Node   findByNodeId(1: TLZ_NodeId nodeId)
 }
 
 // Local Variables:

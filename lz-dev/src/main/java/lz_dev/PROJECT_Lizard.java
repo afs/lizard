@@ -18,6 +18,13 @@
 package lz_dev ;
 
 public class PROJECT_Lizard {
+    // RPC clearup.
+    //  ThriftServer, ThriftClient.
+    //   TServerIndex
+    //    TClientIndex/TupleIndexRemote
+    // Revisit .thrift naming 
+    // Node
+    
     /*
      *  index, node "clear"
      *  

@@ -17,9 +17,12 @@
 
 package lizard.node;
 
+import java.util.concurrent.Callable ;
 import java.util.concurrent.atomic.AtomicLong ;
 
-import lizard.api.TLZ.* ;
+import lizard.api.TLZ.TLZ_Node ;
+import lizard.api.TLZ.TLZ_NodeId ;
+import lizard.api.TLZ.TLZ_NodeRequest ;
 import lizard.comms.ConnState ;
 import lizard.comms.Connection ;
 import lizard.comms.thrift.ThriftClient ;
@@ -28,7 +31,6 @@ import lizard.system.LizardException ;
 import lizard.system.Pingable ;
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.riot.out.NodeFmtLib ;
-import org.apache.thrift.TException ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
@@ -40,6 +42,7 @@ public class TClientNode extends ComponentBase implements Connection, Pingable
 {
     private static Logger log = LoggerFactory.getLogger(TClientNode.class) ;
     private final ThriftClient client ;
+    private TLZ_NodeRequest.Client rpc ;
     private ConnState connState ;
     
     public static TClientNode create(String host, int port) {
@@ -47,7 +50,7 @@ public class TClientNode extends ComponentBase implements Connection, Pingable
     }
     
     private TClientNode(String host, int port) {
-        client = new ThriftClient(host, port) ;
+        this.client = new ThriftClient(host, port) ;
         setLabel("NodeClient["+host+":"+port+"]") ;
         connState = ConnState.NOT_ACTIVATED ; 
     }
@@ -60,6 +63,8 @@ public class TClientNode extends ComponentBase implements Connection, Pingable
         }
         FmtLog.debug(log, "Start: %s", getLabel()) ;
         client.start() ;
+        // Delay until starting (client.protocol not valid until then).
+        rpc = new TLZ_NodeRequest.Client(client.protocol()) ;
         super.start() ;
         connState = ConnState.OK ;
     }
@@ -67,57 +72,47 @@ public class TClientNode extends ComponentBase implements Connection, Pingable
     private static AtomicLong counter = new AtomicLong(0) ;
     
     public NodeId getAllocateNodeId(Node node) {
-        TLZ_NodeRequest request = new TLZ_NodeRequest() ;
-        TLZ_NodeReply reply = new TLZ_NodeReply() ;
+        // XXX Can do away with little structs
         String x =  NodeFmtLib.str(node) ;
         TLZ_Node lzn = new TLZ_Node().setNodeStr(x) ; 
-        request.setAllocNodeId(lzn) ;
-        sendReceive("getAllocateNodeId", request, reply) ;
-        TLZ_NodeId tlzNodeId = reply.getAllocId() ;
-        
-        long idval = reply.getAllocId().getNodeId() ;
+        TLZ_NodeId tlzNodeId = exec("allocNodeId", ()-> rpc.allocNodeId(lzn)) ;
+        long idval = tlzNodeId.getNodeId() ;
         NodeId nid = NodeId.create(idval) ;
         return nid ; 
     }
 
     public NodeId getNodeIdForNode(Node node) {
-        TLZ_NodeRequest request = new TLZ_NodeRequest() ;
-        TLZ_NodeReply reply = new TLZ_NodeReply() ;
+        // XXX Can do away with little structs
         String x =  NodeFmtLib.str(node) ;
         TLZ_Node lzn = new TLZ_Node().setNodeStr(x) ; 
-        request.setFindByNode(lzn) ;
-        sendReceive("getNodeIdForNode", request, reply) ;
-        long idval = reply.getAllocId().getNodeId() ;
+        TLZ_NodeId tlzNodeId = exec("allocNodeId", ()-> rpc.findByNode(lzn)) ;
+        long idval = tlzNodeId.getNodeId() ;
         NodeId nid = NodeId.create(idval) ;
         return nid ; 
     }
     
     public Node getNodeForNodeId(NodeId id) {
-        TLZ_NodeRequest request = new TLZ_NodeRequest() ;
-        TLZ_NodeReply reply = new TLZ_NodeReply() ;
+        // XXX Can do away with little structs
         TLZ_NodeId lznid = new TLZ_NodeId().setNodeId(id.getId()) ; 
-        request.setFindByNodeId(lznid) ;
-        sendReceive("getNodeForNodeId", request, reply) ;
-        String x = reply.getFoundNode().getNodeStr() ;
+        TLZ_Node lzn = exec("allocNodeId", ()-> rpc.findByNodeId(lznid)) ;
+        String x = lzn.getNodeStr() ;
         Node n = SSE.parseNode(x) ;
         return n ; 
     }
     
-    private void sendReceive(String caller, TLZ_NodeRequest request, TLZ_NodeReply reply) {
-        try { 
-            request.setRequestId(counter.incrementAndGet()) ;
-            if ( ! request.isSetGeneration() ) 
-                request.setGeneration(0) ;
-            request.write(client.protocol()) ;
-            client.protocol().getTransport().flush() ;
-            reply.read(client.protocol()) ;
-        }
-        catch (TException ex) {
-            FmtLog.error(log, ex, caller) ;
-            throw new LizardException(ex) ;
-        }
+    @Override
+    public void ping() {
+        exec("ping", ()-> { rpc.nodePing(); return null;}) ;
     }
     
+    private <T> T exec(String label, Callable<T> action) {
+        try { return action.call() ; } 
+        catch (Exception ex) {
+          FmtLog.error(log, ex, label) ;
+          throw new LizardException(ex) ;
+        }
+    }
+
     @Override
     public ConnState getConnectionStatus() {
         return connState ;
@@ -130,21 +125,6 @@ public class TClientNode extends ComponentBase implements Connection, Pingable
 
     @Override
     public void setConnectionStatus(ConnState status) { connState = status ; }
-
-    private static TLZ_Ping tlzPing = new TLZ_Ping(8888) ;
-    @Override
-    public void ping() {
-        TLZ_NodeRequest request = new TLZ_NodeRequest() ;
-        TLZ_NodeReply reply = new TLZ_NodeReply() ;
-        request.setPing(tlzPing) ;
-        request.setGeneration(-1) ;
-        sendReceive("ping", request, reply);
-        long requestId = request.getRequestId() ;
-        if ( ! reply.isSetRequestId() )
-            FmtLog.error(log, "ping: requestId not set in reply") ;
-        else if ( reply.getRequestId() != requestId )
-            FmtLog.error(log, "ping: requestId does not match that sent (%d,%d)", reply.getRequestId(), requestId) ;
-    }
 
     @Override
     public void close() {
