@@ -98,27 +98,28 @@ public class TServerIndex extends ThriftServer
         }
 
         @Override
-        public boolean idxAdd(TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws TException {
+        public boolean idxAdd(long id, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws TException {
             Tuple<NodeId> tuple2 = TLZlib.build(tuple) ;
             // Verbose.
-            FmtLog.info(log, "[%d] add %s [%s]", /*id*/0, index.getName(), index.getName()) ;
+            FmtLog.info(log, "[%d] add %s [%s]", id, index.getName(), index.getName()) ;
             boolean b = index.add(tuple2) ;
             return b ;
         }
 
         @Override
-        public boolean idxDelete(TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws TException {
+        public boolean idxDelete(long id, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws TException {
             Tuple<NodeId> tuple2 = TLZlib.build(tuple) ;
             // Verbose.
-            FmtLog.info(log, "[%d] delete %s [%s]", /*id*/0, index.getName(), index.getName()) ;
+            FmtLog.info(log, "[%d] delete %s [%s]", id, index.getName(), index.getName()) ;
             boolean b = index.delete(tuple2) ;
             return b ;
         }
 
         @Override
-        public List<TLZ_TupleNodeId> idxFind(TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws TException {
+        public List<TLZ_TupleNodeId> idxFind(long id, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws TException {
             Tuple<NodeId> pattern = TLZlib.build(tuple) ;
             Iterator<Tuple<NodeId>> iter = index.find(pattern) ;
+            FmtLog.info(log, "[%d] find %s [%s]", id, index.getName(), index.getName()) ;
             // TODO XXX Revisit and stream this.
             List<TLZ_TupleNodeId> result = new ArrayList<>() ;
             iter.forEachRemaining(t->result.add(TLZlib.build(t))) ;

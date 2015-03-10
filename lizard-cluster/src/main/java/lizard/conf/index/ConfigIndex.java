@@ -48,7 +48,6 @@ import com.hp.hpl.jena.tdb.sys.Names ;
 
 /** Configuration of indexes */
 public class ConfigIndex {
-    // XXX Currently, unsharded.
     public static Logger logConf = LoggerFactory.getLogger("lizard.Config") ;
     
     private static String prefixes = Config.prefixes ;

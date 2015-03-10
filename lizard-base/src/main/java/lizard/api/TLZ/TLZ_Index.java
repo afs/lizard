@@ -39,11 +39,11 @@ public class TLZ_Index {
 
     public void idxPing() throws org.apache.thrift.TException;
 
-    public boolean idxAdd(TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws org.apache.thrift.TException;
+    public boolean idxAdd(long requestId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws org.apache.thrift.TException;
 
-    public boolean idxDelete(TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws org.apache.thrift.TException;
+    public boolean idxDelete(long requestId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws org.apache.thrift.TException;
 
-    public List<TLZ_TupleNodeId> idxFind(TLZ_ShardIndex shard, TLZ_TupleNodeId pattern) throws org.apache.thrift.TException;
+    public List<TLZ_TupleNodeId> idxFind(long requestId, TLZ_ShardIndex shard, TLZ_TupleNodeId pattern) throws org.apache.thrift.TException;
 
   }
 
@@ -51,11 +51,11 @@ public class TLZ_Index {
 
     public void idxPing(org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
-    public void idxAdd(TLZ_ShardIndex shard, TLZ_TupleNodeId tuple, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
+    public void idxAdd(long requestId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
-    public void idxDelete(TLZ_ShardIndex shard, TLZ_TupleNodeId tuple, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
+    public void idxDelete(long requestId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
-    public void idxFind(TLZ_ShardIndex shard, TLZ_TupleNodeId pattern, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
+    public void idxFind(long requestId, TLZ_ShardIndex shard, TLZ_TupleNodeId pattern, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
   }
 
@@ -98,15 +98,16 @@ public class TLZ_Index {
       return;
     }
 
-    public boolean idxAdd(TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws org.apache.thrift.TException
+    public boolean idxAdd(long requestId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws org.apache.thrift.TException
     {
-      send_idxAdd(shard, tuple);
+      send_idxAdd(requestId, shard, tuple);
       return recv_idxAdd();
     }
 
-    public void send_idxAdd(TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws org.apache.thrift.TException
+    public void send_idxAdd(long requestId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws org.apache.thrift.TException
     {
       idxAdd_args args = new idxAdd_args();
+      args.setRequestId(requestId);
       args.setShard(shard);
       args.setTuple(tuple);
       sendBase("idxAdd", args);
@@ -122,15 +123,16 @@ public class TLZ_Index {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "idxAdd failed: unknown result");
     }
 
-    public boolean idxDelete(TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws org.apache.thrift.TException
+    public boolean idxDelete(long requestId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws org.apache.thrift.TException
     {
-      send_idxDelete(shard, tuple);
+      send_idxDelete(requestId, shard, tuple);
       return recv_idxDelete();
     }
 
-    public void send_idxDelete(TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws org.apache.thrift.TException
+    public void send_idxDelete(long requestId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws org.apache.thrift.TException
     {
       idxDelete_args args = new idxDelete_args();
+      args.setRequestId(requestId);
       args.setShard(shard);
       args.setTuple(tuple);
       sendBase("idxDelete", args);
@@ -146,15 +148,16 @@ public class TLZ_Index {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "idxDelete failed: unknown result");
     }
 
-    public List<TLZ_TupleNodeId> idxFind(TLZ_ShardIndex shard, TLZ_TupleNodeId pattern) throws org.apache.thrift.TException
+    public List<TLZ_TupleNodeId> idxFind(long requestId, TLZ_ShardIndex shard, TLZ_TupleNodeId pattern) throws org.apache.thrift.TException
     {
-      send_idxFind(shard, pattern);
+      send_idxFind(requestId, shard, pattern);
       return recv_idxFind();
     }
 
-    public void send_idxFind(TLZ_ShardIndex shard, TLZ_TupleNodeId pattern) throws org.apache.thrift.TException
+    public void send_idxFind(long requestId, TLZ_ShardIndex shard, TLZ_TupleNodeId pattern) throws org.apache.thrift.TException
     {
       idxFind_args args = new idxFind_args();
+      args.setRequestId(requestId);
       args.setShard(shard);
       args.setPattern(pattern);
       sendBase("idxFind", args);
@@ -217,18 +220,20 @@ public class TLZ_Index {
       }
     }
 
-    public void idxAdd(TLZ_ShardIndex shard, TLZ_TupleNodeId tuple, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
+    public void idxAdd(long requestId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      idxAdd_call method_call = new idxAdd_call(shard, tuple, resultHandler, this, ___protocolFactory, ___transport);
+      idxAdd_call method_call = new idxAdd_call(requestId, shard, tuple, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class idxAdd_call extends org.apache.thrift.async.TAsyncMethodCall {
+      private long requestId;
       private TLZ_ShardIndex shard;
       private TLZ_TupleNodeId tuple;
-      public idxAdd_call(TLZ_ShardIndex shard, TLZ_TupleNodeId tuple, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public idxAdd_call(long requestId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
+        this.requestId = requestId;
         this.shard = shard;
         this.tuple = tuple;
       }
@@ -236,6 +241,7 @@ public class TLZ_Index {
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("idxAdd", org.apache.thrift.protocol.TMessageType.CALL, 0));
         idxAdd_args args = new idxAdd_args();
+        args.setRequestId(requestId);
         args.setShard(shard);
         args.setTuple(tuple);
         args.write(prot);
@@ -252,18 +258,20 @@ public class TLZ_Index {
       }
     }
 
-    public void idxDelete(TLZ_ShardIndex shard, TLZ_TupleNodeId tuple, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
+    public void idxDelete(long requestId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      idxDelete_call method_call = new idxDelete_call(shard, tuple, resultHandler, this, ___protocolFactory, ___transport);
+      idxDelete_call method_call = new idxDelete_call(requestId, shard, tuple, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class idxDelete_call extends org.apache.thrift.async.TAsyncMethodCall {
+      private long requestId;
       private TLZ_ShardIndex shard;
       private TLZ_TupleNodeId tuple;
-      public idxDelete_call(TLZ_ShardIndex shard, TLZ_TupleNodeId tuple, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public idxDelete_call(long requestId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
+        this.requestId = requestId;
         this.shard = shard;
         this.tuple = tuple;
       }
@@ -271,6 +279,7 @@ public class TLZ_Index {
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("idxDelete", org.apache.thrift.protocol.TMessageType.CALL, 0));
         idxDelete_args args = new idxDelete_args();
+        args.setRequestId(requestId);
         args.setShard(shard);
         args.setTuple(tuple);
         args.write(prot);
@@ -287,18 +296,20 @@ public class TLZ_Index {
       }
     }
 
-    public void idxFind(TLZ_ShardIndex shard, TLZ_TupleNodeId pattern, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
+    public void idxFind(long requestId, TLZ_ShardIndex shard, TLZ_TupleNodeId pattern, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      idxFind_call method_call = new idxFind_call(shard, pattern, resultHandler, this, ___protocolFactory, ___transport);
+      idxFind_call method_call = new idxFind_call(requestId, shard, pattern, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class idxFind_call extends org.apache.thrift.async.TAsyncMethodCall {
+      private long requestId;
       private TLZ_ShardIndex shard;
       private TLZ_TupleNodeId pattern;
-      public idxFind_call(TLZ_ShardIndex shard, TLZ_TupleNodeId pattern, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public idxFind_call(long requestId, TLZ_ShardIndex shard, TLZ_TupleNodeId pattern, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
+        this.requestId = requestId;
         this.shard = shard;
         this.pattern = pattern;
       }
@@ -306,6 +317,7 @@ public class TLZ_Index {
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("idxFind", org.apache.thrift.protocol.TMessageType.CALL, 0));
         idxFind_args args = new idxFind_args();
+        args.setRequestId(requestId);
         args.setShard(shard);
         args.setPattern(pattern);
         args.write(prot);
@@ -377,7 +389,7 @@ public class TLZ_Index {
 
       public idxAdd_result getResult(I iface, idxAdd_args args) throws org.apache.thrift.TException {
         idxAdd_result result = new idxAdd_result();
-        result.success = iface.idxAdd(args.shard, args.tuple);
+        result.success = iface.idxAdd(args.requestId, args.shard, args.tuple);
         result.setSuccessIsSet(true);
         return result;
       }
@@ -398,7 +410,7 @@ public class TLZ_Index {
 
       public idxDelete_result getResult(I iface, idxDelete_args args) throws org.apache.thrift.TException {
         idxDelete_result result = new idxDelete_result();
-        result.success = iface.idxDelete(args.shard, args.tuple);
+        result.success = iface.idxDelete(args.requestId, args.shard, args.tuple);
         result.setSuccessIsSet(true);
         return result;
       }
@@ -419,7 +431,7 @@ public class TLZ_Index {
 
       public idxFind_result getResult(I iface, idxFind_args args) throws org.apache.thrift.TException {
         idxFind_result result = new idxFind_result();
-        result.success = iface.idxFind(args.shard, args.pattern);
+        result.success = iface.idxFind(args.requestId, args.shard, args.pattern);
         return result;
       }
     }
@@ -542,7 +554,7 @@ public class TLZ_Index {
       }
 
       public void start(I iface, idxAdd_args args, org.apache.thrift.async.AsyncMethodCallback<Boolean> resultHandler) throws TException {
-        iface.idxAdd(args.shard, args.tuple,resultHandler);
+        iface.idxAdd(args.requestId, args.shard, args.tuple,resultHandler);
       }
     }
 
@@ -594,7 +606,7 @@ public class TLZ_Index {
       }
 
       public void start(I iface, idxDelete_args args, org.apache.thrift.async.AsyncMethodCallback<Boolean> resultHandler) throws TException {
-        iface.idxDelete(args.shard, args.tuple,resultHandler);
+        iface.idxDelete(args.requestId, args.shard, args.tuple,resultHandler);
       }
     }
 
@@ -645,7 +657,7 @@ public class TLZ_Index {
       }
 
       public void start(I iface, idxFind_args args, org.apache.thrift.async.AsyncMethodCallback<List<TLZ_TupleNodeId>> resultHandler) throws TException {
-        iface.idxFind(args.shard, args.pattern,resultHandler);
+        iface.idxFind(args.requestId, args.shard, args.pattern,resultHandler);
       }
     }
 
@@ -1146,8 +1158,9 @@ public class TLZ_Index {
   public static class idxAdd_args implements org.apache.thrift.TBase<idxAdd_args, idxAdd_args._Fields>, java.io.Serializable, Cloneable, Comparable<idxAdd_args>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("idxAdd_args");
 
-    private static final org.apache.thrift.protocol.TField SHARD_FIELD_DESC = new org.apache.thrift.protocol.TField("shard", org.apache.thrift.protocol.TType.STRUCT, (short)1);
-    private static final org.apache.thrift.protocol.TField TUPLE_FIELD_DESC = new org.apache.thrift.protocol.TField("tuple", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField REQUEST_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("requestId", org.apache.thrift.protocol.TType.I64, (short)1);
+    private static final org.apache.thrift.protocol.TField SHARD_FIELD_DESC = new org.apache.thrift.protocol.TField("shard", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField TUPLE_FIELD_DESC = new org.apache.thrift.protocol.TField("tuple", org.apache.thrift.protocol.TType.STRUCT, (short)3);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -1155,13 +1168,15 @@ public class TLZ_Index {
       schemes.put(TupleScheme.class, new idxAdd_argsTupleSchemeFactory());
     }
 
+    public long requestId; // required
     public TLZ_ShardIndex shard; // required
     public TLZ_TupleNodeId tuple; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      SHARD((short)1, "shard"),
-      TUPLE((short)2, "tuple");
+      REQUEST_ID((short)1, "requestId"),
+      SHARD((short)2, "shard"),
+      TUPLE((short)3, "tuple");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -1176,9 +1191,11 @@ public class TLZ_Index {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
-          case 1: // SHARD
+          case 1: // REQUEST_ID
+            return REQUEST_ID;
+          case 2: // SHARD
             return SHARD;
-          case 2: // TUPLE
+          case 3: // TUPLE
             return TUPLE;
           default:
             return null;
@@ -1220,9 +1237,13 @@ public class TLZ_Index {
     }
 
     // isset id assignments
+    private static final int __REQUESTID_ISSET_ID = 0;
+    private byte __isset_bitfield = 0;
     public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.REQUEST_ID, new org.apache.thrift.meta_data.FieldMetaData("requestId", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       tmpMap.put(_Fields.SHARD, new org.apache.thrift.meta_data.FieldMetaData("shard", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_ShardIndex.class)));
       tmpMap.put(_Fields.TUPLE, new org.apache.thrift.meta_data.FieldMetaData("tuple", org.apache.thrift.TFieldRequirementType.DEFAULT, 
@@ -1235,10 +1256,13 @@ public class TLZ_Index {
     }
 
     public idxAdd_args(
+      long requestId,
       TLZ_ShardIndex shard,
       TLZ_TupleNodeId tuple)
     {
       this();
+      this.requestId = requestId;
+      setRequestIdIsSet(true);
       this.shard = shard;
       this.tuple = tuple;
     }
@@ -1247,6 +1271,8 @@ public class TLZ_Index {
      * Performs a deep copy on <i>other</i>.
      */
     public idxAdd_args(idxAdd_args other) {
+      __isset_bitfield = other.__isset_bitfield;
+      this.requestId = other.requestId;
       if (other.isSetShard()) {
         this.shard = new TLZ_ShardIndex(other.shard);
       }
@@ -1261,8 +1287,33 @@ public class TLZ_Index {
 
     @Override
     public void clear() {
+      setRequestIdIsSet(false);
+      this.requestId = 0;
       this.shard = null;
       this.tuple = null;
+    }
+
+    public long getRequestId() {
+      return this.requestId;
+    }
+
+    public idxAdd_args setRequestId(long requestId) {
+      this.requestId = requestId;
+      setRequestIdIsSet(true);
+      return this;
+    }
+
+    public void unsetRequestId() {
+      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __REQUESTID_ISSET_ID);
+    }
+
+    /** Returns true if field requestId is set (has been assigned a value) and false otherwise */
+    public boolean isSetRequestId() {
+      return EncodingUtils.testBit(__isset_bitfield, __REQUESTID_ISSET_ID);
+    }
+
+    public void setRequestIdIsSet(boolean value) {
+      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __REQUESTID_ISSET_ID, value);
     }
 
     public TLZ_ShardIndex getShard() {
@@ -1315,6 +1366,14 @@ public class TLZ_Index {
 
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
+      case REQUEST_ID:
+        if (value == null) {
+          unsetRequestId();
+        } else {
+          setRequestId((Long)value);
+        }
+        break;
+
       case SHARD:
         if (value == null) {
           unsetShard();
@@ -1336,6 +1395,9 @@ public class TLZ_Index {
 
     public Object getFieldValue(_Fields field) {
       switch (field) {
+      case REQUEST_ID:
+        return Long.valueOf(getRequestId());
+
       case SHARD:
         return getShard();
 
@@ -1353,6 +1415,8 @@ public class TLZ_Index {
       }
 
       switch (field) {
+      case REQUEST_ID:
+        return isSetRequestId();
       case SHARD:
         return isSetShard();
       case TUPLE:
@@ -1373,6 +1437,15 @@ public class TLZ_Index {
     public boolean equals(idxAdd_args that) {
       if (that == null)
         return false;
+
+      boolean this_present_requestId = true;
+      boolean that_present_requestId = true;
+      if (this_present_requestId || that_present_requestId) {
+        if (!(this_present_requestId && that_present_requestId))
+          return false;
+        if (this.requestId != that.requestId)
+          return false;
+      }
 
       boolean this_present_shard = true && this.isSetShard();
       boolean that_present_shard = true && that.isSetShard();
@@ -1408,6 +1481,16 @@ public class TLZ_Index {
 
       int lastComparison = 0;
 
+      lastComparison = Boolean.valueOf(isSetRequestId()).compareTo(other.isSetRequestId());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetRequestId()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.requestId, other.requestId);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       lastComparison = Boolean.valueOf(isSetShard()).compareTo(other.isSetShard());
       if (lastComparison != 0) {
         return lastComparison;
@@ -1448,6 +1531,10 @@ public class TLZ_Index {
       StringBuilder sb = new StringBuilder("idxAdd_args(");
       boolean first = true;
 
+      sb.append("requestId:");
+      sb.append(this.requestId);
+      first = false;
+      if (!first) sb.append(", ");
       sb.append("shard:");
       if (this.shard == null) {
         sb.append("null");
@@ -1488,6 +1575,8 @@ public class TLZ_Index {
 
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
       try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bitfield = 0;
         read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
       } catch (org.apache.thrift.TException te) {
         throw new java.io.IOException(te);
@@ -1512,7 +1601,15 @@ public class TLZ_Index {
             break;
           }
           switch (schemeField.id) {
-            case 1: // SHARD
+            case 1: // REQUEST_ID
+              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+                struct.requestId = iprot.readI64();
+                struct.setRequestIdIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 2: // SHARD
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
                 struct.shard = new TLZ_ShardIndex();
                 struct.shard.read(iprot);
@@ -1521,7 +1618,7 @@ public class TLZ_Index {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
-            case 2: // TUPLE
+            case 3: // TUPLE
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
                 struct.tuple = new TLZ_TupleNodeId();
                 struct.tuple.read(iprot);
@@ -1545,6 +1642,9 @@ public class TLZ_Index {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
+        oprot.writeFieldBegin(REQUEST_ID_FIELD_DESC);
+        oprot.writeI64(struct.requestId);
+        oprot.writeFieldEnd();
         if (struct.shard != null) {
           oprot.writeFieldBegin(SHARD_FIELD_DESC);
           struct.shard.write(oprot);
@@ -1573,13 +1673,19 @@ public class TLZ_Index {
       public void write(org.apache.thrift.protocol.TProtocol prot, idxAdd_args struct) throws org.apache.thrift.TException {
         TTupleProtocol oprot = (TTupleProtocol) prot;
         BitSet optionals = new BitSet();
-        if (struct.isSetShard()) {
+        if (struct.isSetRequestId()) {
           optionals.set(0);
         }
-        if (struct.isSetTuple()) {
+        if (struct.isSetShard()) {
           optionals.set(1);
         }
-        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetTuple()) {
+          optionals.set(2);
+        }
+        oprot.writeBitSet(optionals, 3);
+        if (struct.isSetRequestId()) {
+          oprot.writeI64(struct.requestId);
+        }
         if (struct.isSetShard()) {
           struct.shard.write(oprot);
         }
@@ -1591,13 +1697,17 @@ public class TLZ_Index {
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, idxAdd_args struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
-        BitSet incoming = iprot.readBitSet(2);
+        BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
+          struct.requestId = iprot.readI64();
+          struct.setRequestIdIsSet(true);
+        }
+        if (incoming.get(1)) {
           struct.shard = new TLZ_ShardIndex();
           struct.shard.read(iprot);
           struct.setShardIsSet(true);
         }
-        if (incoming.get(1)) {
+        if (incoming.get(2)) {
           struct.tuple = new TLZ_TupleNodeId();
           struct.tuple.read(iprot);
           struct.setTupleIsSet(true);
@@ -1964,8 +2074,9 @@ public class TLZ_Index {
   public static class idxDelete_args implements org.apache.thrift.TBase<idxDelete_args, idxDelete_args._Fields>, java.io.Serializable, Cloneable, Comparable<idxDelete_args>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("idxDelete_args");
 
-    private static final org.apache.thrift.protocol.TField SHARD_FIELD_DESC = new org.apache.thrift.protocol.TField("shard", org.apache.thrift.protocol.TType.STRUCT, (short)1);
-    private static final org.apache.thrift.protocol.TField TUPLE_FIELD_DESC = new org.apache.thrift.protocol.TField("tuple", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField REQUEST_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("requestId", org.apache.thrift.protocol.TType.I64, (short)1);
+    private static final org.apache.thrift.protocol.TField SHARD_FIELD_DESC = new org.apache.thrift.protocol.TField("shard", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField TUPLE_FIELD_DESC = new org.apache.thrift.protocol.TField("tuple", org.apache.thrift.protocol.TType.STRUCT, (short)3);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -1973,13 +2084,15 @@ public class TLZ_Index {
       schemes.put(TupleScheme.class, new idxDelete_argsTupleSchemeFactory());
     }
 
+    public long requestId; // required
     public TLZ_ShardIndex shard; // required
     public TLZ_TupleNodeId tuple; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      SHARD((short)1, "shard"),
-      TUPLE((short)2, "tuple");
+      REQUEST_ID((short)1, "requestId"),
+      SHARD((short)2, "shard"),
+      TUPLE((short)3, "tuple");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -1994,9 +2107,11 @@ public class TLZ_Index {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
-          case 1: // SHARD
+          case 1: // REQUEST_ID
+            return REQUEST_ID;
+          case 2: // SHARD
             return SHARD;
-          case 2: // TUPLE
+          case 3: // TUPLE
             return TUPLE;
           default:
             return null;
@@ -2038,9 +2153,13 @@ public class TLZ_Index {
     }
 
     // isset id assignments
+    private static final int __REQUESTID_ISSET_ID = 0;
+    private byte __isset_bitfield = 0;
     public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.REQUEST_ID, new org.apache.thrift.meta_data.FieldMetaData("requestId", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       tmpMap.put(_Fields.SHARD, new org.apache.thrift.meta_data.FieldMetaData("shard", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_ShardIndex.class)));
       tmpMap.put(_Fields.TUPLE, new org.apache.thrift.meta_data.FieldMetaData("tuple", org.apache.thrift.TFieldRequirementType.DEFAULT, 
@@ -2053,10 +2172,13 @@ public class TLZ_Index {
     }
 
     public idxDelete_args(
+      long requestId,
       TLZ_ShardIndex shard,
       TLZ_TupleNodeId tuple)
     {
       this();
+      this.requestId = requestId;
+      setRequestIdIsSet(true);
       this.shard = shard;
       this.tuple = tuple;
     }
@@ -2065,6 +2187,8 @@ public class TLZ_Index {
      * Performs a deep copy on <i>other</i>.
      */
     public idxDelete_args(idxDelete_args other) {
+      __isset_bitfield = other.__isset_bitfield;
+      this.requestId = other.requestId;
       if (other.isSetShard()) {
         this.shard = new TLZ_ShardIndex(other.shard);
       }
@@ -2079,8 +2203,33 @@ public class TLZ_Index {
 
     @Override
     public void clear() {
+      setRequestIdIsSet(false);
+      this.requestId = 0;
       this.shard = null;
       this.tuple = null;
+    }
+
+    public long getRequestId() {
+      return this.requestId;
+    }
+
+    public idxDelete_args setRequestId(long requestId) {
+      this.requestId = requestId;
+      setRequestIdIsSet(true);
+      return this;
+    }
+
+    public void unsetRequestId() {
+      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __REQUESTID_ISSET_ID);
+    }
+
+    /** Returns true if field requestId is set (has been assigned a value) and false otherwise */
+    public boolean isSetRequestId() {
+      return EncodingUtils.testBit(__isset_bitfield, __REQUESTID_ISSET_ID);
+    }
+
+    public void setRequestIdIsSet(boolean value) {
+      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __REQUESTID_ISSET_ID, value);
     }
 
     public TLZ_ShardIndex getShard() {
@@ -2133,6 +2282,14 @@ public class TLZ_Index {
 
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
+      case REQUEST_ID:
+        if (value == null) {
+          unsetRequestId();
+        } else {
+          setRequestId((Long)value);
+        }
+        break;
+
       case SHARD:
         if (value == null) {
           unsetShard();
@@ -2154,6 +2311,9 @@ public class TLZ_Index {
 
     public Object getFieldValue(_Fields field) {
       switch (field) {
+      case REQUEST_ID:
+        return Long.valueOf(getRequestId());
+
       case SHARD:
         return getShard();
 
@@ -2171,6 +2331,8 @@ public class TLZ_Index {
       }
 
       switch (field) {
+      case REQUEST_ID:
+        return isSetRequestId();
       case SHARD:
         return isSetShard();
       case TUPLE:
@@ -2191,6 +2353,15 @@ public class TLZ_Index {
     public boolean equals(idxDelete_args that) {
       if (that == null)
         return false;
+
+      boolean this_present_requestId = true;
+      boolean that_present_requestId = true;
+      if (this_present_requestId || that_present_requestId) {
+        if (!(this_present_requestId && that_present_requestId))
+          return false;
+        if (this.requestId != that.requestId)
+          return false;
+      }
 
       boolean this_present_shard = true && this.isSetShard();
       boolean that_present_shard = true && that.isSetShard();
@@ -2226,6 +2397,16 @@ public class TLZ_Index {
 
       int lastComparison = 0;
 
+      lastComparison = Boolean.valueOf(isSetRequestId()).compareTo(other.isSetRequestId());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetRequestId()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.requestId, other.requestId);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       lastComparison = Boolean.valueOf(isSetShard()).compareTo(other.isSetShard());
       if (lastComparison != 0) {
         return lastComparison;
@@ -2266,6 +2447,10 @@ public class TLZ_Index {
       StringBuilder sb = new StringBuilder("idxDelete_args(");
       boolean first = true;
 
+      sb.append("requestId:");
+      sb.append(this.requestId);
+      first = false;
+      if (!first) sb.append(", ");
       sb.append("shard:");
       if (this.shard == null) {
         sb.append("null");
@@ -2306,6 +2491,8 @@ public class TLZ_Index {
 
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
       try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bitfield = 0;
         read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
       } catch (org.apache.thrift.TException te) {
         throw new java.io.IOException(te);
@@ -2330,7 +2517,15 @@ public class TLZ_Index {
             break;
           }
           switch (schemeField.id) {
-            case 1: // SHARD
+            case 1: // REQUEST_ID
+              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+                struct.requestId = iprot.readI64();
+                struct.setRequestIdIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 2: // SHARD
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
                 struct.shard = new TLZ_ShardIndex();
                 struct.shard.read(iprot);
@@ -2339,7 +2534,7 @@ public class TLZ_Index {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
-            case 2: // TUPLE
+            case 3: // TUPLE
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
                 struct.tuple = new TLZ_TupleNodeId();
                 struct.tuple.read(iprot);
@@ -2363,6 +2558,9 @@ public class TLZ_Index {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
+        oprot.writeFieldBegin(REQUEST_ID_FIELD_DESC);
+        oprot.writeI64(struct.requestId);
+        oprot.writeFieldEnd();
         if (struct.shard != null) {
           oprot.writeFieldBegin(SHARD_FIELD_DESC);
           struct.shard.write(oprot);
@@ -2391,13 +2589,19 @@ public class TLZ_Index {
       public void write(org.apache.thrift.protocol.TProtocol prot, idxDelete_args struct) throws org.apache.thrift.TException {
         TTupleProtocol oprot = (TTupleProtocol) prot;
         BitSet optionals = new BitSet();
-        if (struct.isSetShard()) {
+        if (struct.isSetRequestId()) {
           optionals.set(0);
         }
-        if (struct.isSetTuple()) {
+        if (struct.isSetShard()) {
           optionals.set(1);
         }
-        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetTuple()) {
+          optionals.set(2);
+        }
+        oprot.writeBitSet(optionals, 3);
+        if (struct.isSetRequestId()) {
+          oprot.writeI64(struct.requestId);
+        }
         if (struct.isSetShard()) {
           struct.shard.write(oprot);
         }
@@ -2409,13 +2613,17 @@ public class TLZ_Index {
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, idxDelete_args struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
-        BitSet incoming = iprot.readBitSet(2);
+        BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
+          struct.requestId = iprot.readI64();
+          struct.setRequestIdIsSet(true);
+        }
+        if (incoming.get(1)) {
           struct.shard = new TLZ_ShardIndex();
           struct.shard.read(iprot);
           struct.setShardIsSet(true);
         }
-        if (incoming.get(1)) {
+        if (incoming.get(2)) {
           struct.tuple = new TLZ_TupleNodeId();
           struct.tuple.read(iprot);
           struct.setTupleIsSet(true);
@@ -2782,8 +2990,9 @@ public class TLZ_Index {
   public static class idxFind_args implements org.apache.thrift.TBase<idxFind_args, idxFind_args._Fields>, java.io.Serializable, Cloneable, Comparable<idxFind_args>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("idxFind_args");
 
-    private static final org.apache.thrift.protocol.TField SHARD_FIELD_DESC = new org.apache.thrift.protocol.TField("shard", org.apache.thrift.protocol.TType.STRUCT, (short)1);
-    private static final org.apache.thrift.protocol.TField PATTERN_FIELD_DESC = new org.apache.thrift.protocol.TField("pattern", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField REQUEST_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("requestId", org.apache.thrift.protocol.TType.I64, (short)1);
+    private static final org.apache.thrift.protocol.TField SHARD_FIELD_DESC = new org.apache.thrift.protocol.TField("shard", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField PATTERN_FIELD_DESC = new org.apache.thrift.protocol.TField("pattern", org.apache.thrift.protocol.TType.STRUCT, (short)3);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -2791,13 +3000,15 @@ public class TLZ_Index {
       schemes.put(TupleScheme.class, new idxFind_argsTupleSchemeFactory());
     }
 
+    public long requestId; // required
     public TLZ_ShardIndex shard; // required
     public TLZ_TupleNodeId pattern; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      SHARD((short)1, "shard"),
-      PATTERN((short)2, "pattern");
+      REQUEST_ID((short)1, "requestId"),
+      SHARD((short)2, "shard"),
+      PATTERN((short)3, "pattern");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -2812,9 +3023,11 @@ public class TLZ_Index {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
-          case 1: // SHARD
+          case 1: // REQUEST_ID
+            return REQUEST_ID;
+          case 2: // SHARD
             return SHARD;
-          case 2: // PATTERN
+          case 3: // PATTERN
             return PATTERN;
           default:
             return null;
@@ -2856,9 +3069,13 @@ public class TLZ_Index {
     }
 
     // isset id assignments
+    private static final int __REQUESTID_ISSET_ID = 0;
+    private byte __isset_bitfield = 0;
     public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.REQUEST_ID, new org.apache.thrift.meta_data.FieldMetaData("requestId", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       tmpMap.put(_Fields.SHARD, new org.apache.thrift.meta_data.FieldMetaData("shard", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_ShardIndex.class)));
       tmpMap.put(_Fields.PATTERN, new org.apache.thrift.meta_data.FieldMetaData("pattern", org.apache.thrift.TFieldRequirementType.DEFAULT, 
@@ -2871,10 +3088,13 @@ public class TLZ_Index {
     }
 
     public idxFind_args(
+      long requestId,
       TLZ_ShardIndex shard,
       TLZ_TupleNodeId pattern)
     {
       this();
+      this.requestId = requestId;
+      setRequestIdIsSet(true);
       this.shard = shard;
       this.pattern = pattern;
     }
@@ -2883,6 +3103,8 @@ public class TLZ_Index {
      * Performs a deep copy on <i>other</i>.
      */
     public idxFind_args(idxFind_args other) {
+      __isset_bitfield = other.__isset_bitfield;
+      this.requestId = other.requestId;
       if (other.isSetShard()) {
         this.shard = new TLZ_ShardIndex(other.shard);
       }
@@ -2897,8 +3119,33 @@ public class TLZ_Index {
 
     @Override
     public void clear() {
+      setRequestIdIsSet(false);
+      this.requestId = 0;
       this.shard = null;
       this.pattern = null;
+    }
+
+    public long getRequestId() {
+      return this.requestId;
+    }
+
+    public idxFind_args setRequestId(long requestId) {
+      this.requestId = requestId;
+      setRequestIdIsSet(true);
+      return this;
+    }
+
+    public void unsetRequestId() {
+      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __REQUESTID_ISSET_ID);
+    }
+
+    /** Returns true if field requestId is set (has been assigned a value) and false otherwise */
+    public boolean isSetRequestId() {
+      return EncodingUtils.testBit(__isset_bitfield, __REQUESTID_ISSET_ID);
+    }
+
+    public void setRequestIdIsSet(boolean value) {
+      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __REQUESTID_ISSET_ID, value);
     }
 
     public TLZ_ShardIndex getShard() {
@@ -2951,6 +3198,14 @@ public class TLZ_Index {
 
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
+      case REQUEST_ID:
+        if (value == null) {
+          unsetRequestId();
+        } else {
+          setRequestId((Long)value);
+        }
+        break;
+
       case SHARD:
         if (value == null) {
           unsetShard();
@@ -2972,6 +3227,9 @@ public class TLZ_Index {
 
     public Object getFieldValue(_Fields field) {
       switch (field) {
+      case REQUEST_ID:
+        return Long.valueOf(getRequestId());
+
       case SHARD:
         return getShard();
 
@@ -2989,6 +3247,8 @@ public class TLZ_Index {
       }
 
       switch (field) {
+      case REQUEST_ID:
+        return isSetRequestId();
       case SHARD:
         return isSetShard();
       case PATTERN:
@@ -3009,6 +3269,15 @@ public class TLZ_Index {
     public boolean equals(idxFind_args that) {
       if (that == null)
         return false;
+
+      boolean this_present_requestId = true;
+      boolean that_present_requestId = true;
+      if (this_present_requestId || that_present_requestId) {
+        if (!(this_present_requestId && that_present_requestId))
+          return false;
+        if (this.requestId != that.requestId)
+          return false;
+      }
 
       boolean this_present_shard = true && this.isSetShard();
       boolean that_present_shard = true && that.isSetShard();
@@ -3044,6 +3313,16 @@ public class TLZ_Index {
 
       int lastComparison = 0;
 
+      lastComparison = Boolean.valueOf(isSetRequestId()).compareTo(other.isSetRequestId());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetRequestId()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.requestId, other.requestId);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       lastComparison = Boolean.valueOf(isSetShard()).compareTo(other.isSetShard());
       if (lastComparison != 0) {
         return lastComparison;
@@ -3084,6 +3363,10 @@ public class TLZ_Index {
       StringBuilder sb = new StringBuilder("idxFind_args(");
       boolean first = true;
 
+      sb.append("requestId:");
+      sb.append(this.requestId);
+      first = false;
+      if (!first) sb.append(", ");
       sb.append("shard:");
       if (this.shard == null) {
         sb.append("null");
@@ -3124,6 +3407,8 @@ public class TLZ_Index {
 
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
       try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bitfield = 0;
         read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
       } catch (org.apache.thrift.TException te) {
         throw new java.io.IOException(te);
@@ -3148,7 +3433,15 @@ public class TLZ_Index {
             break;
           }
           switch (schemeField.id) {
-            case 1: // SHARD
+            case 1: // REQUEST_ID
+              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+                struct.requestId = iprot.readI64();
+                struct.setRequestIdIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 2: // SHARD
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
                 struct.shard = new TLZ_ShardIndex();
                 struct.shard.read(iprot);
@@ -3157,7 +3450,7 @@ public class TLZ_Index {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
-            case 2: // PATTERN
+            case 3: // PATTERN
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
                 struct.pattern = new TLZ_TupleNodeId();
                 struct.pattern.read(iprot);
@@ -3181,6 +3474,9 @@ public class TLZ_Index {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
+        oprot.writeFieldBegin(REQUEST_ID_FIELD_DESC);
+        oprot.writeI64(struct.requestId);
+        oprot.writeFieldEnd();
         if (struct.shard != null) {
           oprot.writeFieldBegin(SHARD_FIELD_DESC);
           struct.shard.write(oprot);
@@ -3209,13 +3505,19 @@ public class TLZ_Index {
       public void write(org.apache.thrift.protocol.TProtocol prot, idxFind_args struct) throws org.apache.thrift.TException {
         TTupleProtocol oprot = (TTupleProtocol) prot;
         BitSet optionals = new BitSet();
-        if (struct.isSetShard()) {
+        if (struct.isSetRequestId()) {
           optionals.set(0);
         }
-        if (struct.isSetPattern()) {
+        if (struct.isSetShard()) {
           optionals.set(1);
         }
-        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetPattern()) {
+          optionals.set(2);
+        }
+        oprot.writeBitSet(optionals, 3);
+        if (struct.isSetRequestId()) {
+          oprot.writeI64(struct.requestId);
+        }
         if (struct.isSetShard()) {
           struct.shard.write(oprot);
         }
@@ -3227,13 +3529,17 @@ public class TLZ_Index {
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, idxFind_args struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
-        BitSet incoming = iprot.readBitSet(2);
+        BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
+          struct.requestId = iprot.readI64();
+          struct.setRequestIdIsSet(true);
+        }
+        if (incoming.get(1)) {
           struct.shard = new TLZ_ShardIndex();
           struct.shard.read(iprot);
           struct.setShardIsSet(true);
         }
-        if (incoming.get(1)) {
+        if (incoming.get(2)) {
           struct.pattern = new TLZ_TupleNodeId();
           struct.pattern.read(iprot);
           struct.setPatternIsSet(true);

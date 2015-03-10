@@ -29,14 +29,15 @@ import lizard.comms.thrift.ThriftClient ;
 import lizard.system.ComponentBase ;
 import lizard.system.LizardException ;
 import lizard.system.Pingable ;
-import org.apache.jena.atlas.logging.FmtLog ;
-import org.apache.jena.riot.out.NodeFmtLib ;
-import org.slf4j.Logger ;
-import org.slf4j.LoggerFactory ;
 
 import com.hp.hpl.jena.graph.Node ;
 import com.hp.hpl.jena.sparql.sse.SSE ;
 import com.hp.hpl.jena.tdb.store.NodeId ;
+
+import org.apache.jena.atlas.logging.FmtLog ;
+import org.apache.jena.riot.out.NodeFmtLib ;
+import org.slf4j.Logger ;
+import org.slf4j.LoggerFactory ;
  
 public class TClientNode extends ComponentBase implements Connection, Pingable
 {
@@ -44,6 +45,7 @@ public class TClientNode extends ComponentBase implements Connection, Pingable
     private final ThriftClient client ;
     private TLZ_NodeTable.Client rpc ;
     private ConnState connState ;
+    private static AtomicLong counter = new AtomicLong(0) ;
     
     public static TClientNode create(String host, int port) {
         return new TClientNode(host, port) ;
@@ -66,13 +68,12 @@ public class TClientNode extends ComponentBase implements Connection, Pingable
         connState = ConnState.OK ;
     }
     
-    private static AtomicLong counter = new AtomicLong(0) ;
-    
     public NodeId getAllocateNodeId(Node node) {
         // XXX Can do away with little structs
+        long id = counter.incrementAndGet() ; 
         String x =  NodeFmtLib.str(node) ;
         TLZ_Node lzn = new TLZ_Node().setNodeStr(x) ; 
-        TLZ_NodeId tlzNodeId = exec("allocNodeId", ()-> rpc.allocNodeId(lzn)) ;
+        TLZ_NodeId tlzNodeId = exec("allocNodeId", ()-> rpc.allocNodeId(id, lzn)) ;
         long idval = tlzNodeId.getNodeId() ;
         NodeId nid = NodeId.create(idval) ;
         return nid ; 
@@ -80,18 +81,20 @@ public class TClientNode extends ComponentBase implements Connection, Pingable
 
     public NodeId getNodeIdForNode(Node node) {
         // XXX Can do away with little structs
+        long id = counter.incrementAndGet() ; 
         String x =  NodeFmtLib.str(node) ;
         TLZ_Node lzn = new TLZ_Node().setNodeStr(x) ; 
-        TLZ_NodeId tlzNodeId = exec("allocNodeId", ()-> rpc.findByNode(lzn)) ;
+        TLZ_NodeId tlzNodeId = exec("allocNodeId", ()-> rpc.findByNode(id, lzn)) ;
         long idval = tlzNodeId.getNodeId() ;
         NodeId nid = NodeId.create(idval) ;
         return nid ; 
     }
     
-    public Node getNodeForNodeId(NodeId id) {
+    public Node getNodeForNodeId(NodeId nid) {
         // XXX Can do away with little structs
-        TLZ_NodeId lznid = new TLZ_NodeId().setNodeId(id.getId()) ; 
-        TLZ_Node lzn = exec("allocNodeId", ()-> rpc.findByNodeId(lznid)) ;
+        long id = counter.incrementAndGet() ; 
+        TLZ_NodeId lznid = new TLZ_NodeId().setNodeId(nid.getId()) ; 
+        TLZ_Node lzn = exec("allocNodeId", ()-> rpc.findByNodeId(id, lznid)) ;
         String x = lzn.getNodeStr() ;
         Node n = SSE.parseNode(x) ;
         return n ; 

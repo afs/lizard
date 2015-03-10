@@ -50,7 +50,8 @@ class TClientIndex extends ComponentBase implements Connection, ComponentTxn, Pi
     private ConnState connState ; 
     private final TLZ_IndexName indexName ;
     private final TLZ_ShardIndex shard ;    // remove.
-    
+    private static AtomicLong counter = new AtomicLong(0) ;
+
 
     public static TClientIndex create(String host, int port, String indexName, ColumnMap colMap) {
         return new TClientIndex(host, port, indexName, colMap) ;
@@ -85,18 +86,18 @@ class TClientIndex extends ComponentBase implements Connection, ComponentTxn, Pi
         super.stop() ;
     }
     
-    private static AtomicLong counter = new AtomicLong(0) ;
-    
     /** Insert a tuple - return true if it was really added, false if it was a duplicate */
     public boolean add(Tuple<NodeId> tuple) {
+        long id = counter.incrementAndGet() ;
         TLZ_TupleNodeId x = TLZlib.build(tuple) ;
-        return exec("add", ()->rpc.idxAdd(shard, x)) ;
+        return exec("add", ()->rpc.idxAdd(id, shard, x)) ;
     }
 
     /** Delete a tuple - return true if it was deleted, false if it didn't exist */
-    public boolean delete(Tuple<NodeId> tuple)  { 
+    public boolean delete(Tuple<NodeId> tuple)  {
+        long id = counter.incrementAndGet() ;
         TLZ_TupleNodeId x = TLZlib.build(tuple) ;
-        return exec("delete", ()->rpc.idxDelete(shard, x)) ;
+        return exec("delete", ()->rpc.idxDelete(id, shard, x)) ;
     }
     
     @Override
@@ -105,8 +106,9 @@ class TClientIndex extends ComponentBase implements Connection, ComponentTxn, Pi
     }
 
     public Iterator<Tuple<NodeId>> find(Tuple<NodeId> pattern) {
+        long id = counter.incrementAndGet() ;
         TLZ_TupleNodeId x = TLZlib.build(pattern) ;
-        List<TLZ_TupleNodeId> find = exec("find", ()->rpc.idxFind(shard, x)) ;
+        List<TLZ_TupleNodeId> find = exec("find", ()->rpc.idxFind(id, shard, x)) ;
         // TODO Avoid copy (harder to debug?)
         List<Tuple<NodeId>> rows = find.stream().map(z -> TLZlib.build(z)).collect(Collectors.toList()) ;
         return rows.iterator() ;

@@ -53,9 +53,9 @@ struct TLZ_Patch {
 // ---- Index
 service TLZ_Index extends TxnCtl {
     void idxPing()    
-    bool idxAdd (1: TLZ_ShardIndex shard, 2: TLZ_TupleNodeId tuple)
-    bool idxDelete(1: TLZ_ShardIndex shard, 2: TLZ_TupleNodeId tuple)
-    list<TLZ_TupleNodeId> idxFind(1: TLZ_ShardIndex shard, 2: TLZ_TupleNodeId pattern)
+    bool idxAdd (1: i64 requestId, 2: TLZ_ShardIndex shard, 3: TLZ_TupleNodeId tuple)
+    bool idxDelete(1: i64 requestId,2: TLZ_ShardIndex shard, 3: TLZ_TupleNodeId tuple)
+    list<TLZ_TupleNodeId> idxFind(1: i64 requestId, 2: TLZ_ShardIndex shard, 3: TLZ_TupleNodeId pattern)
 
     // TLZ_SubjectPredicateList find(X)
     // patch
@@ -72,9 +72,9 @@ struct TLZ_NodeId {
 
 service TLZ_NodeTable extends TxnCtl {
     void nodePing() 
-    TLZ_NodeId allocNodeId(1: TLZ_Node node)
-    TLZ_NodeId findByNode(1: TLZ_Node node)
-    TLZ_Node   findByNodeId(1: TLZ_NodeId nodeId)
+    TLZ_NodeId allocNodeId(1: i64 requestId, 2: TLZ_Node node)
+    TLZ_NodeId findByNode(1: i64 requestId, 2: TLZ_Node node)
+    TLZ_Node   findByNodeId(1: i64 requestId, 2: TLZ_NodeId nodeId)
 }
 
 // Local Variables:
