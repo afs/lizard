@@ -19,6 +19,7 @@ target
 \#*
 .#*
 *.bak
+hs_err_pid*.log
 
 # Cached classpath information
 /lizard-cmds/lizard.classpath
