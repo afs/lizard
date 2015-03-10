@@ -53,7 +53,8 @@ public class ThriftServerAcceptFork extends ThriftServer {
         super.stop() ;
     }
 
-    // Better - use one the TServer implementations
+    // OLD
+    // Better - use one the TServer implementations with custom TProcessor
     public void server(TServerTransport serverTransport) {
         for ( ;; ) 
             try {

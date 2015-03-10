@@ -15,24 +15,30 @@
  *  information regarding copyright ownership.
  */
 
-package rpc;
+package service.rpc;
 
 import java.util.Arrays ;
 
 import lizard.comms.thrift.ThriftLib ;
+
 import org.apache.jena.atlas.lib.Lib ;
 import org.apache.jena.atlas.logging.LogCtl ;
 import org.apache.thrift.protocol.TCompactProtocol ;
 import org.apache.thrift.protocol.TProtocol ;
 import org.apache.thrift.server.TServer ;
 import org.apache.thrift.server.TThreadPoolServer ;
-import org.apache.thrift.transport.* ;
+import org.apache.thrift.transport.TServerSocket ;
+import org.apache.thrift.transport.TServerTransport ;
+import org.apache.thrift.transport.TSocket ;
+import org.apache.thrift.transport.TTransport ;
+
 import rpc.thrift.Item ;
 import rpc.thrift.S1 ;
 
 public class MainRPC {
 
     static { LogCtl.setLog4j(); }
+    
     public static void main(String[] args) throws Exception {
         server() ;
         

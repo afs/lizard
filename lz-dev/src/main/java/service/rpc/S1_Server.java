@@ -15,7 +15,7 @@
  *  information regarding copyright ownership.
  */
 
-package rpc;
+package service.rpc;
 
 import org.apache.thrift.TException ;
 import rpc.thrift.Item ;
