@@ -52,7 +52,6 @@ class TClientIndex extends ComponentBase implements Connection, ComponentTxn, Pi
     private final TLZ_ShardIndex shard ;    // remove.
     private static AtomicLong counter = new AtomicLong(0) ;
 
-
     public static TClientIndex create(String host, int port, String indexName, ColumnMap colMap) {
         return new TClientIndex(host, port, indexName, colMap) ;
     }

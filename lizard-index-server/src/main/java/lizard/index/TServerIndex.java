@@ -17,22 +17,12 @@
 
 package lizard.index;
 
-import java.util.ArrayList ;
-import java.util.Iterator ;
-import java.util.List ;
-
-import lizard.api.TLZlib ;
 import lizard.api.TLZ.TLZ_Index ;
-import lizard.api.TLZ.TLZ_ShardIndex ;
-import lizard.api.TLZ.TLZ_TupleNodeId ;
 import lizard.comms.thrift.ThriftServer ;
 
-import com.hp.hpl.jena.tdb.store.NodeId ;
 import com.hp.hpl.jena.tdb.store.tupletable.TupleIndex ;
 
-import org.apache.jena.atlas.lib.Tuple ;
 import org.apache.jena.atlas.logging.FmtLog ;
-import org.apache.thrift.TException ;
 import org.apache.thrift.protocol.TCompactProtocol ;
 import org.apache.thrift.server.TServer ;
 import org.apache.thrift.server.TThreadPoolServer ;
@@ -63,7 +53,7 @@ public class TServerIndex extends ThriftServer
         
         new Thread(()-> {
             try {
-                TLZ_Index.Iface handler = new TServerIndex.Handler(getLabel(), index) ;
+                TLZ_Index.Iface handler = new IndexHandler(getLabel(), index) ;
                 TLZ_Index.Processor<TLZ_Index.Iface> processor = new TLZ_Index.Processor<TLZ_Index.Iface>(handler);
                 TThreadPoolServer.Args args = new TThreadPoolServer.Args(serverTransport) ;
                 args.processor(processor) ;
@@ -80,75 +70,6 @@ public class TServerIndex extends ThriftServer
         }) .start() ;
         //sema.acquireUninterruptibly(); 
         super.start();
-    }
-    
-    static class Handler implements TLZ_Index.Iface {
-
-        private final TupleIndex index ;
-        private final String label ;
-
-        public Handler(String label, TupleIndex index) {
-            this.label = label ;
-            this.index = index ;
-        }
-        
-        @Override
-        public void idxPing() throws TException {
-            log.info("ping") ;
-        }
-
-        @Override
-        public boolean idxAdd(long id, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws TException {
-            Tuple<NodeId> tuple2 = TLZlib.build(tuple) ;
-            // Verbose.
-            FmtLog.info(log, "[%d] add %s [%s]", id, index.getName(), index.getName()) ;
-            boolean b = index.add(tuple2) ;
-            return b ;
-        }
-
-        @Override
-        public boolean idxDelete(long id, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws TException {
-            Tuple<NodeId> tuple2 = TLZlib.build(tuple) ;
-            // Verbose.
-            FmtLog.info(log, "[%d] delete %s [%s]", id, index.getName(), index.getName()) ;
-            boolean b = index.delete(tuple2) ;
-            return b ;
-        }
-
-        @Override
-        public List<TLZ_TupleNodeId> idxFind(long id, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws TException {
-            Tuple<NodeId> pattern = TLZlib.build(tuple) ;
-            Iterator<Tuple<NodeId>> iter = index.find(pattern) ;
-            FmtLog.info(log, "[%d] find %s [%s]", id, index.getName(), index.getName()) ;
-            // TODO XXX Revisit and stream this.
-            List<TLZ_TupleNodeId> result = new ArrayList<>() ;
-            iter.forEachRemaining(t->result.add(TLZlib.build(t))) ;
-            return result ;
-        }
-
-        @Override
-        public long txnBeginRead() throws TException {
-            log.warn("TServerIndex:txnBeginRead - not implemented"); 
-            return 0 ;
-        }
-
-        @Override
-        public long txnBeginWrite() throws TException {
-            log.warn("TServerIndex:txnBeginWrite - not implemented"); 
-            return 0 ;
-        }
-
-        @Override
-        public void txnPrepare(long txnId) throws TException {}
-
-        @Override
-        public void txnCommit(long txnId) throws TException {}
-
-        @Override
-        public void txnAbort(long txnId) throws TException {}
-
-        @Override
-        public void txnEnd(long txnId) throws TException {}
     }
     
 }

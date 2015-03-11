@@ -18,26 +18,18 @@
 package lizard.node;
 
 
-import lizard.api.TLZ.TLZ_Node ;
-import lizard.api.TLZ.TLZ_NodeId ;
 import lizard.api.TLZ.TLZ_NodeTable ;
 import lizard.comms.thrift.ThriftServer ;
 
-import com.hp.hpl.jena.graph.Node ;
-import com.hp.hpl.jena.sparql.sse.SSE ;
-import com.hp.hpl.jena.tdb.store.NodeId ;
 import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
 
 import org.apache.jena.atlas.logging.FmtLog ;
-import org.apache.jena.riot.out.NodeFmtLib ;
-import org.apache.thrift.TException ;
 import org.apache.thrift.protocol.TCompactProtocol ;
 import org.apache.thrift.server.TServer ;
 import org.apache.thrift.server.TThreadPoolServer ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
-// XXX Needs efficiency attention.
 public class TServerNode extends ThriftServer
 {
     private static Logger log = LoggerFactory.getLogger(TServerNode.class) ;
@@ -57,7 +49,7 @@ public class TServerNode extends ThriftServer
     @Override
     public void start() {
         //FmtLog.debug(log, "Start node server, port = %d", getPort()) ;
-        TLZ_NodeTable.Iface handler = new TServerNode.Handler(getLabel(), nodeTable) ;
+        TLZ_NodeTable.Iface handler = new NodeTableHandler(getLabel(), nodeTable) ;
         TLZ_NodeTable.Processor<TLZ_NodeTable.Iface> processor = new TLZ_NodeTable.Processor<TLZ_NodeTable.Iface>(handler);
 
         // Semapahores to sync??
@@ -76,78 +68,5 @@ public class TServerNode extends ThriftServer
               }
         }) .start() ;
         super.start() ;
-    }
-    
-    static class Handler implements TLZ_NodeTable.Iface {
-        private final NodeTable nodeTable ;
-        private final String label ;
-
-        public Handler(String label, NodeTable nodeTable) {
-          this.label = label ;
-          this.nodeTable = nodeTable ;
-        }
-        
-        @Override
-        public void nodePing() throws TException {
-            log.info("ping") ;
-        }
-
-        @Override
-        public TLZ_NodeId allocNodeId(long id, TLZ_Node nz) throws TException {
-          Node n = SSE.parseNode(nz.getNodeStr()) ;
-          NodeId nid = nodeTable.getAllocateNodeId(n) ;
-          TLZ_NodeId nidz = new TLZ_NodeId() ;
-          nidz.setNodeId(nid.getId()) ;
-          FmtLog.info(log, "[%d] Node alloc request : %s => %s", id, n, nid) ;
-          return nidz ; 
-        }
-
-        @Override
-        public TLZ_NodeId findByNode(long id, TLZ_Node nz) throws TException {
-          Node n = SSE.parseNode(nz.getNodeStr()) ;
-          NodeId nid = nodeTable.getNodeIdForNode(n) ;
-          // XXX Remove little structs
-          TLZ_NodeId nidz = new TLZ_NodeId() ;
-          nidz.setNodeId(nid.getId()) ;
-          FmtLog.info(log, "[%d] Node get request : %s => %s", id, n, nid) ;
-          return nidz ;
-        }
-
-        @Override
-        public TLZ_Node findByNodeId(long id, TLZ_NodeId nz) throws TException {
-            NodeId nid = NodeId.create(nz.getNodeId()) ; 
-            Node n = nodeTable.getNodeForNodeId(nid) ;
-            if ( n == null )
-                FmtLog.error(log, "NodeId not found: "+nid) ;
-            String str = NodeFmtLib.str(n) ;
-            FmtLog.info(log, "[%d] NodeId get request : %s => %s", id, nid, n) ;
-            TLZ_Node nlz = new TLZ_Node().setNodeStr(str) ;
-            return nlz ;
-        }
-        
-        @Override
-        public long txnBeginRead() throws TException {
-            log.warn("TServerNode:txnBeginRead - not implemented"); 
-            return 0 ;
-        }
-
-        @Override
-        public long txnBeginWrite() throws TException {
-            log.warn("TServerNode:txnBeginWrite - not implemented"); 
-            return 0 ;
-        }
-
-        @Override
-        public void txnPrepare(long txnId) throws TException {}
-
-        @Override
-        public void txnCommit(long txnId) throws TException {}
-
-        @Override
-        public void txnAbort(long txnId) throws TException {}
-
-        @Override
-        public void txnEnd(long txnId) throws TException {}
-
     }
 }
