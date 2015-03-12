@@ -21,10 +21,12 @@ import lizard.cluster.Platform ;
 import lizard.conf.dataset.DatasetBuilderLizard ;
 import lizard.conf.index.IndexServer ;
 import lizard.conf.node.NodeServer ;
+import lizard.index.LzBuildIndex ;
 import lizard.index.TServerIndex ;
 import lizard.node.TServerNode ;
 import lizard.query.QuackLizard ;
 import lizard.system.LzLog ;
+
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.StrUtils ;
 import org.apache.jena.atlas.logging.FmtLog ;
@@ -55,20 +57,21 @@ public class LzBuild
     static Logger logConf = Config.logConf ;
     // XXX 
     // *** To be replaced 
-    private static ObjectFileBuilder objectFileBuilder     = new BuilderStdDB.ObjectFileBuilderStd() ;
-    private static BlockMgrBuilder blockMgrBuilder         = new BuilderStdIndex.BlockMgrBuilderStd() ;
-    /*package*/ static IndexBuilder indexBuilder               = new BuilderStdIndex.IndexBuilderStd(blockMgrBuilder, blockMgrBuilder) ;
-    /*package*/ static RangeIndexBuilder rangeIndexBuilder     = new BuilderStdIndex.RangeIndexBuilderStd(blockMgrBuilder, blockMgrBuilder) ;
+    private static ObjectFileBuilder objectFileBuilder          = new BuilderStdDB.ObjectFileBuilderStd() ;
+    private static BlockMgrBuilder blockMgrBuilder              = new BuilderStdIndex.BlockMgrBuilderStd() ;
+    /*package*/ static IndexBuilder indexBuilder                = new BuilderStdIndex.IndexBuilderStd(blockMgrBuilder, blockMgrBuilder) ;
+    /*package*/ static RangeIndexBuilder rangeIndexBuilder      = new BuilderStdIndex.RangeIndexBuilderStd(blockMgrBuilder, blockMgrBuilder) ;
     
     private static NodeTableBuilder nodeTableBuilder       = new BuilderStdDB.NodeTableBuilderStd(indexBuilder, objectFileBuilder) ;
     private static TupleIndexBuilder tupleIndexBuilder     = new BuilderStdDB.TupleIndexBuilderStd(rangeIndexBuilder) ;
     private static StoreParams params = StoreParams.builder().build() ;
     
     public static TupleIndex createTupleIndex(Location loc, String order, String name) {
-        FileSet fs = new FileSet(loc, order) ;
-        ColumnMap cMap = new ColumnMap(Names.primaryIndexTriples, order) ;   // Primary order.
-        TupleIndex tupleIndex = tupleIndexBuilder.buildTupleIndex(fs, cMap, name, params) ;
-        return tupleIndex ;
+        return LzBuildIndex.createTupleIndex(loc, order, name) ;
+//        FileSet fs = new FileSet(loc, order) ;
+//        ColumnMap cMap = new ColumnMap(Names.primaryIndexTriples, order) ;   // Primary order.
+//        TupleIndex tupleIndex = tupleIndexBuilder.buildTupleIndex(fs, cMap, name, params) ;
+//        return tupleIndex ;
     }
     
     public static NodeTable createNodeTable(Location location) {
