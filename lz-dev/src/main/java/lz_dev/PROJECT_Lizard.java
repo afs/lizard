@@ -23,6 +23,20 @@ public class PROJECT_Lizard {
     //   TServerIndex
     //    TClientIndex/TupleIndexRemote
     
+    // IndexHandler - autocommit hackery
+
+    // Do we need TDB2? and no TDB code?
+    
+    // Version of TransactionalComponentLifecycle that is thread-settable.
+    //   setForThisThread(
+    
+    // Mantis?? Add TxnState to Transaction, not TransactionalComponentLifecycle
+    //  ==> Transaction<X>
+    // then only Transaction<X> needs setting per thread.
+    // 
+    
+    // Tuple hierarchy.
+    // Avoid copy - tuple + set colmap.
     /*
      *  index, node "clear"
      *  
