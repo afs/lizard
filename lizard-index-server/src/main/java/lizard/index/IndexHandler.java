@@ -28,10 +28,18 @@ import lizard.api.TLZ.TLZ_TupleNodeId ;
 
 import com.hp.hpl.jena.tdb.store.NodeId ;
 import com.hp.hpl.jena.tdb.store.tupletable.TupleIndex ;
+import com.hp.hpl.jena.tdb.store.tupletable.TupleIndexRecord ;
 
 import org.apache.jena.atlas.lib.Tuple ;
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.thrift.TException ;
+import org.seaborne.dboe.base.file.Location ;
+import org.seaborne.dboe.index.RangeIndex ;
+import org.seaborne.dboe.trans.bplustree.BPlusTree ;
+import org.seaborne.dboe.transaction.Transactional ;
+import org.seaborne.dboe.transaction.Txn ;
+import org.seaborne.dboe.transaction.txn.TransactionalBase ;
+import org.seaborne.dboe.transaction.txn.journal.Journal ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
@@ -40,10 +48,21 @@ import org.slf4j.LoggerFactory ;
     private static Logger log = LoggerFactory.getLogger(IndexHandler.class) ;
     private final TupleIndex index ;
     private final String label ;
+    private final TransactionalBase transactional ;
 
     public IndexHandler(String label, TupleIndex index) {
         this.label = label ;
         this.index = index ;
+        BPlusTree x = unwrap(index) ;
+        Journal journal = Journal.create(Location.mem()) ; 
+        this.transactional = new TransactionalBase(journal, x) ;
+    }
+    
+    static BPlusTree unwrap(TupleIndex index) {
+        TupleIndexRecord tir = (TupleIndexRecord)index ;
+        AdapterRangeIndex ari = (AdapterRangeIndex)(tir.getRangeIndex()) ;
+        RangeIndex ri = ari.getUnderlyingRangeIndex() ;
+        return (BPlusTree)ri ;
     }
     
     @Override
@@ -54,10 +73,12 @@ import org.slf4j.LoggerFactory ;
     @Override
     public boolean idxAdd(long id, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws TException {
         Tuple<NodeId> tuple2 = TLZlib.build(tuple) ;
-        // Verbose.
         FmtLog.info(log, "[%d] add %s [%s]", id, index.getName(), index.getName()) ;
-        boolean b = index.add(tuple2) ;
-        return b ;
+        return Txn.executeWriteReturn(transactional, ()->{
+            // Verbose.
+            boolean b = index.add(tuple2) ;
+            return b ;
+        });
     }
 
     @Override
@@ -65,18 +86,22 @@ import org.slf4j.LoggerFactory ;
         Tuple<NodeId> tuple2 = TLZlib.build(tuple) ;
         // Verbose.
         FmtLog.info(log, "[%d] delete %s [%s]", id, index.getName(), index.getName()) ;
-        boolean b = index.delete(tuple2) ;
-        return b ;
+        return Txn.executeWriteReturn(transactional, ()->{
+            boolean b = index.delete(tuple2) ;
+            return b ;
+        });
     }
 
     @Override
     public List<TLZ_TupleNodeId> idxFind(long id, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws TException {
         Tuple<NodeId> pattern = TLZlib.build(tuple) ;
-        Iterator<Tuple<NodeId>> iter = index.find(pattern) ;
         FmtLog.info(log, "[%d] find %s [%s]", id, index.getName(), index.getName()) ;
         // TODO XXX Revisit and stream this.
         List<TLZ_TupleNodeId> result = new ArrayList<>() ;
-        iter.forEachRemaining(t->result.add(TLZlib.build(t))) ;
+        Txn.executeRead(transactional, ()->{
+            Iterator<Tuple<NodeId>> iter = index.find(pattern) ;
+            iter.forEachRemaining(t->result.add(TLZlib.build(t))) ;
+        }) ;
         return result ;
     }
 
