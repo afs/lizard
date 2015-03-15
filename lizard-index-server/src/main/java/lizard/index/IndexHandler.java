@@ -22,6 +22,7 @@ import java.util.Iterator ;
 import java.util.List ;
 
 import lizard.api.TLZlib ;
+import lizard.api.TxnHandler ;
 import lizard.api.TLZ.TLZ_Index ;
 import lizard.api.TLZ.TLZ_ShardIndex ;
 import lizard.api.TLZ.TLZ_TupleNodeId ;
@@ -36,28 +37,40 @@ import org.apache.thrift.TException ;
 import org.seaborne.dboe.base.file.Location ;
 import org.seaborne.dboe.index.RangeIndex ;
 import org.seaborne.dboe.trans.bplustree.BPlusTree ;
-import org.seaborne.dboe.transaction.Transactional ;
 import org.seaborne.dboe.transaction.Txn ;
 import org.seaborne.dboe.transaction.txn.TransactionalBase ;
 import org.seaborne.dboe.transaction.txn.journal.Journal ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
-/* package */ class IndexHandler implements TLZ_Index.Iface {
+//COMMON SUPER TYPE FOR TXN LIFECYCLE
+
+/* package */ class IndexHandler extends TxnHandler implements TLZ_Index.Iface {
     
     private static Logger log = LoggerFactory.getLogger(IndexHandler.class) ;
-    private final TupleIndex index ;
+    @Override
+    protected Logger getLog() { return log ; }
+    
     private final String label ;
-    private final TransactionalBase transactional ;
+    @Override
+    protected String getLabel() { return label ; }
+
+    private final TupleIndex index ;
 
     public IndexHandler(String label, TupleIndex index) {
+        super(init(index)) ;
+        
         this.label = label ;
         this.index = index ;
-        BPlusTree x = unwrap(index) ;
-        Journal journal = Journal.create(Location.mem()) ; 
-        this.transactional = new TransactionalBase(journal, x) ;
     }
     
+    private static TransactionalBase init(TupleIndex index) {
+        BPlusTree x = unwrap(index) ;
+        // XXX !!!!!
+        Journal journal = Journal.create(Location.mem()) ; 
+        return new TransactionalBase(journal, x) ;
+    }
+
     static BPlusTree unwrap(TupleIndex index) {
         TupleIndexRecord tir = (TupleIndexRecord)index ;
         AdapterRangeIndex ari = (AdapterRangeIndex)(tir.getRangeIndex()) ;
@@ -73,30 +86,28 @@ import org.slf4j.LoggerFactory ;
     @Override
     public boolean idxAdd(long id, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws TException {
         Tuple<NodeId> tuple2 = TLZlib.build(tuple) ;
-        FmtLog.info(log, "[%d] add %s [%s]", id, index.getName(), index.getName()) ;
-        return Txn.executeWriteReturn(transactional, ()->{
-            // Verbose.
-            boolean b = index.add(tuple2) ;
-            return b ;
-        });
+        FmtLog.info(log, "[%d] add %s %s", id, index.getName(), tuple2) ;
+        return writeTxnAlwaysReturn(() -> index.add(tuple2)) ;
     }
 
+    // Single tuple add/delete. Not efficient.  Sort of autocommit.
+    // Batches are better; this code hels in small scale changes
+    // and setting up tests.
+    
     @Override
     public boolean idxDelete(long id, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws TException {
         Tuple<NodeId> tuple2 = TLZlib.build(tuple) ;
-        // Verbose.
-        FmtLog.info(log, "[%d] delete %s [%s]", id, index.getName(), index.getName()) ;
-        return Txn.executeWriteReturn(transactional, ()->{
-            boolean b = index.delete(tuple2) ;
-            return b ;
-        });
+        FmtLog.info(log, "[%d] delete %s %s", id, index.getName(), tuple2) ;
+        return writeTxnAlwaysReturn(() -> index.delete(tuple2) ) ;
     }
 
     @Override
     public List<TLZ_TupleNodeId> idxFind(long id, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws TException {
         Tuple<NodeId> pattern = TLZlib.build(tuple) ;
-        FmtLog.info(log, "[%d] find %s [%s]", id, index.getName(), index.getName()) ;
+        
+        FmtLog.info(log, "[%d] find %s %s", id, index.getName(), pattern) ;
         // TODO XXX Revisit and stream this.
+        // TODO Respect trasnaction id.
         List<TLZ_TupleNodeId> result = new ArrayList<>() ;
         Txn.executeRead(transactional, ()->{
             Iterator<Tuple<NodeId>> iter = index.find(pattern) ;
@@ -104,28 +115,4 @@ import org.slf4j.LoggerFactory ;
         }) ;
         return result ;
     }
-
-    @Override
-    public long txnBeginRead() throws TException {
-        log.warn("TServerIndex:txnBeginRead - not implemented"); 
-        return 0 ;
-    }
-
-    @Override
-    public long txnBeginWrite() throws TException {
-        log.warn("TServerIndex:txnBeginWrite - not implemented"); 
-        return 0 ;
-    }
-
-    @Override
-    public void txnPrepare(long txnId) throws TException {}
-
-    @Override
-    public void txnCommit(long txnId) throws TException {}
-
-    @Override
-    public void txnAbort(long txnId) throws TException {}
-
-    @Override
-    public void txnEnd(long txnId) throws TException {}
 }

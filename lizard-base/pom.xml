@@ -93,6 +93,11 @@
       <artifactId>curator-framework</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.seaborne.mantis</groupId>
+      <artifactId>dboe-transaction</artifactId>
+    </dependency>
+
   </dependencies>
 
 </project>

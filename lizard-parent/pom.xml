@@ -48,6 +48,7 @@
     <ver.log4j>1.2.17</ver.log4j>
     <ver.thrift>0.9.2</ver.thrift>
     <ver.curator>2.7.0</ver.curator>
+    <ver.mantis>0.0.0-SNAPSHOT</ver.mantis>
   </properties>
 
   <!--
@@ -87,11 +88,25 @@
 	<version>${ver.fuseki}</version>
       </dependency>
 
-       <dependency>
+      <!-- Mantis -->
+      <dependency>
 	 <groupId>org.seaborne.mantis</groupId>
 	 <artifactId>dboe-quack</artifactId>
-	 <version>0.0.0-SNAPSHOT</version>
+	 <version>${ver.mantis}</version>
       </dependency>
+
+      <dependency>
+	 <groupId>org.seaborne.mantis</groupId>
+	 <artifactId>dboe-transaction</artifactId>
+	 <version>${ver.mantis}</version>
+      </dependency>
+
+      <dependency>
+	 <groupId>org.seaborne.mantis</groupId>
+	 <artifactId>dboe-trans-data</artifactId>
+	 <version>${ver.mantis}</version>
+      </dependency>
+      <!-- Mantis -->
 
       <dependency>
 	<groupId>junit</groupId>
