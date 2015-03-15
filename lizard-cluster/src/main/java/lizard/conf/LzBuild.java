@@ -23,6 +23,7 @@ import lizard.conf.index.IndexServer ;
 import lizard.conf.node.NodeServer ;
 import lizard.index.LzBuildIndex ;
 import lizard.index.TServerIndex ;
+import lizard.node.LzBuildNode ;
 import lizard.node.TServerNode ;
 import lizard.query.QuackLizard ;
 import lizard.system.LzLog ;
@@ -57,13 +58,13 @@ public class LzBuild
     static Logger logConf = Config.logConf ;
     // XXX 
     // *** To be replaced 
-    private static ObjectFileBuilder objectFileBuilder          = new BuilderStdDB.ObjectFileBuilderStd() ;
+//    private static ObjectFileBuilder objectFileBuilder          = new BuilderStdDB.ObjectFileBuilderStd() ;
     private static BlockMgrBuilder blockMgrBuilder              = new BuilderStdIndex.BlockMgrBuilderStd() ;
     /*package*/ static IndexBuilder indexBuilder                = new BuilderStdIndex.IndexBuilderStd(blockMgrBuilder, blockMgrBuilder) ;
     /*package*/ static RangeIndexBuilder rangeIndexBuilder      = new BuilderStdIndex.RangeIndexBuilderStd(blockMgrBuilder, blockMgrBuilder) ;
     
-    private static NodeTableBuilder nodeTableBuilder       = new BuilderStdDB.NodeTableBuilderStd(indexBuilder, objectFileBuilder) ;
-    private static TupleIndexBuilder tupleIndexBuilder     = new BuilderStdDB.TupleIndexBuilderStd(rangeIndexBuilder) ;
+//    private static NodeTableBuilder nodeTableBuilder       = new BuilderStdDB.NodeTableBuilderStd(indexBuilder, objectFileBuilder) ;
+//    private static TupleIndexBuilder tupleIndexBuilder     = new BuilderStdDB.TupleIndexBuilderStd(rangeIndexBuilder) ;
     private static StoreParams params = StoreParams.builder().build() ;
     
     public static TupleIndex createTupleIndex(Location loc, String order, String name) {
@@ -75,15 +76,17 @@ public class LzBuild
     }
     
     public static NodeTable createNodeTable(Location location) {
-        FileSet fsNodeToId = new FileSet(location, Names.indexNode2Id) ;
-        FileSet fsId2Node = new FileSet(location, Names.indexId2Node) ;
-        StoreParams params2 = StoreParams.builder(params)
-            .node2NodeIdCacheSize(-1)
-            .nodeId2NodeCacheSize(-1)
-            .nodeMissCacheSize(-1)
-            .build() ;
-        NodeTable nt = nodeTableBuilder.buildNodeTable(fsNodeToId, fsId2Node, params2) ;
-        return nt ;
+        return LzBuildNode.createNodeTable(location) ;
+    
+//        FileSet fsNodeToId = new FileSet(location, Names.indexNode2Id) ;
+//        FileSet fsId2Node = new FileSet(location, Names.indexId2Node) ;
+//        StoreParams params2 = StoreParams.builder(params)
+//            .node2NodeIdCacheSize(-1)
+//            .nodeId2NodeCacheSize(-1)
+//            .nodeMissCacheSize(-1)
+//            .build() ;
+//        NodeTable nt = nodeTableBuilder.buildNodeTable(fsNodeToId, fsId2Node, params2) ;
+//        return nt ;
     }
     
     // Lizard related builds
@@ -97,6 +100,7 @@ public class LzBuild
 //        return index ;
 //    }
     
+    // XXX What is this?
     public static DatasetGraphTDB createDataset(Location location, TupleIndex[] tripleIndexes, NodeTable nodeTable) {
         DatasetControl policy = new DatasetControlMRSW() ;
         StoreParams params = StoreParams.getDftStoreParams() ;

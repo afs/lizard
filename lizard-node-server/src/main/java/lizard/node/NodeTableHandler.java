@@ -17,6 +17,7 @@
 
 package lizard.node;
 
+import lizard.api.TxnHandler ;
 import lizard.api.TLZ.TLZ_Node ;
 import lizard.api.TLZ.TLZ_NodeId ;
 import lizard.api.TLZ.TLZ_NodeTable ;
@@ -25,22 +26,41 @@ import com.hp.hpl.jena.graph.Node ;
 import com.hp.hpl.jena.sparql.sse.SSE ;
 import com.hp.hpl.jena.tdb.store.NodeId ;
 import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
+import com.hp.hpl.jena.tdb.store.tupletable.TupleIndex ;
 
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.riot.out.NodeFmtLib ;
 import org.apache.thrift.TException ;
+import org.seaborne.dboe.base.file.Location ;
+import org.seaborne.dboe.trans.bplustree.BPlusTree ;
+import org.seaborne.dboe.transaction.txn.TransactionalBase ;
+import org.seaborne.dboe.transaction.txn.journal.Journal ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
 //XXX Needs efficiency attention.
-/* package */ class NodeTableHandler implements TLZ_NodeTable.Iface {
+/* package */ class NodeTableHandler extends TxnHandler implements TLZ_NodeTable.Iface {
     private static Logger log = LoggerFactory.getLogger(NodeTableHandler.class) ;
-    private final NodeTable nodeTable ;
+    @Override
+    protected Logger getLog() { return log ; }
+    
     private final String label ;
+    @Override
+    protected String getLabel() { return label ; }    
 
     public NodeTableHandler(String label, NodeTable nodeTable) {
-      this.label = label ;
-      this.nodeTable = nodeTable ;
+        super(init(nodeTable)) ;
+        this.label = label ;
+    }
+    
+    private static TransactionalBase init(NodeTable nodeTable) {
+        
+        
+        
+        return null ;
+//        // XXX !!!!!
+//        Journal journal = Journal.create(Location.mem()) ; 
+//        return new TransactionalBase(journal, x) ;
     }
     
     @Override
@@ -80,29 +100,4 @@ import org.slf4j.LoggerFactory ;
         TLZ_Node nlz = new TLZ_Node().setNodeStr(str) ;
         return nlz ;
     }
-    
-    @Override
-    public long txnBeginRead() throws TException {
-        log.warn("TServerNode:txnBeginRead - not implemented"); 
-        return 0 ;
-    }
-
-    @Override
-    public long txnBeginWrite() throws TException {
-        log.warn("TServerNode:txnBeginWrite - not implemented"); 
-        return 0 ;
-    }
-
-    @Override
-    public void txnPrepare(long txnId) throws TException {}
-
-    @Override
-    public void txnCommit(long txnId) throws TException {}
-
-    @Override
-    public void txnAbort(long txnId) throws TException {}
-
-    @Override
-    public void txnEnd(long txnId) throws TException {}
-
 }
