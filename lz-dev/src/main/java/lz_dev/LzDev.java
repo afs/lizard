@@ -64,6 +64,9 @@ public class LzDev {
         lz.getComponents().forEach(c->{
 //            System.out.println(c) ;
 //            System.out.println(c.getClass().getName()) ;
+            
+            //SOME TRANSACTION STUFF
+            
             if ( c instanceof TupleIndexRemote ) {
                 TupleIndexRemote rIdx = (TupleIndexRemote)c ;
                 rIdx.begin(ReadWrite.READ) ;
