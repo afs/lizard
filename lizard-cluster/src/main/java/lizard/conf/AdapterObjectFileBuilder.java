@@ -28,7 +28,7 @@ import org.seaborne.dboe.trans.data.TransObjectFile ;
 class AdapterObjectFileBuilder implements com.hp.hpl.jena.tdb.setup.ObjectFileBuilder {
     @Override
     public com.hp.hpl.jena.tdb.base.objectfile.ObjectFile buildObjectFile(com.hp.hpl.jena.tdb.base.file.FileSet fileSet, String ext) {
-        FileSet fs = new FileSet(fileSet.getBasename()) ;
+        FileSet fs = A.convert(fileSet) ;
         String filename = fileSet.filename(ext) ;
         ObjectFile of = ( fileSet.isMem() ) 
             ? FileFactory.createObjectFileMem(filename) 

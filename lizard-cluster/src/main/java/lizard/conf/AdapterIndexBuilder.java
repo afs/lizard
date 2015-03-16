@@ -29,7 +29,7 @@ class AdapterIndexBuilder implements com.hp.hpl.jena.tdb.index.IndexBuilder {
                                                       com.hp.hpl.jena.tdb.base.record.RecordFactory recordfactory, 
                                                       com.hp.hpl.jena.tdb.index.IndexParams indexParams) {
 
-        FileSet fs = new FileSet(fileSet.getBasename()) ;
+        FileSet fs = A.convert(fileSet) ;
         RecordFactory rf = new RecordFactory(recordfactory.keyLength(), recordfactory.valueLength()) ;
         // Override with defaults.
         RangeIndex ridx = LzBuildDBOE.rangeIndexBuilderDBoe.buildRangeIndex(fs, rf, IndexConst.getDftParams()) ;
