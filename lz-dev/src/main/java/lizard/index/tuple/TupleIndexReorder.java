@@ -17,20 +17,6 @@
 
 package lizard.index.tuple;
 
-import static com.hp.hpl.jena.tdb.sys.SystemTDB.SizeOfNodeId ;
-
-import java.util.Iterator ;
-
-import com.hp.hpl.jena.tdb.TDBException ;
-import com.hp.hpl.jena.tdb.base.record.Record ;
-import com.hp.hpl.jena.tdb.lib.TupleLib ;
-import com.hp.hpl.jena.tdb.store.NodeId ;
-import com.hp.hpl.jena.tdb.store.tupletable.TupleIndexBase ;
-
-import org.apache.jena.atlas.iterator.* ;
-import org.apache.jena.atlas.lib.Bytes ;
-import org.apache.jena.atlas.lib.ColumnMap ;
-import org.apache.jena.atlas.lib.Tuple ;
 
 /** Machinary to map between any order+colmap and with col map applied. */
 public class TupleIndexReorder {}
