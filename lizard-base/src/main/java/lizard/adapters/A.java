@@ -15,12 +15,14 @@
  *  information regarding copyright ownership.
  */
 
-package lizard.conf;
+package lizard.adapters;
 
 import com.hp.hpl.jena.tdb.sys.Names ;
 
 import org.seaborne.dboe.base.file.FileSet ;
 import org.seaborne.dboe.base.file.Location ;
+import org.seaborne.dboe.base.record.Record ;
+import org.seaborne.dboe.base.record.RecordFactory ;
 
 public class A {
     public static FileSet convert(com.hp.hpl.jena.tdb.base.file.FileSet fileSet) {
@@ -39,5 +41,19 @@ public class A {
         }
         return Location.create(location.getDirectoryPath()) ;
     }
+    
+    public static com.hp.hpl.jena.tdb.base.record.Record convertToTDB(com.hp.hpl.jena.tdb.base.record.RecordFactory tdbFactory, Record r) {
+        if ( r == null )
+            return null ;
+        return tdbFactory.create(r.getKey(), r.getValue()) ;
+    }
+    
+    public static Record convertToMantis(RecordFactory dboeFactory, com.hp.hpl.jena.tdb.base.record.Record r) {
+        if ( r == null )
+            return null ;
+        return dboeFactory.create(r.getKey(), r.getValue()) ;
+    }
+
+
 }
 

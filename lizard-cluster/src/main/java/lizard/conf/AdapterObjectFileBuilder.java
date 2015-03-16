@@ -17,6 +17,7 @@
 
 package lizard.conf;
 
+import lizard.adapters.A ;
 import lizard.adapters.AdapterObjectFile ;
 import org.apache.jena.atlas.logging.Log ;
 import org.seaborne.dboe.base.file.BufferChannel ;

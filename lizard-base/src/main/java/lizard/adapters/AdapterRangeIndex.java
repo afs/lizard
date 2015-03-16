@@ -40,11 +40,11 @@ public class AdapterRangeIndex implements RangeIndex {
     public org.seaborne.dboe.index.RangeIndex getUnderlyingRangeIndex()   { return rIndex ; }
     
     private Record convertToTDB(org.seaborne.dboe.base.record.Record r) {
-        return tdbFactory.create(r.getKey(), r.getValue()) ;
+        return A.convertToTDB(tdbFactory, r) ;
     }
     
     private org.seaborne.dboe.base.record.Record convertToMantis(Record r) {
-        return dboeFactory.create(r.getKey(), r.getValue()) ;
+        return A.convertToMantis(dboeFactory, r) ;
     }
 
     @Override

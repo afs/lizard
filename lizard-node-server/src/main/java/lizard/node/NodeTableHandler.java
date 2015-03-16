@@ -94,33 +94,41 @@ import com.hp.hpl.jena.tdb.store.nodetable.NodeTableWrapper ;
     @Override
     public TLZ_NodeId allocNodeId(long id, TLZ_Node nz) throws TException {
       Node n = SSE.parseNode(nz.getNodeStr()) ;
-      NodeId nid = nodeTable.getAllocateNodeId(n) ;
-      TLZ_NodeId nidz = new TLZ_NodeId() ;
-      nidz.setNodeId(nid.getId()) ;
-      FmtLog.info(log, "[%d] Node alloc request : %s => %s", id, n, nid) ;
-      return nidz ; 
+      
+      return writeTxnAlwaysReturn(()-> {
+          NodeId nid = nodeTable.getAllocateNodeId(n) ;
+          TLZ_NodeId nidz = new TLZ_NodeId() ;
+          nidz.setNodeId(nid.getId()) ;
+          FmtLog.info(log, "[%d] Node alloc request : %s => %s", id, n, nid) ;
+          return nidz ;
+      }) ;
+      
     }
 
     @Override
     public TLZ_NodeId findByNode(long id, TLZ_Node nz) throws TException {
       Node n = SSE.parseNode(nz.getNodeStr()) ;
-      NodeId nid = nodeTable.getNodeIdForNode(n) ;
-      // XXX Remove little structs
-      TLZ_NodeId nidz = new TLZ_NodeId() ;
-      nidz.setNodeId(nid.getId()) ;
-      FmtLog.info(log, "[%d] Node get request : %s => %s", id, n, nid) ;
-      return nidz ;
+      return writeTxnAlwaysReturn(()-> {
+          NodeId nid = nodeTable.getNodeIdForNode(n) ;
+          // XXX Remove little structs
+          TLZ_NodeId nidz = new TLZ_NodeId() ;
+          nidz.setNodeId(nid.getId()) ;
+          FmtLog.info(log, "[%d] Node get request : %s => %s", id, n, nid) ;
+          return nidz ;
+      }) ;
     }
 
     @Override
     public TLZ_Node findByNodeId(long id, TLZ_NodeId nz) throws TException {
-        NodeId nid = NodeId.create(nz.getNodeId()) ; 
-        Node n = nodeTable.getNodeForNodeId(nid) ;
-        if ( n == null )
-            FmtLog.error(log, "NodeId not found: "+nid) ;
-        String str = NodeFmtLib.str(n) ;
-        FmtLog.info(log, "[%d] NodeId get request : %s => %s", id, nid, n) ;
-        TLZ_Node nlz = new TLZ_Node().setNodeStr(str) ;
-        return nlz ;
+        NodeId nid = NodeId.create(nz.getNodeId()) ;
+        return writeTxnAlwaysReturn(()-> {
+            Node n = nodeTable.getNodeForNodeId(nid) ;
+            if ( n == null )
+                FmtLog.error(log, "NodeId not found: "+nid) ;
+            String str = NodeFmtLib.str(n) ;
+            FmtLog.info(log, "[%d] NodeId get request : %s => %s", id, nid, n) ;
+            TLZ_Node nlz = new TLZ_Node().setNodeStr(str) ;
+            return nlz ;
+        }) ;
     }
 }

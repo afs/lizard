@@ -17,6 +17,7 @@
 
 package lizard.conf;
 
+import lizard.adapters.A ;
 import lizard.adapters.AdapterRangeIndex ;
 import org.seaborne.dboe.base.file.FileSet ;
 import org.seaborne.dboe.base.record.RecordFactory ;
