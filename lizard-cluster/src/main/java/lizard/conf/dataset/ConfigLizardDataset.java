@@ -24,7 +24,7 @@ import java.util.Map.Entry ;
 
 import lizard.conf.Config ;
 import lizard.conf.ConfigLib ;
-import lizard.conf.LzBuild ;
+import lizard.conf.LzBuildClient ;
 import lizard.conf.assembler.VocabLizard ;
 import lizard.conf.index.ConfigIndex ;
 import lizard.conf.index.IndexService ;
@@ -95,7 +95,7 @@ public class ConfigLizardDataset {
                 TupleIndex idx = ci.buildIndex(idxSvc, startables) ;
                 indexes[i++] = idx ;
             }
-            DatasetGraph dsg = LzBuild.createDataset(Location.mem(), indexes, nt) ;
+            DatasetGraph dsg = LzBuildClient.createDataset(Location.mem(), indexes, nt) ;
             LzDataset lizard = new LzDataset(dsg, startables) ;
             lzDsg.add(lizard) ;
         }

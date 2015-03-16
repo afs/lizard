@@ -23,8 +23,6 @@ public class PROJECT_Lizard {
     //   TServerIndex
     //    TClientIndex/TupleIndexRemote
     
-    // IndexHandler - autocommit hackery
-
     // Do we need TDB2? and no TDB code?
     
     // Version of TransactionalComponentLifecycle that is thread-settable.

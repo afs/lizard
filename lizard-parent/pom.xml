@@ -106,6 +106,13 @@
 	 <artifactId>dboe-trans-data</artifactId>
 	 <version>${ver.mantis}</version>
       </dependency>
+
+      <dependency>
+	 <groupId>org.seaborne.mantis</groupId>
+	 <artifactId>dboe-index</artifactId>
+	 <version>${ver.mantis}</version>
+      </dependency>
+
       <!-- Mantis -->
 
       <dependency>

@@ -21,6 +21,7 @@ import java.util.ArrayList ;
 import java.util.Iterator ;
 import java.util.List ;
 
+import lizard.adapters.AdapterRangeIndex ;
 import lizard.api.TLZlib ;
 import lizard.api.TxnHandler ;
 import lizard.api.TLZ.TLZ_Index ;
@@ -42,8 +43,6 @@ import org.seaborne.dboe.transaction.txn.TransactionalBase ;
 import org.seaborne.dboe.transaction.txn.journal.Journal ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
-
-//COMMON SUPER TYPE FOR TXN LIFECYCLE
 
 /* package */ class IndexHandler extends TxnHandler implements TLZ_Index.Iface {
     
@@ -67,6 +66,7 @@ import org.slf4j.LoggerFactory ;
     private static TransactionalBase init(TupleIndex index) {
         BPlusTree x = unwrap(index) ;
         // XXX !!!!!
+        log.warn("Ad-hoc memory journal");  
         Journal journal = Journal.create(Location.mem()) ; 
         return new TransactionalBase(journal, x) ;
     }

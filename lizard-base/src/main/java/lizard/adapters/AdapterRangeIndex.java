@@ -15,7 +15,7 @@
  *  information regarding copyright ownership.
  */
 
-package lizard.index;
+package lizard.adapters;
 
 import java.util.Iterator ;
 

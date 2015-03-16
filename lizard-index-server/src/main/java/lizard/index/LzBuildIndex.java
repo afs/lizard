@@ -17,6 +17,8 @@
 
 package lizard.index;
 
+import lizard.adapters.AdapterRangeIndex ;
+
 import com.hp.hpl.jena.tdb.base.file.Location ;
 import com.hp.hpl.jena.tdb.setup.BuilderStdDB ;
 import com.hp.hpl.jena.tdb.setup.TupleIndexBuilder ;

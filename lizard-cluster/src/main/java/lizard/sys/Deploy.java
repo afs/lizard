@@ -17,9 +17,19 @@
 
 package lizard.sys;
 
+import com.hp.hpl.jena.tdb.base.file.Location ;
+import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
+import com.hp.hpl.jena.tdb.store.tupletable.TupleIndex ;
+
 import lizard.cluster.Platform ;
+import lizard.conf.Config ;
 import lizard.conf.Configuration ;
-import lizard.conf.LzBuild ;
+import lizard.conf.LzBuildDBOE ;
+import lizard.conf.index.IndexServer ;
+import lizard.conf.node.NodeServer ;
+import lizard.index.TServerIndex ;
+import lizard.node.TServerNode ;
+import org.apache.jena.atlas.logging.FmtLog ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
@@ -30,12 +40,12 @@ public class Deploy {
         Platform platform = new Platform() ;
         deployment.nodeServers.stream().forEach(ns -> {
             log.info("Build N: " + ns.resource) ;
-            LzBuild.buildNodeServer(ns, platform) ;
+            buildNodeServer(ns, platform) ;
         }) ;
 
         deployment.indexServers.forEach(idx -> {
             log.info("Build I: " + idx.resource) ;
-            LzBuild.buildIndexServer(idx, platform) ;
+            buildIndexServer(idx, platform) ;
         }) ;
 
         platform.start() ;
@@ -49,6 +59,25 @@ public class Deploy {
         //System.out.println(deployment.nodeServers) ;
         deploy(deployment) ;
         return deployment ;
+    }
+
+    /** Build index server, locally */ 
+    public static void buildIndexServer(IndexServer idxSvc, Platform platform) {
+        Location location = Location.create(idxSvc.data) ;
+        FmtLog.info(Config.logConf, "BuildIndexServer: %s %s", idxSvc.port, location) ;
+        String indexOrder = idxSvc.indexService.indexOrder ;
+        TupleIndex index = LzBuildDBOE.createTupleIndex(location, indexOrder, "Idx"+indexOrder) ;
+        TServerIndex serverIdx = TServerIndex.create(idxSvc.port, index) ;
+        platform.add(serverIdx) ;
+    }
+    
+    /** Build noder server, locally */
+    public static void buildNodeServer(NodeServer ns, Platform platform) {
+        Location location = Location.create(ns.data) ;
+        FmtLog.info(Config.logConf, "buildNodeServer: %s %s", ns.port, location) ;
+        NodeTable nt = LzBuildDBOE.createNodeTable(location) ;
+        TServerNode serverNode = TServerNode.create(ns.port, nt) ;
+        platform.add(serverNode) ;
     }
 
 }

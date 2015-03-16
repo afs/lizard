@@ -24,7 +24,7 @@ import lizard.cluster.Platform ;
 import lizard.conf.Config ;
 import lizard.conf.ConfigLib ;
 import lizard.conf.DataServer ;
-import lizard.conf.LzBuild ;
+import lizard.conf.LzBuildDBOE ;
 import lizard.node.ClusterNodeTable ;
 import lizard.node.DistributorNodesReplicate ;
 import lizard.node.NodeTableRemote ;
@@ -102,13 +102,11 @@ public class ConfigNode {
         }
     }
     
-    // XXX Put in BuildNode??
-    
     /** Build directly, locally */
     @Deprecated
     public static TServerNode buildNodeServer(NodeServer ds, Location loc) {
         FmtLog.info(logConf, "buildNodeServer: %s %s", ds.port, loc) ;
-        NodeTable nt = LzBuild.createNodeTable(loc) ;
+        NodeTable nt = LzBuildDBOE.createNodeTable(loc) ;
         TServerNode serverNode = TServerNode.create(ds.port, nt) ;
         return serverNode ; 
     }
