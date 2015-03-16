@@ -18,23 +18,9 @@
 package lz_dev ;
 
 public class PROJECT_Lizard {
-    // RPC clearup.
-    //  ThriftServer, ThriftClient.
-    //   TServerIndex
-    //    TClientIndex/TupleIndexRemote
-    
-    // Do we need TDB2? and no TDB code?
-    
-    // Version of TransactionalComponentLifecycle that is thread-settable.
-    //   setForThisThread(
-    
-    // Mantis?? Add TxnState to Transaction, not TransactionalComponentLifecycle
-    //  ==> Transaction<X>
-    // then only Transaction<X> needs setting per thread.
-    // 
-    
     // Tuple hierarchy.
     // Avoid copy - tuple + set colmap.
+    
     /*
      *  index, node "clear"
      *  
@@ -49,11 +35,10 @@ public class PROJECT_Lizard {
      *  lz-dev/bin
      */
     
-    // LzTXnId
+    // LzTxnId
     //   Zookepper allocation.
     
-    // Thrift
-    //  Other servers  - TNonblockingServer+TFramedTransport 
+    // Thrift : Other servers  - TNonblockingServer+TFramedTransport 
     
     /*
      * Project setup:
@@ -90,8 +75,6 @@ public class PROJECT_Lizard {
     
     // Special kinds for RemoteAccessData and RemoteNode that are sync call
     // throughs. Parallel work pool versions?
-
-    // Concurrency policy
 
     /*
      * 1. index to index copy "tdbidxcopy --loc=DB SPO POS no overwrite 2.
