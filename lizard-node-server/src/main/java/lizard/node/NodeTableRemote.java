@@ -21,6 +21,7 @@ import java.util.Iterator ;
 
 import lizard.comms.ConnState ;
 import lizard.system.Component ;
+import lizard.system.ComponentTxn ;
 import lizard.system.Pingable ;
 import org.apache.jena.atlas.lib.NotImplemented ;
 import org.apache.jena.atlas.lib.Pair ;
@@ -28,11 +29,12 @@ import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
 import com.hp.hpl.jena.graph.Node ;
+import com.hp.hpl.jena.query.ReadWrite ;
 import com.hp.hpl.jena.tdb.store.NodeId ;
 import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
 
-/** NodeTbale interface to a remote node table server */
-public class NodeTableRemote implements Component, NodeTable, Pingable {
+/** NodeTable interface to a remote node table server */
+public class NodeTableRemote implements ComponentTxn, Component, NodeTable, Pingable {
 
     public static NodeTableRemote create(String hostname, int port) {
         TClientNode remote = TClientNode.create(hostname, port) ;
@@ -43,29 +45,29 @@ public class NodeTableRemote implements Component, NodeTable, Pingable {
     
     private static Logger log = LoggerFactory.getLogger(NodeTableRemote.class) ;
     
-    private final TClientNode conn ;
+    private final TClientNode client ;
     private String label ;
     
     private NodeTableRemote(TClientNode conn) { 
-        this.conn = conn ;
+        this.client = conn ;
         this.label = conn.getLabel() ;
     }
     
-    public ConnState getStatus() { return conn.getConnectionStatus() ; }
+    public ConnState getStatus() { return client.getConnectionStatus() ; }
     
     @Override
     public NodeId getAllocateNodeId(Node node) {
-        return conn.getAllocateNodeId(node) ;
+        return client.getAllocateNodeId(node) ;
     }
 
     @Override
     public NodeId getNodeIdForNode(Node node) {
-        return conn.getNodeIdForNode(node) ;
+        return client.getNodeIdForNode(node) ;
     }
 
     @Override
     public Node getNodeForNodeId(NodeId id) {
-        return conn.getNodeForNodeId(id) ;
+        return client.getNodeForNodeId(id) ;
     }
     
     @Override
@@ -101,22 +103,22 @@ public class NodeTableRemote implements Component, NodeTable, Pingable {
     }
 
     @Override
-    public void start()         { conn.start(); }
+    public void start()         { client.start(); }
 
     @Override
     public void stop()          { close() ; }
 
     @Override
-    public boolean isRunning()  { return conn.isRunning() ; }
+    public boolean isRunning()  { return client.isRunning() ; }
 
     @Override
-    public boolean hasFailed()  { return conn.hasFailed() ; }
+    public boolean hasFailed()  { return client.hasFailed() ; }
 
     @Override
-    public void setStatus(Component.Status status)    { conn.setStatus(status) ; }
+    public void setStatus(Component.Status status)    { client.setStatus(status) ; }
 
     @Override
-    public void close() { conn.stop() ; }
+    public void close() { client.stop() ; }
 
     @Override
     public String toString() {
@@ -141,6 +143,14 @@ public class NodeTableRemote implements Component, NodeTable, Pingable {
 
     @Override
     public void ping() {
-        conn.ping() ;
+        client.ping() ;
     }
+
+    // Java does not have multiple implementation inheritance. 
+    
+    @Override public void begin(ReadWrite mode)   { client.begin(mode) ; }
+    @Override public void prepare()               { client.prepare() ; }
+    @Override public void commit()                { client.commit() ; }
+    @Override public void abort()                 { client.abort() ; }
+    @Override public void end()                   { client.end() ; }
 }

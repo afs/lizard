@@ -24,6 +24,7 @@ import java.util.concurrent.atomic.AtomicLong ;
 import java.util.stream.Collectors ;
 
 import lizard.api.TLZlib ;
+import lizard.api.TxnClient ;
 import lizard.api.TLZ.TLZ_Index ;
 import lizard.api.TLZ.TLZ_IndexName ;
 import lizard.api.TLZ.TLZ_ShardIndex ;
@@ -47,6 +48,7 @@ class TClientIndex extends ComponentBase implements Connection, ComponentTxn, Pi
     private static Logger log = LoggerFactory.getLogger(TClientIndex.class) ;
     private final ThriftClient client ;
     private TLZ_Index.Client rpc ;
+    private TxnClient ctl ;
     private ConnState connState ; 
     private final TLZ_IndexName indexName ;
     private final TLZ_ShardIndex shard ;    // remove.
@@ -74,6 +76,7 @@ class TClientIndex extends ComponentBase implements Connection, ComponentTxn, Pi
         client.start() ;
         // Delay until starting (client.protocol not valid until then).
         this.rpc = new TLZ_Index.Client(client.protocol()) ;
+        this.ctl = new TxnClient(rpc) ;
         super.start() ; 
         connState = ConnState.OK ;
     }
@@ -121,27 +124,12 @@ class TClientIndex extends ComponentBase implements Connection, ComponentTxn, Pi
         }
     }
 
-    // XXX TODO
+    @Override public void begin(ReadWrite mode)   { ctl.begin(mode) ; }
+    @Override public void prepare()               { ctl.prepare() ; }
+    @Override public void commit()                { ctl.commit() ; }
+    @Override public void abort()                 { ctl.abort() ; }
+    @Override public void end()                   { ctl.end() ; }
 
-    @Override
-    public LzTxnId begin(ReadWrite mode) {
-        return null ;
-    }
-
-    @Override
-    public void prepare(LzTxnId txnId) {}
-
-    @Override
-    public void commit(LzTxnId txnId) {}
-
-    @Override
-    public void abort(LzTxnId txnId) {}
-
-    @Override
-    public void end(LzTxnId txnId) {}
-
-    // XXX TODO
-    
     private static Tuple<NodeId> tupleAny4 = Tuple.createTuple(NodeId.NodeIdAny, NodeId.NodeIdAny, NodeId.NodeIdAny, NodeId.NodeIdAny) ; 
     private static Tuple<NodeId> tupleAny3 = Tuple.createTuple(NodeId.NodeIdAny, NodeId.NodeIdAny, NodeId.NodeIdAny) ; 
     

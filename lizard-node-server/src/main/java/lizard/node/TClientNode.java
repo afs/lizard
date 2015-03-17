@@ -26,20 +26,18 @@ import lizard.api.TLZ.TLZ_NodeTable ;
 import lizard.comms.ConnState ;
 import lizard.comms.Connection ;
 import lizard.comms.thrift.ThriftClient ;
-import lizard.system.ComponentBase ;
-import lizard.system.LizardException ;
-import lizard.system.Pingable ;
-
-import com.hp.hpl.jena.graph.Node ;
-import com.hp.hpl.jena.sparql.sse.SSE ;
-import com.hp.hpl.jena.tdb.store.NodeId ;
-
+import lizard.system.* ;
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.riot.out.NodeFmtLib ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
+
+import com.hp.hpl.jena.graph.Node ;
+import com.hp.hpl.jena.query.ReadWrite ;
+import com.hp.hpl.jena.sparql.sse.SSE ;
+import com.hp.hpl.jena.tdb.store.NodeId ;
  
-public class TClientNode extends ComponentBase implements Connection, Pingable
+public class TClientNode extends ComponentBase implements ComponentTxn, Connection, Pingable
 {
     private static Logger log = LoggerFactory.getLogger(TClientNode.class) ;
     private final ThriftClient client ;
@@ -131,4 +129,23 @@ public class TClientNode extends ComponentBase implements Connection, Pingable
         client.close() ;
         connState = ConnState.CLOSED ;
     }
+
+    @Override
+    public void begin(ReadWrite mode) {
+        //long v = rpc.txnBeginRead() ;
+    }
+
+    @Override
+    public void prepare() {
+        //rpc.txnPrepare(0); 
+    }
+
+    @Override
+    public void commit() {}
+
+    @Override
+    public void abort() {}
+
+    @Override
+    public void end() {}
 }

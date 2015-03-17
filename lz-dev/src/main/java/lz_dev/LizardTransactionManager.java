@@ -15,22 +15,10 @@
  *  information regarding copyright ownership.
  */
 
-package lizard.system;
+package lz_dev;
 
-import com.hp.hpl.jena.query.ReadWrite ;
-
-/** Client-facing component transaction interface */
-public interface ComponentTxn {
-
-    /** begin */
-    public void begin(ReadWrite mode) ;
-    /** prepare */
-    public void prepare() ;
-    /** commit */
-    public void commit() ;
-    /** abort */
-    public void abort() ;
-    /** end */
-    public void end() ;
+/** Lizard cluster-wide controller */
+public class LizardTransactionManager {
 
 }
+

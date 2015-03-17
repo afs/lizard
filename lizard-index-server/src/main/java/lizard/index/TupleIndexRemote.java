@@ -126,34 +126,11 @@ public class TupleIndexRemote extends TupleIndexBase implements Component, Compo
     @Override
     public void stop() { component.stop() ; }
 
-    // ---- Transactions
-    
-    @Override
-    public LzTxnId begin(ReadWrite mode) {
-        return client.begin(mode) ;
-    }
-
-    @Override
-    public void prepare(LzTxnId txnId) {
-        client.prepare(txnId);
-    }
-
-    @Override
-    public void commit(LzTxnId txnId) {
-        client.commit(txnId);
-    }
-
-    @Override
-    public void abort(LzTxnId txnId) {
-        client.abort(txnId);
-    }
-
-    @Override
-    public void end(LzTxnId txnId) {
-        client.end(txnId) ;
-    }
-
-    // ---- Transactions
+    @Override public void begin(ReadWrite mode)   { client.begin(mode) ; }
+    @Override public void prepare()               { client.prepare() ; }
+    @Override public void commit()                { client.commit() ; }
+    @Override public void abort()                 { client.abort() ; }
+    @Override public void end()                   { client.end() ; }
 
     @Override
     public boolean isRunning() { return component.isRunning() ; }

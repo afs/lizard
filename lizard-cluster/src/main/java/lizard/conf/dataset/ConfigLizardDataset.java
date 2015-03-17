@@ -32,6 +32,10 @@ import lizard.conf.node.ConfigNode ;
 import lizard.query.LzDataset ;
 import lizard.system.Component ;
 import lizard.system.LizardException ;
+import org.seaborne.dboe.transaction.Transactional ;
+import org.seaborne.dboe.transaction.txn.TransactionCoordinator ;
+import org.seaborne.dboe.transaction.txn.TransactionalBase ;
+import org.seaborne.dboe.transaction.txn.journal.Journal ;
 import org.slf4j.Logger ;
 
 import com.hp.hpl.jena.rdf.model.Model ;
@@ -83,6 +87,10 @@ public class ConfigLizardDataset {
         List<LzDataset> lzDsg = new ArrayList<>() ;
         
         for ( Entry<Resource, LzDatasetDesc> e : x.entrySet() ) {
+            Journal journal = null ;
+            TransactionCoordinator txnCoord = new TransactionCoordinator(journal) ;
+            Transactional trans = new TransactionalBase(txnCoord) ;
+
             List<Component> startables = new ArrayList<>() ;
             
             ConfigNode cn = ConfigNode.create(m) ;
@@ -95,6 +103,8 @@ public class ConfigLizardDataset {
                 TupleIndex idx = ci.buildIndex(idxSvc, startables) ;
                 indexes[i++] = idx ;
             }
+            
+            
             DatasetGraph dsg = LzBuildClient.createDataset(Location.mem(), indexes, nt) ;
             LzDataset lizard = new LzDataset(dsg, startables) ;
             lzDsg.add(lizard) ;

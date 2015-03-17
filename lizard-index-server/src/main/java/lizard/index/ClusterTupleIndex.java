@@ -43,7 +43,7 @@ public class ClusterTupleIndex extends TupleIndexBase
     // Prototype - hardwired to one policy.
     // No parallel setup or access (easy of debugging)
     
-    // TODO Policy for tuple -> segment by the distributor needs ot be index colmap sensitive without being a tupel rewrite.
+    // TODO Policy for tuple -> segment by the distributor needs to be index colmap sensitive without being a tupel rewrite.
     
     private static Logger log = LoggerFactory.getLogger(ClusterTupleIndex.class) ; 
     private Tuple<NodeId> anyTuple ;
@@ -146,8 +146,6 @@ public class ClusterTupleIndex extends TupleIndexBase
             FmtLog.info(log, "  Place: %s %s", idx, tuple) ;
             idx.find(tuple).forEachRemaining(z -> FmtLog.info(log, "   %s",z)) ;
         }
-        
-        
         
         // In parallel ...
         List<Iterator<Tuple<NodeId>>> incoming = new ArrayList<>() ;

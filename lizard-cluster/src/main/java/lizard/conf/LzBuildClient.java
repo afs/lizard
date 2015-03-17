@@ -68,7 +68,7 @@ public class LzBuildClient
         DatasetBuilderLizard dbb = new DatasetBuilderLizard(indexBuilder, rangeIndexBuilder) ;
         // Hack node table.
         DatasetPrefixesTDB prefixes = dbb.makePrefixTable(location, policy) ; 
-
+        
         // Special.
         String indexes[] = new String[tripleIndexes.length] ;
         for ( int i = 0 ; i < indexes.length ; i++ ) {

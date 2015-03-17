@@ -51,9 +51,12 @@ public class LzDev {
     static Configuration config     = Configuration.fromModel(configurationModel) ;
     
     static String deploymentFile        = Q.filename(Setup.confDir, "deploy-jvm.ttl") ;
-
     
     public static void main(String[] args) {
+        //Setup, take apart - try N way transactions.
+    }
+    
+    public static void main1(String[] args) {
         log.info("SERVERS") ;
         Deployment deployment = Deploy.deployServers(config, deploymentFile);
 
