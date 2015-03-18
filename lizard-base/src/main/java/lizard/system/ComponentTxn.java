@@ -21,9 +21,8 @@ import com.hp.hpl.jena.query.ReadWrite ;
 
 /** Client-facing component transaction interface */
 public interface ComponentTxn {
-
     /** begin */
-    public void begin(ReadWrite mode) ;
+    public void begin(long txnId, ReadWrite mode) ;
     /** prepare */
     public void prepare() ;
     /** commit */

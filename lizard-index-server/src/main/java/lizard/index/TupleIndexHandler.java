@@ -44,9 +44,9 @@ import org.seaborne.dboe.transaction.txn.journal.Journal ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
-/* package */ class IndexHandler extends TxnHandler implements TLZ_Index.Iface {
+/* package */ class TupleIndexHandler extends TxnHandler implements TLZ_Index.Iface {
     
-    private static Logger log = LoggerFactory.getLogger(IndexHandler.class) ;
+    private static Logger log = LoggerFactory.getLogger(TupleIndexHandler.class) ;
     @Override
     protected Logger getLog() { return log ; }
     
@@ -56,7 +56,7 @@ import org.slf4j.LoggerFactory ;
 
     private final TupleIndex index ;
 
-    public IndexHandler(String label, TupleIndex index) {
+    public TupleIndexHandler(String label, TupleIndex index) {
         super(init(index)) ;
         
         this.label = label ;
@@ -84,7 +84,9 @@ import org.slf4j.LoggerFactory ;
     }
 
     @Override
-    public boolean idxAdd(long id, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws TException {
+    public boolean idxAdd(long id, long txnId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws TException {
+        FmtLog.warn(log, "[%d] No transaction implementation", id) ;
+        
         Tuple<NodeId> tuple2 = TLZlib.build(tuple) ;
         FmtLog.info(log, "[%d] add %s %s", id, index.getName(), tuple2) ;
         return writeTxnAlwaysReturn(() -> index.add(tuple2)) ;
@@ -95,14 +97,14 @@ import org.slf4j.LoggerFactory ;
     // and setting up tests.
     
     @Override
-    public boolean idxDelete(long id, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws TException {
+    public boolean idxDelete(long id, long txnId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws TException {
         Tuple<NodeId> tuple2 = TLZlib.build(tuple) ;
         FmtLog.info(log, "[%d] delete %s %s", id, index.getName(), tuple2) ;
         return writeTxnAlwaysReturn(() -> index.delete(tuple2) ) ;
     }
 
     @Override
-    public List<TLZ_TupleNodeId> idxFind(long id, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws TException {
+    public List<TLZ_TupleNodeId> idxFind(long id, long txnId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws TException {
         Tuple<NodeId> pattern = TLZlib.build(tuple) ;
         
         FmtLog.info(log, "[%d] find %s %s", id, index.getName(), pattern) ;

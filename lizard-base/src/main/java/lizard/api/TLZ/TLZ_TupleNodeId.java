@@ -37,7 +37,7 @@ public class TLZ_TupleNodeId implements org.apache.thrift.TBase<TLZ_TupleNodeId,
   private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("TLZ_TupleNodeId");
 
   private static final org.apache.thrift.protocol.TField S_FIELD_DESC = new org.apache.thrift.protocol.TField("S", org.apache.thrift.protocol.TType.I64, (short)1);
-  private static final org.apache.thrift.protocol.TField P_FIELD_DESC = new org.apache.thrift.protocol.TField("P", org.apache.thrift.protocol.TType.I64, (short)2);
+  private static final org.apache.thrift.protocol.TField P_FIELD_DESC = new org.apache.thrift.protocol.TField("P", org.apache.thrift.protocol.TType.I64, (short)9);
   private static final org.apache.thrift.protocol.TField O_FIELD_DESC = new org.apache.thrift.protocol.TField("O", org.apache.thrift.protocol.TType.I64, (short)3);
   private static final org.apache.thrift.protocol.TField G_FIELD_DESC = new org.apache.thrift.protocol.TField("G", org.apache.thrift.protocol.TType.I64, (short)4);
 
@@ -55,7 +55,7 @@ public class TLZ_TupleNodeId implements org.apache.thrift.TBase<TLZ_TupleNodeId,
   /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
   public enum _Fields implements org.apache.thrift.TFieldIdEnum {
     S((short)1, "S"),
-    P((short)2, "P"),
+    P((short)9, "P"),
     O((short)3, "O"),
     G((short)4, "G");
 
@@ -74,7 +74,7 @@ public class TLZ_TupleNodeId implements org.apache.thrift.TBase<TLZ_TupleNodeId,
       switch(fieldId) {
         case 1: // S
           return S;
-        case 2: // P
+        case 9: // P
           return P;
         case 3: // O
           return O;
@@ -549,7 +549,7 @@ public class TLZ_TupleNodeId implements org.apache.thrift.TBase<TLZ_TupleNodeId,
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
-          case 2: // P
+          case 9: // P
             if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
               struct.P = iprot.readI64();
               struct.setPIsSet(true);
@@ -600,9 +600,6 @@ public class TLZ_TupleNodeId implements org.apache.thrift.TBase<TLZ_TupleNodeId,
       oprot.writeFieldBegin(S_FIELD_DESC);
       oprot.writeI64(struct.S);
       oprot.writeFieldEnd();
-      oprot.writeFieldBegin(P_FIELD_DESC);
-      oprot.writeI64(struct.P);
-      oprot.writeFieldEnd();
       oprot.writeFieldBegin(O_FIELD_DESC);
       oprot.writeI64(struct.O);
       oprot.writeFieldEnd();
@@ -611,6 +608,9 @@ public class TLZ_TupleNodeId implements org.apache.thrift.TBase<TLZ_TupleNodeId,
         oprot.writeI64(struct.G);
         oprot.writeFieldEnd();
       }
+      oprot.writeFieldBegin(P_FIELD_DESC);
+      oprot.writeI64(struct.P);
+      oprot.writeFieldEnd();
       oprot.writeFieldStop();
       oprot.writeStructEnd();
     }

@@ -19,10 +19,12 @@ package lizard.node;
 
 import java.util.Iterator ;
 
+import lizard.api.TxnClient ;
 import lizard.comms.ConnState ;
 import lizard.system.Component ;
 import lizard.system.ComponentTxn ;
 import lizard.system.Pingable ;
+
 import org.apache.jena.atlas.lib.NotImplemented ;
 import org.apache.jena.atlas.lib.Pair ;
 import org.slf4j.Logger ;
@@ -51,6 +53,10 @@ public class NodeTableRemote implements ComponentTxn, Component, NodeTable, Ping
     private NodeTableRemote(TClientNode conn) { 
         this.client = conn ;
         this.label = conn.getLabel() ;
+    }
+    
+    public TxnClient<?> getWireClient() { 
+        return client ;
     }
     
     public ConnState getStatus() { return client.getConnectionStatus() ; }
@@ -148,7 +154,7 @@ public class NodeTableRemote implements ComponentTxn, Component, NodeTable, Ping
 
     // Java does not have multiple implementation inheritance. 
     
-    @Override public void begin(ReadWrite mode)   { client.begin(mode) ; }
+    @Override public void begin(long txnId, ReadWrite mode)   { client.begin(txnId, mode) ; }
     @Override public void prepare()               { client.prepare() ; }
     @Override public void commit()                { client.commit() ; }
     @Override public void abort()                 { client.abort() ; }

@@ -84,42 +84,45 @@ import com.hp.hpl.jena.tdb.store.nodetable.NodeTableWrapper ;
         return new TransactionalBase(journal, of, bpt) ;
     }
     
-    
-    
     @Override
     public void nodePing() throws TException {
         log.info("ping") ;
     }
 
     @Override
-    public TLZ_NodeId allocNodeId(long id, TLZ_Node nz) throws TException {
-      Node n = SSE.parseNode(nz.getNodeStr()) ;
-      
-      return writeTxnAlwaysReturn(()-> {
-          NodeId nid = nodeTable.getAllocateNodeId(n) ;
-          TLZ_NodeId nidz = new TLZ_NodeId() ;
-          nidz.setNodeId(nid.getId()) ;
-          FmtLog.info(log, "[%d] Node alloc request : %s => %s", id, n, nid) ;
-          return nidz ;
-      }) ;
-      
+    public TLZ_NodeId allocNodeId(long id, long txnId, TLZ_Node nz) throws TException {
+        if ( txnId <= 0 )
+            FmtLog.info(log, "[%d] txnId = %d", id, txnId) ;
+        
+        FmtLog.warn(log, "[%d] txnId = %d : transactions not implemented", id, txnId) ;
+        
+        Node n = SSE.parseNode(nz.getNodeStr()) ;
+
+        return writeTxnAlwaysReturn(()-> {
+            NodeId nid = nodeTable.getAllocateNodeId(n) ;
+            TLZ_NodeId nidz = new TLZ_NodeId() ;
+            nidz.setNodeId(nid.getId()) ;
+            FmtLog.info(log, "[%d] Node alloc request : %s => %s", id, n, nid) ;
+            return nidz ;
+        }) ;
+
     }
 
     @Override
-    public TLZ_NodeId findByNode(long id, TLZ_Node nz) throws TException {
-      Node n = SSE.parseNode(nz.getNodeStr()) ;
-      return writeTxnAlwaysReturn(()-> {
-          NodeId nid = nodeTable.getNodeIdForNode(n) ;
-          // XXX Remove little structs
-          TLZ_NodeId nidz = new TLZ_NodeId() ;
-          nidz.setNodeId(nid.getId()) ;
-          FmtLog.info(log, "[%d] Node get request : %s => %s", id, n, nid) ;
-          return nidz ;
-      }) ;
+    public TLZ_NodeId findByNode(long id, long txnId, TLZ_Node nz) throws TException {
+        Node n = SSE.parseNode(nz.getNodeStr()) ;
+        return writeTxnAlwaysReturn(()-> {
+            NodeId nid = nodeTable.getNodeIdForNode(n) ;
+            // XXX Remove little structs
+            TLZ_NodeId nidz = new TLZ_NodeId() ;
+            nidz.setNodeId(nid.getId()) ;
+            FmtLog.info(log, "[%d] Node get request : %s => %s", id, n, nid) ;
+            return nidz ;
+        }) ;
     }
 
     @Override
-    public TLZ_Node findByNodeId(long id, TLZ_NodeId nz) throws TException {
+    public TLZ_Node findByNodeId(long id, long txnId, TLZ_NodeId nz) throws TException {
         NodeId nid = NodeId.create(nz.getNodeId()) ;
         return writeTxnAlwaysReturn(()-> {
             Node n = nodeTable.getNodeForNodeId(nid) ;

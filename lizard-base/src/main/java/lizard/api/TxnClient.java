@@ -18,76 +18,84 @@
 package lizard.api;
 
 import java.util.Objects ;
+import java.util.concurrent.atomic.AtomicLong ;
 
 import lizard.api.TLZ.TxnCtl ;
-import lizard.api.TLZ.TxnCtl.Client ;
+import lizard.comms.thrift.ThriftLib ;
+import lizard.system.ComponentBase ;
 import lizard.system.ComponentTxn ;
-import lizard.system.LizardException ;
-import org.apache.thrift.TException ;
 
 import com.hp.hpl.jena.query.ReadWrite ;
 
-/** Client side transaction support for a single component
- *  that forwards to its remote pair.  
- *  Inherit or use as a hidden member. 
- */
+import org.apache.jena.atlas.logging.Log ;
 
-public class TxnClient implements ComponentTxn {
-    private final Client client ;
-    private final ThreadLocal<Long> txn = new ThreadLocal<>() ;
+public class TxnClient<X extends TxnCtl.Client> extends ComponentBase implements ComponentTxn {
 
-    public TxnClient(TxnCtl.Client client) {
-        this.client = client ;
+    // request counter.
+    private static AtomicLong requestCounter = new AtomicLong(0) ;
+    // Thread's transaction.
+    private ThreadLocal<Long> currentTnxId = new ThreadLocal<>() ;
+    // Transaction interface.
+    protected X rpc = null ;
+    
+    protected TxnClient() { }
+
+    protected void setRPC(X rpc) {
+        if ( rpc != null )
+            Log.warn(this, "RPC handler for trasnactiosn already set") ;
+        this.rpc = rpc ;
     }
     
     @Override
-    public void begin(ReadWrite mode) {
-        exec(() -> {
-            long z = 0 ;
+    public void begin(long txnId, ReadWrite mode) {
+        ThriftLib.exec(()-> {
             switch(Objects.requireNonNull(mode)) {
                 case READ :
-                    z = client.txnBeginRead() ;
-                    break ;
+                    rpc.txnBeginRead(txnId) ; break ;        
                 case WRITE :
-                    z = client.txnBeginWrite() ;
-                    break ;
+                    rpc.txnBeginWrite(txnId) ; break ;
             }
-            txn.set(z);
         }) ;
+        currentTnxId.set(txnId) ;
     }
 
     @Override
     public void prepare() {
-        exec(() -> client.txnPrepare(txn.get().longValue())) ;
+        ThriftLib.exec(()-> rpc.txnPrepare(getTxnId())) ;
+    }
+
+    protected long allocRequestId() {
+        return requestCounter.incrementAndGet() ;
+    }
+    
+    protected long getTxnId() {
+        Long z = currentTnxId.get() ;
+        if ( z == null )
+            return -99 ;
+        return z ;
     }
 
     @Override
     public void commit() {
-        exec(() -> client.txnPrepare(txn.get().longValue())) ;
-
+        ThriftLib.exec(()-> rpc.txnCommit(getTxnId())) ;
     }
 
     @Override
     public void abort() {
-        exec(() -> client.txnPrepare(txn.get().longValue())) ;
+        ThriftLib.exec(()-> rpc.txnAbort(getTxnId())) ;
     }
 
     @Override
     public void end() {
-        Long z = txn.get() ;
-        if ( z != null )
-            exec(() -> client.txnPrepare(txn.get().longValue())) ;
-        txn.set(null) ;
-        txn.remove() ;
-    }
-    
-    @FunctionalInterface
-    interface ThriftRunnable { void run() throws TException ; }
-    
-    private static void exec(ThriftRunnable runnable) {
-        try { runnable.run() ; } 
-        catch (TException ex)   { throw new LizardException(ex) ; }
-        catch (Exception ex)    { throw new LizardException("Unexpected exception: "+ex.getMessage(), ex) ; }
+        Long z = getTxnId() ;
+        if ( z != null ) {
+            ThriftLib.exec(() -> rpc.txnEnd(getTxnId())) ;
+            currentTnxId.set(null) ;
+        }
+
+        // Because get may have created it. 
+        currentTnxId.remove() ;
     }
 }
+
 

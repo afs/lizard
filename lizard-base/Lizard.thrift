@@ -9,20 +9,22 @@ struct TLZ_Ping {
 }
 
 // ---- Transaction
+typedef i64 TxnId
+
 service TxnCtl {
-    i64 txnBeginRead()
-    i64 txnBeginWrite()
-    void txnPrepare(1: i64 txnId)
-    void txnCommit(1: i64 txnId)
-    void txnAbort(1: i64 txnId)
-    void txnEnd(1: i64 txnId)
+    void txnBeginRead(1: TxnId txnId)
+    void txnBeginWrite(1: TxnId txnId)
+    void txnPrepare(1: TxnId txnId)
+    void txnCommit(1: TxnId txnId)
+    void txnAbort(1: TxnId txnId)
+    void txnEnd(1: TxnId txnId)
 }
 
 // ---- Index
 
 struct TLZ_TupleNodeId {
 1: required i64 S ;
-2: required i64 P ;
+9: required i64 P ;
 3: required i64 O ;
 4: optional i64 G ;
 }
@@ -31,19 +33,19 @@ enum TLZ_IndexName { SPO , POS , PSO , OSP }
 
 struct TLZ_ShardIndex {
 1:  required TLZ_IndexName indexName ;
-2:  required i32 shardId ;
+9:  required i32 shardId ;
 }
 
 struct TLZ_SubjectPredicateList {
 1: required i64 subject ;
-2: list<i64> predicates ;
+9: list<i64> predicates ;
 }
 
 enum TLZ_PatchAction { ADD , DEL }
 
 struct TLZ_PatchEntry {
 1: required TLZ_PatchAction      action ;
-2: required TLZ_TupleNodeId      tuple ;
+9: required TLZ_TupleNodeId      tuple ;
 }
 
 struct TLZ_Patch {
@@ -53,9 +55,10 @@ struct TLZ_Patch {
 // ---- Index
 service TLZ_Index extends TxnCtl {
     void idxPing()    
-    bool idxAdd (1: i64 requestId, 2: TLZ_ShardIndex shard, 3: TLZ_TupleNodeId tuple)
-    bool idxDelete(1: i64 requestId,2: TLZ_ShardIndex shard, 3: TLZ_TupleNodeId tuple)
-    list<TLZ_TupleNodeId> idxFind(1: i64 requestId, 2: TLZ_ShardIndex shard, 3: TLZ_TupleNodeId pattern)
+    bool idxAdd (1: i64 requestId, 9: TxnId txnId, 3: TLZ_ShardIndex shard, 4: TLZ_TupleNodeId tuple)
+    bool idxDelete(1: i64 requestId, 9: TxnId txnId, 3: TLZ_ShardIndex shard, 4: TLZ_TupleNodeId tuple)
+    list<TLZ_TupleNodeId> idxFind(1: i64 requestId, 9: TxnId txnId, 3: TLZ_ShardIndex shard, 4: TLZ_TupleNodeId pattern)
+
 
     // TLZ_SubjectPredicateList find(X)
     // patch
@@ -72,9 +75,9 @@ struct TLZ_NodeId {
 
 service TLZ_NodeTable extends TxnCtl {
     void nodePing() 
-    TLZ_NodeId allocNodeId(1: i64 requestId, 2: TLZ_Node node)
-    TLZ_NodeId findByNode(1: i64 requestId, 2: TLZ_Node node)
-    TLZ_Node   findByNodeId(1: i64 requestId, 2: TLZ_NodeId nodeId)
+    TLZ_NodeId allocNodeId(1: i64 requestId, 9: TxnId txnId, 3: TLZ_Node node)
+    TLZ_NodeId findByNode(1: i64 requestId, 9: TxnId txnId, 3: TLZ_Node node)
+    TLZ_Node   findByNodeId(1: i64 requestId, 9: TxnId txnId, 3: TLZ_NodeId nodeId)
 }
 
 // Local Variables:

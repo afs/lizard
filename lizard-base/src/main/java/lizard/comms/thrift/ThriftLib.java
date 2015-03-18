@@ -17,7 +17,10 @@
 
 package lizard.comms.thrift;
 
+import lizard.system.LizardException ;
+
 import org.apache.jena.atlas.lib.InternalErrorException ;
+import org.apache.thrift.TException ;
 import org.apache.thrift.protocol.* ;
 import org.apache.thrift.transport.TTransport ;
 
@@ -31,5 +34,15 @@ public class ThriftLib {
         if ( false ) return new TJSONProtocol(transport) ;
         throw new InternalErrorException("No protocol impl choosen") ;
     }
+
+    // Wrapper fro calls 
+    @FunctionalInterface
+    public interface ThriftRunnable { void run() throws TException ; }
     
+    public static void exec(ThriftRunnable runnable) {
+        try { runnable.run() ; } 
+        catch (TException ex)   { throw new LizardException(ex) ; }
+        catch (Exception ex)    { throw new LizardException("Unexpected exception: "+ex.getMessage(), ex) ; }
+    }
+
 }

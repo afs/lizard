@@ -20,11 +20,10 @@ package lizard.index;
 import java.util.Iterator ;
 import java.util.List ;
 import java.util.concurrent.Callable ;
-import java.util.concurrent.atomic.AtomicLong ;
 import java.util.stream.Collectors ;
 
-import lizard.api.TLZlib ;
 import lizard.api.TxnClient ;
+import lizard.api.TLZlib ;
 import lizard.api.TLZ.TLZ_Index ;
 import lizard.api.TLZ.TLZ_IndexName ;
 import lizard.api.TLZ.TLZ_ShardIndex ;
@@ -32,9 +31,10 @@ import lizard.api.TLZ.TLZ_TupleNodeId ;
 import lizard.comms.ConnState ;
 import lizard.comms.Connection ;
 import lizard.comms.thrift.ThriftClient ;
-import lizard.system.* ;
+import lizard.system.ComponentTxn ;
+import lizard.system.LizardException ;
+import lizard.system.Pingable ;
 
-import com.hp.hpl.jena.query.ReadWrite ;
 import com.hp.hpl.jena.tdb.store.NodeId ;
 
 import org.apache.jena.atlas.lib.ColumnMap ;
@@ -43,16 +43,13 @@ import org.apache.jena.atlas.logging.FmtLog ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
-class TClientIndex extends ComponentBase implements Connection, ComponentTxn, Pingable 
+class TClientIndex extends TxnClient<TLZ_Index.Client> implements Connection, ComponentTxn, Pingable 
 {
     private static Logger log = LoggerFactory.getLogger(TClientIndex.class) ;
     private final ThriftClient client ;
-    private TLZ_Index.Client rpc ;
-    private TxnClient ctl ;
     private ConnState connState ; 
     private final TLZ_IndexName indexName ;
     private final TLZ_ShardIndex shard ;    // remove.
-    private static AtomicLong counter = new AtomicLong(0) ;
 
     public static TClientIndex create(String host, int port, String indexName, ColumnMap colMap) {
         return new TClientIndex(host, port, indexName, colMap) ;
@@ -75,12 +72,10 @@ class TClientIndex extends ComponentBase implements Connection, ComponentTxn, Pi
         FmtLog.debug(log, "Start: %s", getLabel()) ;
         client.start() ;
         // Delay until starting (client.protocol not valid until then).
-        this.rpc = new TLZ_Index.Client(client.protocol()) ;
-        this.ctl = new TxnClient(rpc) ;
+        super.setRPC(new TLZ_Index.Client(client.protocol())) ;
         super.start() ; 
         connState = ConnState.OK ;
     }
-    
     
     @Override
     public void stop() {
@@ -90,16 +85,18 @@ class TClientIndex extends ComponentBase implements Connection, ComponentTxn, Pi
     
     /** Insert a tuple - return true if it was really added, false if it was a duplicate */
     public boolean add(Tuple<NodeId> tuple) {
-        long id = counter.incrementAndGet() ;
+        long id = allocRequestId() ;
+        long txnId = getTxnId() ;
         TLZ_TupleNodeId x = TLZlib.build(tuple) ;
-        return exec("add", ()->rpc.idxAdd(id, shard, x)) ;
+        return exec("add", ()->rpc.idxAdd(id, txnId, shard, x)) ;
     }
 
     /** Delete a tuple - return true if it was deleted, false if it didn't exist */
     public boolean delete(Tuple<NodeId> tuple)  {
-        long id = counter.incrementAndGet() ;
+        long id = allocRequestId() ;
+        long txnId = getTxnId() ;
         TLZ_TupleNodeId x = TLZlib.build(tuple) ;
-        return exec("delete", ()->rpc.idxDelete(id, shard, x)) ;
+        return exec("delete", ()->rpc.idxDelete(id, txnId, shard, x)) ;
     }
     
     @Override
@@ -108,9 +105,10 @@ class TClientIndex extends ComponentBase implements Connection, ComponentTxn, Pi
     }
 
     public Iterator<Tuple<NodeId>> find(Tuple<NodeId> pattern) {
-        long id = counter.incrementAndGet() ;
+        long id = allocRequestId() ;
+        long txnId = getTxnId() ;
         TLZ_TupleNodeId x = TLZlib.build(pattern) ;
-        List<TLZ_TupleNodeId> find = exec("find", ()->rpc.idxFind(id, shard, x)) ;
+        List<TLZ_TupleNodeId> find = exec("find", ()->rpc.idxFind(id, txnId, shard, x)) ;
         // TODO Avoid copy (harder to debug?)
         List<Tuple<NodeId>> rows = find.stream().map(z -> TLZlib.build(z)).collect(Collectors.toList()) ;
         return rows.iterator() ;
@@ -123,12 +121,6 @@ class TClientIndex extends ComponentBase implements Connection, ComponentTxn, Pi
           throw new LizardException(ex) ;
         }
     }
-
-    @Override public void begin(ReadWrite mode)   { ctl.begin(mode) ; }
-    @Override public void prepare()               { ctl.prepare() ; }
-    @Override public void commit()                { ctl.commit() ; }
-    @Override public void abort()                 { ctl.abort() ; }
-    @Override public void end()                   { ctl.end() ; }
 
     private static Tuple<NodeId> tupleAny4 = Tuple.createTuple(NodeId.NodeIdAny, NodeId.NodeIdAny, NodeId.NodeIdAny, NodeId.NodeIdAny) ; 
     private static Tuple<NodeId> tupleAny3 = Tuple.createTuple(NodeId.NodeIdAny, NodeId.NodeIdAny, NodeId.NodeIdAny) ; 

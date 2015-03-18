@@ -37,7 +37,7 @@ public class TLZ_ShardIndex implements org.apache.thrift.TBase<TLZ_ShardIndex, T
   private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("TLZ_ShardIndex");
 
   private static final org.apache.thrift.protocol.TField INDEX_NAME_FIELD_DESC = new org.apache.thrift.protocol.TField("indexName", org.apache.thrift.protocol.TType.I32, (short)1);
-  private static final org.apache.thrift.protocol.TField SHARD_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("shardId", org.apache.thrift.protocol.TType.I32, (short)2);
+  private static final org.apache.thrift.protocol.TField SHARD_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("shardId", org.apache.thrift.protocol.TType.I32, (short)9);
 
   private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
   static {
@@ -59,7 +59,7 @@ public class TLZ_ShardIndex implements org.apache.thrift.TBase<TLZ_ShardIndex, T
      * @see TLZ_IndexName
      */
     INDEX_NAME((short)1, "indexName"),
-    SHARD_ID((short)2, "shardId");
+    SHARD_ID((short)9, "shardId");
 
     private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -76,7 +76,7 @@ public class TLZ_ShardIndex implements org.apache.thrift.TBase<TLZ_ShardIndex, T
       switch(fieldId) {
         case 1: // INDEX_NAME
           return INDEX_NAME;
-        case 2: // SHARD_ID
+        case 9: // SHARD_ID
           return SHARD_ID;
         default:
           return null;
@@ -424,7 +424,7 @@ public class TLZ_ShardIndex implements org.apache.thrift.TBase<TLZ_ShardIndex, T
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
-          case 2: // SHARD_ID
+          case 9: // SHARD_ID
             if (schemeField.type == org.apache.thrift.protocol.TType.I32) {
               struct.shardId = iprot.readI32();
               struct.setShardIdIsSet(true);

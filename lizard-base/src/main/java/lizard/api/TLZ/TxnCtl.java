@@ -37,9 +37,9 @@ public class TxnCtl {
 
   public interface Iface {
 
-    public long txnBeginRead() throws org.apache.thrift.TException;
+    public void txnBeginRead(long txnId) throws org.apache.thrift.TException;
 
-    public long txnBeginWrite() throws org.apache.thrift.TException;
+    public void txnBeginWrite(long txnId) throws org.apache.thrift.TException;
 
     public void txnPrepare(long txnId) throws org.apache.thrift.TException;
 
@@ -53,9 +53,9 @@ public class TxnCtl {
 
   public interface AsyncIface {
 
-    public void txnBeginRead(org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
+    public void txnBeginRead(long txnId, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
-    public void txnBeginWrite(org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
+    public void txnBeginWrite(long txnId, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
     public void txnPrepare(long txnId, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
@@ -87,48 +87,44 @@ public class TxnCtl {
       super(iprot, oprot);
     }
 
-    public long txnBeginRead() throws org.apache.thrift.TException
+    public void txnBeginRead(long txnId) throws org.apache.thrift.TException
     {
-      send_txnBeginRead();
-      return recv_txnBeginRead();
+      send_txnBeginRead(txnId);
+      recv_txnBeginRead();
     }
 
-    public void send_txnBeginRead() throws org.apache.thrift.TException
+    public void send_txnBeginRead(long txnId) throws org.apache.thrift.TException
     {
       txnBeginRead_args args = new txnBeginRead_args();
+      args.setTxnId(txnId);
       sendBase("txnBeginRead", args);
     }
 
-    public long recv_txnBeginRead() throws org.apache.thrift.TException
+    public void recv_txnBeginRead() throws org.apache.thrift.TException
     {
       txnBeginRead_result result = new txnBeginRead_result();
       receiveBase(result, "txnBeginRead");
-      if (result.isSetSuccess()) {
-        return result.success;
-      }
-      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "txnBeginRead failed: unknown result");
+      return;
     }
 
-    public long txnBeginWrite() throws org.apache.thrift.TException
+    public void txnBeginWrite(long txnId) throws org.apache.thrift.TException
     {
-      send_txnBeginWrite();
-      return recv_txnBeginWrite();
+      send_txnBeginWrite(txnId);
+      recv_txnBeginWrite();
     }
 
-    public void send_txnBeginWrite() throws org.apache.thrift.TException
+    public void send_txnBeginWrite(long txnId) throws org.apache.thrift.TException
     {
       txnBeginWrite_args args = new txnBeginWrite_args();
+      args.setTxnId(txnId);
       sendBase("txnBeginWrite", args);
     }
 
-    public long recv_txnBeginWrite() throws org.apache.thrift.TException
+    public void recv_txnBeginWrite() throws org.apache.thrift.TException
     {
       txnBeginWrite_result result = new txnBeginWrite_result();
       receiveBase(result, "txnBeginWrite");
-      if (result.isSetSuccess()) {
-        return result.success;
-      }
-      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "txnBeginWrite failed: unknown result");
+      return;
     }
 
     public void txnPrepare(long txnId) throws org.apache.thrift.TException
@@ -229,61 +225,67 @@ public class TxnCtl {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void txnBeginRead(org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
+    public void txnBeginRead(long txnId, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      txnBeginRead_call method_call = new txnBeginRead_call(resultHandler, this, ___protocolFactory, ___transport);
+      txnBeginRead_call method_call = new txnBeginRead_call(txnId, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class txnBeginRead_call extends org.apache.thrift.async.TAsyncMethodCall {
-      public txnBeginRead_call(org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private long txnId;
+      public txnBeginRead_call(long txnId, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
+        this.txnId = txnId;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("txnBeginRead", org.apache.thrift.protocol.TMessageType.CALL, 0));
         txnBeginRead_args args = new txnBeginRead_args();
+        args.setTxnId(txnId);
         args.write(prot);
         prot.writeMessageEnd();
       }
 
-      public long getResult() throws org.apache.thrift.TException {
+      public void getResult() throws org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_txnBeginRead();
+        (new Client(prot)).recv_txnBeginRead();
       }
     }
 
-    public void txnBeginWrite(org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
+    public void txnBeginWrite(long txnId, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      txnBeginWrite_call method_call = new txnBeginWrite_call(resultHandler, this, ___protocolFactory, ___transport);
+      txnBeginWrite_call method_call = new txnBeginWrite_call(txnId, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class txnBeginWrite_call extends org.apache.thrift.async.TAsyncMethodCall {
-      public txnBeginWrite_call(org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private long txnId;
+      public txnBeginWrite_call(long txnId, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
+        this.txnId = txnId;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("txnBeginWrite", org.apache.thrift.protocol.TMessageType.CALL, 0));
         txnBeginWrite_args args = new txnBeginWrite_args();
+        args.setTxnId(txnId);
         args.write(prot);
         prot.writeMessageEnd();
       }
 
-      public long getResult() throws org.apache.thrift.TException {
+      public void getResult() throws org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_txnBeginWrite();
+        (new Client(prot)).recv_txnBeginWrite();
       }
     }
 
@@ -452,8 +454,7 @@ public class TxnCtl {
 
       public txnBeginRead_result getResult(I iface, txnBeginRead_args args) throws org.apache.thrift.TException {
         txnBeginRead_result result = new txnBeginRead_result();
-        result.success = iface.txnBeginRead();
-        result.setSuccessIsSet(true);
+        iface.txnBeginRead(args.txnId);
         return result;
       }
     }
@@ -473,8 +474,7 @@ public class TxnCtl {
 
       public txnBeginWrite_result getResult(I iface, txnBeginWrite_args args) throws org.apache.thrift.TException {
         txnBeginWrite_result result = new txnBeginWrite_result();
-        result.success = iface.txnBeginWrite();
-        result.setSuccessIsSet(true);
+        iface.txnBeginWrite(args.txnId);
         return result;
       }
     }
@@ -581,7 +581,7 @@ public class TxnCtl {
       return processMap;
     }
 
-    public static class txnBeginRead<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, txnBeginRead_args, Long> {
+    public static class txnBeginRead<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, txnBeginRead_args, Void> {
       public txnBeginRead() {
         super("txnBeginRead");
       }
@@ -590,13 +590,11 @@ public class TxnCtl {
         return new txnBeginRead_args();
       }
 
-      public AsyncMethodCallback<Long> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
+      public AsyncMethodCallback<Void> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new AsyncMethodCallback<Long>() { 
-          public void onComplete(Long o) {
+        return new AsyncMethodCallback<Void>() { 
+          public void onComplete(Void o) {
             txnBeginRead_result result = new txnBeginRead_result();
-            result.success = o;
-            result.setSuccessIsSet(true);
             try {
               fcall.sendResponse(fb,result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
               return;
@@ -628,12 +626,12 @@ public class TxnCtl {
         return false;
       }
 
-      public void start(I iface, txnBeginRead_args args, org.apache.thrift.async.AsyncMethodCallback<Long> resultHandler) throws TException {
-        iface.txnBeginRead(resultHandler);
+      public void start(I iface, txnBeginRead_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws TException {
+        iface.txnBeginRead(args.txnId,resultHandler);
       }
     }
 
-    public static class txnBeginWrite<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, txnBeginWrite_args, Long> {
+    public static class txnBeginWrite<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, txnBeginWrite_args, Void> {
       public txnBeginWrite() {
         super("txnBeginWrite");
       }
@@ -642,13 +640,11 @@ public class TxnCtl {
         return new txnBeginWrite_args();
       }
 
-      public AsyncMethodCallback<Long> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
+      public AsyncMethodCallback<Void> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new AsyncMethodCallback<Long>() { 
-          public void onComplete(Long o) {
+        return new AsyncMethodCallback<Void>() { 
+          public void onComplete(Void o) {
             txnBeginWrite_result result = new txnBeginWrite_result();
-            result.success = o;
-            result.setSuccessIsSet(true);
             try {
               fcall.sendResponse(fb,result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
               return;
@@ -680,8 +676,8 @@ public class TxnCtl {
         return false;
       }
 
-      public void start(I iface, txnBeginWrite_args args, org.apache.thrift.async.AsyncMethodCallback<Long> resultHandler) throws TException {
-        iface.txnBeginWrite(resultHandler);
+      public void start(I iface, txnBeginWrite_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws TException {
+        iface.txnBeginWrite(args.txnId,resultHandler);
       }
     }
 
@@ -890,6 +886,7 @@ public class TxnCtl {
   public static class txnBeginRead_args implements org.apache.thrift.TBase<txnBeginRead_args, txnBeginRead_args._Fields>, java.io.Serializable, Cloneable, Comparable<txnBeginRead_args>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("txnBeginRead_args");
 
+    private static final org.apache.thrift.protocol.TField TXN_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("txnId", org.apache.thrift.protocol.TType.I64, (short)1);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -897,10 +894,11 @@ public class TxnCtl {
       schemes.put(TupleScheme.class, new txnBeginRead_argsTupleSchemeFactory());
     }
 
+    public long txnId; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-;
+      TXN_ID((short)1, "txnId");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -915,6 +913,8 @@ public class TxnCtl {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
+          case 1: // TXN_ID
+            return TXN_ID;
           default:
             return null;
         }
@@ -953,9 +953,15 @@ public class TxnCtl {
         return _fieldName;
       }
     }
+
+    // isset id assignments
+    private static final int __TXNID_ISSET_ID = 0;
+    private byte __isset_bitfield = 0;
     public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.TXN_ID, new org.apache.thrift.meta_data.FieldMetaData("txnId", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64          , "TxnId")));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(txnBeginRead_args.class, metaDataMap);
     }
@@ -963,10 +969,20 @@ public class TxnCtl {
     public txnBeginRead_args() {
     }
 
+    public txnBeginRead_args(
+      long txnId)
+    {
+      this();
+      this.txnId = txnId;
+      setTxnIdIsSet(true);
+    }
+
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public txnBeginRead_args(txnBeginRead_args other) {
+      __isset_bitfield = other.__isset_bitfield;
+      this.txnId = other.txnId;
     }
 
     public txnBeginRead_args deepCopy() {
@@ -975,15 +991,51 @@ public class TxnCtl {
 
     @Override
     public void clear() {
+      setTxnIdIsSet(false);
+      this.txnId = 0;
+    }
+
+    public long getTxnId() {
+      return this.txnId;
+    }
+
+    public txnBeginRead_args setTxnId(long txnId) {
+      this.txnId = txnId;
+      setTxnIdIsSet(true);
+      return this;
+    }
+
+    public void unsetTxnId() {
+      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __TXNID_ISSET_ID);
+    }
+
+    /** Returns true if field txnId is set (has been assigned a value) and false otherwise */
+    public boolean isSetTxnId() {
+      return EncodingUtils.testBit(__isset_bitfield, __TXNID_ISSET_ID);
+    }
+
+    public void setTxnIdIsSet(boolean value) {
+      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __TXNID_ISSET_ID, value);
     }
 
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
+      case TXN_ID:
+        if (value == null) {
+          unsetTxnId();
+        } else {
+          setTxnId((Long)value);
+        }
+        break;
+
       }
     }
 
     public Object getFieldValue(_Fields field) {
       switch (field) {
+      case TXN_ID:
+        return Long.valueOf(getTxnId());
+
       }
       throw new IllegalStateException();
     }
@@ -995,6 +1047,8 @@ public class TxnCtl {
       }
 
       switch (field) {
+      case TXN_ID:
+        return isSetTxnId();
       }
       throw new IllegalStateException();
     }
@@ -1012,6 +1066,15 @@ public class TxnCtl {
       if (that == null)
         return false;
 
+      boolean this_present_txnId = true;
+      boolean that_present_txnId = true;
+      if (this_present_txnId || that_present_txnId) {
+        if (!(this_present_txnId && that_present_txnId))
+          return false;
+        if (this.txnId != that.txnId)
+          return false;
+      }
+
       return true;
     }
 
@@ -1028,6 +1091,16 @@ public class TxnCtl {
 
       int lastComparison = 0;
 
+      lastComparison = Boolean.valueOf(isSetTxnId()).compareTo(other.isSetTxnId());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetTxnId()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.txnId, other.txnId);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -1048,6 +1121,9 @@ public class TxnCtl {
       StringBuilder sb = new StringBuilder("txnBeginRead_args(");
       boolean first = true;
 
+      sb.append("txnId:");
+      sb.append(this.txnId);
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -1067,6 +1143,8 @@ public class TxnCtl {
 
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
       try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bitfield = 0;
         read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
       } catch (org.apache.thrift.TException te) {
         throw new java.io.IOException(te);
@@ -1091,6 +1169,14 @@ public class TxnCtl {
             break;
           }
           switch (schemeField.id) {
+            case 1: // TXN_ID
+              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+                struct.txnId = iprot.readI64();
+                struct.setTxnIdIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -1106,6 +1192,9 @@ public class TxnCtl {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
+        oprot.writeFieldBegin(TXN_ID_FIELD_DESC);
+        oprot.writeI64(struct.txnId);
+        oprot.writeFieldEnd();
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -1123,11 +1212,24 @@ public class TxnCtl {
       @Override
       public void write(org.apache.thrift.protocol.TProtocol prot, txnBeginRead_args struct) throws org.apache.thrift.TException {
         TTupleProtocol oprot = (TTupleProtocol) prot;
+        BitSet optionals = new BitSet();
+        if (struct.isSetTxnId()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetTxnId()) {
+          oprot.writeI64(struct.txnId);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, txnBeginRead_args struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
+        BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.txnId = iprot.readI64();
+          struct.setTxnIdIsSet(true);
+        }
       }
     }
 
@@ -1136,365 +1238,11 @@ public class TxnCtl {
   public static class txnBeginRead_result implements org.apache.thrift.TBase<txnBeginRead_result, txnBeginRead_result._Fields>, java.io.Serializable, Cloneable, Comparable<txnBeginRead_result>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("txnBeginRead_result");
 
-    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.I64, (short)0);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
       schemes.put(StandardScheme.class, new txnBeginRead_resultStandardSchemeFactory());
       schemes.put(TupleScheme.class, new txnBeginRead_resultTupleSchemeFactory());
-    }
-
-    public long success; // required
-
-    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
-    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      SUCCESS((short)0, "success");
-
-      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
-
-      static {
-        for (_Fields field : EnumSet.allOf(_Fields.class)) {
-          byName.put(field.getFieldName(), field);
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, or null if its not found.
-       */
-      public static _Fields findByThriftId(int fieldId) {
-        switch(fieldId) {
-          case 0: // SUCCESS
-            return SUCCESS;
-          default:
-            return null;
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, throwing an exception
-       * if it is not found.
-       */
-      public static _Fields findByThriftIdOrThrow(int fieldId) {
-        _Fields fields = findByThriftId(fieldId);
-        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
-        return fields;
-      }
-
-      /**
-       * Find the _Fields constant that matches name, or null if its not found.
-       */
-      public static _Fields findByName(String name) {
-        return byName.get(name);
-      }
-
-      private final short _thriftId;
-      private final String _fieldName;
-
-      _Fields(short thriftId, String fieldName) {
-        _thriftId = thriftId;
-        _fieldName = fieldName;
-      }
-
-      public short getThriftFieldId() {
-        return _thriftId;
-      }
-
-      public String getFieldName() {
-        return _fieldName;
-      }
-    }
-
-    // isset id assignments
-    private static final int __SUCCESS_ISSET_ID = 0;
-    private byte __isset_bitfield = 0;
-    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
-    static {
-      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
-      metaDataMap = Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(txnBeginRead_result.class, metaDataMap);
-    }
-
-    public txnBeginRead_result() {
-    }
-
-    public txnBeginRead_result(
-      long success)
-    {
-      this();
-      this.success = success;
-      setSuccessIsSet(true);
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public txnBeginRead_result(txnBeginRead_result other) {
-      __isset_bitfield = other.__isset_bitfield;
-      this.success = other.success;
-    }
-
-    public txnBeginRead_result deepCopy() {
-      return new txnBeginRead_result(this);
-    }
-
-    @Override
-    public void clear() {
-      setSuccessIsSet(false);
-      this.success = 0;
-    }
-
-    public long getSuccess() {
-      return this.success;
-    }
-
-    public txnBeginRead_result setSuccess(long success) {
-      this.success = success;
-      setSuccessIsSet(true);
-      return this;
-    }
-
-    public void unsetSuccess() {
-      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __SUCCESS_ISSET_ID);
-    }
-
-    /** Returns true if field success is set (has been assigned a value) and false otherwise */
-    public boolean isSetSuccess() {
-      return EncodingUtils.testBit(__isset_bitfield, __SUCCESS_ISSET_ID);
-    }
-
-    public void setSuccessIsSet(boolean value) {
-      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __SUCCESS_ISSET_ID, value);
-    }
-
-    public void setFieldValue(_Fields field, Object value) {
-      switch (field) {
-      case SUCCESS:
-        if (value == null) {
-          unsetSuccess();
-        } else {
-          setSuccess((Long)value);
-        }
-        break;
-
-      }
-    }
-
-    public Object getFieldValue(_Fields field) {
-      switch (field) {
-      case SUCCESS:
-        return Long.valueOf(getSuccess());
-
-      }
-      throw new IllegalStateException();
-    }
-
-    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
-    public boolean isSet(_Fields field) {
-      if (field == null) {
-        throw new IllegalArgumentException();
-      }
-
-      switch (field) {
-      case SUCCESS:
-        return isSetSuccess();
-      }
-      throw new IllegalStateException();
-    }
-
-    @Override
-    public boolean equals(Object that) {
-      if (that == null)
-        return false;
-      if (that instanceof txnBeginRead_result)
-        return this.equals((txnBeginRead_result)that);
-      return false;
-    }
-
-    public boolean equals(txnBeginRead_result that) {
-      if (that == null)
-        return false;
-
-      boolean this_present_success = true;
-      boolean that_present_success = true;
-      if (this_present_success || that_present_success) {
-        if (!(this_present_success && that_present_success))
-          return false;
-        if (this.success != that.success)
-          return false;
-      }
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      return 0;
-    }
-
-    @Override
-    public int compareTo(txnBeginRead_result other) {
-      if (!getClass().equals(other.getClass())) {
-        return getClass().getName().compareTo(other.getClass().getName());
-      }
-
-      int lastComparison = 0;
-
-      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetSuccess()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      return 0;
-    }
-
-    public _Fields fieldForId(int fieldId) {
-      return _Fields.findByThriftId(fieldId);
-    }
-
-    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
-      schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
-    }
-
-    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
-      schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
-      }
-
-    @Override
-    public String toString() {
-      StringBuilder sb = new StringBuilder("txnBeginRead_result(");
-      boolean first = true;
-
-      sb.append("success:");
-      sb.append(this.success);
-      first = false;
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws org.apache.thrift.TException {
-      // check for required fields
-      // check for sub-struct validity
-    }
-
-    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
-      try {
-        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
-      try {
-        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
-        __isset_bitfield = 0;
-        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private static class txnBeginRead_resultStandardSchemeFactory implements SchemeFactory {
-      public txnBeginRead_resultStandardScheme getScheme() {
-        return new txnBeginRead_resultStandardScheme();
-      }
-    }
-
-    private static class txnBeginRead_resultStandardScheme extends StandardScheme<txnBeginRead_result> {
-
-      public void read(org.apache.thrift.protocol.TProtocol iprot, txnBeginRead_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TField schemeField;
-        iprot.readStructBegin();
-        while (true)
-        {
-          schemeField = iprot.readFieldBegin();
-          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
-            break;
-          }
-          switch (schemeField.id) {
-            case 0: // SUCCESS
-              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
-                struct.success = iprot.readI64();
-                struct.setSuccessIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            default:
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-          }
-          iprot.readFieldEnd();
-        }
-        iprot.readStructEnd();
-
-        // check for required fields of primitive type, which can't be checked in the validate method
-        struct.validate();
-      }
-
-      public void write(org.apache.thrift.protocol.TProtocol oprot, txnBeginRead_result struct) throws org.apache.thrift.TException {
-        struct.validate();
-
-        oprot.writeStructBegin(STRUCT_DESC);
-        if (struct.isSetSuccess()) {
-          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
-          oprot.writeI64(struct.success);
-          oprot.writeFieldEnd();
-        }
-        oprot.writeFieldStop();
-        oprot.writeStructEnd();
-      }
-
-    }
-
-    private static class txnBeginRead_resultTupleSchemeFactory implements SchemeFactory {
-      public txnBeginRead_resultTupleScheme getScheme() {
-        return new txnBeginRead_resultTupleScheme();
-      }
-    }
-
-    private static class txnBeginRead_resultTupleScheme extends TupleScheme<txnBeginRead_result> {
-
-      @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, txnBeginRead_result struct) throws org.apache.thrift.TException {
-        TTupleProtocol oprot = (TTupleProtocol) prot;
-        BitSet optionals = new BitSet();
-        if (struct.isSetSuccess()) {
-          optionals.set(0);
-        }
-        oprot.writeBitSet(optionals, 1);
-        if (struct.isSetSuccess()) {
-          oprot.writeI64(struct.success);
-        }
-      }
-
-      @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, txnBeginRead_result struct) throws org.apache.thrift.TException {
-        TTupleProtocol iprot = (TTupleProtocol) prot;
-        BitSet incoming = iprot.readBitSet(1);
-        if (incoming.get(0)) {
-          struct.success = iprot.readI64();
-          struct.setSuccessIsSet(true);
-        }
-      }
-    }
-
-  }
-
-  public static class txnBeginWrite_args implements org.apache.thrift.TBase<txnBeginWrite_args, txnBeginWrite_args._Fields>, java.io.Serializable, Cloneable, Comparable<txnBeginWrite_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("txnBeginWrite_args");
-
-
-    private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
-    static {
-      schemes.put(StandardScheme.class, new txnBeginWrite_argsStandardSchemeFactory());
-      schemes.put(TupleScheme.class, new txnBeginWrite_argsTupleSchemeFactory());
     }
 
 
@@ -1557,20 +1305,20 @@ public class TxnCtl {
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       metaDataMap = Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(txnBeginWrite_args.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(txnBeginRead_result.class, metaDataMap);
     }
 
-    public txnBeginWrite_args() {
+    public txnBeginRead_result() {
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public txnBeginWrite_args(txnBeginWrite_args other) {
+    public txnBeginRead_result(txnBeginRead_result other) {
     }
 
-    public txnBeginWrite_args deepCopy() {
-      return new txnBeginWrite_args(this);
+    public txnBeginRead_result deepCopy() {
+      return new txnBeginRead_result(this);
     }
 
     @Override
@@ -1603,12 +1351,12 @@ public class TxnCtl {
     public boolean equals(Object that) {
       if (that == null)
         return false;
-      if (that instanceof txnBeginWrite_args)
-        return this.equals((txnBeginWrite_args)that);
+      if (that instanceof txnBeginRead_result)
+        return this.equals((txnBeginRead_result)that);
       return false;
     }
 
-    public boolean equals(txnBeginWrite_args that) {
+    public boolean equals(txnBeginRead_result that) {
       if (that == null)
         return false;
 
@@ -1621,7 +1369,7 @@ public class TxnCtl {
     }
 
     @Override
-    public int compareTo(txnBeginWrite_args other) {
+    public int compareTo(txnBeginRead_result other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -1641,11 +1389,11 @@ public class TxnCtl {
 
     public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
       schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
-    }
+      }
 
     @Override
     public String toString() {
-      StringBuilder sb = new StringBuilder("txnBeginWrite_args(");
+      StringBuilder sb = new StringBuilder("txnBeginRead_result(");
       boolean first = true;
 
       sb.append(")");
@@ -1673,15 +1421,15 @@ public class TxnCtl {
       }
     }
 
-    private static class txnBeginWrite_argsStandardSchemeFactory implements SchemeFactory {
-      public txnBeginWrite_argsStandardScheme getScheme() {
-        return new txnBeginWrite_argsStandardScheme();
+    private static class txnBeginRead_resultStandardSchemeFactory implements SchemeFactory {
+      public txnBeginRead_resultStandardScheme getScheme() {
+        return new txnBeginRead_resultStandardScheme();
       }
     }
 
-    private static class txnBeginWrite_argsStandardScheme extends StandardScheme<txnBeginWrite_args> {
+    private static class txnBeginRead_resultStandardScheme extends StandardScheme<txnBeginRead_result> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, txnBeginWrite_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, txnBeginRead_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -1702,7 +1450,7 @@ public class TxnCtl {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, txnBeginWrite_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, txnBeginRead_result struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -1712,43 +1460,43 @@ public class TxnCtl {
 
     }
 
-    private static class txnBeginWrite_argsTupleSchemeFactory implements SchemeFactory {
-      public txnBeginWrite_argsTupleScheme getScheme() {
-        return new txnBeginWrite_argsTupleScheme();
+    private static class txnBeginRead_resultTupleSchemeFactory implements SchemeFactory {
+      public txnBeginRead_resultTupleScheme getScheme() {
+        return new txnBeginRead_resultTupleScheme();
       }
     }
 
-    private static class txnBeginWrite_argsTupleScheme extends TupleScheme<txnBeginWrite_args> {
+    private static class txnBeginRead_resultTupleScheme extends TupleScheme<txnBeginRead_result> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, txnBeginWrite_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, txnBeginRead_result struct) throws org.apache.thrift.TException {
         TTupleProtocol oprot = (TTupleProtocol) prot;
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, txnBeginWrite_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, txnBeginRead_result struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
       }
     }
 
   }
 
-  public static class txnBeginWrite_result implements org.apache.thrift.TBase<txnBeginWrite_result, txnBeginWrite_result._Fields>, java.io.Serializable, Cloneable, Comparable<txnBeginWrite_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("txnBeginWrite_result");
+  public static class txnBeginWrite_args implements org.apache.thrift.TBase<txnBeginWrite_args, txnBeginWrite_args._Fields>, java.io.Serializable, Cloneable, Comparable<txnBeginWrite_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("txnBeginWrite_args");
 
-    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.I64, (short)0);
+    private static final org.apache.thrift.protocol.TField TXN_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("txnId", org.apache.thrift.protocol.TType.I64, (short)1);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
-      schemes.put(StandardScheme.class, new txnBeginWrite_resultStandardSchemeFactory());
-      schemes.put(TupleScheme.class, new txnBeginWrite_resultTupleSchemeFactory());
+      schemes.put(StandardScheme.class, new txnBeginWrite_argsStandardSchemeFactory());
+      schemes.put(TupleScheme.class, new txnBeginWrite_argsTupleSchemeFactory());
     }
 
-    public long success; // required
+    public long txnId; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      SUCCESS((short)0, "success");
+      TXN_ID((short)1, "txnId");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -1763,8 +1511,8 @@ public class TxnCtl {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
-          case 0: // SUCCESS
-            return SUCCESS;
+          case 1: // TXN_ID
+            return TXN_ID;
           default:
             return null;
         }
@@ -1805,76 +1553,76 @@ public class TxnCtl {
     }
 
     // isset id assignments
-    private static final int __SUCCESS_ISSET_ID = 0;
+    private static final int __TXNID_ISSET_ID = 0;
     private byte __isset_bitfield = 0;
     public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+      tmpMap.put(_Fields.TXN_ID, new org.apache.thrift.meta_data.FieldMetaData("txnId", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64          , "TxnId")));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(txnBeginWrite_result.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(txnBeginWrite_args.class, metaDataMap);
     }
 
-    public txnBeginWrite_result() {
+    public txnBeginWrite_args() {
     }
 
-    public txnBeginWrite_result(
-      long success)
+    public txnBeginWrite_args(
+      long txnId)
     {
       this();
-      this.success = success;
-      setSuccessIsSet(true);
+      this.txnId = txnId;
+      setTxnIdIsSet(true);
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public txnBeginWrite_result(txnBeginWrite_result other) {
+    public txnBeginWrite_args(txnBeginWrite_args other) {
       __isset_bitfield = other.__isset_bitfield;
-      this.success = other.success;
+      this.txnId = other.txnId;
     }
 
-    public txnBeginWrite_result deepCopy() {
-      return new txnBeginWrite_result(this);
+    public txnBeginWrite_args deepCopy() {
+      return new txnBeginWrite_args(this);
     }
 
     @Override
     public void clear() {
-      setSuccessIsSet(false);
-      this.success = 0;
+      setTxnIdIsSet(false);
+      this.txnId = 0;
     }
 
-    public long getSuccess() {
-      return this.success;
+    public long getTxnId() {
+      return this.txnId;
     }
 
-    public txnBeginWrite_result setSuccess(long success) {
-      this.success = success;
-      setSuccessIsSet(true);
+    public txnBeginWrite_args setTxnId(long txnId) {
+      this.txnId = txnId;
+      setTxnIdIsSet(true);
       return this;
     }
 
-    public void unsetSuccess() {
-      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __SUCCESS_ISSET_ID);
+    public void unsetTxnId() {
+      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __TXNID_ISSET_ID);
     }
 
-    /** Returns true if field success is set (has been assigned a value) and false otherwise */
-    public boolean isSetSuccess() {
-      return EncodingUtils.testBit(__isset_bitfield, __SUCCESS_ISSET_ID);
+    /** Returns true if field txnId is set (has been assigned a value) and false otherwise */
+    public boolean isSetTxnId() {
+      return EncodingUtils.testBit(__isset_bitfield, __TXNID_ISSET_ID);
     }
 
-    public void setSuccessIsSet(boolean value) {
-      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __SUCCESS_ISSET_ID, value);
+    public void setTxnIdIsSet(boolean value) {
+      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __TXNID_ISSET_ID, value);
     }
 
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
-      case SUCCESS:
+      case TXN_ID:
         if (value == null) {
-          unsetSuccess();
+          unsetTxnId();
         } else {
-          setSuccess((Long)value);
+          setTxnId((Long)value);
         }
         break;
 
@@ -1883,8 +1631,8 @@ public class TxnCtl {
 
     public Object getFieldValue(_Fields field) {
       switch (field) {
-      case SUCCESS:
-        return Long.valueOf(getSuccess());
+      case TXN_ID:
+        return Long.valueOf(getTxnId());
 
       }
       throw new IllegalStateException();
@@ -1897,8 +1645,8 @@ public class TxnCtl {
       }
 
       switch (field) {
-      case SUCCESS:
-        return isSetSuccess();
+      case TXN_ID:
+        return isSetTxnId();
       }
       throw new IllegalStateException();
     }
@@ -1907,21 +1655,21 @@ public class TxnCtl {
     public boolean equals(Object that) {
       if (that == null)
         return false;
-      if (that instanceof txnBeginWrite_result)
-        return this.equals((txnBeginWrite_result)that);
+      if (that instanceof txnBeginWrite_args)
+        return this.equals((txnBeginWrite_args)that);
       return false;
     }
 
-    public boolean equals(txnBeginWrite_result that) {
+    public boolean equals(txnBeginWrite_args that) {
       if (that == null)
         return false;
 
-      boolean this_present_success = true;
-      boolean that_present_success = true;
-      if (this_present_success || that_present_success) {
-        if (!(this_present_success && that_present_success))
+      boolean this_present_txnId = true;
+      boolean that_present_txnId = true;
+      if (this_present_txnId || that_present_txnId) {
+        if (!(this_present_txnId && that_present_txnId))
           return false;
-        if (this.success != that.success)
+        if (this.txnId != that.txnId)
           return false;
       }
 
@@ -1934,19 +1682,19 @@ public class TxnCtl {
     }
 
     @Override
-    public int compareTo(txnBeginWrite_result other) {
+    public int compareTo(txnBeginWrite_args other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
 
       int lastComparison = 0;
 
-      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      lastComparison = Boolean.valueOf(isSetTxnId()).compareTo(other.isSetTxnId());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      if (isSetSuccess()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
+      if (isSetTxnId()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.txnId, other.txnId);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -1964,15 +1712,15 @@ public class TxnCtl {
 
     public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
       schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
-      }
+    }
 
     @Override
     public String toString() {
-      StringBuilder sb = new StringBuilder("txnBeginWrite_result(");
+      StringBuilder sb = new StringBuilder("txnBeginWrite_args(");
       boolean first = true;
 
-      sb.append("success:");
-      sb.append(this.success);
+      sb.append("txnId:");
+      sb.append(this.txnId);
       first = false;
       sb.append(")");
       return sb.toString();
@@ -2001,6 +1749,276 @@ public class TxnCtl {
       }
     }
 
+    private static class txnBeginWrite_argsStandardSchemeFactory implements SchemeFactory {
+      public txnBeginWrite_argsStandardScheme getScheme() {
+        return new txnBeginWrite_argsStandardScheme();
+      }
+    }
+
+    private static class txnBeginWrite_argsStandardScheme extends StandardScheme<txnBeginWrite_args> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, txnBeginWrite_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 1: // TXN_ID
+              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+                struct.txnId = iprot.readI64();
+                struct.setTxnIdIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, txnBeginWrite_args struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        oprot.writeFieldBegin(TXN_ID_FIELD_DESC);
+        oprot.writeI64(struct.txnId);
+        oprot.writeFieldEnd();
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class txnBeginWrite_argsTupleSchemeFactory implements SchemeFactory {
+      public txnBeginWrite_argsTupleScheme getScheme() {
+        return new txnBeginWrite_argsTupleScheme();
+      }
+    }
+
+    private static class txnBeginWrite_argsTupleScheme extends TupleScheme<txnBeginWrite_args> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, txnBeginWrite_args struct) throws org.apache.thrift.TException {
+        TTupleProtocol oprot = (TTupleProtocol) prot;
+        BitSet optionals = new BitSet();
+        if (struct.isSetTxnId()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetTxnId()) {
+          oprot.writeI64(struct.txnId);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, txnBeginWrite_args struct) throws org.apache.thrift.TException {
+        TTupleProtocol iprot = (TTupleProtocol) prot;
+        BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.txnId = iprot.readI64();
+          struct.setTxnIdIsSet(true);
+        }
+      }
+    }
+
+  }
+
+  public static class txnBeginWrite_result implements org.apache.thrift.TBase<txnBeginWrite_result, txnBeginWrite_result._Fields>, java.io.Serializable, Cloneable, Comparable<txnBeginWrite_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("txnBeginWrite_result");
+
+
+    private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
+    static {
+      schemes.put(StandardScheme.class, new txnBeginWrite_resultStandardSchemeFactory());
+      schemes.put(TupleScheme.class, new txnBeginWrite_resultTupleSchemeFactory());
+    }
+
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+;
+
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
+    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      metaDataMap = Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(txnBeginWrite_result.class, metaDataMap);
+    }
+
+    public txnBeginWrite_result() {
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public txnBeginWrite_result(txnBeginWrite_result other) {
+    }
+
+    public txnBeginWrite_result deepCopy() {
+      return new txnBeginWrite_result(this);
+    }
+
+    @Override
+    public void clear() {
+    }
+
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
+      }
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
+      }
+      throw new IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new IllegalArgumentException();
+      }
+
+      switch (field) {
+      }
+      throw new IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof txnBeginWrite_result)
+        return this.equals((txnBeginWrite_result)that);
+      return false;
+    }
+
+    public boolean equals(txnBeginWrite_result that) {
+      if (that == null)
+        return false;
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return 0;
+    }
+
+    @Override
+    public int compareTo(txnBeginWrite_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
+      }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("txnBeginWrite_result(");
+      boolean first = true;
+
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
     private static class txnBeginWrite_resultStandardSchemeFactory implements SchemeFactory {
       public txnBeginWrite_resultStandardScheme getScheme() {
         return new txnBeginWrite_resultStandardScheme();
@@ -2019,14 +2037,6 @@ public class TxnCtl {
             break;
           }
           switch (schemeField.id) {
-            case 0: // SUCCESS
-              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
-                struct.success = iprot.readI64();
-                struct.setSuccessIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -2042,11 +2052,6 @@ public class TxnCtl {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
-        if (struct.isSetSuccess()) {
-          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
-          oprot.writeI64(struct.success);
-          oprot.writeFieldEnd();
-        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -2064,24 +2069,11 @@ public class TxnCtl {
       @Override
       public void write(org.apache.thrift.protocol.TProtocol prot, txnBeginWrite_result struct) throws org.apache.thrift.TException {
         TTupleProtocol oprot = (TTupleProtocol) prot;
-        BitSet optionals = new BitSet();
-        if (struct.isSetSuccess()) {
-          optionals.set(0);
-        }
-        oprot.writeBitSet(optionals, 1);
-        if (struct.isSetSuccess()) {
-          oprot.writeI64(struct.success);
-        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, txnBeginWrite_result struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
-        BitSet incoming = iprot.readBitSet(1);
-        if (incoming.get(0)) {
-          struct.success = iprot.readI64();
-          struct.setSuccessIsSet(true);
-        }
       }
     }
 
@@ -2165,7 +2157,7 @@ public class TxnCtl {
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.TXN_ID, new org.apache.thrift.meta_data.FieldMetaData("txnId", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64          , "TxnId")));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(txnPrepare_args.class, metaDataMap);
     }
@@ -2763,7 +2755,7 @@ public class TxnCtl {
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.TXN_ID, new org.apache.thrift.meta_data.FieldMetaData("txnId", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64          , "TxnId")));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(txnCommit_args.class, metaDataMap);
     }
@@ -3361,7 +3353,7 @@ public class TxnCtl {
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.TXN_ID, new org.apache.thrift.meta_data.FieldMetaData("txnId", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64          , "TxnId")));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(txnAbort_args.class, metaDataMap);
     }
@@ -3959,7 +3951,7 @@ public class TxnCtl {
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.TXN_ID, new org.apache.thrift.meta_data.FieldMetaData("txnId", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64          , "TxnId")));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(txnEnd_args.class, metaDataMap);
     }

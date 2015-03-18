@@ -18,32 +18,32 @@
 package lizard.node;
 
 import java.util.concurrent.Callable ;
-import java.util.concurrent.atomic.AtomicLong ;
 
+import lizard.api.TxnClient ;
 import lizard.api.TLZ.TLZ_Node ;
 import lizard.api.TLZ.TLZ_NodeId ;
 import lizard.api.TLZ.TLZ_NodeTable ;
 import lizard.comms.ConnState ;
 import lizard.comms.Connection ;
 import lizard.comms.thrift.ThriftClient ;
-import lizard.system.* ;
+import lizard.system.ComponentTxn ;
+import lizard.system.LizardException ;
+import lizard.system.Pingable ;
+
+import com.hp.hpl.jena.graph.Node ;
+import com.hp.hpl.jena.sparql.sse.SSE ;
+import com.hp.hpl.jena.tdb.store.NodeId ;
+
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.riot.out.NodeFmtLib ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
-
-import com.hp.hpl.jena.graph.Node ;
-import com.hp.hpl.jena.query.ReadWrite ;
-import com.hp.hpl.jena.sparql.sse.SSE ;
-import com.hp.hpl.jena.tdb.store.NodeId ;
  
-public class TClientNode extends ComponentBase implements ComponentTxn, Connection, Pingable
+public class TClientNode extends TxnClient<TLZ_NodeTable.Client> implements ComponentTxn, Connection, Pingable
 {
     private static Logger log = LoggerFactory.getLogger(TClientNode.class) ;
     private final ThriftClient client ;
-    private TLZ_NodeTable.Client rpc ;
     private ConnState connState ;
-    private static AtomicLong counter = new AtomicLong(0) ;
     
     public static TClientNode create(String host, int port) {
         return new TClientNode(host, port) ;
@@ -59,19 +59,20 @@ public class TClientNode extends ComponentBase implements ComponentTxn, Connecti
     public void start() {
         client.start() ;
         FmtLog.debug(log, "Start: %s", getLabel()) ;
-        
         // Delay until starting (client.protocol not valid until then).
-        rpc = new TLZ_NodeTable.Client(client.protocol()) ;
+        super.setRPC(new TLZ_NodeTable.Client(client.protocol())) ;
         super.start() ;
         connState = ConnState.OK ;
     }
     
     public NodeId getAllocateNodeId(Node node) {
         // XXX Can do away with little structs
-        long id = counter.incrementAndGet() ; 
+        // XXX Reforator for common code
+        long id = allocRequestId() ;
+        long txnId = getTxnId() ;
         String x =  NodeFmtLib.str(node) ;
         TLZ_Node lzn = new TLZ_Node().setNodeStr(x) ; 
-        TLZ_NodeId tlzNodeId = exec("allocNodeId", ()-> rpc.allocNodeId(id, lzn)) ;
+        TLZ_NodeId tlzNodeId = exec("allocNodeId", ()-> rpc.allocNodeId(id, txnId, lzn)) ;
         long idval = tlzNodeId.getNodeId() ;
         NodeId nid = NodeId.create(idval) ;
         return nid ; 
@@ -79,10 +80,11 @@ public class TClientNode extends ComponentBase implements ComponentTxn, Connecti
 
     public NodeId getNodeIdForNode(Node node) {
         // XXX Can do away with little structs
-        long id = counter.incrementAndGet() ; 
+        long id = allocRequestId() ; 
+        long txnId = getTxnId() ;
         String x =  NodeFmtLib.str(node) ;
         TLZ_Node lzn = new TLZ_Node().setNodeStr(x) ; 
-        TLZ_NodeId tlzNodeId = exec("allocNodeId", ()-> rpc.findByNode(id, lzn)) ;
+        TLZ_NodeId tlzNodeId = exec("allocNodeId", ()-> rpc.findByNode(id, txnId, lzn)) ;
         long idval = tlzNodeId.getNodeId() ;
         NodeId nid = NodeId.create(idval) ;
         return nid ; 
@@ -90,9 +92,10 @@ public class TClientNode extends ComponentBase implements ComponentTxn, Connecti
     
     public Node getNodeForNodeId(NodeId nid) {
         // XXX Can do away with little structs
-        long id = counter.incrementAndGet() ; 
+        long id = allocRequestId() ; 
+        long txnId = getTxnId() ;
         TLZ_NodeId lznid = new TLZ_NodeId().setNodeId(nid.getId()) ; 
-        TLZ_Node lzn = exec("allocNodeId", ()-> rpc.findByNodeId(id, lznid)) ;
+        TLZ_Node lzn = exec("allocNodeId", ()-> rpc.findByNodeId(id, txnId, lznid)) ;
         String x = lzn.getNodeStr() ;
         Node n = SSE.parseNode(x) ;
         return n ; 
@@ -129,23 +132,4 @@ public class TClientNode extends ComponentBase implements ComponentTxn, Connecti
         client.close() ;
         connState = ConnState.CLOSED ;
     }
-
-    @Override
-    public void begin(ReadWrite mode) {
-        //long v = rpc.txnBeginRead() ;
-    }
-
-    @Override
-    public void prepare() {
-        //rpc.txnPrepare(0); 
-    }
-
-    @Override
-    public void commit() {}
-
-    @Override
-    public void abort() {}
-
-    @Override
-    public void end() {}
 }

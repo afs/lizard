@@ -17,27 +17,38 @@
 
 package lz_dev;
 
+import java.util.ArrayList ;
+import java.util.List ;
+
+import com.hp.hpl.jena.query.* ;
+import com.hp.hpl.jena.rdf.model.Model ;
+import com.hp.hpl.jena.sparql.core.DatasetGraph ;
+import com.hp.hpl.jena.sparql.util.QueryExecUtils ;
+
+import lizard.api.TxnClient ;
 import lizard.conf.Configuration ;
 import lizard.index.TServerIndex ;
 import lizard.index.TupleIndexRemote ;
 import lizard.node.ClusterNodeTable ;
+import lizard.node.NodeTableRemote ;
 import lizard.node.TServerNode ;
 import lizard.query.LzDataset ;
 import lizard.sys.Deploy ;
 import lizard.sys.Deployment ;
 import lizard.system.Pingable ;
 import migrate.Q ;
+
 import org.apache.jena.atlas.lib.Lib ;
 import org.apache.jena.atlas.lib.StrUtils ;
 import org.apache.jena.atlas.logging.LogCtl ;
 import org.apache.jena.riot.RDFDataMgr ;
+import org.seaborne.dboe.base.file.Location ;
+import org.seaborne.dboe.transaction.txn.Transaction ;
+import org.seaborne.dboe.transaction.txn.TransactionCoordinator ;
+import org.seaborne.dboe.transaction.txn.TransactionalComponent ;
+import org.seaborne.dboe.transaction.txn.journal.Journal ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
-
-import com.hp.hpl.jena.query.* ;
-import com.hp.hpl.jena.rdf.model.Model ;
-import com.hp.hpl.jena.sparql.core.DatasetGraph ;
-import com.hp.hpl.jena.sparql.util.QueryExecUtils ;
 
 
 public class LzDev {
@@ -52,17 +63,33 @@ public class LzDev {
     
     static String deploymentFile        = Q.filename(Setup.confDir, "deploy-jvm.ttl") ;
     
-    public static void main(String[] args) {
-        //Setup, take apart - try N way transactions.
-    }
-    
     public static void main1(String[] args) {
+        //Setup, take apart - try N way transactions.
         log.info("SERVERS") ;
         Deployment deployment = Deploy.deployServers(config, deploymentFile);
 
         log.info("DATASET") ;
         LzDataset lz = buildDataset(config) ;
         Dataset ds = queryEngine(lz, "D.ttl") ;
+        performQuery(ds); 
+        
+        log.info("** Done **") ;
+        System.exit(0) ;
+        if ( false ) {
+            while(true) { Lib.sleep(10000) ; }
+        }
+
+    }
+    
+    public static void main(String[] args) {
+        log.info("SERVERS") ;
+        Deployment deployment = Deploy.deployServers(config, deploymentFile);
+
+        log.info("DATASET") ;
+        LzDataset lz = buildDataset(config) ;
+        Dataset ds = queryEngine(lz, "D.ttl") ;
+        
+        List<TransactionalComponent> tComp = new ArrayList<>() ;
         
         lz.getComponents().forEach(c->{
 //            System.out.println(c) ;
@@ -72,9 +99,31 @@ public class LzDev {
             
             if ( c instanceof TupleIndexRemote ) {
                 TupleIndexRemote rIdx = (TupleIndexRemote)c ;
-                rIdx.begin(ReadWrite.READ) ;
+                // Remove this can catch at creation time.
+                TxnClient<?> wire = rIdx.getWireClient() ;
+                TransactionalComponentRemote<TxnClient<?>> x = new TransactionalComponentRemote<>(wire) ;
+                tComp.add(x) ;
+            }
+            if ( c instanceof NodeTableRemote ) {
+                NodeTableRemote r = (NodeTableRemote)c ;
+                // Remove this can catch at creation time.
+                TxnClient<?> wire = r.getWireClient() ;
+                TransactionalComponentRemote<TxnClient<?>> x = new TransactionalComponentRemote<>(wire) ;
+                tComp.add(x) ;
             }
         });
+        
+        
+        Journal journal = Journal.create(Location.mem()) ;
+        TransactionCoordinator transCoord = new TransactionCoordinator(journal, tComp) ;
+        Transaction txn = transCoord.begin(ReadWrite.WRITE) ;
+        
+        log.info("LOAD") ;
+        RDFDataMgr.read(ds, "D.ttl") ;
+        
+        txn.commit();
+        txn.end() ;
+        
         
         performQuery(ds); 
         

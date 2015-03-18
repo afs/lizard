@@ -39,11 +39,11 @@ public class TLZ_NodeTable {
 
     public void nodePing() throws org.apache.thrift.TException;
 
-    public TLZ_NodeId allocNodeId(long requestId, TLZ_Node node) throws org.apache.thrift.TException;
+    public TLZ_NodeId allocNodeId(long requestId, long txnId, TLZ_Node node) throws org.apache.thrift.TException;
 
-    public TLZ_NodeId findByNode(long requestId, TLZ_Node node) throws org.apache.thrift.TException;
+    public TLZ_NodeId findByNode(long requestId, long txnId, TLZ_Node node) throws org.apache.thrift.TException;
 
-    public TLZ_Node findByNodeId(long requestId, TLZ_NodeId nodeId) throws org.apache.thrift.TException;
+    public TLZ_Node findByNodeId(long requestId, long txnId, TLZ_NodeId nodeId) throws org.apache.thrift.TException;
 
   }
 
@@ -51,11 +51,11 @@ public class TLZ_NodeTable {
 
     public void nodePing(org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
-    public void allocNodeId(long requestId, TLZ_Node node, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
+    public void allocNodeId(long requestId, long txnId, TLZ_Node node, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
-    public void findByNode(long requestId, TLZ_Node node, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
+    public void findByNode(long requestId, long txnId, TLZ_Node node, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
-    public void findByNodeId(long requestId, TLZ_NodeId nodeId, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
+    public void findByNodeId(long requestId, long txnId, TLZ_NodeId nodeId, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
   }
 
@@ -98,16 +98,17 @@ public class TLZ_NodeTable {
       return;
     }
 
-    public TLZ_NodeId allocNodeId(long requestId, TLZ_Node node) throws org.apache.thrift.TException
+    public TLZ_NodeId allocNodeId(long requestId, long txnId, TLZ_Node node) throws org.apache.thrift.TException
     {
-      send_allocNodeId(requestId, node);
+      send_allocNodeId(requestId, txnId, node);
       return recv_allocNodeId();
     }
 
-    public void send_allocNodeId(long requestId, TLZ_Node node) throws org.apache.thrift.TException
+    public void send_allocNodeId(long requestId, long txnId, TLZ_Node node) throws org.apache.thrift.TException
     {
       allocNodeId_args args = new allocNodeId_args();
       args.setRequestId(requestId);
+      args.setTxnId(txnId);
       args.setNode(node);
       sendBase("allocNodeId", args);
     }
@@ -122,16 +123,17 @@ public class TLZ_NodeTable {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "allocNodeId failed: unknown result");
     }
 
-    public TLZ_NodeId findByNode(long requestId, TLZ_Node node) throws org.apache.thrift.TException
+    public TLZ_NodeId findByNode(long requestId, long txnId, TLZ_Node node) throws org.apache.thrift.TException
     {
-      send_findByNode(requestId, node);
+      send_findByNode(requestId, txnId, node);
       return recv_findByNode();
     }
 
-    public void send_findByNode(long requestId, TLZ_Node node) throws org.apache.thrift.TException
+    public void send_findByNode(long requestId, long txnId, TLZ_Node node) throws org.apache.thrift.TException
     {
       findByNode_args args = new findByNode_args();
       args.setRequestId(requestId);
+      args.setTxnId(txnId);
       args.setNode(node);
       sendBase("findByNode", args);
     }
@@ -146,16 +148,17 @@ public class TLZ_NodeTable {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "findByNode failed: unknown result");
     }
 
-    public TLZ_Node findByNodeId(long requestId, TLZ_NodeId nodeId) throws org.apache.thrift.TException
+    public TLZ_Node findByNodeId(long requestId, long txnId, TLZ_NodeId nodeId) throws org.apache.thrift.TException
     {
-      send_findByNodeId(requestId, nodeId);
+      send_findByNodeId(requestId, txnId, nodeId);
       return recv_findByNodeId();
     }
 
-    public void send_findByNodeId(long requestId, TLZ_NodeId nodeId) throws org.apache.thrift.TException
+    public void send_findByNodeId(long requestId, long txnId, TLZ_NodeId nodeId) throws org.apache.thrift.TException
     {
       findByNodeId_args args = new findByNodeId_args();
       args.setRequestId(requestId);
+      args.setTxnId(txnId);
       args.setNodeId(nodeId);
       sendBase("findByNodeId", args);
     }
@@ -217,19 +220,21 @@ public class TLZ_NodeTable {
       }
     }
 
-    public void allocNodeId(long requestId, TLZ_Node node, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
+    public void allocNodeId(long requestId, long txnId, TLZ_Node node, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      allocNodeId_call method_call = new allocNodeId_call(requestId, node, resultHandler, this, ___protocolFactory, ___transport);
+      allocNodeId_call method_call = new allocNodeId_call(requestId, txnId, node, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class allocNodeId_call extends org.apache.thrift.async.TAsyncMethodCall {
       private long requestId;
+      private long txnId;
       private TLZ_Node node;
-      public allocNodeId_call(long requestId, TLZ_Node node, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public allocNodeId_call(long requestId, long txnId, TLZ_Node node, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.requestId = requestId;
+        this.txnId = txnId;
         this.node = node;
       }
 
@@ -237,6 +242,7 @@ public class TLZ_NodeTable {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("allocNodeId", org.apache.thrift.protocol.TMessageType.CALL, 0));
         allocNodeId_args args = new allocNodeId_args();
         args.setRequestId(requestId);
+        args.setTxnId(txnId);
         args.setNode(node);
         args.write(prot);
         prot.writeMessageEnd();
@@ -252,19 +258,21 @@ public class TLZ_NodeTable {
       }
     }
 
-    public void findByNode(long requestId, TLZ_Node node, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
+    public void findByNode(long requestId, long txnId, TLZ_Node node, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      findByNode_call method_call = new findByNode_call(requestId, node, resultHandler, this, ___protocolFactory, ___transport);
+      findByNode_call method_call = new findByNode_call(requestId, txnId, node, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class findByNode_call extends org.apache.thrift.async.TAsyncMethodCall {
       private long requestId;
+      private long txnId;
       private TLZ_Node node;
-      public findByNode_call(long requestId, TLZ_Node node, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public findByNode_call(long requestId, long txnId, TLZ_Node node, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.requestId = requestId;
+        this.txnId = txnId;
         this.node = node;
       }
 
@@ -272,6 +280,7 @@ public class TLZ_NodeTable {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("findByNode", org.apache.thrift.protocol.TMessageType.CALL, 0));
         findByNode_args args = new findByNode_args();
         args.setRequestId(requestId);
+        args.setTxnId(txnId);
         args.setNode(node);
         args.write(prot);
         prot.writeMessageEnd();
@@ -287,19 +296,21 @@ public class TLZ_NodeTable {
       }
     }
 
-    public void findByNodeId(long requestId, TLZ_NodeId nodeId, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
+    public void findByNodeId(long requestId, long txnId, TLZ_NodeId nodeId, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      findByNodeId_call method_call = new findByNodeId_call(requestId, nodeId, resultHandler, this, ___protocolFactory, ___transport);
+      findByNodeId_call method_call = new findByNodeId_call(requestId, txnId, nodeId, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class findByNodeId_call extends org.apache.thrift.async.TAsyncMethodCall {
       private long requestId;
+      private long txnId;
       private TLZ_NodeId nodeId;
-      public findByNodeId_call(long requestId, TLZ_NodeId nodeId, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public findByNodeId_call(long requestId, long txnId, TLZ_NodeId nodeId, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.requestId = requestId;
+        this.txnId = txnId;
         this.nodeId = nodeId;
       }
 
@@ -307,6 +318,7 @@ public class TLZ_NodeTable {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("findByNodeId", org.apache.thrift.protocol.TMessageType.CALL, 0));
         findByNodeId_args args = new findByNodeId_args();
         args.setRequestId(requestId);
+        args.setTxnId(txnId);
         args.setNodeId(nodeId);
         args.write(prot);
         prot.writeMessageEnd();
@@ -377,7 +389,7 @@ public class TLZ_NodeTable {
 
       public allocNodeId_result getResult(I iface, allocNodeId_args args) throws org.apache.thrift.TException {
         allocNodeId_result result = new allocNodeId_result();
-        result.success = iface.allocNodeId(args.requestId, args.node);
+        result.success = iface.allocNodeId(args.requestId, args.txnId, args.node);
         return result;
       }
     }
@@ -397,7 +409,7 @@ public class TLZ_NodeTable {
 
       public findByNode_result getResult(I iface, findByNode_args args) throws org.apache.thrift.TException {
         findByNode_result result = new findByNode_result();
-        result.success = iface.findByNode(args.requestId, args.node);
+        result.success = iface.findByNode(args.requestId, args.txnId, args.node);
         return result;
       }
     }
@@ -417,7 +429,7 @@ public class TLZ_NodeTable {
 
       public findByNodeId_result getResult(I iface, findByNodeId_args args) throws org.apache.thrift.TException {
         findByNodeId_result result = new findByNodeId_result();
-        result.success = iface.findByNodeId(args.requestId, args.nodeId);
+        result.success = iface.findByNodeId(args.requestId, args.txnId, args.nodeId);
         return result;
       }
     }
@@ -539,7 +551,7 @@ public class TLZ_NodeTable {
       }
 
       public void start(I iface, allocNodeId_args args, org.apache.thrift.async.AsyncMethodCallback<TLZ_NodeId> resultHandler) throws TException {
-        iface.allocNodeId(args.requestId, args.node,resultHandler);
+        iface.allocNodeId(args.requestId, args.txnId, args.node,resultHandler);
       }
     }
 
@@ -590,7 +602,7 @@ public class TLZ_NodeTable {
       }
 
       public void start(I iface, findByNode_args args, org.apache.thrift.async.AsyncMethodCallback<TLZ_NodeId> resultHandler) throws TException {
-        iface.findByNode(args.requestId, args.node,resultHandler);
+        iface.findByNode(args.requestId, args.txnId, args.node,resultHandler);
       }
     }
 
@@ -641,7 +653,7 @@ public class TLZ_NodeTable {
       }
 
       public void start(I iface, findByNodeId_args args, org.apache.thrift.async.AsyncMethodCallback<TLZ_Node> resultHandler) throws TException {
-        iface.findByNodeId(args.requestId, args.nodeId,resultHandler);
+        iface.findByNodeId(args.requestId, args.txnId, args.nodeId,resultHandler);
       }
     }
 
@@ -1143,7 +1155,8 @@ public class TLZ_NodeTable {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("allocNodeId_args");
 
     private static final org.apache.thrift.protocol.TField REQUEST_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("requestId", org.apache.thrift.protocol.TType.I64, (short)1);
-    private static final org.apache.thrift.protocol.TField NODE_FIELD_DESC = new org.apache.thrift.protocol.TField("node", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField TXN_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("txnId", org.apache.thrift.protocol.TType.I64, (short)9);
+    private static final org.apache.thrift.protocol.TField NODE_FIELD_DESC = new org.apache.thrift.protocol.TField("node", org.apache.thrift.protocol.TType.STRUCT, (short)3);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -1152,12 +1165,14 @@ public class TLZ_NodeTable {
     }
 
     public long requestId; // required
+    public long txnId; // required
     public TLZ_Node node; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       REQUEST_ID((short)1, "requestId"),
-      NODE((short)2, "node");
+      TXN_ID((short)9, "txnId"),
+      NODE((short)3, "node");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -1174,7 +1189,9 @@ public class TLZ_NodeTable {
         switch(fieldId) {
           case 1: // REQUEST_ID
             return REQUEST_ID;
-          case 2: // NODE
+          case 9: // TXN_ID
+            return TXN_ID;
+          case 3: // NODE
             return NODE;
           default:
             return null;
@@ -1217,12 +1234,15 @@ public class TLZ_NodeTable {
 
     // isset id assignments
     private static final int __REQUESTID_ISSET_ID = 0;
+    private static final int __TXNID_ISSET_ID = 1;
     private byte __isset_bitfield = 0;
     public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.REQUEST_ID, new org.apache.thrift.meta_data.FieldMetaData("requestId", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+      tmpMap.put(_Fields.TXN_ID, new org.apache.thrift.meta_data.FieldMetaData("txnId", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64          , "TxnId")));
       tmpMap.put(_Fields.NODE, new org.apache.thrift.meta_data.FieldMetaData("node", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_Node.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
@@ -1234,11 +1254,14 @@ public class TLZ_NodeTable {
 
     public allocNodeId_args(
       long requestId,
+      long txnId,
       TLZ_Node node)
     {
       this();
       this.requestId = requestId;
       setRequestIdIsSet(true);
+      this.txnId = txnId;
+      setTxnIdIsSet(true);
       this.node = node;
     }
 
@@ -1248,6 +1271,7 @@ public class TLZ_NodeTable {
     public allocNodeId_args(allocNodeId_args other) {
       __isset_bitfield = other.__isset_bitfield;
       this.requestId = other.requestId;
+      this.txnId = other.txnId;
       if (other.isSetNode()) {
         this.node = new TLZ_Node(other.node);
       }
@@ -1261,6 +1285,8 @@ public class TLZ_NodeTable {
     public void clear() {
       setRequestIdIsSet(false);
       this.requestId = 0;
+      setTxnIdIsSet(false);
+      this.txnId = 0;
       this.node = null;
     }
 
@@ -1285,6 +1311,29 @@ public class TLZ_NodeTable {
 
     public void setRequestIdIsSet(boolean value) {
       __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __REQUESTID_ISSET_ID, value);
+    }
+
+    public long getTxnId() {
+      return this.txnId;
+    }
+
+    public allocNodeId_args setTxnId(long txnId) {
+      this.txnId = txnId;
+      setTxnIdIsSet(true);
+      return this;
+    }
+
+    public void unsetTxnId() {
+      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __TXNID_ISSET_ID);
+    }
+
+    /** Returns true if field txnId is set (has been assigned a value) and false otherwise */
+    public boolean isSetTxnId() {
+      return EncodingUtils.testBit(__isset_bitfield, __TXNID_ISSET_ID);
+    }
+
+    public void setTxnIdIsSet(boolean value) {
+      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __TXNID_ISSET_ID, value);
     }
 
     public TLZ_Node getNode() {
@@ -1321,6 +1370,14 @@ public class TLZ_NodeTable {
         }
         break;
 
+      case TXN_ID:
+        if (value == null) {
+          unsetTxnId();
+        } else {
+          setTxnId((Long)value);
+        }
+        break;
+
       case NODE:
         if (value == null) {
           unsetNode();
@@ -1336,6 +1393,9 @@ public class TLZ_NodeTable {
       switch (field) {
       case REQUEST_ID:
         return Long.valueOf(getRequestId());
+
+      case TXN_ID:
+        return Long.valueOf(getTxnId());
 
       case NODE:
         return getNode();
@@ -1353,6 +1413,8 @@ public class TLZ_NodeTable {
       switch (field) {
       case REQUEST_ID:
         return isSetRequestId();
+      case TXN_ID:
+        return isSetTxnId();
       case NODE:
         return isSetNode();
       }
@@ -1378,6 +1440,15 @@ public class TLZ_NodeTable {
         if (!(this_present_requestId && that_present_requestId))
           return false;
         if (this.requestId != that.requestId)
+          return false;
+      }
+
+      boolean this_present_txnId = true;
+      boolean that_present_txnId = true;
+      if (this_present_txnId || that_present_txnId) {
+        if (!(this_present_txnId && that_present_txnId))
+          return false;
+        if (this.txnId != that.txnId)
           return false;
       }
 
@@ -1416,6 +1487,16 @@ public class TLZ_NodeTable {
           return lastComparison;
         }
       }
+      lastComparison = Boolean.valueOf(isSetTxnId()).compareTo(other.isSetTxnId());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetTxnId()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.txnId, other.txnId);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       lastComparison = Boolean.valueOf(isSetNode()).compareTo(other.isSetNode());
       if (lastComparison != 0) {
         return lastComparison;
@@ -1448,6 +1529,10 @@ public class TLZ_NodeTable {
 
       sb.append("requestId:");
       sb.append(this.requestId);
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("txnId:");
+      sb.append(this.txnId);
       first = false;
       if (!first) sb.append(", ");
       sb.append("node:");
@@ -1513,7 +1598,15 @@ public class TLZ_NodeTable {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
-            case 2: // NODE
+            case 9: // TXN_ID
+              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+                struct.txnId = iprot.readI64();
+                struct.setTxnIdIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 3: // NODE
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
                 struct.node = new TLZ_Node();
                 struct.node.read(iprot);
@@ -1545,6 +1638,9 @@ public class TLZ_NodeTable {
           struct.node.write(oprot);
           oprot.writeFieldEnd();
         }
+        oprot.writeFieldBegin(TXN_ID_FIELD_DESC);
+        oprot.writeI64(struct.txnId);
+        oprot.writeFieldEnd();
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -1566,12 +1662,18 @@ public class TLZ_NodeTable {
         if (struct.isSetRequestId()) {
           optionals.set(0);
         }
-        if (struct.isSetNode()) {
+        if (struct.isSetTxnId()) {
           optionals.set(1);
         }
-        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetNode()) {
+          optionals.set(2);
+        }
+        oprot.writeBitSet(optionals, 3);
         if (struct.isSetRequestId()) {
           oprot.writeI64(struct.requestId);
+        }
+        if (struct.isSetTxnId()) {
+          oprot.writeI64(struct.txnId);
         }
         if (struct.isSetNode()) {
           struct.node.write(oprot);
@@ -1581,12 +1683,16 @@ public class TLZ_NodeTable {
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, allocNodeId_args struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
-        BitSet incoming = iprot.readBitSet(2);
+        BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           struct.requestId = iprot.readI64();
           struct.setRequestIdIsSet(true);
         }
         if (incoming.get(1)) {
+          struct.txnId = iprot.readI64();
+          struct.setTxnIdIsSet(true);
+        }
+        if (incoming.get(2)) {
           struct.node = new TLZ_Node();
           struct.node.read(iprot);
           struct.setNodeIsSet(true);
@@ -1959,7 +2065,8 @@ public class TLZ_NodeTable {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("findByNode_args");
 
     private static final org.apache.thrift.protocol.TField REQUEST_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("requestId", org.apache.thrift.protocol.TType.I64, (short)1);
-    private static final org.apache.thrift.protocol.TField NODE_FIELD_DESC = new org.apache.thrift.protocol.TField("node", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField TXN_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("txnId", org.apache.thrift.protocol.TType.I64, (short)9);
+    private static final org.apache.thrift.protocol.TField NODE_FIELD_DESC = new org.apache.thrift.protocol.TField("node", org.apache.thrift.protocol.TType.STRUCT, (short)3);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -1968,12 +2075,14 @@ public class TLZ_NodeTable {
     }
 
     public long requestId; // required
+    public long txnId; // required
     public TLZ_Node node; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       REQUEST_ID((short)1, "requestId"),
-      NODE((short)2, "node");
+      TXN_ID((short)9, "txnId"),
+      NODE((short)3, "node");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -1990,7 +2099,9 @@ public class TLZ_NodeTable {
         switch(fieldId) {
           case 1: // REQUEST_ID
             return REQUEST_ID;
-          case 2: // NODE
+          case 9: // TXN_ID
+            return TXN_ID;
+          case 3: // NODE
             return NODE;
           default:
             return null;
@@ -2033,12 +2144,15 @@ public class TLZ_NodeTable {
 
     // isset id assignments
     private static final int __REQUESTID_ISSET_ID = 0;
+    private static final int __TXNID_ISSET_ID = 1;
     private byte __isset_bitfield = 0;
     public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.REQUEST_ID, new org.apache.thrift.meta_data.FieldMetaData("requestId", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+      tmpMap.put(_Fields.TXN_ID, new org.apache.thrift.meta_data.FieldMetaData("txnId", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64          , "TxnId")));
       tmpMap.put(_Fields.NODE, new org.apache.thrift.meta_data.FieldMetaData("node", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_Node.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
@@ -2050,11 +2164,14 @@ public class TLZ_NodeTable {
 
     public findByNode_args(
       long requestId,
+      long txnId,
       TLZ_Node node)
     {
       this();
       this.requestId = requestId;
       setRequestIdIsSet(true);
+      this.txnId = txnId;
+      setTxnIdIsSet(true);
       this.node = node;
     }
 
@@ -2064,6 +2181,7 @@ public class TLZ_NodeTable {
     public findByNode_args(findByNode_args other) {
       __isset_bitfield = other.__isset_bitfield;
       this.requestId = other.requestId;
+      this.txnId = other.txnId;
       if (other.isSetNode()) {
         this.node = new TLZ_Node(other.node);
       }
@@ -2077,6 +2195,8 @@ public class TLZ_NodeTable {
     public void clear() {
       setRequestIdIsSet(false);
       this.requestId = 0;
+      setTxnIdIsSet(false);
+      this.txnId = 0;
       this.node = null;
     }
 
@@ -2101,6 +2221,29 @@ public class TLZ_NodeTable {
 
     public void setRequestIdIsSet(boolean value) {
       __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __REQUESTID_ISSET_ID, value);
+    }
+
+    public long getTxnId() {
+      return this.txnId;
+    }
+
+    public findByNode_args setTxnId(long txnId) {
+      this.txnId = txnId;
+      setTxnIdIsSet(true);
+      return this;
+    }
+
+    public void unsetTxnId() {
+      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __TXNID_ISSET_ID);
+    }
+
+    /** Returns true if field txnId is set (has been assigned a value) and false otherwise */
+    public boolean isSetTxnId() {
+      return EncodingUtils.testBit(__isset_bitfield, __TXNID_ISSET_ID);
+    }
+
+    public void setTxnIdIsSet(boolean value) {
+      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __TXNID_ISSET_ID, value);
     }
 
     public TLZ_Node getNode() {
@@ -2137,6 +2280,14 @@ public class TLZ_NodeTable {
         }
         break;
 
+      case TXN_ID:
+        if (value == null) {
+          unsetTxnId();
+        } else {
+          setTxnId((Long)value);
+        }
+        break;
+
       case NODE:
         if (value == null) {
           unsetNode();
@@ -2152,6 +2303,9 @@ public class TLZ_NodeTable {
       switch (field) {
       case REQUEST_ID:
         return Long.valueOf(getRequestId());
+
+      case TXN_ID:
+        return Long.valueOf(getTxnId());
 
       case NODE:
         return getNode();
@@ -2169,6 +2323,8 @@ public class TLZ_NodeTable {
       switch (field) {
       case REQUEST_ID:
         return isSetRequestId();
+      case TXN_ID:
+        return isSetTxnId();
       case NODE:
         return isSetNode();
       }
@@ -2194,6 +2350,15 @@ public class TLZ_NodeTable {
         if (!(this_present_requestId && that_present_requestId))
           return false;
         if (this.requestId != that.requestId)
+          return false;
+      }
+
+      boolean this_present_txnId = true;
+      boolean that_present_txnId = true;
+      if (this_present_txnId || that_present_txnId) {
+        if (!(this_present_txnId && that_present_txnId))
+          return false;
+        if (this.txnId != that.txnId)
           return false;
       }
 
@@ -2232,6 +2397,16 @@ public class TLZ_NodeTable {
           return lastComparison;
         }
       }
+      lastComparison = Boolean.valueOf(isSetTxnId()).compareTo(other.isSetTxnId());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetTxnId()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.txnId, other.txnId);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       lastComparison = Boolean.valueOf(isSetNode()).compareTo(other.isSetNode());
       if (lastComparison != 0) {
         return lastComparison;
@@ -2264,6 +2439,10 @@ public class TLZ_NodeTable {
 
       sb.append("requestId:");
       sb.append(this.requestId);
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("txnId:");
+      sb.append(this.txnId);
       first = false;
       if (!first) sb.append(", ");
       sb.append("node:");
@@ -2329,7 +2508,15 @@ public class TLZ_NodeTable {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
-            case 2: // NODE
+            case 9: // TXN_ID
+              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+                struct.txnId = iprot.readI64();
+                struct.setTxnIdIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 3: // NODE
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
                 struct.node = new TLZ_Node();
                 struct.node.read(iprot);
@@ -2361,6 +2548,9 @@ public class TLZ_NodeTable {
           struct.node.write(oprot);
           oprot.writeFieldEnd();
         }
+        oprot.writeFieldBegin(TXN_ID_FIELD_DESC);
+        oprot.writeI64(struct.txnId);
+        oprot.writeFieldEnd();
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -2382,12 +2572,18 @@ public class TLZ_NodeTable {
         if (struct.isSetRequestId()) {
           optionals.set(0);
         }
-        if (struct.isSetNode()) {
+        if (struct.isSetTxnId()) {
           optionals.set(1);
         }
-        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetNode()) {
+          optionals.set(2);
+        }
+        oprot.writeBitSet(optionals, 3);
         if (struct.isSetRequestId()) {
           oprot.writeI64(struct.requestId);
+        }
+        if (struct.isSetTxnId()) {
+          oprot.writeI64(struct.txnId);
         }
         if (struct.isSetNode()) {
           struct.node.write(oprot);
@@ -2397,12 +2593,16 @@ public class TLZ_NodeTable {
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, findByNode_args struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
-        BitSet incoming = iprot.readBitSet(2);
+        BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           struct.requestId = iprot.readI64();
           struct.setRequestIdIsSet(true);
         }
         if (incoming.get(1)) {
+          struct.txnId = iprot.readI64();
+          struct.setTxnIdIsSet(true);
+        }
+        if (incoming.get(2)) {
           struct.node = new TLZ_Node();
           struct.node.read(iprot);
           struct.setNodeIsSet(true);
@@ -2775,7 +2975,8 @@ public class TLZ_NodeTable {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("findByNodeId_args");
 
     private static final org.apache.thrift.protocol.TField REQUEST_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("requestId", org.apache.thrift.protocol.TType.I64, (short)1);
-    private static final org.apache.thrift.protocol.TField NODE_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("nodeId", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField TXN_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("txnId", org.apache.thrift.protocol.TType.I64, (short)9);
+    private static final org.apache.thrift.protocol.TField NODE_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("nodeId", org.apache.thrift.protocol.TType.STRUCT, (short)3);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -2784,12 +2985,14 @@ public class TLZ_NodeTable {
     }
 
     public long requestId; // required
+    public long txnId; // required
     public TLZ_NodeId nodeId; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       REQUEST_ID((short)1, "requestId"),
-      NODE_ID((short)2, "nodeId");
+      TXN_ID((short)9, "txnId"),
+      NODE_ID((short)3, "nodeId");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -2806,7 +3009,9 @@ public class TLZ_NodeTable {
         switch(fieldId) {
           case 1: // REQUEST_ID
             return REQUEST_ID;
-          case 2: // NODE_ID
+          case 9: // TXN_ID
+            return TXN_ID;
+          case 3: // NODE_ID
             return NODE_ID;
           default:
             return null;
@@ -2849,12 +3054,15 @@ public class TLZ_NodeTable {
 
     // isset id assignments
     private static final int __REQUESTID_ISSET_ID = 0;
+    private static final int __TXNID_ISSET_ID = 1;
     private byte __isset_bitfield = 0;
     public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.REQUEST_ID, new org.apache.thrift.meta_data.FieldMetaData("requestId", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+      tmpMap.put(_Fields.TXN_ID, new org.apache.thrift.meta_data.FieldMetaData("txnId", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64          , "TxnId")));
       tmpMap.put(_Fields.NODE_ID, new org.apache.thrift.meta_data.FieldMetaData("nodeId", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_NodeId.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
@@ -2866,11 +3074,14 @@ public class TLZ_NodeTable {
 
     public findByNodeId_args(
       long requestId,
+      long txnId,
       TLZ_NodeId nodeId)
     {
       this();
       this.requestId = requestId;
       setRequestIdIsSet(true);
+      this.txnId = txnId;
+      setTxnIdIsSet(true);
       this.nodeId = nodeId;
     }
 
@@ -2880,6 +3091,7 @@ public class TLZ_NodeTable {
     public findByNodeId_args(findByNodeId_args other) {
       __isset_bitfield = other.__isset_bitfield;
       this.requestId = other.requestId;
+      this.txnId = other.txnId;
       if (other.isSetNodeId()) {
         this.nodeId = new TLZ_NodeId(other.nodeId);
       }
@@ -2893,6 +3105,8 @@ public class TLZ_NodeTable {
     public void clear() {
       setRequestIdIsSet(false);
       this.requestId = 0;
+      setTxnIdIsSet(false);
+      this.txnId = 0;
       this.nodeId = null;
     }
 
@@ -2917,6 +3131,29 @@ public class TLZ_NodeTable {
 
     public void setRequestIdIsSet(boolean value) {
       __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __REQUESTID_ISSET_ID, value);
+    }
+
+    public long getTxnId() {
+      return this.txnId;
+    }
+
+    public findByNodeId_args setTxnId(long txnId) {
+      this.txnId = txnId;
+      setTxnIdIsSet(true);
+      return this;
+    }
+
+    public void unsetTxnId() {
+      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __TXNID_ISSET_ID);
+    }
+
+    /** Returns true if field txnId is set (has been assigned a value) and false otherwise */
+    public boolean isSetTxnId() {
+      return EncodingUtils.testBit(__isset_bitfield, __TXNID_ISSET_ID);
+    }
+
+    public void setTxnIdIsSet(boolean value) {
+      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __TXNID_ISSET_ID, value);
     }
 
     public TLZ_NodeId getNodeId() {
@@ -2953,6 +3190,14 @@ public class TLZ_NodeTable {
         }
         break;
 
+      case TXN_ID:
+        if (value == null) {
+          unsetTxnId();
+        } else {
+          setTxnId((Long)value);
+        }
+        break;
+
       case NODE_ID:
         if (value == null) {
           unsetNodeId();
@@ -2968,6 +3213,9 @@ public class TLZ_NodeTable {
       switch (field) {
       case REQUEST_ID:
         return Long.valueOf(getRequestId());
+
+      case TXN_ID:
+        return Long.valueOf(getTxnId());
 
       case NODE_ID:
         return getNodeId();
@@ -2985,6 +3233,8 @@ public class TLZ_NodeTable {
       switch (field) {
       case REQUEST_ID:
         return isSetRequestId();
+      case TXN_ID:
+        return isSetTxnId();
       case NODE_ID:
         return isSetNodeId();
       }
@@ -3010,6 +3260,15 @@ public class TLZ_NodeTable {
         if (!(this_present_requestId && that_present_requestId))
           return false;
         if (this.requestId != that.requestId)
+          return false;
+      }
+
+      boolean this_present_txnId = true;
+      boolean that_present_txnId = true;
+      if (this_present_txnId || that_present_txnId) {
+        if (!(this_present_txnId && that_present_txnId))
+          return false;
+        if (this.txnId != that.txnId)
           return false;
       }
 
@@ -3048,6 +3307,16 @@ public class TLZ_NodeTable {
           return lastComparison;
         }
       }
+      lastComparison = Boolean.valueOf(isSetTxnId()).compareTo(other.isSetTxnId());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetTxnId()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.txnId, other.txnId);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       lastComparison = Boolean.valueOf(isSetNodeId()).compareTo(other.isSetNodeId());
       if (lastComparison != 0) {
         return lastComparison;
@@ -3080,6 +3349,10 @@ public class TLZ_NodeTable {
 
       sb.append("requestId:");
       sb.append(this.requestId);
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("txnId:");
+      sb.append(this.txnId);
       first = false;
       if (!first) sb.append(", ");
       sb.append("nodeId:");
@@ -3145,7 +3418,15 @@ public class TLZ_NodeTable {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
-            case 2: // NODE_ID
+            case 9: // TXN_ID
+              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+                struct.txnId = iprot.readI64();
+                struct.setTxnIdIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 3: // NODE_ID
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
                 struct.nodeId = new TLZ_NodeId();
                 struct.nodeId.read(iprot);
@@ -3177,6 +3458,9 @@ public class TLZ_NodeTable {
           struct.nodeId.write(oprot);
           oprot.writeFieldEnd();
         }
+        oprot.writeFieldBegin(TXN_ID_FIELD_DESC);
+        oprot.writeI64(struct.txnId);
+        oprot.writeFieldEnd();
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -3198,12 +3482,18 @@ public class TLZ_NodeTable {
         if (struct.isSetRequestId()) {
           optionals.set(0);
         }
-        if (struct.isSetNodeId()) {
+        if (struct.isSetTxnId()) {
           optionals.set(1);
         }
-        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetNodeId()) {
+          optionals.set(2);
+        }
+        oprot.writeBitSet(optionals, 3);
         if (struct.isSetRequestId()) {
           oprot.writeI64(struct.requestId);
+        }
+        if (struct.isSetTxnId()) {
+          oprot.writeI64(struct.txnId);
         }
         if (struct.isSetNodeId()) {
           struct.nodeId.write(oprot);
@@ -3213,12 +3503,16 @@ public class TLZ_NodeTable {
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, findByNodeId_args struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
-        BitSet incoming = iprot.readBitSet(2);
+        BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           struct.requestId = iprot.readI64();
           struct.setRequestIdIsSet(true);
         }
         if (incoming.get(1)) {
+          struct.txnId = iprot.readI64();
+          struct.setTxnIdIsSet(true);
+        }
+        if (incoming.get(2)) {
           struct.nodeId = new TLZ_NodeId();
           struct.nodeId.read(iprot);
           struct.setNodeIdIsSet(true);

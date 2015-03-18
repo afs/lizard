@@ -15,7 +15,7 @@
  *  information regarding copyright ownership.
  */
 
-package lizard.conf;
+package lz_dev;
 
 import org.seaborne.dboe.transaction.Transactional ;
 

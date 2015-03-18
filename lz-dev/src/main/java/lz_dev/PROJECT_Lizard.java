@@ -21,6 +21,9 @@ public class PROJECT_Lizard {
     // Tuple hierarchy.
     // Avoid copy - tuple + set colmap.
     
+    // NEXT
+    //   Implement carried over transaction in NodeTbaleHandler and IndexHandler 
+    
     /*
      *  index, node "clear"
      *  
@@ -35,8 +38,17 @@ public class PROJECT_Lizard {
      *  lz-dev/bin
      */
     
-    // LzTxnId
-    //   Zookepper allocation.
+    
+    // TransactionalBase : tests for detach after commit, around end(). 
+    
+    
+    // TxnHandler to have transaction mapping help code.
+    // TClientTxn -> TxnClient c.f. TxnHandler.
+    
+    // LzTxnId vs TxnId
+    // Make TxnId and interface
+    // Make TransactionCoordinator take a factory
+    //   Zookeeper allocation for lizard.
     
     // Thrift : Other servers  - TNonblockingServer+TFramedTransport 
     

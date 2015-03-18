@@ -19,7 +19,6 @@ package lizard.api;
 
 import java.util.Map ;
 import java.util.concurrent.ConcurrentHashMap ;
-import java.util.concurrent.atomic.AtomicLong ;
 import java.util.function.Supplier ;
 
 import lizard.api.TLZ.TxnCtl ;
@@ -32,6 +31,7 @@ import org.seaborne.dboe.transaction.txn.TransactionCoordinatorState ;
 import org.seaborne.dboe.transaction.txn.TransactionalBase ;
 import org.slf4j.Logger ;
 
+// Support for the server side. 
 public abstract class TxnHandler implements TxnCtl.Iface {
     //private static Logger log = LoggerFactory.getLogger(IndexHandler.class) ;
     protected final TransactionalBase transactional ;
@@ -40,7 +40,6 @@ public abstract class TxnHandler implements TxnCtl.Iface {
         this.transactional = transactional ;
     }
     
-    private AtomicLong txnIdGenerator = new AtomicLong(0) ;
     private Map<Long, TransactionCoordinatorState> transactions = new ConcurrentHashMap<>() ; 
     private long currentWriter = -1 ;
 
@@ -53,39 +52,43 @@ public abstract class TxnHandler implements TxnCtl.Iface {
     }
 
     @Override
-    public long txnBeginRead() {
-        return txnBegin(ReadWrite.READ) ;
+    public void txnBeginRead(long txnId) {
+        txnBegin(txnId, ReadWrite.READ) ;
     }
 
     @Override
-    public long txnBeginWrite() {
-        if ( currentWriter >= 0 ) {
+    public void txnBeginWrite(long txnId) {
+        if ( currentWriter >= 0 )
             getLog().warn("TServerIndex:txnBeginWrite - already in a W transaction");
-            return currentWriter ;
-        }
-        currentWriter = txnBegin(ReadWrite.WRITE) ;
-        return currentWriter ;
+        txnBegin(txnId, ReadWrite.WRITE) ;
+        currentWriter = txnId ;
     }
 
     // synchronized?  This is RPC and per connection so client end is responsible. 
-    private long txnBegin(ReadWrite mode) {
-        long txnId = txnIdGenerator.incrementAndGet() ;
+    private void txnBegin(long txnId, ReadWrite mode) {
         FmtLog.info(getLog(), "[Txn:%s:%d] begin[%s]", getLabel(), txnId, mode) ;
         transactional.begin(mode) ;
         TransactionCoordinatorState txnState = transactional.detach() ;
         if ( transactions.containsKey(txnId) )
             getLog().warn("TxnHandler - Transaction already exists") ; 
         transactions.put(txnId, txnState) ;
-        return txnId ;
     }
     
     /** Perform an action inside the transaction {@code txnId} */ 
     protected void txnAction(long txnId, Runnable action) {
         TransactionCoordinatorState s = transactions.get(txnId) ;
-        transactional.attach(s); 
+        // May be null -> auto-ended 
+        if ( s != null )
+            transactional.attach(s); 
         action.run() ;
+        if ( s == null )
+            return ;
         s = transactional.detach() ;
-        transactions.put(txnId, s) ;
+        if ( s == null )
+            // End.
+            transactions.remove(txnId) ;
+        else
+            transactions.put(txnId, s) ;
     }
     
     /** Perform an action inside the transaction {@code txnId}; return an object */ 
@@ -123,7 +126,7 @@ public abstract class TxnHandler implements TxnCtl.Iface {
     @Override
     public void txnCommit(long txnId) {
         FmtLog.info(getLog(), "[Txn:%s:%d] commit", getLabel(), txnId) ;
-        txnAction(txnId, () -> getLog().info("Commit!")) ;
+        txnAction(txnId, () -> transactional.commit()) ;
     }
 
     @Override

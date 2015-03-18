@@ -37,7 +37,7 @@ public class TLZ_PatchEntry implements org.apache.thrift.TBase<TLZ_PatchEntry, T
   private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("TLZ_PatchEntry");
 
   private static final org.apache.thrift.protocol.TField ACTION_FIELD_DESC = new org.apache.thrift.protocol.TField("action", org.apache.thrift.protocol.TType.I32, (short)1);
-  private static final org.apache.thrift.protocol.TField TUPLE_FIELD_DESC = new org.apache.thrift.protocol.TField("tuple", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+  private static final org.apache.thrift.protocol.TField TUPLE_FIELD_DESC = new org.apache.thrift.protocol.TField("tuple", org.apache.thrift.protocol.TType.STRUCT, (short)9);
 
   private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
   static {
@@ -59,7 +59,7 @@ public class TLZ_PatchEntry implements org.apache.thrift.TBase<TLZ_PatchEntry, T
      * @see TLZ_PatchAction
      */
     ACTION((short)1, "action"),
-    TUPLE((short)2, "tuple");
+    TUPLE((short)9, "tuple");
 
     private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -76,7 +76,7 @@ public class TLZ_PatchEntry implements org.apache.thrift.TBase<TLZ_PatchEntry, T
       switch(fieldId) {
         case 1: // ACTION
           return ACTION;
-        case 2: // TUPLE
+        case 9: // TUPLE
           return TUPLE;
         default:
           return null;
@@ -429,7 +429,7 @@ public class TLZ_PatchEntry implements org.apache.thrift.TBase<TLZ_PatchEntry, T
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
-          case 2: // TUPLE
+          case 9: // TUPLE
             if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
               struct.tuple = new TLZ_TupleNodeId();
               struct.tuple.read(iprot);

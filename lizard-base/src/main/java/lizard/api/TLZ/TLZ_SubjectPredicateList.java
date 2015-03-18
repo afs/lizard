@@ -37,7 +37,7 @@ public class TLZ_SubjectPredicateList implements org.apache.thrift.TBase<TLZ_Sub
   private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("TLZ_SubjectPredicateList");
 
   private static final org.apache.thrift.protocol.TField SUBJECT_FIELD_DESC = new org.apache.thrift.protocol.TField("subject", org.apache.thrift.protocol.TType.I64, (short)1);
-  private static final org.apache.thrift.protocol.TField PREDICATES_FIELD_DESC = new org.apache.thrift.protocol.TField("predicates", org.apache.thrift.protocol.TType.LIST, (short)2);
+  private static final org.apache.thrift.protocol.TField PREDICATES_FIELD_DESC = new org.apache.thrift.protocol.TField("predicates", org.apache.thrift.protocol.TType.LIST, (short)9);
 
   private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
   static {
@@ -51,7 +51,7 @@ public class TLZ_SubjectPredicateList implements org.apache.thrift.TBase<TLZ_Sub
   /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
   public enum _Fields implements org.apache.thrift.TFieldIdEnum {
     SUBJECT((short)1, "subject"),
-    PREDICATES((short)2, "predicates");
+    PREDICATES((short)9, "predicates");
 
     private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -68,7 +68,7 @@ public class TLZ_SubjectPredicateList implements org.apache.thrift.TBase<TLZ_Sub
       switch(fieldId) {
         case 1: // SUBJECT
           return SUBJECT;
-        case 2: // PREDICATES
+        case 9: // PREDICATES
           return PREDICATES;
         default:
           return null;
@@ -422,7 +422,7 @@ public class TLZ_SubjectPredicateList implements org.apache.thrift.TBase<TLZ_Sub
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
-          case 2: // PREDICATES
+          case 9: // PREDICATES
             if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
               {
                 org.apache.thrift.protocol.TList _list0 = iprot.readListBegin();

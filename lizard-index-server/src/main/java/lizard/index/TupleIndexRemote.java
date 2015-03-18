@@ -20,18 +20,23 @@ package lizard.index;
 import java.util.Iterator ;
 
 import lizard.api.TLZlib ;
+import lizard.api.TxnClient ;
 import lizard.api.TLZ.TLZ_IndexName ;
 import lizard.comms.ConnState ;
-import lizard.system.* ;
+import lizard.system.Component ;
+import lizard.system.ComponentBase ;
+import lizard.system.ComponentTxn ;
+import lizard.system.Pingable ;
+
+import com.hp.hpl.jena.query.ReadWrite ;
+import com.hp.hpl.jena.tdb.store.NodeId ;
+import com.hp.hpl.jena.tdb.store.tupletable.TupleIndexBase ;
+
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.NotImplemented ;
 import org.apache.jena.atlas.lib.Tuple ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
-
-import com.hp.hpl.jena.query.ReadWrite ;
-import com.hp.hpl.jena.tdb.store.NodeId ;
-import com.hp.hpl.jena.tdb.store.tupletable.TupleIndexBase ;
 
 /** Client side of a remote index */
 public class TupleIndexRemote extends TupleIndexBase implements Component, ComponentTxn, Pingable
@@ -62,6 +67,11 @@ public class TupleIndexRemote extends TupleIndexBase implements Component, Compo
             x[i] = NodeId.NodeIdAny ;
         anyTuple = Tuple.create(x) ;
         component.setLabel(super.getName()) ;
+    }
+    
+    public TxnClient<?> getWireClient() 
+    { 
+        return client ;
     }
     
     public ConnState getStatus() { return client.getConnectionStatus() ; }
@@ -126,7 +136,7 @@ public class TupleIndexRemote extends TupleIndexBase implements Component, Compo
     @Override
     public void stop() { component.stop() ; }
 
-    @Override public void begin(ReadWrite mode)   { client.begin(mode) ; }
+    @Override public void begin(long tnxId, ReadWrite mode)   { client.begin(tnxId, mode) ; }
     @Override public void prepare()               { client.prepare() ; }
     @Override public void commit()                { client.commit() ; }
     @Override public void abort()                 { client.abort() ; }
