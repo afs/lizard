@@ -62,7 +62,7 @@ public abstract class TxnClient<X extends TxnCtl.Client> extends ComponentBase i
     }
 
     protected abstract Logger getLog() ;
-    private final static boolean LOG_TXN = true ; 
+    private final static boolean LOG_TXN = false ; 
     
     @Override
     public void begin(long txnId, ReadWrite mode) {
