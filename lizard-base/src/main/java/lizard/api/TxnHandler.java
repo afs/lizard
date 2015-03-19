@@ -35,13 +35,18 @@ import org.slf4j.Logger ;
 public abstract class TxnHandler implements TxnCtl.Iface {
     //private static Logger log = LoggerFactory.getLogger(IndexHandler.class) ;
     protected final TransactionalBase transactional ;
-
+    private final static boolean LOG_TXN = false ;
+    
     protected TxnHandler(TransactionalBase transactional) {
         this.transactional = transactional ;
     }
     
     private Map<Long, TransactionCoordinatorState> transactions = new ConcurrentHashMap<>() ; 
-    private volatile long currentWriter = -1 ;
+    private static long NO_WRITER = -1 ;
+    // Volatile because a differnt thread server side
+    // may be used to service the next request.  While this is
+    // per-thread-transaction at the client, it isn't at the server.
+    private volatile long currentWriter = NO_WRITER ;
 
     private void setCurrentWriter(long currentWriter) {
         this.currentWriter = currentWriter ;
@@ -72,7 +77,8 @@ public abstract class TxnHandler implements TxnCtl.Iface {
 
     // synchronized?  This is RPC and per connection so client end is responsible. 
     private void txnBegin(long txnId, ReadWrite mode) {
-        FmtLog.info(log(), "[Txn:%s:%d] begin[%s]", getLabel(), txnId, mode) ;
+        if ( LOG_TXN )
+            FmtLog.info(log(), "[Txn:%s:%d] begin[%s]", getLabel(), txnId, mode) ;
         transactional.begin(mode) ;
         TransactionCoordinatorState txnState = transactional.detach() ;
         if ( transactions.containsKey(txnId) )
@@ -80,6 +86,35 @@ public abstract class TxnHandler implements TxnCtl.Iface {
         transactions.put(txnId, txnState) ;
     }
     
+    @Override
+    public void txnPrepare(long txnId) {
+        if ( LOG_TXN )
+            FmtLog.info(log(), "[Txn:%s:%d] prepare", getLabel(), txnId) ;
+        txnAction(txnId, () -> log().info("Prepare!")) ;
+    }
+
+    @Override
+    public void txnCommit(long txnId) {
+        if ( LOG_TXN )
+            FmtLog.info(log(), "[Txn:%s:%d] commit", getLabel(), txnId) ;
+        txnAction(txnId, () -> transactional.commit()) ;
+    }
+
+    @Override
+    public void txnAbort(long txnId) {
+        if ( LOG_TXN )
+            FmtLog.info(log(), "[Txn:%s:%d] abort", getLabel(), txnId) ; 
+        txnAction(txnId, () -> transactional.abort()) ;
+    }
+
+    @Override
+    public void txnEnd(long txnId) {
+        if ( LOG_TXN )
+            FmtLog.info(log(), "[Txn:%s:%d] end", getLabel(), txnId) ; 
+        txnAction(txnId, () -> transactional.end()) ;
+        setCurrentWriter(NO_WRITER) ;
+    }
+
     /** Perform an action inside the transaction {@code txnId} */ 
     protected void txnAction(long txnId, Runnable action) {
         TransactionCoordinatorState s = transactions.get(txnId) ;
@@ -96,7 +131,7 @@ public abstract class TxnHandler implements TxnCtl.Iface {
         else
             transactions.put(txnId, s) ;
     }
-    
+
     /** Perform an action inside the transaction {@code txnId}; return an object */ 
     protected <X> X txnActionReturn(long txnId, Supplier<X> action) {
         TransactionCoordinatorState s = transactions.get(txnId) ;
@@ -125,31 +160,6 @@ public abstract class TxnHandler implements TxnCtl.Iface {
             log().warn("writeTxnAlways: autocommit"); 
             Txn.executeWrite(transactional, action) ;
         }
-    }
-
-    @Override
-    public void txnPrepare(long txnId) {
-        FmtLog.info(log(), "[Txn:%s:%d] prepare", getLabel(), txnId) ;
-        txnAction(txnId, () -> log().info("Prepare!")) ;
-    }
-
-    @Override
-    public void txnCommit(long txnId) {
-        FmtLog.info(log(), "[Txn:%s:%d] commit", getLabel(), txnId) ;
-        txnAction(txnId, () -> transactional.commit()) ;
-    }
-
-    @Override
-    public void txnAbort(long txnId) {
-        FmtLog.info(log(), "[Txn:%s:%d] abort", getLabel(), txnId) ; 
-        txnAction(txnId, () -> transactional.abort()) ;
-    }
-
-    @Override
-    public void txnEnd(long txnId) {
-        FmtLog.info(log(), "[Txn:%s:%d] end", getLabel(), txnId) ; 
-        txnAction(txnId, () -> transactional.end()) ;
-        currentWriter = -1 ;
     }
 }
 
