@@ -153,18 +153,15 @@ public class LzDev {
         TransactionCoordinator transCoord = new TransactionCoordinator(journal, tComp) ;
         Transaction txn = transCoord.begin(ReadWrite.WRITE) ;
 
-        Node n = SSE.parseNode("<http://example/s>") ;
-        NodeId nid = ntr.getAllocateNodeId(n) ;
-        System.out.printf("Node = %s ; NodeId = %s\n", n, nid) ;
+//        Node n = SSE.parseNode("<http://example/s>") ;
+//        NodeId nid = ntr.getAllocateNodeId(n) ;
+//        System.out.printf("Node = %s ; NodeId = %s\n", n, nid) ;
         
-//        log.info("LOAD") ;
-//        RDFDataMgr.read(ds, "D.ttl") ;
+        log.info("LOAD") ;
+        RDFDataMgr.read(ds, "D.ttl") ;
         
         txn.commit();
         txn.end() ;
-        log.info("** Done **") ;
-        System.exit(0) ;
-        
         
         Transaction txnR = transCoord.begin(ReadWrite.READ) ;
         performQuery(ds); 
