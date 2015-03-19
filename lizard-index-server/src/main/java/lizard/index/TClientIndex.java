@@ -22,8 +22,8 @@ import java.util.List ;
 import java.util.concurrent.Callable ;
 import java.util.stream.Collectors ;
 
-import lizard.api.TxnClient ;
 import lizard.api.TLZlib ;
+import lizard.api.TxnClient ;
 import lizard.api.TLZ.TLZ_Index ;
 import lizard.api.TLZ.TLZ_IndexName ;
 import lizard.api.TLZ.TLZ_ShardIndex ;
@@ -46,6 +46,8 @@ import org.slf4j.LoggerFactory ;
 class TClientIndex extends TxnClient<TLZ_Index.Client> implements Connection, ComponentTxn, Pingable 
 {
     private static Logger log = LoggerFactory.getLogger(TClientIndex.class) ;
+    @Override protected Logger getLog() { return log ; }
+    
     private final ThriftClient client ;
     private ConnState connState ; 
     private final TLZ_IndexName indexName ;
@@ -144,7 +146,6 @@ class TClientIndex extends TxnClient<TLZ_Index.Client> implements Connection, Co
         client.close() ;
         connState = ConnState.CLOSED ;
     }
-    
 }
 
     

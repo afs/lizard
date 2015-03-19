@@ -69,8 +69,7 @@ public class TupleIndexRemote extends TupleIndexBase implements Component, Compo
         component.setLabel(super.getName()) ;
     }
     
-    public TxnClient<?> getWireClient() 
-    { 
+    public TxnClient<? > getWireClient() {
         return client ;
     }
     

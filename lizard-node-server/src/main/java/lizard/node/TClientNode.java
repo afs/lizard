@@ -42,6 +42,8 @@ import org.slf4j.LoggerFactory ;
 public class TClientNode extends TxnClient<TLZ_NodeTable.Client> implements ComponentTxn, Connection, Pingable
 {
     private static Logger log = LoggerFactory.getLogger(TClientNode.class) ;
+    @Override protected Logger getLog() { return log ; }
+
     private final ThriftClient client ;
     private ConnState connState ;
     

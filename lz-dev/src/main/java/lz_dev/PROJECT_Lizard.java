@@ -21,8 +21,8 @@ public class PROJECT_Lizard {
     // Tuple hierarchy.
     // Avoid copy - tuple + set colmap.
     
-    // NEXT
-    //   Implement carried over transaction in NodeTbaleHandler and IndexHandler 
+    // NodeTable Handler not called from Txn?
+    // Only one TupleIndexHandler called. ClusterTupleIndex vs TupleIndexRemote vs TClientIndex.
     
     /*
      *  index, node "clear"

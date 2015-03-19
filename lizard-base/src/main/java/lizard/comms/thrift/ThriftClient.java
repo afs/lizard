@@ -79,4 +79,9 @@ public class ThriftClient extends ComponentBase implements Component {
     public TProtocol protocol() {
         return protocol ;
     }
+    
+    @Override
+    public String toString() {
+        return getLabel() ;
+    }
 }

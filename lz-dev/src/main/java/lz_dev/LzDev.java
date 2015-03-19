@@ -20,10 +20,13 @@ package lz_dev;
 import java.util.ArrayList ;
 import java.util.List ;
 
+import com.hp.hpl.jena.graph.Node ;
 import com.hp.hpl.jena.query.* ;
 import com.hp.hpl.jena.rdf.model.Model ;
 import com.hp.hpl.jena.sparql.core.DatasetGraph ;
+import com.hp.hpl.jena.sparql.sse.SSE ;
 import com.hp.hpl.jena.sparql.util.QueryExecUtils ;
+import com.hp.hpl.jena.tdb.store.NodeId ;
 
 import lizard.api.TxnClient ;
 import lizard.conf.Configuration ;
@@ -35,6 +38,7 @@ import lizard.node.TServerNode ;
 import lizard.query.LzDataset ;
 import lizard.sys.Deploy ;
 import lizard.sys.Deployment ;
+import lizard.system.LizardException ;
 import lizard.system.Pingable ;
 import migrate.Q ;
 
@@ -43,6 +47,7 @@ import org.apache.jena.atlas.lib.StrUtils ;
 import org.apache.jena.atlas.logging.LogCtl ;
 import org.apache.jena.riot.RDFDataMgr ;
 import org.seaborne.dboe.base.file.Location ;
+import org.seaborne.dboe.transaction.txn.ComponentId ;
 import org.seaborne.dboe.transaction.txn.Transaction ;
 import org.seaborne.dboe.transaction.txn.TransactionCoordinator ;
 import org.seaborne.dboe.transaction.txn.TransactionalComponent ;
@@ -70,7 +75,9 @@ public class LzDev {
 
         log.info("DATASET") ;
         LzDataset lz = buildDataset(config) ;
-        Dataset ds = queryEngine(lz, "D.ttl") ;
+        Dataset ds = dataset(lz) ;
+        load(ds, "D.ttl") ;
+        
         performQuery(ds); 
         
         log.info("** Done **") ;
@@ -81,16 +88,38 @@ public class LzDev {
 
     }
     
+    static NodeTableRemote ntr = null ;
+    //static TupleIndexRemote tir = null ;
+    static int counter = 0 ;
+
     public static void main(String[] args) {
+        try { main$(args) ; }
+        catch (Exception ex) 
+        { 
+            System.out.flush() ;
+            System.err.println(ex.getMessage()) ;
+            //ex.printStackTrace(System.err);
+            System.exit(0) ;
+        }
+    }
+    public static void main$(String[] args) {
         log.info("SERVERS") ;
+        try { 
         Deployment deployment = Deploy.deployServers(config, deploymentFile);
+        } catch ( LizardException ex) {
+            System.err.println(ex.getMessage());
+            System.exit(0) ;
+        }
 
         log.info("DATASET") ;
         LzDataset lz = buildDataset(config) ;
-        Dataset ds = queryEngine(lz, "D.ttl") ;
+        Dataset ds = dataset(lz) ;
         
         List<TransactionalComponent> tComp = new ArrayList<>() ;
         
+        log.info("TRANSACTIONS") ;
+        
+        ComponentId base = ComponentId.allocLocal() ;
         lz.getComponents().forEach(c->{
 //            System.out.println(c) ;
 //            System.out.println(c.getClass().getName()) ;
@@ -99,33 +128,47 @@ public class LzDev {
             
             if ( c instanceof TupleIndexRemote ) {
                 TupleIndexRemote rIdx = (TupleIndexRemote)c ;
+                //log.info("TupleIndexRemote: "+rIdx.getLabel()) ;
                 // Remove this can catch at creation time.
                 TxnClient<?> wire = rIdx.getWireClient() ;
-                TransactionalComponentRemote<TxnClient<?>> x = new TransactionalComponentRemote<>(wire) ;
+                int i = ++counter ;
+                ComponentId cid = ComponentId.alloc(base, "TupleIndex"+i, i) ;
+                TransactionalComponentRemote<TxnClient<?>> x = new TransactionalComponentRemote<>(cid, wire) ;
                 tComp.add(x) ;
             }
             if ( c instanceof NodeTableRemote ) {
                 NodeTableRemote r = (NodeTableRemote)c ;
+                ntr = r ;
+                //log.info("NodeTableRemote: "+r.getLabel()) ;
                 // Remove this can catch at creation time.
                 TxnClient<?> wire = r.getWireClient() ;
-                TransactionalComponentRemote<TxnClient<?>> x = new TransactionalComponentRemote<>(wire) ;
+                int i = ++counter ;
+                ComponentId cid = ComponentId.alloc(base, "NodeTable:"+i, i) ;
+                TransactionalComponentRemote<TxnClient<?>> x = new TransactionalComponentRemote<>(cid, wire) ;
                 tComp.add(x) ;
             }
         });
         
-        
         Journal journal = Journal.create(Location.mem()) ;
         TransactionCoordinator transCoord = new TransactionCoordinator(journal, tComp) ;
         Transaction txn = transCoord.begin(ReadWrite.WRITE) ;
+
+        Node n = SSE.parseNode("<http://example/s>") ;
+        NodeId nid = ntr.getAllocateNodeId(n) ;
+        System.out.printf("Node = %s ; NodeId = %s\n", n, nid) ;
         
-        log.info("LOAD") ;
-        RDFDataMgr.read(ds, "D.ttl") ;
+//        log.info("LOAD") ;
+//        RDFDataMgr.read(ds, "D.ttl") ;
         
         txn.commit();
         txn.end() ;
+        log.info("** Done **") ;
+        System.exit(0) ;
         
         
+        Transaction txnR = transCoord.begin(ReadWrite.READ) ;
         performQuery(ds); 
+        txnR.end() ;
         
         log.info("** Done **") ;
         System.exit(0) ;
@@ -140,10 +183,7 @@ public class LzDev {
         return lz ;
     }
     
-    private static Dataset queryEngine(LzDataset lz, String data) {
-        //  Component: lizard.node.NodeTableRemote
-        //  Component: lizard.index.TupleIndexRemote
-        //  Component: lizard.index.TupleIndexRemote
+    private static Dataset dataset(LzDataset lz) {
         lz.getComponents().stream().forEach(c -> {
             //System.out.println("Component: "+c.getClass().getTypeName()) ;
             if ( c instanceof Pingable ) {
@@ -154,7 +194,10 @@ public class LzDev {
 
         DatasetGraph dsg = lz.getDataset() ; 
         Dataset ds = DatasetFactory.create(dsg) ;
-
+        return ds ;
+    }
+    
+    private static void load(Dataset ds, String data) {        
         log.info("LOAD") ;
         if ( data != null ) {
             // Making loading quieter.
@@ -168,7 +211,6 @@ public class LzDev {
             LogCtl.set(TServerNode.class, "INFO") ;
             LogCtl.set(TServerIndex.class, "INFO") ;
         }
-        return ds ;
     }
 
     // -------- Query

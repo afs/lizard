@@ -49,7 +49,7 @@ public class TServerNode extends ThriftServer
     @Override
     public void start() {
         //FmtLog.debug(log, "Start node server, port = %d", getPort()) ;
-        TLZ_NodeTable.Iface handler = new NodeTableHandler(getLabel(), nodeTable) ;
+        TLZ_NodeTable.Iface handler = new THandlerNodeTable(getLabel(), nodeTable) ;
         TLZ_NodeTable.Processor<TLZ_NodeTable.Iface> processor = new TLZ_NodeTable.Processor<TLZ_NodeTable.Iface>(handler);
 
         // Semapahores to sync??

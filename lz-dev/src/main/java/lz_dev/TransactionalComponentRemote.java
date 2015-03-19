@@ -45,14 +45,16 @@ public class TransactionalComponentRemote<X extends TxnClient<?>> extends Transa
     
     private static AtomicLong protocolTxnId = new AtomicLong(1) ;
     private final X worker ;
+    private ComponentId cid ;
     
-    public TransactionalComponentRemote(X worker) {
+    public TransactionalComponentRemote(ComponentId cid, X worker) {
+        this.cid = cid ;
         this.worker = worker ;
     }
     
     @Override
     public ComponentId getComponentId() {
-        return null ;
+        return cid ;
     }
 
     @Override

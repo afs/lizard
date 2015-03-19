@@ -43,10 +43,10 @@ import com.hp.hpl.jena.tdb.store.nodetable.NodeTableCache ;
 import com.hp.hpl.jena.tdb.store.nodetable.NodeTableWrapper ;
 
 //XXX Needs efficiency attention.
-/* package */ class NodeTableHandler extends TxnHandler implements TLZ_NodeTable.Iface {
-    private static Logger log = LoggerFactory.getLogger(NodeTableHandler.class) ;
+/* package */ class THandlerNodeTable extends TxnHandler implements TLZ_NodeTable.Iface {
+    private static Logger log = LoggerFactory.getLogger(THandlerNodeTable.class) ;
     @Override
-    protected Logger getLog() { return log ; }
+    protected Logger log() { return log ; }
     
     private final String label ;
     private final NodeTable nodeTable ;
@@ -54,7 +54,7 @@ import com.hp.hpl.jena.tdb.store.nodetable.NodeTableWrapper ;
     @Override
     protected String getLabel() { return label ; }    
 
-    public NodeTableHandler(String label, NodeTable nodeTable) {
+    public THandlerNodeTable(String label, NodeTable nodeTable) {
         super(init(nodeTable)) ;
         this.label = label ;
         this.nodeTable = nodeTable ;
@@ -93,16 +93,12 @@ import com.hp.hpl.jena.tdb.store.nodetable.NodeTableWrapper ;
     public TLZ_NodeId allocNodeId(long id, long txnId, TLZ_Node nz) throws TException {
         if ( txnId <= 0 )
             FmtLog.info(log, "[%d] txnId = %d", id, txnId) ;
-        
-        FmtLog.warn(log, "[%d] txnId = %d : transactions not implemented", id, txnId) ;
-        
         Node n = SSE.parseNode(nz.getNodeStr()) ;
-
         return writeTxnAlwaysReturn(()-> {
             NodeId nid = nodeTable.getAllocateNodeId(n) ;
             TLZ_NodeId nidz = new TLZ_NodeId() ;
             nidz.setNodeId(nid.getId()) ;
-            FmtLog.info(log, "[%d] Node alloc request : %s => %s", id, n, nid) ;
+            FmtLog.info(log, "[%d:%d] Node alloc request : %s => %s", id, txnId, n, nid) ;
             return nidz ;
         }) ;
 
@@ -116,7 +112,7 @@ import com.hp.hpl.jena.tdb.store.nodetable.NodeTableWrapper ;
             // XXX Remove little structs
             TLZ_NodeId nidz = new TLZ_NodeId() ;
             nidz.setNodeId(nid.getId()) ;
-            FmtLog.info(log, "[%d] Node get request : %s => %s", id, n, nid) ;
+            FmtLog.info(log, "[%d:%d] Node get request : %s => %s", id, txnId, n, nid) ;
             return nidz ;
         }) ;
     }
@@ -129,7 +125,7 @@ import com.hp.hpl.jena.tdb.store.nodetable.NodeTableWrapper ;
             if ( n == null )
                 FmtLog.error(log, "NodeId not found: "+nid) ;
             String str = NodeFmtLib.str(n) ;
-            FmtLog.info(log, "[%d] NodeId get request : %s => %s", id, nid, n) ;
+            FmtLog.info(log, "[%d:%d] NodeId get request : %s => %s", id, txnId, nid, n) ;
             TLZ_Node nlz = new TLZ_Node().setNodeStr(str) ;
             return nlz ;
         }) ;

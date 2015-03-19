@@ -41,14 +41,20 @@ public abstract class TxnHandler implements TxnCtl.Iface {
     }
     
     private Map<Long, TransactionCoordinatorState> transactions = new ConcurrentHashMap<>() ; 
-    private long currentWriter = -1 ;
+    private volatile long currentWriter = -1 ;
 
-    protected abstract Logger getLog() ;
-    protected abstract String getLabel() ;
-    protected long getCurrentWriter() { return currentWriter ; }
+    private void setCurrentWriter(long currentWriter) {
+        this.currentWriter = currentWriter ;
+    }
+
+    protected long getCurrentWriter() {
+        return currentWriter ;
+    }
     
+    protected abstract Logger log() ;
+    protected abstract String getLabel() ;
     protected boolean activeWriteTransaction() {
-        return currentWriter > 0 ; 
+        return getCurrentWriter() > 0 ; 
     }
 
     @Override
@@ -58,19 +64,19 @@ public abstract class TxnHandler implements TxnCtl.Iface {
 
     @Override
     public void txnBeginWrite(long txnId) {
-        if ( currentWriter >= 0 )
-            getLog().warn("TServerIndex:txnBeginWrite - already in a W transaction");
+        if ( getCurrentWriter() >= 0 )
+            log().error("TxnHandler:txnBeginWrite - already in a W transaction");
         txnBegin(txnId, ReadWrite.WRITE) ;
-        currentWriter = txnId ;
+        setCurrentWriter(txnId) ;
     }
 
     // synchronized?  This is RPC and per connection so client end is responsible. 
     private void txnBegin(long txnId, ReadWrite mode) {
-        FmtLog.info(getLog(), "[Txn:%s:%d] begin[%s]", getLabel(), txnId, mode) ;
+        FmtLog.info(log(), "[Txn:%s:%d] begin[%s]", getLabel(), txnId, mode) ;
         transactional.begin(mode) ;
         TransactionCoordinatorState txnState = transactional.detach() ;
         if ( transactions.containsKey(txnId) )
-            getLog().warn("TxnHandler - Transaction already exists") ; 
+            log().warn("TxnHandler - Transaction already exists") ; 
         transactions.put(txnId, txnState) ;
     }
     
@@ -105,40 +111,45 @@ public abstract class TxnHandler implements TxnCtl.Iface {
     protected <X> X writeTxnAlwaysReturn(Supplier<X> action) {
         if ( activeWriteTransaction() )
             return txnActionReturn(getCurrentWriter(), action) ;
-        else
+        else {
+            log().warn("writeTxnAlwaysReturn: autocommit"); 
             return Txn.executeWriteReturn(transactional, action) ;
+        }
     }
 
     /** Perform a write action and return a value */ 
     protected void writeTxnAlways(Runnable action) {
         if ( activeWriteTransaction() )
             txnAction(getCurrentWriter(), action) ;
-        else
+        else {
+            log().warn("writeTxnAlways: autocommit"); 
             Txn.executeWrite(transactional, action) ;
+        }
     }
 
     @Override
     public void txnPrepare(long txnId) {
-        FmtLog.info(getLog(), "[Txn:%s:%d] prepare", getLabel(), txnId) ;
-        txnAction(txnId, () -> getLog().info("Prepare!")) ;
+        FmtLog.info(log(), "[Txn:%s:%d] prepare", getLabel(), txnId) ;
+        txnAction(txnId, () -> log().info("Prepare!")) ;
     }
 
     @Override
     public void txnCommit(long txnId) {
-        FmtLog.info(getLog(), "[Txn:%s:%d] commit", getLabel(), txnId) ;
+        FmtLog.info(log(), "[Txn:%s:%d] commit", getLabel(), txnId) ;
         txnAction(txnId, () -> transactional.commit()) ;
     }
 
     @Override
     public void txnAbort(long txnId) {
-        FmtLog.info(getLog(), "[Txn:%s:%d] abort", getLabel(), txnId) ; 
+        FmtLog.info(log(), "[Txn:%s:%d] abort", getLabel(), txnId) ; 
         txnAction(txnId, () -> transactional.abort()) ;
     }
 
     @Override
     public void txnEnd(long txnId) {
-        FmtLog.info(getLog(), "[Txn:%s:%d] end", getLabel(), txnId) ; 
+        FmtLog.info(log(), "[Txn:%s:%d] end", getLabel(), txnId) ; 
         txnAction(txnId, () -> transactional.end()) ;
+        currentWriter = -1 ;
     }
 }
 

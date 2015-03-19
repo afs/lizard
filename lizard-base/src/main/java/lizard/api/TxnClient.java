@@ -27,27 +27,47 @@ import lizard.system.ComponentTxn ;
 
 import com.hp.hpl.jena.query.ReadWrite ;
 
+import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.atlas.logging.Log ;
+import org.slf4j.Logger ;
 
-public class TxnClient<X extends TxnCtl.Client> extends ComponentBase implements ComponentTxn {
+public abstract class TxnClient<X extends TxnCtl.Client> extends ComponentBase implements ComponentTxn {
 
     // request counter.
     private static AtomicLong requestCounter = new AtomicLong(0) ;
     // Thread's transaction.
-    private ThreadLocal<Long> currentTnxId = new ThreadLocal<>() ;
+    // XXX separate out beging per Client and system wide txnid.
+    
+    private ThreadLocal<Long> currentTxnId = new ThreadLocal<>() ;
     // Transaction interface.
     protected X rpc = null ;
     
     protected TxnClient() { }
 
-    protected void setRPC(X rpc) {
-        if ( rpc != null )
-            Log.warn(this, "RPC handler for trasnactiosn already set") ;
-        this.rpc = rpc ;
+    protected void setRPC(X rpcx) {
+        if ( this.rpc != null )
+            Log.warn(this, "RPC handler for transactions already set") ;
+        this.rpc = rpcx ;
     }
+    
+    protected long allocRequestId() {
+        return requestCounter.incrementAndGet() ;
+    }
+
+    protected long getTxnId() {
+        Long z = currentTxnId.get() ;
+        if ( z == null )
+            return -99 ;
+        return z ;
+    }
+
+    protected abstract Logger getLog() ;
+    private final static boolean LOG_TXN = true ; 
     
     @Override
     public void begin(long txnId, ReadWrite mode) {
+        if ( LOG_TXN )
+            FmtLog.info(getLog(), "[Txn:%s:%d] begin/%s", getLabel(), txnId, mode.toString().toLowerCase());
         ThriftLib.exec(()-> {
             switch(Objects.requireNonNull(mode)) {
                 case READ :
@@ -56,32 +76,27 @@ public class TxnClient<X extends TxnCtl.Client> extends ComponentBase implements
                     rpc.txnBeginWrite(txnId) ; break ;
             }
         }) ;
-        currentTnxId.set(txnId) ;
+        currentTxnId.set(txnId) ;
     }
 
     @Override
     public void prepare() {
+        if ( LOG_TXN )
+            FmtLog.info(getLog(), "[Txn:%s:%d] prepare", getLabel(), getTxnId());
         ThriftLib.exec(()-> rpc.txnPrepare(getTxnId())) ;
-    }
-
-    protected long allocRequestId() {
-        return requestCounter.incrementAndGet() ;
-    }
-    
-    protected long getTxnId() {
-        Long z = currentTnxId.get() ;
-        if ( z == null )
-            return -99 ;
-        return z ;
     }
 
     @Override
     public void commit() {
+        if ( LOG_TXN )
+            FmtLog.info(getLog(), "[Txn:%s:%d] commit", getLabel(), getTxnId());
         ThriftLib.exec(()-> rpc.txnCommit(getTxnId())) ;
     }
 
     @Override
     public void abort() {
+        if ( LOG_TXN )
+            FmtLog.info(getLog(), "[Txn:%s:%d] aborts", getLabel(), getTxnId());
         ThriftLib.exec(()-> rpc.txnAbort(getTxnId())) ;
     }
 
@@ -89,12 +104,14 @@ public class TxnClient<X extends TxnCtl.Client> extends ComponentBase implements
     public void end() {
         Long z = getTxnId() ;
         if ( z != null ) {
+            if ( LOG_TXN )
+                FmtLog.info(getLog(), "[Txn:%s:%d] end", getLabel(), getTxnId());
             ThriftLib.exec(() -> rpc.txnEnd(getTxnId())) ;
-            currentTnxId.set(null) ;
+            currentTxnId.set(null) ;
         }
 
         // Because get may have created it. 
-        currentTnxId.remove() ;
+        currentTxnId.remove() ;
     }
 }
 
