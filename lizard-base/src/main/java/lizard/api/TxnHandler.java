@@ -126,10 +126,8 @@ public abstract class TxnHandler implements TxnCtl.Iface {
      */
     private void internal_txnAction(long txnId, Runnable action) {
         TransactionCoordinatorState s = transactions.get(txnId) ;
-//        if ( s == null ) 
-//            // null if (1) no begin (2) auto-ended
-//            // In both cases, do nothing
-//            return ;
+        //( s == null ) if (1) no begin (2) auto-ended
+        // Do action without a transaction. 
 
         if ( s != null )
             transactional.attach(s); 
