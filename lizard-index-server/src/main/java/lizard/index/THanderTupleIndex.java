@@ -38,11 +38,12 @@ import org.apache.thrift.TException ;
 import org.seaborne.dboe.base.file.Location ;
 import org.seaborne.dboe.index.RangeIndex ;
 import org.seaborne.dboe.trans.bplustree.BPlusTree ;
-import org.seaborne.dboe.transaction.Txn ;
 import org.seaborne.dboe.transaction.txn.TransactionalBase ;
 import org.seaborne.dboe.transaction.txn.journal.Journal ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
+
+import static com.hp.hpl.jena.query.ReadWrite.* ;
 
 /* package */ class THanderTupleIndex extends TxnHandler implements TLZ_Index.Iface {
     
@@ -87,18 +88,19 @@ import org.slf4j.LoggerFactory ;
     public boolean idxAdd(long id, long txnId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws TException {
         Tuple<NodeId> tuple2 = TLZlib.build(tuple) ;
         FmtLog.info(log, "[%d:%d] add %s %s", id, txnId, index.getName(), tuple2) ;
-        return writeTxnAlwaysReturn(() -> index.add(tuple2)) ;
+        return txnAlwaysReturn(txnId, WRITE, () -> index.add(tuple2)) ;
     }
 
     // Single tuple add/delete. Not efficient.  Sort of autocommit.
-    // Batches are better; this code hels in small scale changes
-    // and setting up tests.
+    // Batches are better; this code helps in small scale changes
+    // and setting up tests.  Autocommit per node is not safe/consistent
+    // across the cluster but at least does not corrupt local storage.
     
     @Override
     public boolean idxDelete(long id, long txnId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws TException {
         Tuple<NodeId> tuple2 = TLZlib.build(tuple) ;
         FmtLog.info(log, "[%d:%d] delete %s %s", id, txnId, index.getName(), tuple2) ;
-        return writeTxnAlwaysReturn(() -> index.delete(tuple2) ) ;
+        return txnAlwaysReturn(txnId, WRITE, () -> index.delete(tuple2) ) ;
     }
 
     @Override
@@ -109,16 +111,10 @@ import org.slf4j.LoggerFactory ;
         // TODO XXX Revisit and stream this.
         // TODO Respect transaction id.
         List<TLZ_TupleNodeId> result = new ArrayList<>() ;
-        Txn.executeRead(transactional, ()->{
+        txnAlways(txnId, READ, ()->{
             Iterator<Tuple<NodeId>> iter = index.find(pattern) ;
             iter.forEachRemaining(t->result.add(TLZlib.build(t))) ;
         }) ;
         return result ;
-    }
-    
-    @Override
-    public void txnCommit(long txnId) {
-        log.info("txnCommit: "+getLabel()); 
-        super.txnCommit(txnId);
     }
 }

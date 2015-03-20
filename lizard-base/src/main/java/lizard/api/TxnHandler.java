@@ -47,6 +47,9 @@ public abstract class TxnHandler implements TxnCtl.Iface {
     // may be used to service the next request.  While this is
     // per-thread-transaction at the client, it isn't at the server.
     private volatile long currentWriter = NO_WRITER ;
+    
+    // readers
+    //private 
 
     private void setCurrentWriter(long currentWriter) {
         this.currentWriter = currentWriter ;
@@ -90,35 +93,44 @@ public abstract class TxnHandler implements TxnCtl.Iface {
     public void txnPrepare(long txnId) {
         if ( LOG_TXN )
             FmtLog.info(log(), "[Txn:%s:%d] prepare", getLabel(), txnId) ;
-        txnAction(txnId, () -> log().info("Prepare!")) ;
+        internal_txnAction(txnId, () -> log().info("Prepare!")) ;
     }
 
     @Override
     public void txnCommit(long txnId) {
         if ( LOG_TXN )
             FmtLog.info(log(), "[Txn:%s:%d] commit", getLabel(), txnId) ;
-        txnAction(txnId, () -> transactional.commit()) ;
+        internal_txnAction(txnId, () -> transactional.commit()) ;
     }
 
     @Override
     public void txnAbort(long txnId) {
         if ( LOG_TXN )
             FmtLog.info(log(), "[Txn:%s:%d] abort", getLabel(), txnId) ; 
-        txnAction(txnId, () -> transactional.abort()) ;
+        internal_txnAction(txnId, () -> transactional.abort()) ;
     }
 
     @Override
     public void txnEnd(long txnId) {
         if ( LOG_TXN )
             FmtLog.info(log(), "[Txn:%s:%d] end", getLabel(), txnId) ; 
-        txnAction(txnId, () -> transactional.end()) ;
+        internal_txnAction(txnId, () -> transactional.end()) ;
         setCurrentWriter(NO_WRITER) ;
     }
 
-    /** Perform an action inside the transaction {@code txnId} */ 
-    protected void txnAction(long txnId, Runnable action) {
+    /** Perform an action inside the transaction {@code txnId}
+     * This is for transaction lifecycl operations, not client
+     * actions.  
+     * @see #txnRead
+     * @see #txnWrite
+     */
+    private void internal_txnAction(long txnId, Runnable action) {
         TransactionCoordinatorState s = transactions.get(txnId) ;
-        // May be null -> auto-ended 
+//        if ( s == null ) 
+//            // null if (1) no begin (2) auto-ended
+//            // In both cases, do nothing
+//            return ;
+
         if ( s != null )
             transactional.attach(s); 
         action.run() ;
@@ -131,9 +143,11 @@ public abstract class TxnHandler implements TxnCtl.Iface {
         else
             transactions.put(txnId, s) ;
     }
+    
 
+    // Used?
     /** Perform an action inside the transaction {@code txnId}; return an object */ 
-    protected <X> X txnActionReturn(long txnId, Supplier<X> action) {
+    private <X> X internal_txnActionReturn(long txnId, Supplier<X> action) {
         TransactionCoordinatorState s = transactions.get(txnId) ;
         transactional.attach(s); 
         X x = action.get() ;
@@ -142,24 +156,37 @@ public abstract class TxnHandler implements TxnCtl.Iface {
         return x ;
     }
 
-    /** Perform a write action and return a value; either inside the current writer or inside a new writer */ 
-    protected <X> X writeTxnAlwaysReturn(Supplier<X> action) {
-        if ( activeWriteTransaction() )
-            return txnActionReturn(getCurrentWriter(), action) ;
-        else {
-            log().warn("writeTxnAlwaysReturn: autocommit"); 
-            return Txn.executeWriteReturn(transactional, action) ;
+    private void autoCommit(long txnId, Runnable action, ReadWrite mode) {
+        FmtLog.warn(log(), "[Txn:%s:%d] autocommit(%s)", getLabel(), txnId, mode) ;
+        switch(mode) {
+            case READ : Txn.executeRead(transactional, action); break ;
+            case WRITE : Txn.executeWrite(transactional, action); break ;
         }
     }
 
-    /** Perform a write action and return a value */ 
-    protected void writeTxnAlways(Runnable action) {
-        if ( activeWriteTransaction() )
-            txnAction(getCurrentWriter(), action) ;
-        else {
-            log().warn("writeTxnAlways: autocommit"); 
-            Txn.executeWrite(transactional, action) ;
+    private <X> X autoCommitReturn(long txnId, Supplier<X> action, ReadWrite mode) {
+        FmtLog.warn(log(), "[Txn:%s:%d] autocommit(%s)", getLabel(), txnId, mode) ;
+        switch(mode) {
+            case READ : return Txn.executeReadReturn(transactional, action) ;
+            case WRITE : return Txn.executeWriteReturn(transactional, action) ;
         }
+        return null ;   // Dummy
+    }
+
+    /** Perform a transaction,use autocommitif necessary */ 
+    protected void txnAlways(long txnId, ReadWrite mode, Runnable action) {
+        if ( ! transactions.containsKey(txnId) ) {
+            autoCommit(txnId, action, mode); 
+            return ;
+        }
+        internal_txnAction(txnId, action); 
+    }
+
+    /** Perform a write action and return a value; either inside the current writer or inside a new writer */ 
+    protected <X> X txnAlwaysReturn(long txnId, ReadWrite mode, Supplier<X> action) {
+        if ( ! transactions.containsKey(txnId) )
+            return autoCommitReturn(txnId, action, mode) ; 
+        return internal_txnActionReturn(txnId, action); 
     }
 }
 

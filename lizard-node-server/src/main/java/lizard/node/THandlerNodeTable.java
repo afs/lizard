@@ -42,6 +42,8 @@ import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
 import com.hp.hpl.jena.tdb.store.nodetable.NodeTableCache ;
 import com.hp.hpl.jena.tdb.store.nodetable.NodeTableWrapper ;
 
+import static com.hp.hpl.jena.query.ReadWrite.* ;
+
 //XXX Needs efficiency attention.
 /* package */ class THandlerNodeTable extends TxnHandler implements TLZ_NodeTable.Iface {
     private static Logger log = LoggerFactory.getLogger(THandlerNodeTable.class) ;
@@ -94,20 +96,19 @@ import com.hp.hpl.jena.tdb.store.nodetable.NodeTableWrapper ;
         if ( txnId <= 0 )
             FmtLog.info(log, "[%d] txnId = %d", id, txnId) ;
         Node n = SSE.parseNode(nz.getNodeStr()) ;
-        return writeTxnAlwaysReturn(()-> {
+        return txnAlwaysReturn(txnId, WRITE, ()-> {
             NodeId nid = nodeTable.getAllocateNodeId(n) ;
             TLZ_NodeId nidz = new TLZ_NodeId() ;
             nidz.setNodeId(nid.getId()) ;
             FmtLog.info(log, "[%d:%d] Node alloc request : %s => %s", id, txnId, n, nid) ;
             return nidz ;
         }) ;
-
     }
 
     @Override
     public TLZ_NodeId findByNode(long id, long txnId, TLZ_Node nz) throws TException {
         Node n = SSE.parseNode(nz.getNodeStr()) ;
-        return writeTxnAlwaysReturn(()-> {
+        return txnAlwaysReturn(txnId, READ, ()-> {
             NodeId nid = nodeTable.getNodeIdForNode(n) ;
             // XXX Remove little structs
             TLZ_NodeId nidz = new TLZ_NodeId() ;
@@ -120,7 +121,7 @@ import com.hp.hpl.jena.tdb.store.nodetable.NodeTableWrapper ;
     @Override
     public TLZ_Node findByNodeId(long id, long txnId, TLZ_NodeId nz) throws TException {
         NodeId nid = NodeId.create(nz.getNodeId()) ;
-        return writeTxnAlwaysReturn(()-> {
+        return txnAlwaysReturn(txnId, READ, ()-> {
             Node n = nodeTable.getNodeForNodeId(nid) ;
             if ( n == null )
                 FmtLog.error(log, "NodeId not found: "+nid) ;
