@@ -21,8 +21,12 @@ public class PROJECT_Lizard {
     // Tuple hierarchy.
     // Avoid copy - tuple + set colmap.
     
-    // NodeTable Handler not called from Txn?
-    // Only one TupleIndexHandler called. ClusterTupleIndex vs TupleIndexRemote vs TClientIndex.
+    //Next:
+    //  ZK transaction ids.
+    //  prepare-abort testing.
+    //  
+    
+    // Mantis : sort out prepare-commit
     
     /*
      *  index, node "clear"
@@ -37,9 +41,6 @@ public class PROJECT_Lizard {
      *  lizard-cmds - deployed version
      *  lz-dev/bin
      */
-    
-    
-    // TransactionalBase : tests for detach after commit, around end(). 
     
     
     // TxnHandler to have transaction mapping help code.

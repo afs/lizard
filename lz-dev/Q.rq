@@ -1,5 +1,5 @@
 PREFIX : <http://example/> 
 
 SELECT * {
-  :s1 ?p ?o 
+  ?s :p ?o 
 }

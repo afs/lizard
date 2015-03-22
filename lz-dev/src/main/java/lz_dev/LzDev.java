@@ -47,10 +47,10 @@ import org.apache.jena.atlas.lib.StrUtils ;
 import org.apache.jena.atlas.logging.LogCtl ;
 import org.apache.jena.riot.RDFDataMgr ;
 import org.seaborne.dboe.base.file.Location ;
-import org.seaborne.dboe.transaction.txn.ComponentId ;
-import org.seaborne.dboe.transaction.txn.Transaction ;
-import org.seaborne.dboe.transaction.txn.TransactionCoordinator ;
-import org.seaborne.dboe.transaction.txn.TransactionalComponent ;
+import org.seaborne.dboe.transaction.ThreadTxn ;
+import org.seaborne.dboe.transaction.Transactional ;
+import org.seaborne.dboe.transaction.Txn ;
+import org.seaborne.dboe.transaction.txn.* ;
 import org.seaborne.dboe.transaction.txn.journal.Journal ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
@@ -151,17 +151,54 @@ public class LzDev {
         
         Journal journal = Journal.create(Location.mem()) ;
         TransactionCoordinator transCoord = new TransactionCoordinator(journal, tComp) ;
-        Transaction txn = transCoord.begin(ReadWrite.WRITE) ;
+        Transactional transactional = new TransactionalBase(transCoord) ;
+        
+        if ( false )
+        {
+            Node n1 = SSE.parseNode("<http://example/s1>") ;
+            Node n2 = SSE.parseNode("<http://example/s2>") ;
+            
+            Txn.executeWrite(transactional, ()->{
+                NodeId nid = ntr.getAllocateNodeId(n1) ;
+                System.out.printf("T1: Node = %s ; NodeId = %s\n", n1, nid) ;
 
-//        Node n = SSE.parseNode("<http://example/s>") ;
-//        NodeId nid = ntr.getAllocateNodeId(n) ;
-//        System.out.printf("Node = %s ; NodeId = %s\n", n, nid) ;
+                Node n1a = ntr.getNodeForNodeId(nid) ;
+                System.out.printf("T1: Node = %s ; NodeId = %s\n", n1a, nid) ;
+            });
+
+            ThreadTxn tt = Txn.threadTxnRead(transactional, ()->{
+                NodeId nid1 = ntr.getNodeIdForNode(n1) ;
+                System.out.printf("TA11: Node = %s ; NodeId = %s\n", n1, nid1) ;
+                NodeId nid2 = ntr.getNodeIdForNode(n2) ;
+                System.out.printf("TA12: Node = %s ; NodeId = %s\n", n2, nid2) ;
+            }) ;
+            
+            Txn.executeWrite(transactional, ()->{
+                NodeId nid2 = ntr.getAllocateNodeId(n2) ;
+                System.out.printf("T2: Node = %s ; NodeId = %s\n", n2, nid2) ;
+            }) ;
+            
+            tt.run();
+            Txn.threadTxnRead(transactional, ()->{
+                NodeId nid1 = ntr.getNodeIdForNode(n1) ;
+                System.out.printf("TA21: Node = %s ; NodeId = %s\n", n1, nid1) ;
+                NodeId nid2 = ntr.getNodeIdForNode(n2) ;
+                System.out.printf("TA22: Node = %s ; NodeId = %s\n", n2, nid2) ;
+            }).run();
+            
+            log.info("** Done **") ;
+            System.exit(0) ;
+        }
         
-        log.info("LOAD") ;
-        RDFDataMgr.read(ds, "D.ttl") ;
-        
+        log.info("LOAD 1") ;
+        Transaction txn = transCoord.begin(ReadWrite.WRITE) ;
+        RDFDataMgr.read(ds, "D1.ttl") ;
+        //txn.prepare(); 
         txn.commit();
         txn.end() ;
+        log.info("LOAD 2") ;
+        Txn.executeWrite(transactional, () -> RDFDataMgr.read(ds, "D2.ttl")) ;
+        
         
         Transaction txnR = transCoord.begin(ReadWrite.READ) ;
         performQuery(ds); 
@@ -217,7 +254,7 @@ public class LzDev {
         //            ARQ.setExecutionLogging(InfoLevel.NONE);
 
         String qs = StrUtils.strjoinNL("PREFIX : <http://example/> SELECT * "
-                                       , "{ :s1 ?p ?o }" 
+                                       , "{ ?s :p ?o }" 
                                        //, "{ ?x :k ?k . ?x :p ?v . }"
                                        //, "{ :x1 :p ?x . ?x :p ?v . }"
                                        // Filter placement occurs?
