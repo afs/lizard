@@ -1,0 +1,4 @@
+PREFIX : <http://example/> 
+
+:s1 :p :o1 .
+:s1 :q :o1 .
