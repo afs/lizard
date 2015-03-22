@@ -17,23 +17,14 @@
 
 package lizard.node;
 
+import static com.hp.hpl.jena.query.ReadWrite.READ ;
+import static com.hp.hpl.jena.query.ReadWrite.WRITE ;
 import lizard.adapters.AdapterObjectFile ;
 import lizard.adapters.AdapterRangeIndex ;
 import lizard.api.TxnHandler ;
 import lizard.api.TLZ.TLZ_Node ;
 import lizard.api.TLZ.TLZ_NodeId ;
 import lizard.api.TLZ.TLZ_NodeTable ;
-import org.apache.jena.atlas.logging.FmtLog ;
-import org.apache.jena.riot.out.NodeFmtLib ;
-import org.apache.thrift.TException ;
-import org.seaborne.dboe.base.file.Location ;
-import org.seaborne.dboe.index.RangeIndex ;
-import org.seaborne.dboe.trans.bplustree.BPlusTree ;
-import org.seaborne.dboe.trans.data.TransObjectFile ;
-import org.seaborne.dboe.transaction.txn.TransactionalBase ;
-import org.seaborne.dboe.transaction.txn.journal.Journal ;
-import org.slf4j.Logger ;
-import org.slf4j.LoggerFactory ;
 
 import com.hp.hpl.jena.graph.Node ;
 import com.hp.hpl.jena.sparql.sse.SSE ;
@@ -42,7 +33,18 @@ import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
 import com.hp.hpl.jena.tdb.store.nodetable.NodeTableCache ;
 import com.hp.hpl.jena.tdb.store.nodetable.NodeTableWrapper ;
 
-import static com.hp.hpl.jena.query.ReadWrite.* ;
+import org.apache.jena.atlas.logging.FmtLog ;
+import org.apache.jena.riot.out.NodeFmtLib ;
+import org.apache.thrift.TException ;
+import org.seaborne.dboe.base.file.Location ;
+import org.seaborne.dboe.index.RangeIndex ;
+import org.seaborne.dboe.trans.bplustree.BPlusTree ;
+import org.seaborne.dboe.trans.data.TransObjectFile ;
+import org.seaborne.dboe.transaction.txn.TransactionalBase ;
+import org.seaborne.dboe.transaction.txn.TransactionalSystem ;
+import org.seaborne.dboe.transaction.txn.journal.Journal ;
+import org.slf4j.Logger ;
+import org.slf4j.LoggerFactory ;
 
 //XXX Needs efficiency attention.
 /* package */ class THandlerNodeTable extends TxnHandler implements TLZ_NodeTable.Iface {
@@ -62,7 +64,7 @@ import static com.hp.hpl.jena.query.ReadWrite.* ;
         this.nodeTable = nodeTable ;
     }
     
-    private static TransactionalBase init(NodeTable nodeTable) {
+    private static TransactionalSystem init(NodeTable nodeTable) {
         while ( nodeTable instanceof NodeTableWrapper )
             nodeTable = ((NodeTableWrapper)nodeTable).wrapped() ;
         if ( nodeTable instanceof NodeTableCache )

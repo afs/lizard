@@ -28,16 +28,16 @@ import com.hp.hpl.jena.query.ReadWrite ;
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.seaborne.dboe.transaction.Txn ;
 import org.seaborne.dboe.transaction.txn.TransactionCoordinatorState ;
-import org.seaborne.dboe.transaction.txn.TransactionalBase ;
+import org.seaborne.dboe.transaction.txn.TransactionalSystem ;
 import org.slf4j.Logger ;
 
 // Support for the server side. 
 public abstract class TxnHandler implements TxnCtl.Iface {
     //private static Logger log = LoggerFactory.getLogger(IndexHandler.class) ;
-    protected final TransactionalBase transactional ;
+    protected final TransactionalSystem transactional ;
     private final static boolean LOG_TXN = false ;
     
-    protected TxnHandler(TransactionalBase transactional) {
+    protected TxnHandler(TransactionalSystem transactional) {
         this.transactional = transactional ;
     }
     
@@ -93,14 +93,15 @@ public abstract class TxnHandler implements TxnCtl.Iface {
     public void txnPrepare(long txnId) {
         if ( LOG_TXN )
             FmtLog.info(log(), "[Txn:%s:%d] prepare", getLabel(), txnId) ;
-        internal_txnAction(txnId, () -> log().info("Prepare!")) ;
+        internal_txnAction(txnId, () -> transactional.commitPrepare() ) ;
     }
 
     @Override
     public void txnCommit(long txnId) {
         if ( LOG_TXN )
             FmtLog.info(log(), "[Txn:%s:%d] commit", getLabel(), txnId) ;
-        internal_txnAction(txnId, () -> transactional.commit()) ;
+        internal_txnAction(txnId, () -> { transactional.commitExec() ; }) ;
+        
     }
 
     @Override

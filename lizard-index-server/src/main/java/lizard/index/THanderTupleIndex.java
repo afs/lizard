@@ -17,6 +17,9 @@
 
 package lizard.index;
 
+import static com.hp.hpl.jena.query.ReadWrite.READ ;
+import static com.hp.hpl.jena.query.ReadWrite.WRITE ;
+
 import java.util.ArrayList ;
 import java.util.Iterator ;
 import java.util.List ;
@@ -39,11 +42,10 @@ import org.seaborne.dboe.base.file.Location ;
 import org.seaborne.dboe.index.RangeIndex ;
 import org.seaborne.dboe.trans.bplustree.BPlusTree ;
 import org.seaborne.dboe.transaction.txn.TransactionalBase ;
+import org.seaborne.dboe.transaction.txn.TransactionalSystem ;
 import org.seaborne.dboe.transaction.txn.journal.Journal ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
-
-import static com.hp.hpl.jena.query.ReadWrite.* ;
 
 /* package */ class THanderTupleIndex extends TxnHandler implements TLZ_Index.Iface {
     
@@ -64,7 +66,7 @@ import static com.hp.hpl.jena.query.ReadWrite.* ;
         this.index = index ;
     }
     
-    private static TransactionalBase init(TupleIndex index) {
+    private static TransactionalSystem init(TupleIndex index) {
         BPlusTree x = unwrap(index) ;
         // XXX !!!!!
         log.warn("Ad-hoc memory journal");  
