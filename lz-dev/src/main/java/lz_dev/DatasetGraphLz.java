@@ -18,6 +18,7 @@
 package lz_dev;
 
 import org.seaborne.dboe.transaction.Transactional ;
+import org.seaborne.dboe.transaction.txn.TransactionCoordinator ;
 
 import com.hp.hpl.jena.query.ReadWrite ;
 import com.hp.hpl.jena.sparql.core.DatasetGraph ;
@@ -29,14 +30,16 @@ import com.hp.hpl.jena.tdb.store.DatasetGraphTDB ;
 public class DatasetGraphLz extends DatasetGraphTrackActive {
     private final DatasetGraphTDB dsg ;
     private final Transactional dboe ;
+    private final TransactionCoordinator transCoord ;
     @Override
     protected DatasetGraph get() { return dsg ; } 
     
-    public DatasetGraphLz(DatasetGraphTDB dsg, Transactional dboe) {
+    public DatasetGraphLz(DatasetGraphTDB dsg, Transactional dboe, TransactionCoordinator transCoord) {
         this.dsg = dsg ;
         this.dboe = dboe ;
+        this.transCoord = transCoord ;
     }
-
+    
     @Override
     public Context getContext() {
         return dsg.getContext()  ;
@@ -54,7 +57,9 @@ public class DatasetGraphLz extends DatasetGraphTrackActive {
     }
 
     @Override
-    protected void _begin(ReadWrite readWrite) { dboe.begin(readWrite); }
+    protected void _begin(ReadWrite readWrite) {
+        dboe.begin(readWrite) ;
+    }
 
     @Override
     protected void _commit() { dboe.commit(); }
@@ -67,4 +72,17 @@ public class DatasetGraphLz extends DatasetGraphTrackActive {
 
     @Override
     protected void _close() {}
+
+    public DatasetGraphTDB getDatasetTDB() {
+        return dsg ;
+    }
+
+    public Transactional getDBoeTransactional() {
+        return dboe ;
+    }
+    
+    public TransactionCoordinator getCoordinator() {
+        return transCoord ;
+    }
+
 }

@@ -24,9 +24,6 @@ public class PROJECT_Lizard {
     //Next:
     //  ZK transaction ids.
     //  prepare-abort testing.
-    //  
-    
-    // Mantis : sort out prepare-commit
     
     /*
      *  index, node "clear"
@@ -41,7 +38,6 @@ public class PROJECT_Lizard {
      *  lizard-cmds - deployed version
      *  lz-dev/bin
      */
-    
     
     // TxnHandler to have transaction mapping help code.
     // TClientTxn -> TxnClient c.f. TxnHandler.

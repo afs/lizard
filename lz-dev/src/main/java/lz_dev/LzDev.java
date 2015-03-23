@@ -20,14 +20,6 @@ package lz_dev;
 import java.util.ArrayList ;
 import java.util.List ;
 
-import com.hp.hpl.jena.graph.Node ;
-import com.hp.hpl.jena.query.* ;
-import com.hp.hpl.jena.rdf.model.Model ;
-import com.hp.hpl.jena.sparql.core.DatasetGraph ;
-import com.hp.hpl.jena.sparql.sse.SSE ;
-import com.hp.hpl.jena.sparql.util.QueryExecUtils ;
-import com.hp.hpl.jena.tdb.store.NodeId ;
-
 import lizard.api.TxnClient ;
 import lizard.conf.Configuration ;
 import lizard.index.TServerIndex ;
@@ -41,7 +33,6 @@ import lizard.sys.Deployment ;
 import lizard.system.LizardException ;
 import lizard.system.Pingable ;
 import migrate.Q ;
-
 import org.apache.jena.atlas.lib.Lib ;
 import org.apache.jena.atlas.lib.StrUtils ;
 import org.apache.jena.atlas.logging.LogCtl ;
@@ -54,6 +45,15 @@ import org.seaborne.dboe.transaction.txn.* ;
 import org.seaborne.dboe.transaction.txn.journal.Journal ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
+
+import com.hp.hpl.jena.graph.Node ;
+import com.hp.hpl.jena.query.* ;
+import com.hp.hpl.jena.rdf.model.Model ;
+import com.hp.hpl.jena.sparql.core.DatasetGraph ;
+import com.hp.hpl.jena.sparql.sse.SSE ;
+import com.hp.hpl.jena.sparql.util.QueryExecUtils ;
+import com.hp.hpl.jena.tdb.store.DatasetGraphTDB ;
+import com.hp.hpl.jena.tdb.store.NodeId ;
 
 
 public class LzDev {
@@ -119,12 +119,15 @@ public class LzDev {
         
         log.info("TRANSACTIONS") ;
         
+        // Can we add the base instance or the cluster versions?
+        // Cluster must expose their units.
+        // Cluster is actually just the distributor and not involved otherwise (?)
+        // Issue : deciding who it talks to to reduce network coordination (?)
+        //   Not for W, only R.
+        //   Can we do R simply by using "current R transaction"?  
+
         ComponentId base = ComponentId.allocLocal() ;
         lz.getComponents().forEach(c->{
-//            System.out.println(c) ;
-//            System.out.println(c.getClass().getName()) ;
-            
-            //SOME TRANSACTION STUFF
             
             if ( c instanceof TupleIndexRemote ) {
                 TupleIndexRemote rIdx = (TupleIndexRemote)c ;
@@ -133,7 +136,7 @@ public class LzDev {
                 TxnClient<?> wire = rIdx.getWireClient() ;
                 int i = ++counter ;
                 ComponentId cid = ComponentId.alloc(base, "TupleIndex"+i, i) ;
-                TransactionalComponentRemote<TxnClient<?>> x = new TransactionalComponentRemote<>(cid, wire) ;
+                TransactionalComponent x = new TransactionalComponentRemote<>(cid, wire) ;
                 tComp.add(x) ;
             }
             if ( c instanceof NodeTableRemote ) {
@@ -144,7 +147,7 @@ public class LzDev {
                 TxnClient<?> wire = r.getWireClient() ;
                 int i = ++counter ;
                 ComponentId cid = ComponentId.alloc(base, "NodeTable:"+i, i) ;
-                TransactionalComponentRemote<TxnClient<?>> x = new TransactionalComponentRemote<>(cid, wire) ;
+                TransactionalComponent x = new TransactionalComponentRemote<>(cid, wire) ;
                 tComp.add(x) ;
             }
         });
@@ -218,6 +221,28 @@ public class LzDev {
     }
     
     private static Dataset dataset(LzDataset lz) {
+        List<TransactionalComponent> tComp = new ArrayList<>() ;
+        ComponentId base = ComponentId.allocLocal() ;
+        lz.getComponents().forEach(c->{
+            if ( c instanceof TxnClient.Accessor ) {
+                TxnClient<?> wire = ((TxnClient.Accessor)c).getWireClient() ;
+                int i = ++counter ;
+                ComponentId cid = ComponentId.alloc(base, c.getLabel() , i) ;
+                TransactionalComponent x = new TransactionalComponentRemote<>(cid, wire) ;
+                tComp.add(x) ;
+            }
+        });
+        
+        Journal journal = Journal.create(Location.mem()) ;
+        TransactionCoordinator transCoord = new TransactionCoordinator(journal, tComp) ;
+        Transactional transactional = new TransactionalBase(transCoord) ;
+
+        DatasetGraphTDB dsgtdb = lz.getDataset() ;
+        DatasetGraph dsg = new DatasetGraphLz(dsgtdb, transactional, transCoord) ;
+        return DatasetFactory.create(dsg) ;
+    }
+    
+    private static void ping(LzDataset lz) {
         lz.getComponents().stream().forEach(c -> {
             //System.out.println("Component: "+c.getClass().getTypeName()) ;
             if ( c instanceof Pingable ) {
@@ -225,10 +250,6 @@ public class LzDev {
                 p.ping();
             }
         }) ;
-
-        DatasetGraph dsg = lz.getDataset() ; 
-        Dataset ds = DatasetFactory.create(dsg) ;
-        return ds ;
     }
     
     private static void load(Dataset ds, String data) {        

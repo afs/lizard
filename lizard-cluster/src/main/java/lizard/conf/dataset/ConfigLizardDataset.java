@@ -38,14 +38,14 @@ import org.seaborne.dboe.transaction.txn.TransactionalBase ;
 import org.seaborne.dboe.transaction.txn.journal.Journal ;
 import org.slf4j.Logger ;
 
+import org.seaborne.dboe.base.file.Location; 
 import com.hp.hpl.jena.rdf.model.Model ;
 import com.hp.hpl.jena.rdf.model.Resource ;
 import com.hp.hpl.jena.sparql.ARQException ;
-import com.hp.hpl.jena.sparql.core.DatasetGraph ;
 import com.hp.hpl.jena.sparql.core.assembler.DatasetAssemblerVocab ;
 import com.hp.hpl.jena.sparql.util.TypeNotUniqueException ;
 import com.hp.hpl.jena.sparql.util.graph.GraphUtils ;
-import com.hp.hpl.jena.tdb.base.file.Location ;
+import com.hp.hpl.jena.tdb.store.DatasetGraphTDB ;
 import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
 import com.hp.hpl.jena.tdb.store.tupletable.TupleIndex ;
 
@@ -105,7 +105,7 @@ public class ConfigLizardDataset {
             }
             
             
-            DatasetGraph dsg = LzBuildClient.createDataset(Location.mem(), indexes, nt) ;
+            DatasetGraphTDB dsg = LzBuildClient.createDataset(Location.mem(), indexes, nt) ;
             LzDataset lizard = new LzDataset(dsg, startables) ;
             lzDsg.add(lizard) ;
         }

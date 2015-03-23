@@ -17,6 +17,7 @@
 
 package lizard.conf;
 
+import lizard.adapters.A ;
 import lizard.conf.dataset.DatasetBuilderLizard ;
 import lizard.query.QuackLizard ;
 import org.apache.jena.atlas.lib.StrUtils ;
@@ -27,7 +28,6 @@ import com.hp.hpl.jena.query.ARQ ;
 import com.hp.hpl.jena.sparql.engine.main.QC ;
 import com.hp.hpl.jena.sparql.engine.optimizer.reorder.ReorderLib ;
 import com.hp.hpl.jena.tdb.base.file.FileSet ;
-import com.hp.hpl.jena.tdb.base.file.Location ;
 import com.hp.hpl.jena.tdb.base.record.RecordFactory ;
 import com.hp.hpl.jena.tdb.index.* ;
 import com.hp.hpl.jena.tdb.setup.StoreParams ;
@@ -45,7 +45,8 @@ public class LzBuildClient
 {
     static Logger logConf = Config.logConf ;
 
-    public static DatasetGraphTDB createDataset(Location location, TupleIndex[] tripleIndexes, NodeTable nodeTable) {
+    public static DatasetGraphTDB createDataset(org.seaborne.dboe.base.file.Location _location, TupleIndex[] tripleIndexes, NodeTable nodeTable) {
+        com.hp.hpl.jena.tdb.base.file.Location location = A.convert(_location) ;
         DatasetControl policy = new DatasetControlMRSW() ;
         StoreParams params = StoreParams.getDftStoreParams() ;
         

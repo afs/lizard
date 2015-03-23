@@ -22,20 +22,20 @@ import java.util.List ;
 import lizard.system.Component ;
 import lizard.system.LifeCycle ;
 
-import com.hp.hpl.jena.sparql.core.DatasetGraph ;
+import com.hp.hpl.jena.tdb.store.DatasetGraphTDB ;
 
 /** The query platform for Lizard - a dataset and the local compoents (clients to index and nodes) */ 
 public class LzDataset implements LifeCycle {
-    private DatasetGraph dsg ;
+    private DatasetGraphTDB dsg ;
     private List<Component> components ;
     private boolean started = false ;
 
-    public LzDataset(DatasetGraph dsg, List<Component> components) {
+    public LzDataset(DatasetGraphTDB dsg, List<Component> components) {
         this.dsg = dsg ;
         this.components = components ;
     }
 
-    public DatasetGraph getDataset() { return dsg ; }
+    public DatasetGraphTDB getDataset() { return dsg ; }
     
     public List<Component> getStartables() {
         return components ;

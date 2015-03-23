@@ -39,7 +39,7 @@ import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
 /** Client side of a remote index */
-public class TupleIndexRemote extends TupleIndexBase implements Component, ComponentTxn, Pingable
+public class TupleIndexRemote extends TupleIndexBase implements Component, ComponentTxn, Pingable, TxnClient.Accessor
 {
     // Relationship of TupleIndexRemote and TClientIndex
     public static TupleIndexRemote create(String hostname, int port, String indexStr, ColumnMap cmap) {
@@ -69,7 +69,8 @@ public class TupleIndexRemote extends TupleIndexBase implements Component, Compo
         component.setLabel(super.getName()) ;
     }
     
-    public TxnClient<? > getWireClient() {
+    @Override
+    public TxnClient<?> getWireClient() {
         return client ;
     }
     

@@ -29,7 +29,9 @@ import org.seaborne.dboe.transaction.txn.ComponentId ;
 import org.seaborne.dboe.transaction.txn.TransactionalComponentLifecycle ;
 import org.seaborne.dboe.transaction.txn.TxnId ;
 
-/** Manages the*/ 
+/** Transactional management for a TxnClient - that is, 
+ *  the client side of cluster point-to-point connection.
+ */ 
 public class TransactionalComponentRemote<X extends TxnClient<?>> extends TransactionalComponentLifecycle<TxnRemoteState> {
     // Local state is the Txn id.
     

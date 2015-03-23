@@ -47,7 +47,7 @@ public class ClusterNodeTable implements NodeTable {
     
     @Override
     public NodeId getAllocateNodeId(Node node) {
-        // Could useful know whether it was find or store
+        // XXX Could useful know whether it was find or store
         // find - stop early, store, do all 
         List<NodeTableRemote> tables = distributor.storeAt(node) ;
         NodeId nid = null ; 

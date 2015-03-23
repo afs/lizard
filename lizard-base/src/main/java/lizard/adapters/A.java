@@ -42,6 +42,18 @@ public class A {
         return Location.create(location.getDirectoryPath()) ;
     }
     
+    public static com.hp.hpl.jena.tdb.base.file.Location convert(Location location) {
+        if ( location.isMemUnique() )
+            // Call once.
+            return com.hp.hpl.jena.tdb.base.file.Location.mem() ;
+        if ( location.isMem() ) {
+            String x = location.getDirectoryPath() ;
+            x = x.substring(Names.memName.length()+1) ;
+            return com.hp.hpl.jena.tdb.base.file.Location.mem(x) ;
+        }
+        return com.hp.hpl.jena.tdb.base.file.Location.create(location.getDirectoryPath()) ;
+    }
+
     public static com.hp.hpl.jena.tdb.base.record.Record convertToTDB(com.hp.hpl.jena.tdb.base.record.RecordFactory tdbFactory, Record r) {
         if ( r == null )
             return null ;

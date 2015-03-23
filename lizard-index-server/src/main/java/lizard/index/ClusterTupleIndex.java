@@ -40,11 +40,7 @@ import com.hp.hpl.jena.tdb.store.tupletable.TupleIndexBase ;
  */
 public class ClusterTupleIndex extends TupleIndexBase
 {
-    // Prototype - hardwired to one policy.
-    // No parallel setup or access (easy of debugging)
-    
-    // TODO Policy for tuple -> segment by the distributor needs to be index colmap sensitive without being a tupel rewrite.
-    
+    // XXX No parallel access (easy of debugging)
     private static Logger log = LoggerFactory.getLogger(ClusterTupleIndex.class) ; 
     private Tuple<NodeId> anyTuple ;
     private DistributorTupleIndex distributor ;

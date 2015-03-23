@@ -36,7 +36,7 @@ import com.hp.hpl.jena.tdb.store.NodeId ;
 import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
 
 /** NodeTable interface to a remote node table server */
-public class NodeTableRemote implements ComponentTxn, Component, NodeTable, Pingable {
+public class NodeTableRemote implements ComponentTxn, Component, NodeTable, Pingable, TxnClient.Accessor {
 
     public static NodeTableRemote create(String hostname, int port) {
         TClientNode remote = TClientNode.create(hostname, port) ;
@@ -55,6 +55,7 @@ public class NodeTableRemote implements ComponentTxn, Component, NodeTable, Ping
         this.label = conn.getLabel() ;
     }
     
+    @Override
     public TxnClient<?> getWireClient() { 
         return client ;
     }

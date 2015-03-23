@@ -38,11 +38,10 @@ public class DistributorTuplesBySubject implements DistributorTupleIndex {
     private final ColumnMap mapper ;
     private final int size ;
     
-    /** Create a DistributorTuplesBySubject is N replicas */
+    /** Create a DistributorTuplesBySubject of N replicas */
     public DistributorTuplesBySubject(ColumnMap mapper, int N) {
         this.mapper = mapper ;
         this.size = N ;
-        
     }
 
     public void add(Long hashKey, TupleIndexRemote... indexes) {

@@ -30,6 +30,7 @@ import com.hp.hpl.jena.tdb.store.NodeId ;
 
 /** Policy for the placement of triples based on eventual consistent replication.
  *  For simplicity, for N replicas, R=1 W=N
+ *  This policy does not shard.
  */ 
 
 public class DistributorTuplesReplicate implements DistributorTupleIndex {

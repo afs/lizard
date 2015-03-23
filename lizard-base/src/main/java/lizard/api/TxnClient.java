@@ -33,6 +33,8 @@ import org.slf4j.Logger ;
 
 public abstract class TxnClient<X extends TxnCtl.Client> extends ComponentBase implements ComponentTxn {
 
+    public interface Accessor { TxnClient<?> getWireClient() ; }
+    
     // request counter.
     private static AtomicLong requestCounter = new AtomicLong(0) ;
     // Thread's transaction.
