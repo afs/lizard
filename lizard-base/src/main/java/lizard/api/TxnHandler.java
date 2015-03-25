@@ -114,8 +114,9 @@ public abstract class TxnHandler implements TxnCtl.Iface {
     @Override
     public void txnEnd(long txnId) {
         if ( LOG_TXN )
-            FmtLog.info(log(), "[Txn:%s:%d] end", getLabel(), txnId) ; 
-        internal_txnAction(txnId, () -> transactional.end()) ;
+            FmtLog.info(log(), "[Txn:%s:%d] end", getLabel(), txnId) ;
+        if ( txnId > 0 )
+            internal_txnAction(txnId, () -> transactional.end()) ;
         setCurrentWriter(NO_WRITER) ;
     }
 
