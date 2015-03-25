@@ -98,7 +98,7 @@ public abstract class TxnClient<X extends TxnCtl.Client> extends ComponentBase i
     @Override
     public void abort() {
         if ( LOG_TXN )
-            FmtLog.info(getLog(), "[Txn:%s:%d] aborts", getLabel(), getTxnId());
+            FmtLog.info(getLog(), "[Txn:%s:%d] abort", getLabel(), getTxnId());
         ThriftLib.exec(()-> rpc.txnAbort(getTxnId())) ;
     }
 
@@ -106,9 +106,14 @@ public abstract class TxnClient<X extends TxnCtl.Client> extends ComponentBase i
     public void end() {
         Long z = getTxnId() ;
         if ( z != null ) {
-            if ( LOG_TXN )
-                FmtLog.info(getLog(), "[Txn:%s:%d] end", getLabel(), getTxnId());
-            ThriftLib.exec(() -> rpc.txnEnd(getTxnId())) ;
+            if ( z < 0 ) {
+                if ( LOG_TXN )
+                    FmtLog.info(getLog(), "[Txn:%s:%d] end (no call)", getLabel(), getTxnId());
+            } else { 
+                if ( LOG_TXN )
+                    FmtLog.info(getLog(), "[Txn:%s:%d] end", getLabel(), getTxnId());
+                ThriftLib.exec(() -> rpc.txnEnd(getTxnId())) ;
+            }
             currentTxnId.set(null) ;
         }
 
