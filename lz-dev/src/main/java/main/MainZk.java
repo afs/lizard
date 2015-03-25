@@ -18,15 +18,21 @@
 package main;
 
 import java.util.List ;
+import java.util.concurrent.atomic.AtomicLong ;
 
 import lizard.cluster.Cluster ;
+
 import org.apache.curator.RetryPolicy ;
 import org.apache.curator.framework.CuratorFramework ;
 import org.apache.curator.framework.CuratorFrameworkFactory ;
 import org.apache.curator.framework.api.CuratorListener ;
+import org.apache.curator.framework.recipes.atomic.AtomicValue ;
+import org.apache.curator.framework.recipes.atomic.DistributedAtomicLong ;
+import org.apache.curator.framework.recipes.shared.SharedCount ;
 import org.apache.curator.retry.ExponentialBackoffRetry ;
 import org.apache.jena.atlas.lib.Lib ;
 import org.apache.jena.atlas.logging.LogCtl ;
+import org.seaborne.dboe.transaction.txn.TxnIdFactory ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
@@ -37,7 +43,19 @@ public class MainZk {
     private static Logger log = LoggerFactory.getLogger(MainZk.class) ;
     
     public static void main(String...argv) throws Exception {
+        
+        {
+            long x1 = TxnIdFactory.create().runtime() ; 
+            long x2 = TxnIdFactory.create().runtime() ;
+            System.out.printf("0x%016x\n", x1) ;
+            System.out.printf("0x%016x\n", x2) ;
+            System.exit(0) ;
+        }
+        
+        
         String connectString = "localhost:2181" ;
+        run(connectString) ;
+        System.exit(0) ;
 //        Runnable r = () -> run(connectString) ;
 //        new Thread(r).start() ;
         
@@ -61,8 +79,8 @@ public class MainZk {
     
     public static void run(String connectString) {
         CuratorFramework client = null ;
+        RetryPolicy policy = new ExponentialBackoffRetry(10000, 3) ;
         try {
-            RetryPolicy policy = new ExponentialBackoffRetry(10000, 3) ;
             client = CuratorFrameworkFactory.builder()
                 /*.namespace(namespace)*/
                 .connectString(connectString)
@@ -71,7 +89,7 @@ public class MainZk {
             client.start() ;
             
             client.blockUntilConnected() ;
-            client.getCuratorListenable().addListener(listener) ;
+            //client.getCuratorListenable().addListener(listener) ;
             
         }
         catch (Exception e) {
@@ -79,7 +97,23 @@ public class MainZk {
             client = null ;
         }
         
+        //SharedCount sc = new SharedCount(client, "COUNTER", 0) ;
+        DistributedAtomicLong x = new DistributedAtomicLong(client,"/COUNTER", policy) ;
+        try {
+            AtomicValue<Long> along = x.increment() ;
+            if ( ! along.succeeded() )
+                System.err.println("Did not succeed") ;
+            System.out.println(along.postValue()) ;
+            along = x.increment() ;
+            if ( ! along.succeeded() )
+                System.err.println("Did not succeed") ;
+            System.out.println(along.postValue()) ;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
         
+        if ( true ) return ;
         
         log.info("sleep") ;
         Lib.sleep(10000) ;

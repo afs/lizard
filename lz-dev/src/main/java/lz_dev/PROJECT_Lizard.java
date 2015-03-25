@@ -22,8 +22,17 @@ public class PROJECT_Lizard {
     // Avoid copy - tuple + set colmap.
     
     //Next:
+    // Server!
+    
+    // Transaction id allocation policy
+    // Patch
+    
     //  ZK transaction ids.
     //  prepare-abort testing.
+    
+    // Client side transaction - call end IFF commit/abort didn't do it. 
+    //   TxnClient or TransactionalComponentRemote.TxnRemoteState 
+    // Mantis: Component has W lifecycle and an R lifecycle
     
     /*
      *  index, node "clear"

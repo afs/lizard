@@ -20,8 +20,18 @@ package lz_dev;
 import java.util.ArrayList ;
 import java.util.List ;
 
+import com.hp.hpl.jena.graph.Node ;
+import com.hp.hpl.jena.query.* ;
+import com.hp.hpl.jena.rdf.model.Model ;
+import com.hp.hpl.jena.sparql.sse.SSE ;
+import com.hp.hpl.jena.sparql.util.QueryExecUtils ;
+import com.hp.hpl.jena.tdb.store.NodeId ;
+
 import lizard.api.TxnClient ;
 import lizard.conf.Configuration ;
+import lizard.conf.dataset.DatasetGraphLz ;
+import lizard.conf.dataset.LzBuildClient ;
+import lizard.conf.dataset.TransactionalComponentRemote ;
 import lizard.index.TServerIndex ;
 import lizard.index.TupleIndexRemote ;
 import lizard.node.ClusterNodeTable ;
@@ -33,6 +43,7 @@ import lizard.sys.Deployment ;
 import lizard.system.LizardException ;
 import lizard.system.Pingable ;
 import migrate.Q ;
+
 import org.apache.jena.atlas.lib.Lib ;
 import org.apache.jena.atlas.lib.StrUtils ;
 import org.apache.jena.atlas.logging.LogCtl ;
@@ -45,15 +56,6 @@ import org.seaborne.dboe.transaction.txn.* ;
 import org.seaborne.dboe.transaction.txn.journal.Journal ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
-
-import com.hp.hpl.jena.graph.Node ;
-import com.hp.hpl.jena.query.* ;
-import com.hp.hpl.jena.rdf.model.Model ;
-import com.hp.hpl.jena.sparql.core.DatasetGraph ;
-import com.hp.hpl.jena.sparql.sse.SSE ;
-import com.hp.hpl.jena.sparql.util.QueryExecUtils ;
-import com.hp.hpl.jena.tdb.store.DatasetGraphTDB ;
-import com.hp.hpl.jena.tdb.store.NodeId ;
 
 
 public class LzDev {
@@ -75,7 +77,7 @@ public class LzDev {
 
         log.info("DATASET") ;
         LzDataset lz = buildDataset(config) ;
-        Dataset ds = dataset(lz) ;
+        Dataset ds = LzBuildClient.dataset(lz, Location.mem()) ;
         load(ds, "D.ttl") ;
         
         performQuery(ds); 
@@ -113,7 +115,7 @@ public class LzDev {
 
         log.info("DATASET") ;
         LzDataset lz = buildDataset(config) ;
-        Dataset ds = dataset(lz) ;
+        Dataset ds = LzBuildClient.dataset(lz, Location.mem()) ;
         
         List<TransactionalComponent> tComp = new ArrayList<>() ;
         
@@ -126,40 +128,16 @@ public class LzDev {
         //   Not for W, only R.
         //   Can we do R simply by using "current R transaction"?  
 
-        ComponentId base = ComponentId.allocLocal() ;
-        lz.getComponents().forEach(c->{
-            
-            if ( c instanceof TupleIndexRemote ) {
-                TupleIndexRemote rIdx = (TupleIndexRemote)c ;
-                //log.info("TupleIndexRemote: "+rIdx.getLabel()) ;
-                // Remove this can catch at creation time.
-                TxnClient<?> wire = rIdx.getWireClient() ;
-                int i = ++counter ;
-                ComponentId cid = ComponentId.alloc(base, "TupleIndex"+i, i) ;
-                TransactionalComponent x = new TransactionalComponentRemote<>(cid, wire) ;
-                tComp.add(x) ;
-            }
-            if ( c instanceof NodeTableRemote ) {
-                NodeTableRemote r = (NodeTableRemote)c ;
-                ntr = r ;
-                //log.info("NodeTableRemote: "+r.getLabel()) ;
-                // Remove this can catch at creation time.
-                TxnClient<?> wire = r.getWireClient() ;
-                int i = ++counter ;
-                ComponentId cid = ComponentId.alloc(base, "NodeTable:"+i, i) ;
-                TransactionalComponent x = new TransactionalComponentRemote<>(cid, wire) ;
-                tComp.add(x) ;
-            }
-        });
-        
-        Journal journal = Journal.create(Location.mem()) ;
-        TransactionCoordinator transCoord = new TransactionCoordinator(journal, tComp) ;
-        Transactional transactional = new TransactionalBase(transCoord) ;
+        DatasetGraphLz xds = (DatasetGraphLz)ds.asDatasetGraph() ;
+        Transactional transactional = xds.getTransactional() ;
+        TransactionCoordinator transCoord = xds.getCoordinator() ;
         
         if ( false )
         {
-            Node n1 = SSE.parseNode("<http://example/s1>") ;
-            Node n2 = SSE.parseNode("<http://example/s2>") ;
+          
+
+          Node n1 = SSE.parseNode("<http://example/s1>") ;
+          Node n2 = SSE.parseNode("<http://example/s2>") ;
             
             Txn.executeWrite(transactional, ()->{
                 NodeId nid = ntr.getAllocateNodeId(n1) ;
@@ -192,6 +170,16 @@ public class LzDev {
             log.info("** Done **") ;
             System.exit(0) ;
         }
+
+        
+        if ( true ) {
+            Transaction txnR = transCoord.begin(ReadWrite.READ) ;
+            //txnR.commit() ; // ?????
+            txnR.end() ;
+            log.info("** Done **") ;
+            System.exit(0) ;
+        }
+        
         
         log.info("LOAD 1") ;
         Transaction txn = transCoord.begin(ReadWrite.WRITE) ;
@@ -218,28 +206,6 @@ public class LzDev {
     private static LzDataset buildDataset(Configuration config) {
         LzDataset lz = Local.buildDataset(configurationModel) ;
         return lz ;
-    }
-    
-    private static Dataset dataset(LzDataset lz) {
-        List<TransactionalComponent> tComp = new ArrayList<>() ;
-        ComponentId base = ComponentId.allocLocal() ;
-        lz.getComponents().forEach(c->{
-            if ( c instanceof TxnClient.Accessor ) {
-                TxnClient<?> wire = ((TxnClient.Accessor)c).getWireClient() ;
-                int i = ++counter ;
-                ComponentId cid = ComponentId.alloc(base, c.getLabel() , i) ;
-                TransactionalComponent x = new TransactionalComponentRemote<>(cid, wire) ;
-                tComp.add(x) ;
-            }
-        });
-        
-        Journal journal = Journal.create(Location.mem()) ;
-        TransactionCoordinator transCoord = new TransactionCoordinator(journal, tComp) ;
-        Transactional transactional = new TransactionalBase(transCoord) ;
-
-        DatasetGraphTDB dsgtdb = lz.getDataset() ;
-        DatasetGraph dsg = new DatasetGraphLz(dsgtdb, transactional, transCoord) ;
-        return DatasetFactory.create(dsg) ;
     }
     
     private static void ping(LzDataset lz) {
