@@ -24,7 +24,6 @@ import java.util.Map.Entry ;
 
 import lizard.conf.Config ;
 import lizard.conf.ConfigLib ;
-import lizard.conf.LzBuildClient ;
 import lizard.conf.assembler.VocabLizard ;
 import lizard.conf.index.ConfigIndex ;
 import lizard.conf.index.IndexService ;
@@ -32,13 +31,14 @@ import lizard.conf.node.ConfigNode ;
 import lizard.query.LzDataset ;
 import lizard.system.Component ;
 import lizard.system.LizardException ;
+
 import org.seaborne.dboe.transaction.Transactional ;
 import org.seaborne.dboe.transaction.txn.TransactionCoordinator ;
 import org.seaborne.dboe.transaction.txn.TransactionalBase ;
 import org.seaborne.dboe.transaction.txn.journal.Journal ;
 import org.slf4j.Logger ;
-
 import org.seaborne.dboe.base.file.Location; 
+
 import com.hp.hpl.jena.rdf.model.Model ;
 import com.hp.hpl.jena.rdf.model.Resource ;
 import com.hp.hpl.jena.sparql.ARQException ;

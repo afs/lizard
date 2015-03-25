@@ -15,16 +15,21 @@
  *  information regarding copyright ownership.
  */
 
-package lizard.conf;
+package lizard.conf.dataset;
+
+import java.util.ArrayList ;
+import java.util.List ;
 
 import lizard.adapters.A ;
-import lizard.conf.dataset.DatasetBuilderLizard ;
+import lizard.api.TxnClient ;
+import lizard.conf.Config ;
+import lizard.query.LzDataset ;
 import lizard.query.QuackLizard ;
-import org.apache.jena.atlas.lib.StrUtils ;
-import org.apache.jena.atlas.logging.FmtLog ;
-import org.slf4j.Logger ;
 
 import com.hp.hpl.jena.query.ARQ ;
+import com.hp.hpl.jena.query.Dataset ;
+import com.hp.hpl.jena.query.DatasetFactory ;
+import com.hp.hpl.jena.sparql.core.DatasetGraph ;
 import com.hp.hpl.jena.sparql.engine.main.QC ;
 import com.hp.hpl.jena.sparql.engine.optimizer.reorder.ReorderLib ;
 import com.hp.hpl.jena.tdb.base.file.FileSet ;
@@ -40,9 +45,43 @@ import com.hp.hpl.jena.tdb.store.tupletable.TupleIndex ;
 import com.hp.hpl.jena.tdb.sys.DatasetControl ;
 import com.hp.hpl.jena.tdb.sys.DatasetControlMRSW ;
 
+import org.apache.jena.atlas.lib.StrUtils ;
+import org.apache.jena.atlas.logging.FmtLog ;
+import org.seaborne.dboe.base.file.Location ;
+import org.seaborne.dboe.transaction.Transactional ;
+import org.seaborne.dboe.transaction.txn.ComponentId ;
+import org.seaborne.dboe.transaction.txn.TransactionCoordinator ;
+import org.seaborne.dboe.transaction.txn.TransactionalBase ;
+import org.seaborne.dboe.transaction.txn.TransactionalComponent ;
+import org.seaborne.dboe.transaction.txn.journal.Journal ;
+import org.slf4j.Logger ;
+
 /** Build dataset related structutes - client side, that is, query server */
 public class LzBuildClient
 {
+    static int counter = 0 ;
+    public static Dataset dataset(LzDataset lz, Location location) {
+        List<TransactionalComponent> tComp = new ArrayList<>() ;
+        ComponentId base = ComponentId.allocLocal() ;
+        lz.getComponents().forEach(c->{
+            if ( c instanceof TxnClient.Accessor ) {
+                TxnClient<?> wire = ((TxnClient.Accessor)c).getWireClient() ;
+                int i = ++counter ;
+                ComponentId cid = ComponentId.alloc(base, c.getLabel() , i) ;
+                TransactionalComponent x = new TransactionalComponentRemote<>(cid, wire) ;
+                tComp.add(x) ;
+            }
+        });
+        
+        Journal journal = Journal.create(location) ;
+        TransactionCoordinator transCoord = new TransactionCoordinator(journal, tComp) ;
+        Transactional transactional = new TransactionalBase(transCoord) ;
+
+        DatasetGraphTDB dsgtdb = lz.getDataset() ;
+        DatasetGraph dsg = new DatasetGraphLz(dsgtdb, transactional, transCoord) ;
+        return DatasetFactory.create(dsg) ;
+    }
+    
     static Logger logConf = Config.logConf ;
 
     public static DatasetGraphTDB createDataset(org.seaborne.dboe.base.file.Location _location, TupleIndex[] tripleIndexes, NodeTable nodeTable) {
