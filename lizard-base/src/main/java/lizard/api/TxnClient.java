@@ -32,6 +32,7 @@ import org.apache.jena.atlas.logging.Log ;
 import org.slf4j.Logger ;
 
 public abstract class TxnClient<X extends TxnCtl.Client> extends ComponentBase implements ComponentTxn {
+    private final static boolean LOG_TXN = true ; 
 
     public interface Accessor { TxnClient<?> getWireClient() ; }
     
@@ -64,7 +65,6 @@ public abstract class TxnClient<X extends TxnCtl.Client> extends ComponentBase i
     }
 
     protected abstract Logger getLog() ;
-    private final static boolean LOG_TXN = false ; 
     
     @Override
     public void begin(long txnId, ReadWrite mode) {

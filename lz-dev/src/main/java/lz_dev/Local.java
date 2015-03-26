@@ -55,9 +55,10 @@ public class Local {
     /** Build (and start) a dataset */
     public static LzDataset buildDataset(String... confDataset) {
         Model m = Q.readAll(confDataset) ;
-        ConfigLizardDataset config = new ConfigLizardDataset(m) ;
-        LzDataset lz = config.buildDataset() ;
-        lz.start() ;
-        return lz ;
+        return buildDataset(m) ;
+//        ConfigLizardDataset config = new ConfigLizardDataset(m) ;
+//        LzDataset lz = config.buildDataset() ;
+//        lz.start() ;
+//        return lz ;
     }
 }

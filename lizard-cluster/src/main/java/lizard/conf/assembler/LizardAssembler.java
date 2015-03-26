@@ -18,8 +18,11 @@
 package lizard.conf.assembler;
 
 import lizard.conf.dataset.ConfigLizardDataset ;
+import lizard.conf.dataset.LzBuildClient ;
 import lizard.query.LizardQuery ;
 import lizard.query.LzDataset ;
+import lizard.sys.Lizard ;
+import org.seaborne.dboe.base.file.Location ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
@@ -51,11 +54,11 @@ public class LizardAssembler extends DatasetAssembler {
     
     static Dataset make(Resource root)
     {
+        Lizard.init(); 
         LzDataset lz = ConfigLizardDataset.buildDataset(root) ;
-        lz.start(); 
-        
-        // DatasetGraphLizard.
-        DatasetGraph dsg = lz.getDataset() ;
+        lz.start();
+        log.warn("** In-memory journal") ;
+        DatasetGraph dsg = LzBuildClient.datasetGraph(lz, Location.mem()) ;
         AssemblerUtils.setContext(root, dsg.getContext());
         return DatasetFactory.create(dsg) ;
     }

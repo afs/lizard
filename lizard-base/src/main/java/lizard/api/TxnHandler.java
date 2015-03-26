@@ -33,9 +33,9 @@ import org.slf4j.Logger ;
 
 // Support for the server side. 
 public abstract class TxnHandler implements TxnCtl.Iface {
-    //private static Logger log = LoggerFactory.getLogger(IndexHandler.class) ;
-    protected final TransactionalSystem transactional ;
     private final static boolean LOG_TXN = true ;
+
+    protected final TransactionalSystem transactional ;
     
     protected TxnHandler(TransactionalSystem transactional) {
         this.transactional = transactional ;

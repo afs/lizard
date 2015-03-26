@@ -39,7 +39,7 @@ public class lz {
             case "monitor":  { new LZ_Monitor(args).mainRun();   break ; }
                 
             default:
-                CmdError("lz; no such subcommand: "+subcmd) ;
+                CmdError("lz: no such subcommand: "+subcmd) ;
                 break ;
         }
     }

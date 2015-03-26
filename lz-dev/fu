@@ -5,8 +5,7 @@ LIZARD_HOME="${LIZARD_HOME:-$HOME/Lizard}"
 LZ_CMDS="$LIZARD_HOME/lizard-cmds"
 source "$LZ_CMDS/bin/init"
 
-CP="$CP:$HOME/Projects/quack/target/classes"
-VER_FU=2.0.0-SNAPSHOT
+VER_FU=2.0.1-SNAPSHOT
 
 CP="$CP:${M2_REPO}/org/apache/jena/jena-fuseki-server/${VER_FU}/jena-fuseki-server-${VER_FU}.jar"
 # Remove slf4j (inside fuseki server)
@@ -15,8 +14,10 @@ CP="$(echo $CP | perl -p -e 's!:[^:]*/org/slf4j/[^:]*!:!g')"
 FUSEKI_LOG=${FUSEKI_LOG:-}
 JVM_ARGS="${JVM_ARGS:--Xmx1200M}"
 
-export FUSEKI_HOME=$HOME/Jena/jena-fuseki2
+export FUSEKI_HOME=$HOME/Jena/jena-fuseki2/jena-fuseki-core
 export FUSEKI_BASE=$PWD/run
 [[ -e $FUSEKI_BASE ]] || mkdir -p $FUSEKI_BASE
 
-exec java -cp "$CP" $JVM_ARGS $FUSEKI_LOG org.apache.jena.fuseki.FusekiCmd "$@"
+X=$(echo $CP | sed -e "s/:/\n"/g)
+
+exec java -cp "$CP" $JVM_ARGS $FUSEKI_LOG org.apache.jena.fuseki.cmd.FusekiCmd "$@"

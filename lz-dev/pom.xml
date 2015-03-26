@@ -48,23 +48,11 @@
       <groupId>org.seaborne.lizard</groupId>
       <artifactId>lizard-cmds</artifactId>
       <version>0.0.0-SNAPSHOT</version>
-      <exclusions>
-	<exclusion>
-	  <groupId>org.slf4j</groupId>
-	  <artifactId>slf4j-log4j12</artifactId>
-	</exclusion>
-      </exclusions>
     </dependency>
     
     <dependency>
       <groupId>org.apache.jena</groupId>
-      <artifactId>jena-fuseki-server</artifactId>
-      <exclusions>
-	<exclusion>
-	  <groupId>org.slf4j</groupId>
-	  <artifactId>slf4j-log4j12</artifactId>
-	</exclusion>
-      </exclusions>
+      <artifactId>jena-fuseki-core</artifactId>
     </dependency>
 
     <dependency>

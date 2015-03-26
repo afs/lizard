@@ -17,23 +17,14 @@
 
 package lz_dev;
 
+import java.nio.file.Paths ;
 import java.util.ArrayList ;
 import java.util.List ;
 
-import com.hp.hpl.jena.graph.Node ;
-import com.hp.hpl.jena.query.* ;
-import com.hp.hpl.jena.rdf.model.Model ;
-import com.hp.hpl.jena.sparql.sse.SSE ;
-import com.hp.hpl.jena.sparql.util.QueryExecUtils ;
-import com.hp.hpl.jena.tdb.store.NodeId ;
-
-import lizard.api.TxnClient ;
 import lizard.conf.Configuration ;
 import lizard.conf.dataset.DatasetGraphLz ;
 import lizard.conf.dataset.LzBuildClient ;
-import lizard.conf.dataset.TransactionalComponentRemote ;
 import lizard.index.TServerIndex ;
-import lizard.index.TupleIndexRemote ;
 import lizard.node.ClusterNodeTable ;
 import lizard.node.NodeTableRemote ;
 import lizard.node.TServerNode ;
@@ -43,19 +34,30 @@ import lizard.sys.Deployment ;
 import lizard.system.LizardException ;
 import lizard.system.Pingable ;
 import migrate.Q ;
-
+import org.apache.jena.atlas.lib.FileOps ;
 import org.apache.jena.atlas.lib.Lib ;
 import org.apache.jena.atlas.lib.StrUtils ;
 import org.apache.jena.atlas.logging.LogCtl ;
+import org.apache.jena.fuseki.cmd.FusekiCmd ;
+import org.apache.jena.fuseki.server.FusekiEnv ;
 import org.apache.jena.riot.RDFDataMgr ;
+import org.apache.thrift.TException ;
 import org.seaborne.dboe.base.file.Location ;
 import org.seaborne.dboe.transaction.ThreadTxn ;
 import org.seaborne.dboe.transaction.Transactional ;
 import org.seaborne.dboe.transaction.Txn ;
-import org.seaborne.dboe.transaction.txn.* ;
-import org.seaborne.dboe.transaction.txn.journal.Journal ;
+import org.seaborne.dboe.transaction.txn.Transaction ;
+import org.seaborne.dboe.transaction.txn.TransactionCoordinator ;
+import org.seaborne.dboe.transaction.txn.TransactionalComponent ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
+
+import com.hp.hpl.jena.graph.Node ;
+import com.hp.hpl.jena.query.* ;
+import com.hp.hpl.jena.rdf.model.Model ;
+import com.hp.hpl.jena.sparql.sse.SSE ;
+import com.hp.hpl.jena.sparql.util.QueryExecUtils ;
+import com.hp.hpl.jena.tdb.store.NodeId ;
 
 
 public class LzDev {
@@ -70,44 +72,25 @@ public class LzDev {
     
     static String deploymentFile        = Q.filename(Setup.confDir, "deploy-jvm.ttl") ;
     
-    public static void main1(String[] args) {
-        //Setup, take apart - try N way transactions.
-        log.info("SERVERS") ;
-        Deployment deployment = Deploy.deployServers(config, deploymentFile);
-
-        log.info("DATASET") ;
-        LzDataset lz = buildDataset(config) ;
-        Dataset ds = LzBuildClient.dataset(lz, Location.mem()) ;
-        load(ds, "D.ttl") ;
-        
-        performQuery(ds); 
-        
-        log.info("** Done **") ;
-        System.exit(0) ;
-        if ( false ) {
-            while(true) { Lib.sleep(10000) ; }
-        }
-
-    }
-    
     static NodeTableRemote ntr = null ;
     //static TupleIndexRemote tir = null ;
     static int counter = 0 ;
 
     public static void main(String[] args) {
+        //mainFuseki(args) ;
+        
         try { main$(args) ; }
-        catch (Exception ex) 
-        { 
+        catch (Exception ex) { 
             System.out.flush() ;
             System.err.println(ex.getMessage()) ;
-            //ex.printStackTrace(System.err);
+            ex.printStackTrace(System.err);
             System.exit(0) ;
         }
     }
     public static void main$(String[] args) {
         log.info("SERVERS") ;
         try { 
-        Deployment deployment = Deploy.deployServers(config, deploymentFile);
+            Deployment deployment = Deploy.deployServers(config, deploymentFile);
         } catch ( LizardException ex) {
             System.err.println(ex.getMessage());
             System.exit(0) ;
@@ -116,6 +99,9 @@ public class LzDev {
         log.info("DATASET") ;
         LzDataset lz = buildDataset(config) ;
         Dataset ds = LzBuildClient.dataset(lz, Location.mem()) ;
+        
+        ds.asDatasetGraph().find().forEachRemaining(System.out::println);
+        
         
         List<TransactionalComponent> tComp = new ArrayList<>() ;
         
@@ -280,4 +266,11 @@ public class LzDev {
         QueryExecUtils.executeQuery(query, qExec);
     }
 
+    public static void mainFuseki(String[] args) {
+        System.setProperty("FUSEKI_HOME", "/home/afs/Jena/jena-fuseki2/jena-fuseki-core/") ;
+        FusekiEnv.FUSEKI_BASE = Paths.get("setup-simple/run").toAbsolutePath() ;
+        FileOps.ensureDir(FusekiEnv.FUSEKI_BASE.toString()) ;
+        FusekiCmd.main("--conf=setup-simple/fuseki.ttl") ;
+        System.exit(0) ;
+    }
 }

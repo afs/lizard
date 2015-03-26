@@ -18,6 +18,7 @@
 package lizard.conf.dataset;
 
 import java.util.ArrayList ;
+import java.util.Iterator ;
 import java.util.List ;
 
 import lizard.adapters.A ;
@@ -36,16 +37,18 @@ import com.hp.hpl.jena.tdb.base.file.FileSet ;
 import com.hp.hpl.jena.tdb.base.record.RecordFactory ;
 import com.hp.hpl.jena.tdb.index.* ;
 import com.hp.hpl.jena.tdb.setup.StoreParams ;
-import com.hp.hpl.jena.tdb.store.DatasetGraphTDB ;
-import com.hp.hpl.jena.tdb.store.DatasetPrefixesTDB ;
-import com.hp.hpl.jena.tdb.store.QuadTable ;
-import com.hp.hpl.jena.tdb.store.TripleTable ;
+import com.hp.hpl.jena.tdb.store.* ;
 import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
 import com.hp.hpl.jena.tdb.store.tupletable.TupleIndex ;
+import com.hp.hpl.jena.tdb.store.tupletable.TupleIndexBase ;
 import com.hp.hpl.jena.tdb.sys.DatasetControl ;
 import com.hp.hpl.jena.tdb.sys.DatasetControlMRSW ;
+import com.hp.hpl.jena.tdb.sys.Names ;
 
+import org.apache.jena.atlas.iterator.Iter ;
+import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.StrUtils ;
+import org.apache.jena.atlas.lib.Tuple ;
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.seaborne.dboe.base.file.Location ;
 import org.seaborne.dboe.transaction.Transactional ;
@@ -60,7 +63,7 @@ import org.slf4j.Logger ;
 public class LzBuildClient
 {
     static int counter = 0 ;
-    public static Dataset dataset(LzDataset lz, Location location) {
+    public static DatasetGraph datasetGraph(LzDataset lz, Location location) {
         List<TransactionalComponent> tComp = new ArrayList<>() ;
         ComponentId base = ComponentId.allocLocal() ;
         lz.getComponents().forEach(c->{
@@ -79,6 +82,11 @@ public class LzBuildClient
 
         DatasetGraphTDB dsgtdb = lz.getDataset() ;
         DatasetGraph dsg = new DatasetGraphLz(dsgtdb, transactional, transCoord) ;
+        return dsg ;
+    }
+
+    public static Dataset dataset(LzDataset lz, Location location) {
+        DatasetGraph dsg = datasetGraph(lz, location) ;
         return DatasetFactory.create(dsg) ;
     }
     
@@ -109,26 +117,82 @@ public class LzBuildClient
         // Hack node table.
         DatasetPrefixesTDB prefixes = dbb.makePrefixTable(location, policy) ; 
         
-        // Special.
-        String indexes[] = new String[tripleIndexes.length] ;
-        for ( int i = 0 ; i < indexes.length ; i++ ) {
-            indexes[i] = tripleIndexes[i].getName() ;
+        // Special triple table
+        TripleTable tableTriples ;
+        {
+            String indexes[] = new String[tripleIndexes.length] ;
+            for ( int i = 0 ; i < indexes.length ; i++ ) {
+                indexes[i] = tripleIndexes[i].getName() ;
+            }
+
+            tableTriples = new TripleTable(tripleIndexes, nodeTable, policy) ;
+            FmtLog.debug(logConf, "Triple table: %s :: %s", indexes[0], StrUtils.strjoin(",", indexes)) ;
         }
 
-        TripleTable tableTriples = new TripleTable(tripleIndexes, nodeTable, policy) ;
-        FmtLog.debug(logConf, "Triple table: %s :: %s", indexes[0], StrUtils.strjoin(",", indexes)) ;
-
-
-        //        String[] tripleIndexes = new String[] { params.primaryIndexTriples, "POS", "PSO", "OSP" } ;
-        //        TripleTable tableTriples = dbb.makeTripleTable(location, tripleIndexes, nt, policy) ;
-        //        TupleIndex[] quadIndexes ;
-        //        QuadTable tableQuads = new QuadTable(quadIndexes, nodeTable, policy) ;
-
-        QuadTable tableQuads = dbb.makeQuadTable(location, nodeTable, policy, params) ;
+        // Special quad table : two empty placeholder indexes.
+        QuadTable tableQuads ;
+        {
+            String[] indexes = { Names.primaryIndexQuads, "SPOG" } ;
+            TupleIndex[] quadIndexes = new TupleIndex[indexes.length] ;
+            for ( int i = 0 ; i < indexes.length ; i++ ) {
+                String n = indexes[i] ;
+                quadIndexes[i] = new TupleIndexEmpty(new ColumnMap(Names.primaryIndexQuads, n), n) ;
+            }
+            tableQuads = new QuadTable(quadIndexes, nodeTable, policy) ;
+            FmtLog.debug(logConf, "Quad table: %s :: %s", indexes[0], StrUtils.strjoin(",", indexes)) ; 
+        }
+        
         DatasetGraphTDB dsg = new DatasetGraphTDB(tableTriples, tableQuads, prefixes, ReorderLib.fixed(), null) ;
         
         dsg.getContext().set(ARQ.optFilterPlacementBGP, false);
         QC.setFactory(dsg.getContext(), QuackLizard.factoryLizard) ;
         return dsg ;
+    }
+    
+    static class TupleIndexEmpty extends TupleIndexBase {
+
+        protected TupleIndexEmpty(ColumnMap colMapping, String name) {
+            super(4, colMapping, name) ;
+        }
+
+        @Override
+        public Iterator<Tuple<NodeId>> all() {
+            return Iter.nullIterator() ;
+        }
+
+        @Override
+        public long size() {
+            return 0 ;
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return true ;
+        }
+
+        @Override
+        public void clear() {}
+
+        @Override
+        public void sync() {}
+
+        @Override
+        public void close() {}
+
+        @Override
+        protected boolean performAdd(Tuple<NodeId> tuple) {
+            return false ;
+        }
+
+        @Override
+        protected boolean performDelete(Tuple<NodeId> tuple) {
+            return false ;
+        }
+
+        @Override
+        protected Iterator<Tuple<NodeId>> performFind(Tuple<NodeId> tuple) {
+            return Iter.nullIterator() ;
+        }
+        
     }
 }

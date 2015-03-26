@@ -40,6 +40,7 @@ usage() {
 if [[ $# = 0 ]]
 then
     usage
+    exit 1
 fi
 
 SUB=$1
