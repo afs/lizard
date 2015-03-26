@@ -18,11 +18,22 @@
 package lz_dev ;
 
 public class PROJECT_Lizard {
-    // Tuple hierarchy.
-    // Avoid copy - tuple + set colmap.
+    // Tasks
+    // 1: Global Write txn id using zk
     
-    //Next:
-    // Server!
+    // 2: Build-deploy tidy up
+    // Deploy specialized Fuseki
+    //    Fuseki - fixed mode - one config file, no runtime additions.
+    //    Fuseki embedded
+    //    Fuseki webapps from jar? with "-server"
+    //    #include for assemblers
+    // 3: Log4j
+    // 4: AIO
+
+    // Allocate write transaction ids in blocks of 100.
+    
+    // Tuple hierarchy cleanup.
+    // Avoid copy - tuple + set colmap.
     
     // Transaction id allocation policy
     // Patch

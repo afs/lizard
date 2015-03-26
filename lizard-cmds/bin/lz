@@ -17,8 +17,8 @@ then
     fi
     D="$( cd "$( dirname "$SCRIPT")" && pwd )"
     # Strip directories from Lizard home to bin directory.
-    D=${D%/bin}
-    D=${D%/lizard-*}
+    D="${D%/bin}"
+    D="${D%/lizard-*}"
     LIZARD_HOME="$D"
 fi
 LZ_CMDS="$LIZARD_HOME/lizard-cmds"

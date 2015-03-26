@@ -22,9 +22,12 @@ import java.util.List ;
 import java.util.Set ;
 import java.util.concurrent.atomic.AtomicBoolean ;
 
+import lizard.system.LizardException ;
 import org.apache.curator.RetryPolicy ;
 import org.apache.curator.framework.CuratorFramework ;
 import org.apache.curator.framework.CuratorFrameworkFactory ;
+import org.apache.curator.framework.recipes.atomic.AtomicValue ;
+import org.apache.curator.framework.recipes.atomic.DistributedAtomicLong ;
 import org.apache.curator.retry.ExponentialBackoffRetry ;
 import org.apache.zookeeper.CreateMode ;
 import org.apache.zookeeper.data.Stat ;
@@ -95,6 +98,13 @@ public class Cluster {
         }
     }
     
+    /** A cluster-wide unique value. */ 
+    public static synchronized long uniqueNumber() {
+        checkActive() ;
+        // Allocate in blocks.
+        return instance.uniqueNumber() ;
+    }
+
     /** The underlying CuratorFramework */ 
     public static synchronized CuratorFramework getClient() {
         checkActive() ;
@@ -128,10 +138,11 @@ public class Cluster {
         private Set<String> registrations = new HashSet<>() ;
         private AtomicBoolean active = new AtomicBoolean(false) ;
 //        private String self = null ;
+        private DistributedAtomicLong globalCounter ;
         
         private Cluster$(String connectString) {
+            RetryPolicy policy = new ExponentialBackoffRetry(10000, 5) ;
             try {
-                RetryPolicy policy = new ExponentialBackoffRetry(10000, 5) ;
                 client = CuratorFrameworkFactory.builder()
                     /*.namespace(namespace)*/
                     .connectString(connectString)
@@ -149,6 +160,7 @@ public class Cluster {
             ensure(ClusterCtl.namespace) ;
             ensure(ClusterCtl.members) ;
             active.set(true) ;
+            globalCounter = new DistributedAtomicLong(client,"/COUNTER", policy) ;
         }
 
         public String addMember(String baseName) {
@@ -186,6 +198,20 @@ public class Cluster {
             } catch (Exception e) {
                 log.error("Failed: members("+ClusterCtl.members+")") ;
                 return null ;
+            }
+        }
+        
+        public long uniqueNumber() {
+            try {
+                AtomicValue<Long> along = globalCounter.increment() ;
+                if ( ! along.succeeded() ) {
+                    log.error("Failed: uniqueNumber") ;
+                    throw new LizardException("Failed to allocate a unique number") ;
+                }
+                return along.postValue() ;
+            }
+            catch (Exception e) {
+                throw new LizardException("Exception allocating a unique number", e) ;
             }
         }
 
