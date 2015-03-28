@@ -23,6 +23,7 @@ import java.util.List ;
 
 import lizard.adapters.A ;
 import lizard.api.TxnClient ;
+import lizard.cluster.Cluster ;
 import lizard.conf.Config ;
 import lizard.query.LzDataset ;
 import lizard.query.QuackLizard ;
@@ -78,6 +79,8 @@ public class LzBuildClient
         
         Journal journal = Journal.create(location) ;
         TransactionCoordinator transCoord = new TransactionCoordinator(journal, tComp) ;
+        // Use Zookeeper for transaction ids.
+        transCoord.setTxnIdGenerator(Cluster.getTxnIdGenerator());
         Transactional transactional = new TransactionalBase(transCoord) ;
 
         DatasetGraphTDB dsgtdb = lz.getDataset() ;
