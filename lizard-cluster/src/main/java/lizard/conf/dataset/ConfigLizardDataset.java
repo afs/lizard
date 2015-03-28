@@ -20,7 +20,6 @@ package lizard.conf.dataset;
 import java.util.ArrayList ;
 import java.util.List ;
 import java.util.Map ;
-import java.util.Map.Entry ;
 
 import lizard.conf.Config ;
 import lizard.conf.ConfigLib ;
@@ -32,13 +31,6 @@ import lizard.query.LzDataset ;
 import lizard.system.Component ;
 import lizard.system.LizardException ;
 
-import org.seaborne.dboe.transaction.Transactional ;
-import org.seaborne.dboe.transaction.txn.TransactionCoordinator ;
-import org.seaborne.dboe.transaction.txn.TransactionalBase ;
-import org.seaborne.dboe.transaction.txn.journal.Journal ;
-import org.slf4j.Logger ;
-import org.seaborne.dboe.base.file.Location; 
-
 import com.hp.hpl.jena.rdf.model.Model ;
 import com.hp.hpl.jena.rdf.model.Resource ;
 import com.hp.hpl.jena.sparql.ARQException ;
@@ -48,6 +40,14 @@ import com.hp.hpl.jena.sparql.util.graph.GraphUtils ;
 import com.hp.hpl.jena.tdb.store.DatasetGraphTDB ;
 import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
 import com.hp.hpl.jena.tdb.store.tupletable.TupleIndex ;
+
+import org.apache.jena.atlas.logging.Log ;
+import org.seaborne.dboe.base.file.Location ;
+import org.seaborne.dboe.transaction.Transactional ;
+import org.seaborne.dboe.transaction.txn.TransactionCoordinator ;
+import org.seaborne.dboe.transaction.txn.TransactionalBase ;
+import org.seaborne.dboe.transaction.txn.journal.Journal ;
+import org.slf4j.Logger ;
 
 public class ConfigLizardDataset {
     public static Logger logConf = Config.logConf ;
@@ -68,7 +68,6 @@ public class ConfigLizardDataset {
             return root ;
         } catch (TypeNotUniqueException ex)
         { throw new ARQException("Multiple types for: "+DatasetAssemblerVocab.tDataset) ; }
-//      LizardDataset lzDSG = ConfigLizardDataset.buildDataset(root) ;
     }
 
     public LzDataset buildDataset() {
@@ -83,33 +82,35 @@ public class ConfigLizardDataset {
             throw new LizardException("No LzDataset description") ;
         if ( x.size() > 1 )
             throw new LizardException("More than one LzDataset description") ;
-        
-        List<LzDataset> lzDsg = new ArrayList<>() ;
-        
-        for ( Entry<Resource, LzDatasetDesc> e : x.entrySet() ) {
-            Journal journal = null ;
-            TransactionCoordinator txnCoord = new TransactionCoordinator(journal) ;
-            Transactional trans = new TransactionalBase(txnCoord) ;
+        LzDatasetDesc desc = x.entrySet().stream().findFirst().get().getValue() ;
+        LzDataset lizard = buildDataset(Location.mem(), desc) ;
+        return lizard ; 
+    }
+    
+    public static LzDataset buildDataset(Location location, LzDatasetDesc desc) {
+        if ( location.isMem() )
+            Log.warn(ConfigLizardDataset.class, "In-memory journal") ;
+        Journal journal = Journal.create(location) ;
+        TransactionCoordinator txnCoord = new TransactionCoordinator(journal) ;
+        Transactional trans = new TransactionalBase(txnCoord) ;
 
-            List<Component> startables = new ArrayList<>() ;
-            
-            ConfigNode cn = ConfigNode.create(m) ;
-            NodeTable nt = cn.buildNodeTable(startables) ;
-            
-            ConfigIndex ci = ConfigIndex.create(m) ;
-            TupleIndex[] indexes = new TupleIndex[ci.indexServices().size()] ;
-            int i = 0 ;
-            for ( IndexService idxSvc : ci.indexServices() ) {
-                TupleIndex idx = ci.buildIndex(idxSvc, startables) ;
-                indexes[i++] = idx ;
-            }
-            
-            
-            DatasetGraphTDB dsg = LzBuildClient.createDataset(Location.mem(), indexes, nt) ;
-            LzDataset lizard = new LzDataset(dsg, startables) ;
-            lzDsg.add(lizard) ;
+        List<Component> startables = new ArrayList<>() ;
+        
+        Model m = desc.resource.getModel() ;
+        //????
+        ConfigNode cn = ConfigNode.create(desc.resource.getModel()) ;
+        NodeTable nt = cn.buildNodeTable(startables) ;
+        
+        ConfigIndex ci = ConfigIndex.create(m) ;
+        TupleIndex[] indexes = new TupleIndex[ci.indexServices().size()] ;
+        int i = 0 ;
+        for ( IndexService idxSvc : ci.indexServices() ) {
+            TupleIndex idx = ci.buildIndex(idxSvc, startables) ;
+            indexes[i++] = idx ;
         }
-            
-        return lzDsg.get(0) ; 
+        
+        DatasetGraphTDB dsg = LzBuildClient.createDataset(Location.mem(), indexes, nt) ;
+        LzDataset lizard = new LzDataset(dsg, startables) ;
+        return lizard ;
     }
 }
