@@ -23,6 +23,7 @@ import java.util.Set ;
 import java.util.concurrent.atomic.AtomicBoolean ;
 
 import lizard.system.LizardException ;
+
 import org.apache.curator.RetryPolicy ;
 import org.apache.curator.framework.CuratorFramework ;
 import org.apache.curator.framework.CuratorFrameworkFactory ;
@@ -31,6 +32,8 @@ import org.apache.curator.framework.recipes.atomic.DistributedAtomicLong ;
 import org.apache.curator.retry.ExponentialBackoffRetry ;
 import org.apache.zookeeper.CreateMode ;
 import org.apache.zookeeper.data.Stat ;
+import org.seaborne.dboe.transaction.txn.TxnIdGenerator ;
+import org.seaborne.dboe.transaction.txn.TxnIdSimple ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
@@ -103,6 +106,10 @@ public class Cluster {
         checkActive() ;
         // Allocate in blocks.
         return instance.uniqueNumber() ;
+    }
+    
+    public static TxnIdGenerator getTxnIdGenerator() {
+        return ()-> new TxnIdSimple(uniqueNumber()) ;
     }
 
     /** The underlying CuratorFramework */ 
