@@ -18,6 +18,8 @@
 package lizard.conf;
 
 import org.apache.jena.atlas.lib.StrUtils ;
+import org.apache.jena.riot.system.PrefixMap ;
+import org.apache.jena.riot.system.PrefixMapFactory ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
@@ -32,4 +34,14 @@ public class Config {
          "PREFIX rdf:       <http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
          "PREFIX rdfs:      <http://www.w3.org/2000/01/rdf-schema#>",
          "") ;
+    
+    public static PrefixMap confPrefixes = PrefixMapFactory.create() ;
+    static {
+        confPrefixes.add("",        "urn:lizard:") ;
+        confPrefixes.add("lizard",  "urn:lizard:ns#") ;
+        confPrefixes.add("list",    "http://jena.hpl.hp.com/ARQ/list#") ;
+        confPrefixes.add("xsd",     "http://www.w3.org/2001/XMLSchema#") ;
+        confPrefixes.add("rdf",     "http://www.w3.org/1999/02/22-rdf-syntax-ns#") ;
+        confPrefixes.add("rdfs",    "http://www.w3.org/2000/01/rdf-schema#") ;
+    }
 }
