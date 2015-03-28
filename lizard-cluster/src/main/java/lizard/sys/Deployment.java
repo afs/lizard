@@ -17,14 +17,17 @@
 
 package lizard.sys;
 
+import java.io.PrintStream ;
 import java.util.Collection ;
 import java.util.List ;
 import java.util.stream.Collectors ;
 
 import lizard.conf.ConfigLib ;
 import lizard.conf.Configuration ;
+import lizard.conf.dataset.LzDatasetDesc ;
 import lizard.conf.index.IndexServer ;
 import lizard.conf.node.NodeServer ;
+import lizard.system.LizardException ;
 import lizard.system.LzLib ;
 
 import com.hp.hpl.jena.rdf.model.Model ;
@@ -33,6 +36,7 @@ import com.hp.hpl.jena.rdf.model.Model ;
 public class Deployment {
     public final Collection<IndexServer> indexServers ;
     public final Collection<NodeServer> nodeServers ;
+    public final LzDatasetDesc datasetDesc ;
     
     public static Deployment parse(Configuration config, String deploymentFile) {
         Model model = LzLib.readAll(deploymentFile) ;
@@ -43,11 +47,39 @@ public class Deployment {
         List<IndexServer> indexServers = ConfigLib.dataServers(model, ":IndexServer").values().stream()
             .map(ds -> { return config.getConfIndex().findIndexServer(ds.resource);})
             .collect(Collectors.toList()) ;
-        return new Deployment(indexServers, nodeServers) ;
+        
+        // ConfigLib.zkServers
+        
+        List<LzDatasetDesc> datasetsDesc =  ConfigLib.datasets(model).values().stream().collect(Collectors.toList()) ;
+        
+        LzDatasetDesc desc ;
+        switch(datasetsDesc.size()) {
+            case 0: desc = null; break; 
+            case 1: desc = datasetsDesc.get(0) ;
+            default:
+                throw new LizardException("Multiple datasets in deployment description") ;
+        }
+        return new Deployment(indexServers, nodeServers, desc) ;
     }
     
-    private Deployment(Collection<IndexServer> indexServers, Collection<NodeServer> nodeServers) {
+    private Deployment(Collection<IndexServer> indexServers, Collection<NodeServer> nodeServers, LzDatasetDesc datasetDesc) {
         this.indexServers = indexServers ;
         this.nodeServers = nodeServers ;
+        this.datasetDesc = datasetDesc ;
+    }
+    
+    public void print() {
+        print(System.out) ;
+    }
+        
+    public void print(PrintStream ps) {
+        ps.println("Deploy: Index Servers:");
+        indexServers.forEach(x->ps.printf("    <%s>:\"%s\"\n",x.resource, x.name)) ;
+        ps.println("Deploy: Node Servers:");
+        nodeServers.forEach(x->ps.printf("    <%s>:\"%s\"\n",x.resource, x.name)) ;
+        if ( datasetDesc != null ) {
+            ps.println("Deploy: Dataset");
+            ps.printf("    <%s>:\"%s\"\n", datasetDesc.resource, datasetDesc.name) ;
+        }
     }
 }
