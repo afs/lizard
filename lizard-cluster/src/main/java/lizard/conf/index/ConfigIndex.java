@@ -17,6 +17,7 @@
 
 package lizard.conf.index;
 
+import java.io.PrintStream ;
 import java.util.* ;
 import java.util.Map.Entry ;
 
@@ -31,6 +32,7 @@ import lizard.index.TupleIndexRemote ;
 import lizard.system.Component ;
 import lizard.system.LizardException ;
 import migrate.Q ;
+
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.StrUtils ;
 import org.apache.jena.atlas.logging.FmtLog ;
@@ -180,6 +182,7 @@ public class ConfigIndex {
                 else
                     FmtLog.debug(logConf, "Index server: %s [%s]", nSvc.name, dataDir) ;
             }
+            FmtLog.debug(logConf, "IndexService: <%s>:%s", svc.getURI(), nSvc.name) ;
             svcs.put(svc, nSvc) ;
         }
         return svcs ; 
@@ -197,46 +200,6 @@ public class ConfigIndex {
         });
         return indexServers ;
     }
-    
-//    private static Map<Resource, IndexServer> findIndexServers(Map<Resource, IndexService> indexServiceDecl, Model m) {
-//        // c.f. ConfigLib.dataServers
-//        String qsIndexServers= StrUtils.strjoinNL(prefixes,
-//                                                  "SELECT * {",
-//                                                  "  ?idxServer a :IndexServer ;",
-//                                                  "    OPTIONAL { ?idxServer :name ?name }",
-//                                                  // Unnecessary - in the deployment file.
-//                                                  "    OPTIONAL { ?idxServer :hostname ?hostname }",    
-//                                                  "    OPTIONAL { ?idxServer :port ?port }",
-//                                                  "    OPTIONAL { ?idxServer :data ?data }",
-//                                                  "}") ;
-//        Map<Resource, IndexServer> indexServers = new LinkedHashMap<>() ;
-//        for ( QuerySolution row : Q.queryToList(m, qsIndexServers) ) {
-//            Resource idxServer = row.getResource("idxServer") ;
-//            if ( indexServers.containsKey(idxServer) )
-//                throw new LizardException("Malform declaration for: "+idxServer) ;
-//            String name = Q.getStringOrNull(row, "name") ;
-//            if ( name == null)
-//                throw new LizardException("No name for IndexServer: "+idxServer) ;
-//            String hostname = Q.getStringOrNull(row, "hostname") ;
-//            if ( hostname == null)
-//                throw new LizardException("No hostname for IndexServer: "+idxServer) ;
-//            Long port = Q.getIntegerOrNull(row, "port") ;
-//            if ( port == null)
-//                throw new LizardException("No port for IndexServer: "+idxServer) ;
-//            IndexService indexService = findIndexService(indexServiceDecl, idxServer) ;
-//            if ( indexService == null )
-//                throw new LizardException("No IndexService for IndexServer: "+idxServer) ;
-//            
-//            // Optional
-//            String dataDir = Q.getStringOrNull(row, "data") ;
-//            
-//            IndexServer indexServer  = new IndexServer(idxServer, name, indexService, hostname, port.intValue(), dataDir) ;
-//            FmtLog.debug(logConf, "Node server: %s", indexServer) ;
-//            indexServers.put(idxServer, indexServer) ;
-//        }
-//
-//        return indexServers ; 
-//    }
     
     private static IndexService findIndexService(Map<Resource, IndexService> indexServiceDecl, Resource idxServer) {
         return indexServiceDecl.values().stream()
@@ -280,13 +243,13 @@ public class ConfigIndex {
     public static void printConfiguration(String configFile) {
         Model model = RDFDataMgr.loadModel(configFile) ; 
         ConfigIndex conf = new ConfigIndex(model) ;
-        print(conf) ;
+        conf.print(System.out) ;
     }
         
-    public static void print(ConfigIndex conf) {
-        System.out.println("Index services:") ;
-        Q.printMap(conf.indexServiceDecl) ;
-        System.out.println("Index servers:") ;
-        Q.printMap(conf.indexServers) ;
+    public void print(PrintStream ps) {
+        ps.println("Index services:") ;
+        Q.printMap(indexServiceDecl) ;
+        ps.println("Index servers:") ;
+        Q.printMap(indexServers) ;
     }
 }

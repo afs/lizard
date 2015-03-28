@@ -17,6 +17,7 @@
 
 package lizard.conf.node;
 
+import java.io.PrintStream ;
 import java.util.* ;
 import java.util.Map.Entry ;
 
@@ -32,10 +33,6 @@ import lizard.node.TServerNode ;
 import lizard.system.Component ;
 import lizard.system.LizardException ;
 import migrate.Q ;
-import org.apache.jena.atlas.lib.StrUtils ;
-import org.apache.jena.atlas.logging.FmtLog ;
-import org.apache.jena.riot.RDFDataMgr ;
-import org.slf4j.Logger ;
 
 import com.hp.hpl.jena.query.QuerySolution ;
 import com.hp.hpl.jena.rdf.model.Model ;
@@ -43,6 +40,11 @@ import com.hp.hpl.jena.rdf.model.Resource ;
 import com.hp.hpl.jena.tdb.base.file.Location ;
 import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
 import com.hp.hpl.jena.tdb.store.nodetable.NodeTableInline ;
+
+import org.apache.jena.atlas.lib.StrUtils ;
+import org.apache.jena.atlas.logging.FmtLog ;
+import org.apache.jena.riot.RDFDataMgr ;
+import org.slf4j.Logger ;
 
 /** Configuration of NodeTables */
 public class ConfigNode {
@@ -154,7 +156,7 @@ public class ConfigNode {
                 throw new LizardException(name+" : No shard list for NodeService") ;
             List<Resource> sList = Q.listResources(list) ;
             NodeService nSvc = new NodeService(svc, name, sList) ;
-            FmtLog.debug(logConf, "Node service %s", nSvc.name) ;
+            FmtLog.debug(logConf, "Node service <%s>:%s", svc.getURI(), nSvc.name) ;
             svcs.put(svc, nSvc) ;
         }
         return svcs ; 
@@ -260,13 +262,13 @@ public class ConfigNode {
     public static void printConfiguration(String configFile) {
         Model model = RDFDataMgr.loadModel(configFile) ; 
         ConfigNode conf = new ConfigNode(model) ;
-        print(conf) ;
+        conf.print(System.out) ;
     }
-        
-    public static void print(ConfigNode conf) {
+    
+    public void print(PrintStream ps) {
         System.out.println("Node services: ") ;
-        Q.printMap(conf.nodeServiceDecl) ;
+        Q.printMap(nodeServiceDecl) ;
         System.out.println("Node servers: ") ;
-        Q.printMap(conf.nodeServerDecl) ;
+        Q.printMap(nodeServerDecl) ;
     }
 }
