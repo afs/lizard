@@ -22,10 +22,10 @@ import java.util.List ;
 import com.hp.hpl.jena.rdf.model.Resource ;
 
 public class LzDatasetDesc {
-    public final Resource                 resource ;
-    public final String                   name ;
-    public final List<Resource>          indexes ;
-    public final List<Resource>          nodes ;    
+    public final Resource          resource ;
+    public final String            name ;
+    public final List<Resource>    indexes ;
+    public final List<Resource>    nodes ;
 
     public LzDatasetDesc(Resource r, String name, List<Resource> indexes, List<Resource> nodes) {
         this.resource = r ;
