@@ -27,7 +27,6 @@ import lizard.conf.Configuration ;
 import lizard.conf.dataset.LzDatasetDesc ;
 import lizard.conf.index.IndexServer ;
 import lizard.conf.node.NodeServer ;
-import lizard.system.LizardException ;
 import lizard.system.LzLib ;
 
 import com.hp.hpl.jena.rdf.model.Model ;
@@ -49,16 +48,7 @@ public class Deployment {
             .collect(Collectors.toList()) ;
         
         // ConfigLib.zkServers
-        
-        List<LzDatasetDesc> datasetsDesc =  ConfigLib.datasets(model).values().stream().collect(Collectors.toList()) ;
-        
-        LzDatasetDesc desc ;
-        switch(datasetsDesc.size()) {
-            case 0: desc = null; break; 
-            case 1: desc = datasetsDesc.get(0) ;
-            default:
-                throw new LizardException("Multiple datasets in deployment description") ;
-        }
+        LzDatasetDesc desc = config.getConfDataset().descDataset() ;
         return new Deployment(indexServers, nodeServers, desc) ;
     }
     
