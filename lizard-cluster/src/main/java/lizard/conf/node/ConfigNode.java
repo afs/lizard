@@ -39,6 +39,7 @@ import com.hp.hpl.jena.rdf.model.Model ;
 import com.hp.hpl.jena.rdf.model.Resource ;
 import com.hp.hpl.jena.tdb.base.file.Location ;
 import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
+import com.hp.hpl.jena.tdb.store.nodetable.NodeTableCache ;
 import com.hp.hpl.jena.tdb.store.nodetable.NodeTableInline ;
 
 import org.apache.jena.atlas.lib.StrUtils ;
@@ -116,7 +117,7 @@ public class ConfigNode {
     /** Build a Cluster node table, from the configuration */
     public NodeTable buildNodeTable(List<Component> clientStartables) {
         NodeTable nt = buildNodeTable(nodeServers(), clientStartables) ;
-        //nt = stackNodeTable(nt) ;
+        nt = stackNodeTable(nt) ;
         return nt ;
     }
 
@@ -174,44 +175,6 @@ public class ConfigNode {
         return nodeServers ;
     }
     
-//    private Map<Resource, NodeServer> findNodeServers(Map<Resource, NodeService> nodeServiceDecl, Model m) {
-//        String qsNodeServers= StrUtils.strjoinNL(prefixes,
-//                                                   "SELECT * {",
-//                                                    "  ?nServer a :NodeServer ;",
-//                                                    "    OPTIONAL { ?nServer :name ?name }",
-//                                                    // Unnecessary - in the deployment file.
-//                                                    "    OPTIONAL { ?nServer :hostname ?hostname }",
-//                                                    "    OPTIONAL { ?nServer :port ?port }",
-//                                                    "    OPTIONAL { ?nServer :data ?data }",
-//                                                    "}") ;
-//        for ( QuerySolution row : Q.queryToList(m, qsNodeServers) ) {
-//            Resource nServer = row.getResource("nServer") ;
-//            if ( nodeServers.containsKey(nServer) )
-//                throw new LizardException("Malform declaration for: "+nServer) ;
-//            String name = Q.getStringOrNull(row, "name") ;
-//            if ( name == null)
-//                throw new LizardException("No name for NodeServer: "+nServer) ;
-//            String hostname = Q.getStringOrNull(row, "hostname") ;
-//            if ( hostname == null)
-//                throw new LizardException("No hostname for NodeServer: "+nServer) ;
-//            Long port = Q.getIntegerOrNull(row, "port") ;
-//            if ( port == null)
-//                throw new LizardException("No port for NodeServer: "+nServer) ;
-//            // Optional
-//            String dataDir = Q.getStringOrNull(row, "data") ;
-//            
-//            NodeService nodeService = findNodeService(nodeServiceDecl, nServer) ;
-//            if ( nodeService == null )
-//                throw new LizardException("No NodeService for NodeServer: "+nServer) ;
-//            
-//            NodeServer nodeServer  = new NodeServer(nServer, name, nodeService, hostname, port.intValue(), dataDir) ;
-//            FmtLog.debug(logConf, "Node server: %s", nodeServer) ;
-//            nodeServers.put(nServer, nodeServer) ;
-//        }
-// 
-//        return nodeServers ; 
-//    }
-    
     private static NodeService findNodeService(Map<Resource, NodeService> nodeServiceDecl, Resource nodeServer) {
         return nodeServiceDecl.values().stream()
             .filter(ns -> ns.servers.contains(nodeServer))
@@ -254,7 +217,7 @@ public class ConfigNode {
     
 
     public static NodeTable stackNodeTable(NodeTable nodeTable) {
-        //nodeTable = NodeTableCache.create(nodeTable, 100, 100, 100) ; 
+        nodeTable = NodeTableCache.create(nodeTable, 10000, 10000, 100) ; 
         nodeTable =  NodeTableInline.create(nodeTable) ;
         return nodeTable ;
     }
