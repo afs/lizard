@@ -168,6 +168,9 @@ public class Cluster {
             ensure(ClusterCtl.members) ;
             active.set(true) ;
             globalCounter = new DistributedAtomicLong(client,"/COUNTER", policy) ;
+            try {
+                log.info("/COUNTER = "+globalCounter.get().postValue());
+            } catch (Exception ex) {}
         }
 
         public String addMember(String baseName) {
@@ -209,12 +212,14 @@ public class Cluster {
         }
         
         public long uniqueNumber() {
+            // XXX Blocks of numbers.
             try {
                 AtomicValue<Long> along = globalCounter.increment() ;
                 if ( ! along.succeeded() ) {
                     log.error("Failed: uniqueNumber") ;
                     throw new LizardException("Failed to allocate a unique number") ;
                 }
+                //FmtLog.info(log, "Unique: %d -> %d", along.preValue(), along.postValue()) ;
                 return along.postValue() ;
             }
             catch (Exception e) {
