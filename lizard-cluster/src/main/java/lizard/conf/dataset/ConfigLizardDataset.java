@@ -54,10 +54,16 @@ public class ConfigLizardDataset {
 
     private final Model model ;
     private final Resource root ;
+    private final Map<Resource, LzDatasetDesc> datasets ;
     
-    public ConfigLizardDataset(Model model) {
+    public static ConfigLizardDataset create(Model model) {
+        return new ConfigLizardDataset(model) ;
+    }
+
+    ConfigLizardDataset(Model model) {
         this.model = model ;
         this.root = findRoot(model) ;
+        this.datasets = findDatasets(model) ;
     }
     
     private Resource findRoot(Model model2) {
@@ -68,6 +74,10 @@ public class ConfigLizardDataset {
             return root ;
         } catch (TypeNotUniqueException ex)
         { throw new ARQException("Multiple types for: "+DatasetAssemblerVocab.tDataset) ; }
+    }
+
+    private Map<Resource, LzDatasetDesc> findDatasets(Model model) {
+        return ConfigLib.datasets(model) ;
     }
 
     public LzDataset buildDataset() {
@@ -112,5 +122,9 @@ public class ConfigLizardDataset {
         DatasetGraphTDB dsg = LzBuildClient.createDataset(Location.mem(), indexes, nt) ;
         LzDataset lizard = new LzDataset(dsg, startables) ;
         return lizard ;
+    }
+
+    public LzDatasetDesc descDataset() {
+        return datasets.get(root) ;
     }
 }
