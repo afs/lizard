@@ -102,7 +102,7 @@ public class LZ_Query extends CmdGeneral {
             Model m = LzLib.readAll(confFiles) ;
             ConfigLizardDataset cf ;
             try {
-                cf = new ConfigLizardDataset(m) ;
+                cf = ConfigLizardDataset.create(m) ;
             } catch (LizardException ex) {
                 RDFDataMgr.write(System.err, m, Lang.TTL) ;
                 System.exit(1) ;
