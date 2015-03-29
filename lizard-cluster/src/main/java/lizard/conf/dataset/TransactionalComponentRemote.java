@@ -74,7 +74,7 @@ public class TransactionalComponentRemote<X extends TxnClient<?>> extends Transa
     @Override
     protected TxnRemoteState _begin(ReadWrite readWrite, TxnId txnId) {
         // The protocol uses a 64 bit number.
-        long x = protocolTxnId.incrementAndGet() ;
+        long x = txnId.runtime() ;
         worker.begin(x, readWrite) ;
         return new TxnRemoteState(txnId, x) ;
     }
