@@ -13,15 +13,13 @@ PREFIX ja:      <http://jena.hpl.hp.com/2005/11/Assembler#>
 
 # Query server
 
-## <#dataset> rdf:type lizard:Dataset ;
-##     :location "DB" ;
-##     .
+<#dataset> rdf:type lizard:Dataset .
 
 # 1 Node server
 <#node-server> a :NodeServer ;
     :name       "Node-1" ;
     :hostname   "localhost" ;
-    :port       4011 ; 
+    :port       4111 ; 
     :data       "--mem--/N" ;
     .
 
@@ -29,7 +27,7 @@ PREFIX ja:      <http://jena.hpl.hp.com/2005/11/Assembler#>
 <#index-s1>  a  :IndexServer ;
     :name       "Index-s1" ;
     :hostname   "localhost" ;
-    :port       4012 ; 
+    :port       4112 ; 
     :data       "--mem--/I1" ;
     .
 
@@ -37,6 +35,6 @@ PREFIX ja:      <http://jena.hpl.hp.com/2005/11/Assembler#>
 <#index-s2>  a  :IndexServer ;
     :name       "Index-s2" ;
     :hostname   "localhost" ;
-    :port       4016 ; 
+    :port       4116 ; 
     :data       "--mem--/I2" ;
     .

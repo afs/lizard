@@ -26,13 +26,13 @@
 <#index-s1>  a  :IndexServer ;
     :name       "ServerIndex-s1" ;
     :hostname   "localhost" ;
-    :port       4012 ; 
+    :port       4112 ; 
     :data       "--mem--" ; 
     .
 
 <#index-s2>  a  :IndexServer ;
     :name       "ServerIndex-s2" ;
     :hostname   "localhost" ;
-    :port       4014 ; 
+    :port       4114 ; 
     :data       "--mem--" ; 
     .

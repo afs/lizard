@@ -16,6 +16,6 @@
 <#node-server>  a :NodeServer ;
     :name       "ServerNode" ;
 	:hostname   "localhost" ;
-	:port       4011 ; 
+	:port       4111 ; 
     :data       "--mem--" ;
     .

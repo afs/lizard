@@ -1,6 +1,5 @@
-PREFIX ub: <http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#>
-SELECT *
-WHERE {
-    ?n0 a ub:GraduateStudent .
-    ?n0 ub:takesCourse <http://www.Department0.University0.edu/GraduateCourse0> .
+PREFIX : <http://example/> 
+
+SELECT * {
+  :s1 ?p ?o 
 }
