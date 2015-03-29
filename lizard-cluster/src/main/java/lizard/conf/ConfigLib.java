@@ -68,7 +68,6 @@ public class ConfigLib {
 
     /** Extract all dataset declarations (often and normally, one) */
     public static Map<Resource, LzDatasetDesc> datasets(Model model) {
-
         String qsDatasets = StrUtils.strjoinNL(Config.prefixes,
                                                "SELECT * {",
                                                // lizard: <urn:lizard:ns#>
