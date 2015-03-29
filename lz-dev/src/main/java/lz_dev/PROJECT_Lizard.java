@@ -22,11 +22,10 @@ public class PROJECT_Lizard {
     
     // Batching in loads.
     //   add - find/flush - end|commit/flush
+    // Caching nodes info - cache needs to drop back on abort/
     
     // Check/get LZ_* commands working.
     // LZ_Deploy + s-put.
-    
-    
     
     // Very large scans. Batching in replies?
     // Client side node caching.

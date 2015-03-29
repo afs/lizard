@@ -58,7 +58,7 @@ public class LzDevAll {
     static { LogCtl.setLog4j(); } 
     public static Logger log = LoggerFactory.getLogger("Main") ;
 
-    static String confDir           = "setup-simple" ;
+    static String confDir           = "setup-disk" ;
     static String confNode          = Q.filename(confDir, "conf-node.ttl") ;
     static String confIndex         = Q.filename(confDir, "conf-index.ttl") ;
     static String confDataset       = Q.filename(confDir, "conf-dataset.ttl") ;
@@ -107,8 +107,8 @@ public class LzDevAll {
             LogCtl.set("org.seaborne", "warn");
             LogCtl.set("lizard", "warn");
             
-            String datafile = "D.ttl" ;
-            //String datafile = "/home/afs/Datasets/BSBM/bsbm-25m.nt.gz" ;
+            //String datafile = "D.ttl" ;
+            String datafile = "/home/afs/Datasets/BSBM/bsbm-25m.nt.gz" ;
             // Load if empty.
             
             log.info("LOAD") ;
@@ -118,7 +118,8 @@ public class LzDevAll {
             ds.begin(ReadWrite.WRITE) ;
             
             StreamRDF s = StreamRDFLib.dataset(ds.asDatasetGraph()) ;
-            ProgressLogger plog = new ProgressLogger(LoggerFactory.getLogger("LOAD"), "Triples", 10000, 10) ;
+            ProgressLogger plog = new ProgressLogger(LoggerFactory.getLogger("LOAD"), "Triples", 
+                                                     50000, 10) ;
             s = new StreamRDFMonitor(s, plog) ; 
             RDFDataMgr.parse(s, datafile);
             ds.commit();
