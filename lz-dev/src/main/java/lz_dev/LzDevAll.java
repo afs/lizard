@@ -18,11 +18,14 @@
 package lz_dev;
 
 import java.nio.file.Paths ;
+import java.util.concurrent.Semaphore ;
 
 import com.hp.hpl.jena.query.* ;
 import com.hp.hpl.jena.rdf.model.Model ;
 import com.hp.hpl.jena.sparql.util.QueryExecUtils ;
+import com.hp.hpl.jena.sparql.util.Utils ;
 
+import lizard.cluster.Cluster ;
 import lizard.conf.Configuration ;
 import lizard.conf.dataset.LzBuildClient ;
 import lizard.index.TServerIndex ;
@@ -36,13 +39,17 @@ import lizard.system.LizardException ;
 import lizard.system.Pingable ;
 import migrate.Q ;
 
+import org.apache.curator.test.TestingServer ;
 import org.apache.jena.atlas.lib.FileOps ;
 import org.apache.jena.atlas.lib.Lib ;
 import org.apache.jena.atlas.lib.StrUtils ;
 import org.apache.jena.atlas.logging.LogCtl ;
+import org.apache.jena.atlas.logging.ProgressLogger ;
 import org.apache.jena.fuseki.cmd.FusekiCmd ;
 import org.apache.jena.fuseki.server.FusekiEnv ;
 import org.apache.jena.riot.RDFDataMgr ;
+import org.apache.jena.riot.system.StreamRDF ;
+import org.apache.jena.riot.system.StreamRDFLib ;
 import org.seaborne.dboe.base.file.Location ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
@@ -51,13 +58,14 @@ public class LzDevAll {
     static { LogCtl.setLog4j(); } 
     public static Logger log = LoggerFactory.getLogger("Main") ;
 
-    static String confNode          = Q.filename(Setup.confDir, "conf-node.ttl") ;
-    static String confIndex         = Q.filename(Setup.confDir, "conf-index.ttl") ;
-    static String confDataset       = Q.filename(Setup.confDir, "conf-dataset.ttl") ;
+    static String confDir           = "setup-simple" ;
+    static String confNode          = Q.filename(confDir, "conf-node.ttl") ;
+    static String confIndex         = Q.filename(confDir, "conf-index.ttl") ;
+    static String confDataset       = Q.filename(confDir, "conf-dataset.ttl") ;
     static Model configurationModel = Q.readAll(confNode, confIndex, confDataset) ;
     static Configuration config     = Configuration.fromModel(configurationModel) ;
     
-    static String deploymentFile        = Q.filename(Setup.confDir, "deploy-jvm.ttl") ;
+    static String deploymentFile        = Q.filename(confDir, "deploy-jvm.ttl") ;
     
     static NodeTableRemote ntr = null ;
     //static TupleIndexRemote tir = null ;
@@ -82,18 +90,72 @@ public class LzDevAll {
             System.exit(0) ;
         }
 
-        // --> Fuseki
+        // Init a simple ZK
+        int zkPort = 2281 ;
+        zookeeper(zkPort) ;
+        String zkConnect = "localhost:"+zkPort ;
+        Cluster.createSystem(zkConnect);
+        
+        // Multiple query servers?
         log.info("DATASET") ;
         LzDataset lz = buildDataset(config) ;
         Dataset ds = LzBuildClient.dataset(lz, Location.mem()) ;
-        log.info("LOAD") ;
-        ds.begin(ReadWrite.WRITE) ;
-        RDFDataMgr.read(ds, "D.ttl") ;
+        Dataset ds1 = LzBuildClient.dataset(lz, Location.mem()) ;
+
+
+        if ( true ) {
+            LogCtl.set("org.seaborne", "warn");
+            LogCtl.set("lizard", "warn");
+            
+            String datafile = "D.ttl" ;
+            //String datafile = "/home/afs/Datasets/BSBM/bsbm-25m.nt.gz" ;
+            // Load if empty.
+            
+            log.info("LOAD") ;
+            // System.out.println(">> "+Utils.nowAsString()) ;
+            
+            
+            ds.begin(ReadWrite.WRITE) ;
+            
+            StreamRDF s = StreamRDFLib.dataset(ds.asDatasetGraph()) ;
+            ProgressLogger plog = new ProgressLogger(LoggerFactory.getLogger("LOAD"), "Triples", 10000, 10) ;
+            s = new StreamRDFMonitor(s, plog) ; 
+            RDFDataMgr.parse(s, datafile);
+            ds.commit();
+            ds.end() ;
+
+            
+            //System.out.println("<< "+Utils.nowAsString()) ;
+            
+            System.exit(0) ;
+        }
+        
+        log.info("QUERY") ;
+        ds.begin(ReadWrite.READ) ;
+        performQuery(ds);
         //txn.prepare(); 
-        ds.commit();
         ds.end() ;
+        
+        LogCtl.set("lizard", "info");
+        LogCtl.set("org.seaborne", "info");
+        
+        Cluster.close();
+        System.exit(0) ;
     }
 
+    public static void async(Runnable r) {
+        Semaphore semaStart = new Semaphore(0, true) ;
+        Semaphore semaFinish = new Semaphore(0, true) ;
+        Runnable r2 = () -> {
+            semaStart.acquireUninterruptibly(); 
+            r.run();
+            semaFinish.release(1);
+        } ;
+        new Thread(r2).start();
+        semaStart.release(1);
+        semaFinish.acquireUninterruptibly();
+    }
+    
     // -------- Dataset
     private static LzDataset buildDataset(Configuration config) {
         LzDataset lz = Local.buildDataset(configurationModel) ;
@@ -128,28 +190,17 @@ public class LzDevAll {
 
     // -------- Query
     private static void performQuery(Dataset ds) {
-        log.info("QUERY") ;
         //            Quack.setVerbose(true) ;
         //            ARQ.setExecutionLogging(InfoLevel.NONE);
 
-        String qs = StrUtils.strjoinNL("PREFIX : <http://example/> SELECT * "
-                                       , "{ ?s :p ?o }" 
-                                       //, "{ ?x :k ?k . ?x :p ?v . }"
-                                       //, "{ :x1 :p ?x . ?x :p ?v . }"
-                                       // Filter placement occurs?
-                                       //, "{ ?x :k ?k . ?x :p ?v . FILTER(?k = 2) }"
-                                       //,"ORDER BY ?x"
-            ) ;
-        //"{ ?x :k ?k }" ;
-
-        if ( true ) {
-            LogCtl.set("lizard", "info") ;
-            //                LogCtl.disable("lizard.comms.common.tio") ;
-            //                LogCtl.disable("lizard.comms.server") ;
-            //                LogCtl.disable("lizard.comms.client") ;
-        }
-
+        String qs = StrUtils.strjoinNL("PREFIX : <http://example/>"
+                                      ,"SELECT (count(*) AS ?C)  "
+                                      ,"{ ?s ?p ?o }" ) ;
         Query q = QueryFactory.create(qs) ;
+        performQuery(ds, q);
+    }
+    
+    private static void performQuery(Dataset ds, Query q) {
         System.out.println() ;
         System.out.print(q);
         System.out.println() ;
@@ -158,18 +209,18 @@ public class LzDevAll {
             doOne("Lizard", ds, q) ;
             if ( i != N-1 ) Lib.sleep(3000) ;
         }
-
-        if ( true ) {
-            Dataset dsStd = RDFDataMgr.loadDataset("D.ttl") ;
-            doOne("ARQ", dsStd, q) ;
-        }
-
     }
 
     private static void doOne(String label, Dataset ds, Query query) {
         QueryExecution qExec = QueryExecutionFactory.create(query, ds) ;
         log.info("---- {}", label) ;
         QueryExecUtils.executeQuery(query, qExec);
+    }
+    
+    static TestingServer zkTestServer;
+    public static void zookeeper(int port) {
+        try { zkTestServer = new TestingServer(port) ; }
+        catch (Exception e) { e.printStackTrace(); }
     }
 
     public static void mainFuseki(String[] args) {

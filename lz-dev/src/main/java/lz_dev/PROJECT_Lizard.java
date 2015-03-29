@@ -19,9 +19,38 @@ package lz_dev ;
 
 public class PROJECT_Lizard {
     // Tasks
+    
+    // Batching in loads.
+    //   add - find/flush - end|commit/flush
+    
+    // Check/get LZ_* commands working.
+    // LZ_Deploy + s-put.
+    
+    
+    
+    // Very large scans. Batching in replies?
+    // Client side node caching.
+    
+    
+    // Framework for any node ; cluster, zk
+    // Deploy file.
+    // Location to deploy - root for all nodes/index/ds.
+    
+    // Deployment parameters.
+    //   File root.
+    // Static parameters
+    
+    
+    
+    // ConfigLizardDataset.buildDataset = location.
+    
     // 1: Global Write txn id using zk
     
     // 2: Build-deploy tidy up
+    // Deployment.parse -> Deploy.deploy(deployment) ;
+    
+    // ConfigLizardDataset
+    
     // Deploy specialized Fuseki
     //    Fuseki - fixed mode - one config file, no runtime additions.
     //    Fuseki embedded
@@ -44,6 +73,8 @@ public class PROJECT_Lizard {
     // Client side transaction - call end IFF commit/abort didn't do it. 
     //   TxnClient or TransactionalComponentRemote.TxnRemoteState 
     // Mantis: Component has W lifecycle and an R lifecycle
+    
+    // Journal.create to check for in-memory locations.
     
     /*
      *  index, node "clear"
