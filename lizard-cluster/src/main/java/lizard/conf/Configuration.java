@@ -29,6 +29,7 @@ import com.hp.hpl.jena.tdb.store.tupletable.TupleIndex ;
 import com.hp.hpl.jena.tdb.sys.DatasetControlMRSW ;
 
 import lizard.cluster.Platform ;
+import lizard.conf.dataset.ConfigLizardDataset ;
 import lizard.conf.index.ConfigIndex ;
 import lizard.conf.index.IndexService ;
 import lizard.conf.node.ConfigNode ;
@@ -49,25 +50,26 @@ public class Configuration {
         return new Configuration(model) ;
     }
     
-    private final ConfigIndex confIndex ;
-    private final ConfigNode  confNode ;
+    private final ConfigIndex   confIndex ;
+    private final ConfigNode    confNode ;
+    private final ConfigLizardDataset confDataset ;
     
     public Configuration(Model model) {
         confIndex = ConfigIndex.create(model) ;
         confNode  = ConfigNode.create(model) ;
+        confDataset = ConfigLizardDataset.create(model) ;
     }
     
-    public Configuration(ConfigIndex configIndex, ConfigNode configNode) {
-        confIndex = configIndex ;
-        confNode  = configNode ; 
-    }
-
     public ConfigIndex getConfIndex() {
         return confIndex ;
     }
 
     public ConfigNode getConfNode() {
         return confNode ;
+    }
+
+    public ConfigLizardDataset getConfDataset() {
+        return confDataset ;
     }
 
     /** Replace with deployment code */
