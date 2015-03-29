@@ -1,0 +1,37 @@
+# The cluster deployment descriptor. 
+# This is used to override the configuration in the config files
+# with locations of servers for this machine.
+
+@base     <urn:lizard:> .
+@prefix : <urn:lizard:> .
+@prefix lizard: <urn:lizard:ns#> .
+
+@prefix fuseki:  <http://jena.apache.org/fuseki#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix tdb:     <http://jena.hpl.hp.com/2008/tdb#> .
+@prefix ja:      <http://jena.hpl.hp.com/2005/11/Assembler#> .
+
+# One node
+<#node-server> a :NodeServer ;
+    :name       "Node-1" ;
+	:hostname   "localhost" ;
+	:port       4011 ; 
+    :data     	"N" ;
+    .
+
+# Index
+<#index-s1>  a  :IndexServer ;
+    :name       "Index-11" ;
+	:hostname   "localhost" ;
+	:port       4012 ; 
+    :data     	"I1" ;
+    .
+
+# Index-2
+<#index-s1>  a  :IndexServer ;
+    :name       "Index-21" ;
+	:hostname   "localhost" ;
+	:port       4016 ; 
+    :data     	"I2" ;
+    .
