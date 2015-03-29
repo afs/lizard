@@ -1,0 +1,52 @@
+cluster:
+  zookeeper-config:  conf/zoo.cfg
+  root:              "Lizard"
+
+dataset:
+  indexes:           [index-pos, index-pso]
+  nodes:             nodetable
+
+# Index
+index-pos:
+  name: "POS"
+  servers: [pos-1, pos-2]
+
+index-pso:
+  name: "PSO"
+  servers: [pso-1, pso-2]
+
+#Index shards
+pos-1:
+  hostname: localhost
+  port: 4012
+
+pos-2:
+  hostname:  localhost
+  port: 4014
+
+pso-1:
+  hostname: localhost
+  port: 4016
+
+pso-2:
+  hostname:  localhost
+  port: 4018
+
+# Node table
+
+nodetable:
+  servers:  [ node-1, node-2 ]
+
+# 2 servers, each with one segment.
+node-1:
+  name:       "ServerNode1"
+  hostname:   localhost
+  port:       4011
+  data:       "N1"
+
+node-2:
+  name:       "ServerNode2"
+  hostname:   localhost
+  port:       4013
+  data:       N2
+

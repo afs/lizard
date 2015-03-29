@@ -1,0 +1,63 @@
+Design notes on configuration:
+
+Two sets : 
+static 
+- describes the clister over all
+- can be deployed indifefrent ways
+
+All
+:name
+
+------------
+static:
+
+cluster
+:zookeeper configuration file.
+:zookeeper data directory
+
+dataset
+:indexes (I1, I2)
+:nodetable (N)
+
+index services
+:indexOrder
+:server (replicas)
+:quorumR
+:quorumW 
+
+node
+:servers (replicas)
+:policy for update
+:quorumR
+:quorumW
+
+-------------
+Host table.
+<#server> -> (machine,port)
+
+-------------
+
+per machine:
+
+deployment
+- different on each machine.
+- a list of hosted units
+- file root name
+
+YAML , JSON++
+
+
+cluster
+: top area for files 
+   lizard/
+"test" -- in memory override.
+
+dataset
+:location "rel dir" for journal. Override/dft="dataset"
+
+index servers
+replica -> (port, location)
+OR autonaming.
+
+node servers
+
