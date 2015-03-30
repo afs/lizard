@@ -53,7 +53,7 @@ public class TServerIndex extends ThriftServer
         
         new Thread(()-> {
             try {
-                TLZ_Index.Iface handler = new THanderTupleIndex(getLabel(), index) ;
+                TLZ_Index.Iface handler = new THandlerTupleIndex(getLabel(), index) ;
                 TLZ_Index.Processor<TLZ_Index.Iface> processor = new TLZ_Index.Processor<TLZ_Index.Iface>(handler);
                 TThreadPoolServer.Args args = new TThreadPoolServer.Args(serverTransport) ;
                 args.processor(processor) ;

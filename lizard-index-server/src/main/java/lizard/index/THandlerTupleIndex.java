@@ -47,9 +47,9 @@ import org.seaborne.dboe.transaction.txn.journal.Journal ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
-/* package */ class THanderTupleIndex extends TxnHandler implements TLZ_Index.Iface {
+/* package */ class THandlerTupleIndex extends TxnHandler implements TLZ_Index.Iface {
     
-    private static Logger log = LoggerFactory.getLogger(THanderTupleIndex.class) ;
+    private static Logger log = LoggerFactory.getLogger(THandlerTupleIndex.class) ;
     @Override
     protected Logger log() { return log ; }
     
@@ -59,7 +59,7 @@ import org.slf4j.LoggerFactory ;
 
     private final TupleIndex index ;
 
-    public THanderTupleIndex(String label, TupleIndex index) {
+    public THandlerTupleIndex(String label, TupleIndex index) {
         super(init(index)) ;
         
         this.label = label ;
