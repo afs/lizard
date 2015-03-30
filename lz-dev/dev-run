@@ -5,17 +5,20 @@ LZ_CMDS="$LIZARD_HOME/lizard-cmds"
 
 
 ## Test zookeeper
-CPF=lz-dev.classpath
-if [[  -e $CPF ]]
+CPFILE=lz-dev.classpath
+if [[  -e $CPFILE ]]
 then
-    CP="$(cat "$CPF")"
+    CP="$(cat "$CPFILE")"
 else
-    source "$LZ_CMDS/bin/init"
-    # lz-dev special jars
-    CP="$CP:${M2_REPO}/org/apache/curator/curator-test/2.7.1/curator-test-2.7.1.jar"
-    CP="$CP:${M2_REPO}/org/javassist/javassist/3.18.1-GA/javassist-3.18.1-GA.jar"
-    CP="$CP:${M2_REPO}/org/apache/commons/commons-math/2.2/commons-math-2.2.jar"
-    CP="$CP:${M2_REPO}/org/yaml/snakeyaml/1.9/snakeyaml-1.9.jar"
+    echo "No classpath file: $CPFILE" 1>&2
+    echo "Run \"mvn dependency:build-classpath -Dmdep.outputFile=$CPFILE\"" ; 1>&2
+    exit 2 
+##     source "$LZ_CMDS/bin/init"
+##     # lz-dev special jars
+##     CP="$CP:${M2_REPO}/org/apache/curator/curator-test/2.7.1/curator-test-2.7.1.jar"
+##     CP="$CP:${M2_REPO}/org/javassist/javassist/3.18.1-GA/javassist-3.18.1-GA.jar"
+##     CP="$CP:${M2_REPO}/org/apache/commons/commons-math/2.2/commons-math-2.2.jar"
+##     CP="$CP:${M2_REPO}/org/yaml/snakeyaml/1.9/snakeyaml-1.9.jar"
 fi
 
 CP="$CP:target/classes"

@@ -23,7 +23,6 @@ import java.util.concurrent.Semaphore ;
 import com.hp.hpl.jena.query.* ;
 import com.hp.hpl.jena.rdf.model.Model ;
 import com.hp.hpl.jena.sparql.util.QueryExecUtils ;
-import com.hp.hpl.jena.sparql.util.Utils ;
 
 import lizard.cluster.Cluster ;
 import lizard.conf.Configuration ;

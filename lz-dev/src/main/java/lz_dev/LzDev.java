@@ -17,12 +17,12 @@
 
 package lz_dev;
 
-import java.io.InputStream ;
 import java.nio.file.Paths ;
-import java.util.ArrayList ;
-import java.util.List ;
-import java.util.Map ;
-import java.util.concurrent.TimeUnit ;
+import java.util.concurrent.Semaphore ;
+
+import com.hp.hpl.jena.query.* ;
+import com.hp.hpl.jena.rdf.model.Model ;
+import com.hp.hpl.jena.sparql.util.QueryExecUtils ;
 
 import lizard.cluster.Cluster ;
 import lizard.conf.Configuration ;
@@ -37,127 +37,182 @@ import lizard.sys.Deployment ;
 import lizard.system.LizardException ;
 import lizard.system.Pingable ;
 import migrate.Q ;
-import org.apache.curator.framework.CuratorFramework ;
-import org.apache.curator.framework.recipes.locks.InterProcessLock ;
-import org.apache.curator.framework.recipes.locks.InterProcessSemaphoreMutex ;
+
 import org.apache.curator.test.TestingServer ;
-import org.apache.jena.atlas.io.IO ;
-import org.apache.jena.atlas.io.IndentedWriter ;
 import org.apache.jena.atlas.lib.FileOps ;
 import org.apache.jena.atlas.lib.Lib ;
 import org.apache.jena.atlas.lib.StrUtils ;
 import org.apache.jena.atlas.logging.LogCtl ;
+import org.apache.jena.atlas.logging.ProgressLogger ;
 import org.apache.jena.fuseki.cmd.FusekiCmd ;
 import org.apache.jena.fuseki.server.FusekiEnv ;
 import org.apache.jena.riot.RDFDataMgr ;
+import org.apache.jena.riot.system.StreamRDF ;
+import org.apache.jena.riot.system.StreamRDFLib ;
 import org.seaborne.dboe.base.file.Location ;
-import org.seaborne.dboe.transaction.txn.TransactionalComponent ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
-import org.yaml.snakeyaml.Yaml ;
-
-import com.hp.hpl.jena.query.* ;
-import com.hp.hpl.jena.rdf.model.Model ;
-import com.hp.hpl.jena.sparql.util.QueryExecUtils ;
-
 
 public class LzDev {
-    public static void print(Object obj) {
-        print (IndentedWriter.stdout, obj) ;
-        IndentedWriter.stdout.flush();
-    }
+    static { LogCtl.setLog4j(); } 
+    public static Logger log = LoggerFactory.getLogger("Main") ;
+
+    static String confDir           = "setup-disk" ;
+    static String confNode          = Q.filename(confDir, "conf-node.ttl") ;
+    static String confIndex         = Q.filename(confDir, "conf-index.ttl") ;
+    static String confDataset       = Q.filename(confDir, "conf-dataset.ttl") ;
+    static Model configurationModel = Q.readAll(confNode, confIndex, confDataset) ;
+    static Configuration config     = Configuration.fromModel(configurationModel) ;
     
-    public static void print(IndentedWriter w, Object obj) {
-        if ( obj == null ) {
-            w.print("<<null>>");
-            return ;
-        }
-        
-        if ( obj instanceof List ) {
-            @SuppressWarnings("unchecked")
-            List<Object> list = (List<Object>)obj ;
-            w.print("(\n");
-            w.incIndent();
-            list.forEach( x-> {
-                print(w,x) ;   
-                w.println();
-            }) ;
-            w.decIndent();
-            w.print(")");
-        } else if ( obj instanceof Map ) {
-            @SuppressWarnings("unchecked")
-            Map<String, Object> map = (Map<String, Object>)obj ;
-            w.print("{ ");
-            w.incIndent();
-            map.keySet().forEach( k-> {
-                w.printf("%-8s : ", k) ;
-                Object v = map.get(k) ;
-                if ( compound(v) )
-                    w.println();
-                print(w, v) ;
-                w.println();
-            }) ;
-            w.decIndent();
-            w.print("}");
-            //w.println();
-        } else {
-            w.printf("%s[%s]",obj,obj.getClass().getName()) ;
-        }
-    }
+    static String deploymentFile        = Q.filename(confDir, "deploy-jvm.ttl") ;
     
-    public static boolean compound(Object obj) {
-        return obj instanceof List<?> || obj instanceof Map<?,?> ;
-    }
-    
-    public static Object getField(Object x, String obj, String field) {
-        System.out.println("getField: "+obj+"->"+field) ;
-        Object z1 = get1(x, obj) ;
-        //System.out.println("getField: z1="+z1) ;
-        return get1(z1, field) ;
-    }
-    
-    public static Object get(Object obj, String ... path) {
-        //System.out.println("get: "+Arrays.asList(path)) ;
-        Object x = obj ;
-        for ( String c : path )
-            x = get1(obj, c) ;
-        return x ;
-    }
-    
-    private static Object get1(Object obj, String step ) {
-        //System.out.println("get1: "+obj) ;
-        //System.out.println("get1:: "+step) ;
-        
-        if ( ! ( obj instanceof Map ) ) {
-            System.err.println("Not a map : "+obj) ;
-        }
-        
-        @SuppressWarnings("unchecked")
-        Map<String, Object> map = (Map<String, Object>)obj ;
-        //System.out.println("get1>> "+map.get(step)) ;
-        return map.get(step) ;
-    }
-    
+    static NodeTableRemote ntr = null ;
+    //static TupleIndexRemote tir = null ;
+    static int counter = 0 ;
+
     public static void main(String[] args) {
-        InputStream inYaml = IO.openFile("data.yaml") ;
+        FileOps.clearAll("DB");
         
-        Object x = new Yaml().load(inYaml) ;
-        System.out.println(x);
-        System.out.println("<<<<-------------------------------------------------");
-        print(x) ;
+        try { main$(args) ; }
+        catch (Exception ex) { 
+            System.out.flush() ;
+            System.err.println(ex.getMessage()) ;
+            ex.printStackTrace(System.err);
+            System.exit(0) ;
+        }
+    }
+
+    public static void main$(String[] args) {
+        log.info("SERVERS") ;
+        try { 
+            Deployment deployment = Deploy.deployServers(config, deploymentFile);
+        } catch ( LizardException ex) {
+            System.err.println(ex.getMessage());
+            System.exit(0) ;
+        }
+
+        // Init a simple ZK
+        int zkPort = 2281 ;
+        zookeeper(zkPort) ;
+        String zkConnect = "localhost:"+zkPort ;
+        Cluster.createSystem(zkConnect);
+        
+        // Multiple query servers?
+        log.info("DATASET") ;
+        LzDataset lz = buildDataset(config) ;
+        Dataset ds = LzBuildClient.dataset(lz, Location.mem()) ;
+
+        // Do a long, slow load.
+        
+        Runnable r = ()->load(ds,"/home/afs/Datasets/BSBM/bsbm-5m.nt.gz") ;
+        new Thread(r).start() ;
+        Lib.sleep(1000);
+
+        log.info("QUERY") ;
+        ds.begin(ReadWrite.READ) ;
+        performQuery(ds);
+        //txn.prepare(); 
+        ds.end() ;
+        
+        LogCtl.set("lizard", "info");
+        LogCtl.set("org.seaborne", "info");
+        
+        Cluster.close();
+        System.exit(0) ;
+    }
+
+    public static void async(Runnable r) {
+        Semaphore semaStart = new Semaphore(0, true) ;
+        Semaphore semaFinish = new Semaphore(0, true) ;
+        Runnable r2 = () -> {
+            semaStart.acquireUninterruptibly(); 
+            r.run();
+            semaFinish.release(1);
+        } ;
+        new Thread(r2).start();
+        semaStart.release(1);
+        semaFinish.acquireUninterruptibly();
+    }
+    
+    // -------- Dataset
+    private static LzDataset buildDataset(Configuration config) {
+        LzDataset lz = Local.buildDataset(configurationModel) ;
+        return lz ;
+    }
+    
+    private static void ping(LzDataset lz) {
+        lz.getComponents().stream().forEach(c -> {
+            //System.out.println("Component: "+c.getClass().getTypeName()) ;
+            if ( c instanceof Pingable ) {
+                Pingable p = (Pingable)c ;
+                p.ping();
+            }
+        }) ;
+    }
+    
+    private static void load(Dataset ds, String datafile) {        
+        log.info("LOAD") ;
+        if ( datafile != null ) {
+            // Making loading quieter.
+            LogCtl.set(ClusterNodeTable.class, "WARN") ;
+            LogCtl.set(TServerNode.class, "WARN") ;
+            LogCtl.set(TServerIndex.class, "WARN") ;
+
+            ds.begin(ReadWrite.WRITE) ;
+            StreamRDF s = StreamRDFLib.dataset(ds.asDatasetGraph()) ;
+            ProgressLogger plog = new ProgressLogger(LoggerFactory.getLogger("LOAD"), 
+                                                     "Triples", 50000, 10) ;
+            s = new StreamRDFMonitor(s, plog) ; 
+            RDFDataMgr.parse(s, datafile);
+            ds.commit();
+            ds.end() ;
+
+            LogCtl.set(ClusterNodeTable.class, "INFO") ;
+            LogCtl.set(TServerNode.class, "INFO") ;
+            LogCtl.set(TServerIndex.class, "INFO") ;
+        }
+    }
+
+    // -------- Query
+    private static void performQuery(Dataset ds) {
+        //            Quack.setVerbose(true) ;
+        //            ARQ.setExecutionLogging(InfoLevel.NONE);
+
+        String qs = StrUtils.strjoinNL("PREFIX : <http://example/>"
+                                      ,"SELECT (count(*) AS ?C)  "
+                                      ,"{ ?s ?p ?o }" ) ;
+        Query q = QueryFactory.create(qs) ;
+        performQuery(ds, q);
+    }
+    
+    private static void performQuery(Dataset ds, Query q) {
         System.out.println() ;
-        System.out.println(">>>>-------------------------------------------------");
-        
-        // Access language :
-        //  !global
-        //  -link
-        //  @array
-        
-        // can be lists.
-        System.out.println(getField(x, "dataset", "nodes")) ;
+        System.out.print(q);
         System.out.println() ;
-        System.out.println(get(x, "dataset", "nodetable", "servers" )) ;
-        
+        int N = 1 ;// inProcess ? 1 : 20 ;
+        for ( int i = 0 ; i < N ; i++ ) {
+            doOne("Lizard", ds, q) ;
+            if ( i != N-1 ) Lib.sleep(3000) ;
+        }
+    }
+
+    private static void doOne(String label, Dataset ds, Query query) {
+        QueryExecution qExec = QueryExecutionFactory.create(query, ds) ;
+        log.info("---- {}", label) ;
+        QueryExecUtils.executeQuery(query, qExec);
+    }
+    
+    static TestingServer zkTestServer;
+    public static void zookeeper(int port) {
+        try { zkTestServer = new TestingServer(port) ; }
+        catch (Exception e) { e.printStackTrace(); }
+    }
+
+    public static void mainFuseki(String[] args) {
+        System.setProperty("FUSEKI_HOME", "/home/afs/Jena/jena-fuseki2/jena-fuseki-core/") ;
+        FusekiEnv.FUSEKI_BASE = Paths.get("setup-simple/run").toAbsolutePath() ;
+        FileOps.ensureDir(FusekiEnv.FUSEKI_BASE.toString()) ;
+        FusekiCmd.main("--conf=setup-simple/fuseki.ttl") ;
         System.exit(0) ;
     }
 }

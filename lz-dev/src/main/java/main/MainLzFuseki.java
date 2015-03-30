@@ -37,19 +37,19 @@ public class MainLzFuseki {
     static { LogCtl.setLog4j() ; }
     
     public static void main(String...argv) {
-        String conffile = "setup-simple/fuseki.ttl" ;
+        String confFile = "setup-simple/fuseki.ttl" ;
         if ( argv.length == 1 )
-            conffile = argv[0] ;
+            confFile = argv[0] ;
         if ( argv.length > 1 ) {
             System.err.println("Too many argument") ;
             System.exit(1) ;
         }
         
-        Model configurationModel = Q.readAll(conffile) ;
+        Model configurationModel = Q.readAll(confFile) ;
         Configuration config     = Configuration.fromModel(configurationModel) ;
         
         try { 
-            Deployment deployment = Deploy.deployServers(config, conffile);
+            Deployment deployment = Deploy.deployServers(config, confFile);
         } catch ( LizardException ex) {
             System.err.println(ex.getMessage());
             System.exit(0) ;
@@ -69,6 +69,6 @@ public class MainLzFuseki {
         System.setProperty("FUSEKI_HOME", "/home/afs/Jena/jena-fuseki2/jena-fuseki-core/") ;
         FusekiEnv.FUSEKI_BASE = Paths.get("setup-simple/run").toAbsolutePath() ;
         FileOps.ensureDir(FusekiEnv.FUSEKI_BASE.toString()) ;
-        FusekiCmd.main("--conf="+conffile) ;
+        FusekiCmd.main("--conf="+confFile) ;
     }
 }
