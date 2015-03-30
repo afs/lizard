@@ -1,0 +1,8 @@
+#!/bin/bash
+
+DATA=/home/afs/Datasets/MusicBrainz/artists.nt
+
+curl -XPOST \
+    --header "Content-type: text/turtle" \
+    --data-binary "@$DATA" \
+    http://localhost:3030/lz/data
