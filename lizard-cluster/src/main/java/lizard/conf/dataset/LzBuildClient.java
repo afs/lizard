@@ -53,10 +53,7 @@ import org.apache.jena.atlas.lib.Tuple ;
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.seaborne.dboe.base.file.Location ;
 import org.seaborne.dboe.transaction.Transactional ;
-import org.seaborne.dboe.transaction.txn.ComponentId ;
-import org.seaborne.dboe.transaction.txn.TransactionCoordinator ;
-import org.seaborne.dboe.transaction.txn.TransactionalBase ;
-import org.seaborne.dboe.transaction.txn.TransactionalComponent ;
+import org.seaborne.dboe.transaction.txn.* ;
 import org.seaborne.dboe.transaction.txn.journal.Journal ;
 import org.slf4j.Logger ;
 
@@ -66,6 +63,8 @@ public class LzBuildClient
     static int counter = 0 ;
     public static DatasetGraph datasetGraph(LzDataset lz, Location location) {
         List<TransactionalComponent> tComp = new ArrayList<>() ;
+        // Add the global lock manager.
+        tComp.add(new TransactionalComponentZkLock()) ;
         ComponentId base = ComponentId.allocLocal() ;
         lz.getComponents().forEach(c->{
             if ( c instanceof TxnClient.Accessor ) {

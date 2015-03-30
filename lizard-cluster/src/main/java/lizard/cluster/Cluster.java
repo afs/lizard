@@ -20,16 +20,19 @@ package lizard.cluster ;
 import java.util.HashSet ;
 import java.util.List ;
 import java.util.Set ;
+import java.util.concurrent.TimeUnit ;
 import java.util.concurrent.atomic.AtomicBoolean ;
 
 import lizard.system.LizardException ;
-
 import org.apache.curator.RetryPolicy ;
 import org.apache.curator.framework.CuratorFramework ;
 import org.apache.curator.framework.CuratorFrameworkFactory ;
 import org.apache.curator.framework.recipes.atomic.AtomicValue ;
 import org.apache.curator.framework.recipes.atomic.DistributedAtomicLong ;
+import org.apache.curator.framework.recipes.locks.InterProcessLock ;
+import org.apache.curator.framework.recipes.locks.InterProcessSemaphoreMutex ;
 import org.apache.curator.retry.ExponentialBackoffRetry ;
+import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.zookeeper.CreateMode ;
 import org.apache.zookeeper.data.Stat ;
 import org.seaborne.dboe.transaction.txn.TxnIdGenerator ;
@@ -41,7 +44,6 @@ import org.slf4j.LoggerFactory ;
  * One instance of this class per JVM.
  */
 public class Cluster {
-
     /** Create this JVM cluster management instance */
     public static synchronized void createSystem(String connectString) {
         if ( instance != null )
@@ -117,7 +119,6 @@ public class Cluster {
         checkActive() ;
         return instance.client ;
     }
-
     
 //    /** Watch a key's children */ 
 //    public static void watch(CuratorWatcher watcher, String key) {
@@ -130,6 +131,10 @@ public class Cluster {
 //            log.error("Failed: watch("+key+")", e) ;
 //        } 
 //    }
+
+    public static void acquireWriteLock() { instance.acquireWriteLock() ; }
+
+    public static void releaseWriteLock() { instance.releaseWriteLock() ; }
 
     // ----------------------------------
     // Public interface
@@ -144,8 +149,8 @@ public class Cluster {
         private CuratorFramework client = null ;
         private Set<String> registrations = new HashSet<>() ;
         private AtomicBoolean active = new AtomicBoolean(false) ;
-//        private String self = null ;
         private DistributedAtomicLong globalCounter ;
+        private InterProcessLock globalWriteLock ;
         
         private Cluster$(String connectString) {
             RetryPolicy policy = new ExponentialBackoffRetry(10000, 5) ;
@@ -171,7 +176,26 @@ public class Cluster {
             try {
                 log.info("/COUNTER = "+globalCounter.get().postValue());
             } catch (Exception ex) {}
+            globalWriteLock = new InterProcessSemaphoreMutex(client, "/WriteLock") ; 
         }
+        
+        private static int LOCK_ACQUIRE_TIMEOUT = 5000 ;    // Milliseconds.  
+
+        public void acquireWriteLock() {
+            boolean b = false ;
+            try { b = globalWriteLock.acquire(LOCK_ACQUIRE_TIMEOUT, TimeUnit.MILLISECONDS) ; }
+            catch (Exception ex) { throw new LizardException("globalWriteLock.acquire", ex) ; }
+            if ( ! b ) {
+                FmtLog.info(log, "Timeout getting write lock: (%d ms)", LOCK_ACQUIRE_TIMEOUT );
+                throw new LizardException("Timeout getting write lock") ;
+            }
+        }
+
+        public void releaseWriteLock() {
+            try { globalWriteLock.release(); }
+            catch (Exception ex) { throw new LizardException("globalWriteLock.acquire", ex) ; }
+        }
+
 
         public String addMember(String baseName) {
             return addMember(baseName, zeroBytes) ; 
