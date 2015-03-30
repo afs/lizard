@@ -51,19 +51,18 @@ lizard:Dataset rdfs:subClassOf  ja:RDFDataset .
     :servers       ( <#index-s2> ) ;
     .
 
-# 2 servers
 <#index-s1>  a  :IndexServer ;
     :name       "ServerIndex11" ;
 	:hostname   "localhost" ;
 	:port       4012 ; 
-    :data     	"I1" ;
+    :data     	"DB/Idx1" ;
     .
 
 <#index-s2>  a  :IndexServer ;
     :name       "ServerIndex12" ;
 	:hostname   "localhost" ;
 	:port       4014 ; 
-    :data     	"I2" ;
+    :data     	"DB/Idx2" ;
     .
 
 ## ------------ Nodes
@@ -77,5 +76,5 @@ lizard:Dataset rdfs:subClassOf  ja:RDFDataset .
     :name       "ServerNode" ;
 	:hostname   "localhost" ;
 	:port       4011 ; 
-    :data     	"N" ;
+    :data     	"DB/N" ;
     .

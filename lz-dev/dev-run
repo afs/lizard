@@ -2,19 +2,23 @@
 
 LIZARD_HOME="${LIZARD_HOME:-$HOME/Lizard}"
 LZ_CMDS="$LIZARD_HOME/lizard-cmds"
-source "$LZ_CMDS/bin/init"
 
-## ## Test zookeeper
-## CPF=lz-dev.classpath
-## if [[ ! -e $CPF ]]
-## then
-##     echo "Run 'mvn dependency:build-classpath -Dmdep.outputFile=$CPF'"
-##     exit 1
-## fi
-## 
-## CP="$(cat "$CPF")"
-## CP="$CP:target/classes"
 
+## Test zookeeper
+CPF=lz-dev.classpath
+if [[  -e $CPF ]]
+then
+    CP="$(cat "$CPF")"
+else
+    source "$LZ_CMDS/bin/init"
+    # lz-dev special jars
+    CP="$CP:${M2_REPO}/org/apache/curator/curator-test/2.7.1/curator-test-2.7.1.jar"
+    CP="$CP:${M2_REPO}/org/javassist/javassist/3.18.1-GA/javassist-3.18.1-GA.jar"
+    CP="$CP:${M2_REPO}/org/apache/commons/commons-math/2.2/commons-math-2.2.jar"
+    CP="$CP:${M2_REPO}/org/yaml/snakeyaml/1.9/snakeyaml-1.9.jar"
+fi
+
+CP="$CP:target/classes"
 
 if [[ $# = 0 ]]
 then
@@ -25,11 +29,6 @@ fi
 MAIN=$1
 shift
 
-# lz-dev special jars
-CP="$CP:${M2_REPO}/org/apache/curator/curator-test/2.7.1/curator-test-2.7.1.jar"
-CP="$CP:${M2_REPO}/org/javassist/javassist/3.18.1-GA/javassist-3.18.1-GA.jar"
-CP="$CP:${M2_REPO}/org/apache/commons/commons-math/2.2/commons-math-2.2.jar"
-CP="$CP:${M2_REPO}/org/yaml/snakeyaml/1.9/snakeyaml-1.9.jar"
 CP="$LIZARD_HOME/lz-dev/target/classes:$CP"
 
-java -cp "$CP" $JVM_ARGS $LOGGING lz_dev.$MAIN "$@"
+java -cp "$CP" $JVM_ARGS $LOGGING $MAIN "$@"

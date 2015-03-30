@@ -8,7 +8,6 @@ prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
 prefix tdb:     <http://jena.hpl.hp.com/2008/tdb#> 
 prefix ja:      <http://jena.hpl.hp.com/2005/11/Assembler#> 
 
-
 ## Lizard
 [] ja:loadClass "lizard.sys.Lizard" .
 lizard:Dataset rdfs:subClassOf  ja:RDFDataset .
@@ -51,19 +50,18 @@ lizard:Dataset rdfs:subClassOf  ja:RDFDataset .
     :servers       ( <#index-s2> ) ;
     .
 
-# 2 servers
 <#index-s1>  a  :IndexServer ;
     :name       "ServerIndex11" ;
 	:hostname   "localhost" ;
 	:port       4012 ; 
-    :data     	"I1" ;
+    :data     	"--mem--" ;
     .
 
 <#index-s2>  a  :IndexServer ;
     :name       "ServerIndex12" ;
 	:hostname   "localhost" ;
 	:port       4014 ; 
-    :data     	"I2" ;
+    :data     	"--mem--" ;
     .
 
 ## ------------ Nodes
@@ -77,5 +75,5 @@ lizard:Dataset rdfs:subClassOf  ja:RDFDataset .
     :name       "ServerNode" ;
 	:hostname   "localhost" ;
 	:port       4011 ; 
-    :data     	"N" ;
+    :data     	"--mem--" ;
     .

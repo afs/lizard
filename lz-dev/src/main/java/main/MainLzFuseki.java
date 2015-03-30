@@ -17,27 +17,58 @@
 
 package main;
 
+import java.nio.file.Paths ;
+
+import com.hp.hpl.jena.rdf.model.Model ;
+
+import lizard.cluster.Cluster ;
+import lizard.conf.Configuration ;
+import lizard.sys.Deploy ;
+import lizard.sys.Deployment ;
+import lizard.system.LizardException ;
+import migrate.Q ;
+import org.apache.curator.test.TestingServer ;
+import org.apache.jena.atlas.lib.FileOps ;
 import org.apache.jena.atlas.logging.LogCtl ;
 import org.apache.jena.fuseki.cmd.FusekiCmd ;
-import org.slf4j.Logger ;
-import org.slf4j.LoggerFactory ;
+import org.apache.jena.fuseki.server.FusekiEnv ;
 
 public class MainLzFuseki {
     static { LogCtl.setLog4j() ; }
     
-    public static Logger log        = LoggerFactory.getLogger("Lizard") ;  
-    public static Logger logConf    = LoggerFactory.getLogger("Conf") ;
-    static String confNode          = "conf-node.ttl" ;
-    static String confIndex         = "conf-index.ttl" ;
-    static String confDataset       = "conf-dataset.ttl" ;
-    
     public static void main(String...argv) {
-        //String pwd = System.getProperty("user.dir") ;
-        System.setProperty("FUSEKI_HOME", "/home/afs/Jena/jena-fuseki2") ;
-        System.setProperty("FUSEKI_BASE", "run") ;
-//        FusekiServer.FUSEKI_HOME = Paths.get("/home/afs/Jena/jena-fuseki2") ;
-//        FusekiServer.FUSEKI_BASE = Paths.get("run").toAbsolutePath() ;
-//        lizard.sys.Lizard.init() ;
-        FusekiCmd.main("-v","--conf=fuseki-config.ttl") ;
+        String conffile = "setup-simple/fuseki.ttl" ;
+        if ( argv.length == 1 )
+            conffile = argv[0] ;
+        if ( argv.length > 1 ) {
+            System.err.println("Too many argument") ;
+            System.exit(1) ;
+        }
+        
+        Model configurationModel = Q.readAll(conffile) ;
+        Configuration config     = Configuration.fromModel(configurationModel) ;
+        
+        try { 
+            Deployment deployment = Deploy.deployServers(config, conffile);
+        } catch ( LizardException ex) {
+            System.err.println(ex.getMessage());
+            System.exit(0) ;
+        }
+
+        // Init a simple ZK
+        int zkPort = 2281 ;
+        TestingServer zkTestServer;
+        try { zkTestServer = new TestingServer(zkPort) ; }
+        catch (Exception e) { e.printStackTrace(); }
+        
+        String zkConnect = "localhost:"+zkPort ;
+        Cluster.createSystem(zkConnect);
+        
+        // ----------------------
+        
+        System.setProperty("FUSEKI_HOME", "/home/afs/Jena/jena-fuseki2/jena-fuseki-core/") ;
+        FusekiEnv.FUSEKI_BASE = Paths.get("setup-simple/run").toAbsolutePath() ;
+        FileOps.ensureDir(FusekiEnv.FUSEKI_BASE.toString()) ;
+        FusekiCmd.main("--conf="+conffile) ;
     }
 }

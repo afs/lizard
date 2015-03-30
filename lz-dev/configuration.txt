@@ -14,6 +14,7 @@ static:
 cluster
 :zookeeper configuration file.
 :zookeeper data directory
+write lock timeout
 
 dataset
 :indexes (I1, I2)

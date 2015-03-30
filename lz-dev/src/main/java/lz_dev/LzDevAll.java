@@ -58,7 +58,7 @@ public class LzDevAll {
     static { LogCtl.setLog4j(); } 
     public static Logger log = LoggerFactory.getLogger("Main") ;
 
-    static String confDir           = "setup-disk" ;
+    static String confDir           = "setup-simple" ;
     static String confNode          = Q.filename(confDir, "conf-node.ttl") ;
     static String confIndex         = Q.filename(confDir, "conf-index.ttl") ;
     static String confDataset       = Q.filename(confDir, "conf-dataset.ttl") ;
@@ -103,7 +103,6 @@ public class LzDevAll {
 
 
         if ( ds.getDefaultModel().isEmpty() ) {
-            log.info("LOAD") ;
             LogCtl.set("org.seaborne", "warn");
             LogCtl.set("lizard", "warn");
             //String datafile = "/home/afs/Datasets/BSBM/bsbm-25m.nt.gz" ;
@@ -173,7 +172,6 @@ public class LzDevAll {
             RDFDataMgr.parse(s, datafile);
             ds.commit();
             ds.end() ;
-
 
             LogCtl.set(ClusterNodeTable.class, "INFO") ;
             LogCtl.set(TServerNode.class, "INFO") ;
