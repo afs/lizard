@@ -25,6 +25,7 @@ import org.apache.jena.riot.system.StreamRDF ;
 import org.apache.jena.riot.system.StreamRDFWrapper ;
 
 public class StreamRDFMonitor extends StreamRDFWrapper {
+    //DatasetChanges - version for add only? 
     
     private final ProgressLogger monitor ;
     
@@ -35,7 +36,7 @@ public class StreamRDFMonitor extends StreamRDFWrapper {
     
     @Override
     public void start() {
-        monitor.startMessage(); 
+        //monitor.startMessage(); 
         monitor.start();
         super.start() ;
         
@@ -62,4 +63,3 @@ public class StreamRDFMonitor extends StreamRDFWrapper {
     
     private void tick() { monitor.tick() ; }
 }
-

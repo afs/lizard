@@ -20,14 +20,11 @@ package lz_dev;
 import java.io.InputStream ;
 import java.nio.file.Paths ;
 import java.util.ArrayList ;
-import java.util.Arrays ;
 import java.util.List ;
 import java.util.Map ;
+import java.util.concurrent.TimeUnit ;
 
-import com.hp.hpl.jena.query.* ;
-import com.hp.hpl.jena.rdf.model.Model ;
-import com.hp.hpl.jena.sparql.util.QueryExecUtils ;
-
+import lizard.cluster.Cluster ;
 import lizard.conf.Configuration ;
 import lizard.conf.dataset.LzBuildClient ;
 import lizard.index.TServerIndex ;
@@ -40,7 +37,10 @@ import lizard.sys.Deployment ;
 import lizard.system.LizardException ;
 import lizard.system.Pingable ;
 import migrate.Q ;
-
+import org.apache.curator.framework.CuratorFramework ;
+import org.apache.curator.framework.recipes.locks.InterProcessLock ;
+import org.apache.curator.framework.recipes.locks.InterProcessSemaphoreMutex ;
+import org.apache.curator.test.TestingServer ;
 import org.apache.jena.atlas.io.IO ;
 import org.apache.jena.atlas.io.IndentedWriter ;
 import org.apache.jena.atlas.lib.FileOps ;
@@ -55,6 +55,10 @@ import org.seaborne.dboe.transaction.txn.TransactionalComponent ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 import org.yaml.snakeyaml.Yaml ;
+
+import com.hp.hpl.jena.query.* ;
+import com.hp.hpl.jena.rdf.model.Model ;
+import com.hp.hpl.jena.sparql.util.QueryExecUtils ;
 
 
 public class LzDev {

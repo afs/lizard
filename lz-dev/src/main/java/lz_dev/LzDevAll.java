@@ -100,36 +100,20 @@ public class LzDevAll {
         log.info("DATASET") ;
         LzDataset lz = buildDataset(config) ;
         Dataset ds = LzBuildClient.dataset(lz, Location.mem()) ;
-        Dataset ds1 = LzBuildClient.dataset(lz, Location.mem()) ;
 
 
-        if ( true ) {
+        if ( ds.getDefaultModel().isEmpty() ) {
+            log.info("LOAD") ;
             LogCtl.set("org.seaborne", "warn");
             LogCtl.set("lizard", "warn");
-            
-            //String datafile = "D.ttl" ;
-            String datafile = "/home/afs/Datasets/BSBM/bsbm-25m.nt.gz" ;
-            // Load if empty.
-            
-            log.info("LOAD") ;
-            // System.out.println(">> "+Utils.nowAsString()) ;
-            
-            
-            ds.begin(ReadWrite.WRITE) ;
-            
-            StreamRDF s = StreamRDFLib.dataset(ds.asDatasetGraph()) ;
-            ProgressLogger plog = new ProgressLogger(LoggerFactory.getLogger("LOAD"), "Triples", 
-                                                     50000, 10) ;
-            s = new StreamRDFMonitor(s, plog) ; 
-            RDFDataMgr.parse(s, datafile);
-            ds.commit();
-            ds.end() ;
-
-            
-            //System.out.println("<< "+Utils.nowAsString()) ;
-            
-            System.exit(0) ;
+            //String datafile = "/home/afs/Datasets/BSBM/bsbm-25m.nt.gz" ;
+            //String datafile = "/home/afs/Datasets/LUBM/lubm-100.nt.gz" ;
+            load(ds, "D1.ttl") ;
+            load(ds, "D2.ttl") ;
+        } else {
+            log.info("LOAD - data already present") ;
         }
+        
         
         log.info("QUERY") ;
         ds.begin(ReadWrite.READ) ;
@@ -173,15 +157,23 @@ public class LzDevAll {
         }) ;
     }
     
-    private static void load(Dataset ds, String data) {        
+    private static void load(Dataset ds, String datafile) {        
         log.info("LOAD") ;
-        if ( data != null ) {
+        if ( datafile != null ) {
             // Making loading quieter.
             LogCtl.set(ClusterNodeTable.class, "WARN") ;
             LogCtl.set(TServerNode.class, "WARN") ;
             LogCtl.set(TServerIndex.class, "WARN") ;
 
-            RDFDataMgr.read(ds, data) ;
+            ds.begin(ReadWrite.WRITE) ;
+            StreamRDF s = StreamRDFLib.dataset(ds.asDatasetGraph()) ;
+            ProgressLogger plog = new ProgressLogger(LoggerFactory.getLogger("LOAD"), 
+                                                     "Triples", 50000, 10) ;
+            s = new StreamRDFMonitor(s, plog) ; 
+            RDFDataMgr.parse(s, datafile);
+            ds.commit();
+            ds.end() ;
+
 
             LogCtl.set(ClusterNodeTable.class, "INFO") ;
             LogCtl.set(TServerNode.class, "INFO") ;
