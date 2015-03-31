@@ -22,8 +22,11 @@ import java.util.concurrent.atomic.AtomicLong ;
 
 import lizard.api.TLZ.TxnCtl ;
 import lizard.comms.thrift.ThriftLib ;
+import lizard.comms.thrift.ThriftLib.ThriftCallable ;
+import lizard.comms.thrift.ThriftLib.ThriftRunnable ;
 import lizard.system.ComponentBase ;
 import lizard.system.ComponentTxn ;
+import lizard.system.LizardException ;
 
 import com.hp.hpl.jena.query.ReadWrite ;
 
@@ -120,6 +123,24 @@ public abstract class TxnClient<X extends TxnCtl.Client> extends ComponentBase i
         // Because get may have created it. 
         currentTxnId.remove() ;
     }
+    
+    protected <T> T call(String label, ThriftCallable<T> action) {
+        try { return ThriftLib.call(action) ; } 
+        catch (Exception ex) {
+          FmtLog.error(getLog(), ex, label) ;
+          throw new LizardException(ex) ;
+        }
+    }
+    
+    protected void exec(String label, ThriftRunnable action) {
+        try { ThriftLib.exec(action) ; } 
+        catch (Exception ex) {
+          FmtLog.error(getLog(), ex, label) ;
+          throw new LizardException(ex) ;
+        }
+    }
+
+
 }
 
 

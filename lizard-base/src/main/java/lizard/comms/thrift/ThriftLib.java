@@ -35,14 +35,29 @@ public class ThriftLib {
         throw new InternalErrorException("No protocol impl choosen") ;
     }
 
-    // Wrapper fro calls 
+    // Wrapper for calls 
     @FunctionalInterface
     public interface ThriftRunnable { void run() throws TException ; }
     
+    @FunctionalInterface
+    public interface ThriftCallable<X> { X call() throws TException ; }
+    
+    private static Object lock = new Object() ;
+    
     public static void exec(ThriftRunnable runnable) {
-        try { runnable.run() ; } 
-        catch (TException ex)   { throw new LizardException(ex) ; }
-        catch (Exception ex)    { throw new LizardException("Unexpected exception: "+ex.getMessage(), ex) ; }
+        synchronized(lock) {
+            try { runnable.run() ; } 
+            catch (TException ex)   { throw new LizardException(ex) ; }
+            catch (Exception ex)    { throw new LizardException("Unexpected exception: "+ex.getMessage(), ex) ; }
+        }
+    }
+
+    public static <X> X call(ThriftCallable<X> callable) {
+        synchronized(lock) {
+            try { return callable.call() ; } 
+            catch (TException ex)   { throw new LizardException(ex) ; }
+            catch (Exception ex)    { throw new LizardException("Unexpected exception: "+ex.getMessage(), ex) ; }
+        }
     }
 
 }
