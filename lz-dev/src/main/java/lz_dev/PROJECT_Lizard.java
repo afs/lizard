@@ -20,6 +20,8 @@ package lz_dev ;
 public class PROJECT_Lizard {
     // Tasks
     
+    // Fix locks on ThriftLib.
+    
     // Batching in loads.
     //   add - find/flush - end|commit/flush
     // Caching nodes info - cache needs to drop back on abort/

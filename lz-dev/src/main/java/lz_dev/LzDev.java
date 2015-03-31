@@ -50,6 +50,7 @@ import org.apache.jena.riot.RDFDataMgr ;
 import org.apache.jena.riot.system.StreamRDF ;
 import org.apache.jena.riot.system.StreamRDFLib ;
 import org.seaborne.dboe.base.file.Location ;
+import org.seaborne.dboe.migrate.L ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
@@ -103,9 +104,12 @@ public class LzDev {
         Dataset ds = LzBuildClient.dataset(lz, Location.mem()) ;
 
         // Do a long, slow load.
+        ds.begin(ReadWrite.WRITE);
+        RDFDataMgr.read(ds, "D.ttl") ;
+        ds.commit() ;
+        ds.end() ;
         
-        Runnable r = ()->load(ds,"/home/afs/Datasets/BSBM/bsbm-5m.nt.gz") ;
-        new Thread(r).start() ;
+        L.async(()->load(ds,"/home/afs/Datasets/BSBM/bsbm-1m.nt.gz")) ;
         Lib.sleep(1000);
 
         log.info("QUERY") ;
@@ -117,23 +121,10 @@ public class LzDev {
         LogCtl.set("lizard", "info");
         LogCtl.set("org.seaborne", "info");
         
-        Cluster.close();
-        System.exit(0) ;
+        //Cluster.close();
+        //System.exit(0) ;
     }
 
-    public static void async(Runnable r) {
-        Semaphore semaStart = new Semaphore(0, true) ;
-        Semaphore semaFinish = new Semaphore(0, true) ;
-        Runnable r2 = () -> {
-            semaStart.acquireUninterruptibly(); 
-            r.run();
-            semaFinish.release(1);
-        } ;
-        new Thread(r2).start();
-        semaStart.release(1);
-        semaFinish.acquireUninterruptibly();
-    }
-    
     // -------- Dataset
     private static LzDataset buildDataset(Configuration config) {
         LzDataset lz = Local.buildDataset(configurationModel) ;
@@ -151,7 +142,7 @@ public class LzDev {
     }
     
     private static void load(Dataset ds, String datafile) {        
-        log.info("LOAD") ;
+        log.info("LOAD : start") ;
         if ( datafile != null ) {
             // Making loading quieter.
             LogCtl.set(ClusterNodeTable.class, "WARN") ;
@@ -171,6 +162,7 @@ public class LzDev {
             LogCtl.set(TServerNode.class, "INFO") ;
             LogCtl.set(TServerIndex.class, "INFO") ;
         }
+        log.info("LOAD : finish") ;
     }
 
     // -------- Query
