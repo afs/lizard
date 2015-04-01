@@ -20,8 +20,10 @@ package lz_dev ;
 public class PROJECT_Lizard {
     // Tasks
     
-    // ThriftLib
-    // Fix locks on ThriftLib.
+    // Scaling:
+    // A - Fix locks on ThriftLib.
+    // B - Batching updates (and flow reversal)
+    // C - Block allocate txn ids but still need the lock.
     
     // Batching in loads.
     //   add - find/flush - end|commit/flush

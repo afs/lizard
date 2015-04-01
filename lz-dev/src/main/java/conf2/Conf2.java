@@ -35,19 +35,34 @@ public class Conf2 {
     
     /** Static description configuration */
     public static class ConfCluster {
-        public List<NetAddr> zkServer = new ArrayList<>() ; 
-        public ConfDataset dataset ;
+        public final List<NetAddr> zkServer = new ArrayList<>() ;
+        public final ConfDataset   dataset ;
+        
+        public ConfCluster(ConfDataset dataset) {
+            this.dataset = dataset ;
+        }
     }
     
     public static class ConfDataset {
-        public List<ConfIndex> indexes = DS.list() ;
-        public ConfNodeTable nodeTable ; 
+        public final List<ConfIndex> indexes = DS.list() ;
+        public final ConfNodeTable nodeTable ;
+        
+        public ConfDataset(ConfNodeTable nodeTable) {
+            this.nodeTable = nodeTable ;
+        } 
     }
     
     public static class ConfIndex { 
-        public String indexOrder ;
-        public int readQuorum ;
-        public int writeQuorum ;
+        public final String indexOrder ;
+        public final int readQuorum ;
+        public final int writeQuorum ;
+        
+        public ConfIndex(String indexOrder, int readQuorum, int writeQuorum) {
+            super() ;
+            this.indexOrder = indexOrder ;
+            this.readQuorum = readQuorum ;
+            this.writeQuorum = writeQuorum ;
+        }
     }
     
     public static class NetAddr {
@@ -60,13 +75,23 @@ public class Conf2 {
     }
     
     public static class ConfNodeTable { 
-        public int readQuorum ;
-        public int writeQuorum ;
+        public final int readQuorum ;
+        public final int writeQuorum ;
+        public ConfNodeTable(int readQuorum, int writeQuorum) {
+            this.readQuorum = readQuorum ;
+            this.writeQuorum = writeQuorum ;
+        }
     }
     
     public static class ConfZookeeper implements Deployable {
-        public int port ;
-        public String zkConfDir ;
+        public final int port ;
+        public final String zkConfDir ;
+        
+        public ConfZookeeper(int port, String zkConfDir) {
+            super() ;
+            this.port = port ;
+            this.zkConfDir = zkConfDir ;
+        }
     }
 
     public static class ConfQueryServer implements Deployable { 

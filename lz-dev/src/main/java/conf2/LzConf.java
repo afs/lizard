@@ -15,7 +15,7 @@
  *  information regarding copyright ownership.
  */
 
-package lz_dev;
+package conf2;
 
 import java.io.InputStream ;
 import java.util.List ;
