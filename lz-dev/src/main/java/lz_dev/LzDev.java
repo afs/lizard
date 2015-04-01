@@ -18,11 +18,6 @@
 package lz_dev;
 
 import java.nio.file.Paths ;
-import java.util.concurrent.Semaphore ;
-
-import com.hp.hpl.jena.query.* ;
-import com.hp.hpl.jena.rdf.model.Model ;
-import com.hp.hpl.jena.sparql.util.QueryExecUtils ;
 
 import lizard.cluster.Cluster ;
 import lizard.conf.Configuration ;
@@ -37,7 +32,6 @@ import lizard.sys.Deployment ;
 import lizard.system.LizardException ;
 import lizard.system.Pingable ;
 import migrate.Q ;
-
 import org.apache.curator.test.TestingServer ;
 import org.apache.jena.atlas.lib.FileOps ;
 import org.apache.jena.atlas.lib.Lib ;
@@ -50,8 +44,13 @@ import org.apache.jena.riot.RDFDataMgr ;
 import org.apache.jena.riot.system.StreamRDF ;
 import org.apache.jena.riot.system.StreamRDFLib ;
 import org.seaborne.dboe.base.file.Location ;
+import org.seaborne.dboe.migrate.L ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
+
+import com.hp.hpl.jena.query.* ;
+import com.hp.hpl.jena.rdf.model.Model ;
+import com.hp.hpl.jena.sparql.util.QueryExecUtils ;
 
 public class LzDev {
     static { LogCtl.setLog4j(); } 
@@ -103,9 +102,12 @@ public class LzDev {
         Dataset ds = LzBuildClient.dataset(lz, Location.mem()) ;
 
         // Do a long, slow load.
+        ds.begin(ReadWrite.WRITE);
+        RDFDataMgr.read(ds, "D.ttl") ;
+        ds.commit() ;
+        ds.end() ;
         
-        Runnable r = ()->load(ds,"/home/afs/Datasets/BSBM/bsbm-1m.nt.gz") ;
-        new Thread(r).start() ;
+        L.async(()->load(ds,"/home/afs/Datasets/BSBM/bsbm-1m.nt.gz")) ;
         Lib.sleep(1000);
 
         log.info("QUERY") ;
@@ -117,23 +119,10 @@ public class LzDev {
         LogCtl.set("lizard", "info");
         LogCtl.set("org.seaborne", "info");
         
-        Cluster.close();
+        //Cluster.close();
         //System.exit(0) ;
     }
 
-    public static void async(Runnable r) {
-        Semaphore semaStart = new Semaphore(0, true) ;
-        Semaphore semaFinish = new Semaphore(0, true) ;
-        Runnable r2 = () -> {
-            semaStart.acquireUninterruptibly(); 
-            r.run();
-            semaFinish.release(1);
-        } ;
-        new Thread(r2).start();
-        semaStart.release(1);
-        semaFinish.acquireUninterruptibly();
-    }
-    
     // -------- Dataset
     private static LzDataset buildDataset(Configuration config) {
         LzDataset lz = Local.buildDataset(configurationModel) ;
@@ -151,7 +140,7 @@ public class LzDev {
     }
     
     private static void load(Dataset ds, String datafile) {        
-        log.info("LOAD start") ;
+        log.info("LOAD : start") ;
         if ( datafile != null ) {
             // Making loading quieter.
             LogCtl.set(ClusterNodeTable.class, "WARN") ;
@@ -171,7 +160,7 @@ public class LzDev {
             LogCtl.set(TServerNode.class, "INFO") ;
             LogCtl.set(TServerIndex.class, "INFO") ;
         }
-        log.info("LOAD finish") ;
+        log.info("LOAD : finish") ;
     }
 
     // -------- Query

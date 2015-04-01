@@ -26,6 +26,7 @@ import lizard.comms.thrift.ThriftLib.ThriftCallable ;
 import lizard.comms.thrift.ThriftLib.ThriftRunnable ;
 import lizard.system.ComponentBase ;
 import lizard.system.ComponentTxn ;
+import lizard.system.LizardException ;
 
 import com.hp.hpl.jena.query.ReadWrite ;
 
@@ -123,17 +124,20 @@ public abstract class TxnClient<X extends TxnCtl.Client> extends ComponentBase i
         currentTxnId.remove() ;
     }
     
-    protected <T> void exec(String label, ThriftRunnable action) {
-        ThriftLib.exec(action) ;
+    protected <T> T call(String label, ThriftCallable<T> action) {
+        try { return ThriftLib.call(action) ; } 
+        catch (Exception ex) {
+          FmtLog.error(getLog(), ex, label) ;
+          throw new LizardException(ex) ;
+        }
     }
     
-    protected <T> T call(String label, ThriftCallable<T> action) {
-        return ThriftLib.call(action) ;
-//        try { return action.call() ; } 
-//        catch (Exception ex) {
-//          FmtLog.error(log, ex, label) ;
-//          throw new LizardException(ex) ;
-//        }
+    protected void exec(String label, ThriftRunnable action) {
+        try { ThriftLib.exec(action) ; } 
+        catch (Exception ex) {
+          FmtLog.error(getLog(), ex, label) ;
+          throw new LizardException(ex) ;
+        }
     }
 }
 

@@ -19,7 +19,6 @@ package lizard.index;
 
 import java.util.Iterator ;
 import java.util.List ;
-import java.util.concurrent.Callable ;
 import java.util.stream.Collectors ;
 
 import lizard.api.TLZlib ;
@@ -32,7 +31,6 @@ import lizard.comms.ConnState ;
 import lizard.comms.Connection ;
 import lizard.comms.thrift.ThriftClient ;
 import lizard.system.ComponentTxn ;
-import lizard.system.LizardException ;
 import lizard.system.Pingable ;
 
 import com.hp.hpl.jena.tdb.store.NodeId ;
@@ -115,7 +113,7 @@ class TClientIndex extends TxnClient<TLZ_Index.Client> implements Connection, Co
         List<Tuple<NodeId>> rows = find.stream().map(z -> TLZlib.build(z)).collect(Collectors.toList()) ;
         return rows.iterator() ;
     }
-    
+
     private static Tuple<NodeId> tupleAny4 = Tuple.createTuple(NodeId.NodeIdAny, NodeId.NodeIdAny, NodeId.NodeIdAny, NodeId.NodeIdAny) ; 
     private static Tuple<NodeId> tupleAny3 = Tuple.createTuple(NodeId.NodeIdAny, NodeId.NodeIdAny, NodeId.NodeIdAny) ; 
     

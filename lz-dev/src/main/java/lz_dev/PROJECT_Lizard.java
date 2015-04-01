@@ -21,7 +21,7 @@ public class PROJECT_Lizard {
     // Tasks
     
     // ThriftLib
-    //  Lock needs to change to a connection pool and connections.
+    // Fix locks on ThriftLib.
     
     // Batching in loads.
     //   add - find/flush - end|commit/flush

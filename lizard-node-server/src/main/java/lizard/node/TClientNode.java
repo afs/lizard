@@ -17,8 +17,6 @@
 
 package lizard.node;
 
-import java.util.concurrent.Callable ;
-
 import lizard.api.TxnClient ;
 import lizard.api.TLZ.TLZ_Node ;
 import lizard.api.TLZ.TLZ_NodeId ;
@@ -26,20 +24,16 @@ import lizard.api.TLZ.TLZ_NodeTable ;
 import lizard.comms.ConnState ;
 import lizard.comms.Connection ;
 import lizard.comms.thrift.ThriftClient ;
-import lizard.comms.thrift.ThriftLib ;
-import lizard.comms.thrift.ThriftLib.ThriftCallable ;
 import lizard.system.ComponentTxn ;
-import lizard.system.LizardException ;
 import lizard.system.Pingable ;
-
-import com.hp.hpl.jena.graph.Node ;
-import com.hp.hpl.jena.sparql.sse.SSE ;
-import com.hp.hpl.jena.tdb.store.NodeId ;
-
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.riot.out.NodeFmtLib ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
+
+import com.hp.hpl.jena.graph.Node ;
+import com.hp.hpl.jena.sparql.sse.SSE ;
+import com.hp.hpl.jena.tdb.store.NodeId ;
  
 public class TClientNode extends TxnClient<TLZ_NodeTable.Client> implements ComponentTxn, Connection, Pingable
 {
@@ -107,7 +101,7 @@ public class TClientNode extends TxnClient<TLZ_NodeTable.Client> implements Comp
     
     @Override
     public void ping() {
-        call("ping", ()-> { rpc.nodePing(); return null;}) ;
+        exec("ping", ()-> rpc.nodePing()) ;
     }
     
     @Override

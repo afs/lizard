@@ -40,11 +40,10 @@ public class ThriftLib {
     public interface ThriftRunnable { void run() throws TException ; }
     @FunctionalInterface
     public interface ThriftCallable<X> { X call() throws TException ; }
-    
-    private static final Object lock = new Object() ; 
-    
+
     // XXX Locking is crude.
-    
+    private static Object lock = new Object() ;
+
     public static void exec(ThriftRunnable runnable) {
         synchronized(lock) {
             try { runnable.run() ; } 
@@ -52,14 +51,12 @@ public class ThriftLib {
             catch (Exception ex)    { throw new LizardException("Unexpected exception: "+ex.getMessage(), ex) ; }
         }
     }
-    
+
     public static <X> X call(ThriftCallable<X> callable) {
         synchronized(lock) {
-            try { return callable.call() ; }
+            try { return callable.call() ; } 
             catch (TException ex)   { throw new LizardException(ex) ; }
             catch (Exception ex)    { throw new LizardException("Unexpected exception: "+ex.getMessage(), ex) ; }
         }
     }
-
-
 }
