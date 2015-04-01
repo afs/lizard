@@ -26,6 +26,8 @@ import lizard.api.TLZ.TLZ_NodeTable ;
 import lizard.comms.ConnState ;
 import lizard.comms.Connection ;
 import lizard.comms.thrift.ThriftClient ;
+import lizard.comms.thrift.ThriftLib ;
+import lizard.comms.thrift.ThriftLib.ThriftCallable ;
 import lizard.system.ComponentTxn ;
 import lizard.system.LizardException ;
 import lizard.system.Pingable ;
@@ -74,7 +76,7 @@ public class TClientNode extends TxnClient<TLZ_NodeTable.Client> implements Comp
         long txnId = getTxnId() ;
         String x =  NodeFmtLib.str(node) ;
         TLZ_Node lzn = new TLZ_Node().setNodeStr(x) ; 
-        TLZ_NodeId tlzNodeId = exec("allocNodeId", ()-> rpc.allocNodeId(id, txnId, lzn)) ;
+        TLZ_NodeId tlzNodeId = call("allocNodeId", ()-> rpc.allocNodeId(id, txnId, lzn)) ;
         long idval = tlzNodeId.getNodeId() ;
         NodeId nid = NodeId.create(idval) ;
         return nid ; 
@@ -86,7 +88,7 @@ public class TClientNode extends TxnClient<TLZ_NodeTable.Client> implements Comp
         long txnId = getTxnId() ;
         String x =  NodeFmtLib.str(node) ;
         TLZ_Node lzn = new TLZ_Node().setNodeStr(x) ; 
-        TLZ_NodeId tlzNodeId = exec("allocNodeId", ()-> rpc.findByNode(id, txnId, lzn)) ;
+        TLZ_NodeId tlzNodeId = call("allocNodeId", ()-> rpc.findByNode(id, txnId, lzn)) ;
         long idval = tlzNodeId.getNodeId() ;
         NodeId nid = NodeId.create(idval) ;
         return nid ; 
@@ -97,7 +99,7 @@ public class TClientNode extends TxnClient<TLZ_NodeTable.Client> implements Comp
         long id = allocRequestId() ; 
         long txnId = getTxnId() ;
         TLZ_NodeId lznid = new TLZ_NodeId().setNodeId(nid.getId()) ; 
-        TLZ_Node lzn = exec("allocNodeId", ()-> rpc.findByNodeId(id, txnId, lznid)) ;
+        TLZ_Node lzn = call("allocNodeId", ()-> rpc.findByNodeId(id, txnId, lznid)) ;
         String x = lzn.getNodeStr() ;
         Node n = SSE.parseNode(x) ;
         return n ; 
@@ -105,17 +107,9 @@ public class TClientNode extends TxnClient<TLZ_NodeTable.Client> implements Comp
     
     @Override
     public void ping() {
-        exec("ping", ()-> { rpc.nodePing(); return null;}) ;
+        call("ping", ()-> { rpc.nodePing(); return null;}) ;
     }
     
-    private <T> T exec(String label, Callable<T> action) {
-        try { return action.call() ; } 
-        catch (Exception ex) {
-          FmtLog.error(log, ex, label) ;
-          throw new LizardException(ex) ;
-        }
-    }
-
     @Override
     public ConnState getConnectionStatus() {
         return connState ;

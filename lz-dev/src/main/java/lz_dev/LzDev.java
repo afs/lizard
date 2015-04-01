@@ -104,7 +104,7 @@ public class LzDev {
 
         // Do a long, slow load.
         
-        Runnable r = ()->load(ds,"/home/afs/Datasets/BSBM/bsbm-5m.nt.gz") ;
+        Runnable r = ()->load(ds,"/home/afs/Datasets/BSBM/bsbm-1m.nt.gz") ;
         new Thread(r).start() ;
         Lib.sleep(1000);
 
@@ -118,7 +118,7 @@ public class LzDev {
         LogCtl.set("org.seaborne", "info");
         
         Cluster.close();
-        System.exit(0) ;
+        //System.exit(0) ;
     }
 
     public static void async(Runnable r) {
@@ -151,7 +151,7 @@ public class LzDev {
     }
     
     private static void load(Dataset ds, String datafile) {        
-        log.info("LOAD") ;
+        log.info("LOAD start") ;
         if ( datafile != null ) {
             // Making loading quieter.
             LogCtl.set(ClusterNodeTable.class, "WARN") ;
@@ -171,6 +171,7 @@ public class LzDev {
             LogCtl.set(TServerNode.class, "INFO") ;
             LogCtl.set(TServerIndex.class, "INFO") ;
         }
+        log.info("LOAD finish") ;
     }
 
     // -------- Query

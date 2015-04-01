@@ -20,6 +20,9 @@ package lz_dev ;
 public class PROJECT_Lizard {
     // Tasks
     
+    // ThriftLib
+    //  Lock needs to change to a connection pool and connections.
+    
     // Batching in loads.
     //   add - find/flush - end|commit/flush
     // Caching nodes info - cache needs to drop back on abort/

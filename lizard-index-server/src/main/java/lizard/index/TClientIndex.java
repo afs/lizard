@@ -90,7 +90,7 @@ class TClientIndex extends TxnClient<TLZ_Index.Client> implements Connection, Co
         long id = allocRequestId() ;
         long txnId = getTxnId() ;
         TLZ_TupleNodeId x = TLZlib.build(tuple) ;
-        return exec("add", ()->rpc.idxAdd(id, txnId, shard, x)) ;
+        return call("add", ()->rpc.idxAdd(id, txnId, shard, x)) ;
     }
 
     /** Delete a tuple - return true if it was deleted, false if it didn't exist */
@@ -98,32 +98,24 @@ class TClientIndex extends TxnClient<TLZ_Index.Client> implements Connection, Co
         long id = allocRequestId() ;
         long txnId = getTxnId() ;
         TLZ_TupleNodeId x = TLZlib.build(tuple) ;
-        return exec("delete", ()->rpc.idxDelete(id, txnId, shard, x)) ;
+        return call("delete", ()->rpc.idxDelete(id, txnId, shard, x)) ;
     }
     
     @Override
     public void ping() {
-        exec("ping", ()-> { rpc.idxPing(); return null;}) ;
+        exec("ping", ()-> rpc.idxPing()) ;
     }
 
     public Iterator<Tuple<NodeId>> find(Tuple<NodeId> pattern) {
         long id = allocRequestId() ;
         long txnId = getTxnId() ;
         TLZ_TupleNodeId x = TLZlib.build(pattern) ;
-        List<TLZ_TupleNodeId> find = exec("find", ()->rpc.idxFind(id, txnId, shard, x)) ;
+        List<TLZ_TupleNodeId> find = call("find", ()->rpc.idxFind(id, txnId, shard, x)) ;
         // TODO Avoid copy (harder to debug?)
         List<Tuple<NodeId>> rows = find.stream().map(z -> TLZlib.build(z)).collect(Collectors.toList()) ;
         return rows.iterator() ;
     }
-        
-    private <T> T exec(String label, Callable<T> action) {
-        try { return action.call() ; } 
-        catch (Exception ex) {
-          FmtLog.error(log, ex, label) ;
-          throw new LizardException(ex) ;
-        }
-    }
-
+    
     private static Tuple<NodeId> tupleAny4 = Tuple.createTuple(NodeId.NodeIdAny, NodeId.NodeIdAny, NodeId.NodeIdAny, NodeId.NodeIdAny) ; 
     private static Tuple<NodeId> tupleAny3 = Tuple.createTuple(NodeId.NodeIdAny, NodeId.NodeIdAny, NodeId.NodeIdAny) ; 
     
