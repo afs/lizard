@@ -52,7 +52,7 @@ public class Deployment {
         return new Deployment(indexServers, nodeServers, desc) ;
     }
     
-    private Deployment(Collection<IndexServer> indexServers, Collection<NodeServer> nodeServers, LzDatasetDesc datasetDesc) {
+    public Deployment(Collection<IndexServer> indexServers, Collection<NodeServer> nodeServers, LzDatasetDesc datasetDesc) {
         this.indexServers = indexServers ;
         this.nodeServers = nodeServers ;
         this.datasetDesc = datasetDesc ;
