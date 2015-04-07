@@ -1,3 +1,14 @@
+query:
+  servers: [ qs-1 ]
+  a:
+    b:
+      c: 6
+  
+
+qs-1:
+  hostname: localhost
+  port: 3030
+
 cluster:
   zookeeper-config:  conf/zoo.cfg
   root:              "Lizard"
@@ -49,4 +60,5 @@ node-2:
   hostname:   localhost
   port:       4013
   data:       N2
-
+## ---
+## # Deployment part.

@@ -146,11 +146,11 @@ public class LzConf {
         InputStream inYaml = IO.openFile("data.yaml") ;
         
         Object x = new Yaml().load(inYaml) ;
-        System.out.println(x);
-        System.out.println("<<<<-------------------------------------------------");
-        print(x) ;
-        System.out.println() ;
-        System.out.println(">>>>-------------------------------------------------");
+//        System.out.println(x);
+//        System.out.println("<<<<-------------------------------------------------");
+//        print(x) ;
+//        System.out.println() ;
+//        System.out.println(">>>>-------------------------------------------------");
         
         // Access language :
         //  !global
@@ -160,7 +160,14 @@ public class LzConf {
         // can be lists.
         System.out.println(getField(x, "dataset", "nodes")) ;
         System.out.println() ;
-        System.out.println(get(x, "dataset", "nodetable", "servers" )) ;
+        System.out.println(get(x, "dataset", ".nodes", "nodetable", ".servers" )) ;
+        
+        System.out.println(get(x, "query", ".a", ".b", ".c" )) ;
+        
+        // indexes ; 
+        //    dataset.indexes->array
+        // index shards
+        
         
         System.exit(0) ;
     }
@@ -215,29 +222,33 @@ public class LzConf {
     public static Object getField(Object x, String obj, String field) {
         System.out.println("getField: "+obj+"->"+field) ;
         Object z1 = get1(x, obj) ;
-        //System.out.println("getField: z1="+z1) ;
         return get1(z1, field) ;
     }
     
+    //  .field
+    //  /object
+    //  
+    
     public static Object get(Object obj, String ... path) {
         //System.out.println("get: "+Arrays.asList(path)) ;
+
         Object x = obj ;
-        for ( String c : path )
-            x = get1(obj, c) ;
+        for ( String c : path ) {
+            if ( c.startsWith(".") )
+                x = get1(x, c.substring(1)) ;
+            else
+                x = get1(obj, c) ;
+        }
         return x ;
     }
     
     private static Object get1(Object obj, String step ) {
-        //System.out.println("get1: "+obj) ;
-        //System.out.println("get1:: "+step) ;
-       
         if ( ! ( obj instanceof Map ) ) {
             System.err.println("Not a map : "+obj) ;
         }
         
         @SuppressWarnings("unchecked")
         Map<String, Object> map = (Map<String, Object>)obj ;
-        //System.out.println("get1>> "+map.get(step)) ;
         return map.get(step) ;
     }
 }
