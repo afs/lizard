@@ -35,22 +35,20 @@ import org.yaml.snakeyaml.Yaml ;
 import com.hp.hpl.jena.query.Dataset ;
 import com.hp.hpl.jena.query.ReadWrite ;
 
-import conf2.Conf2.ConfCluster ;
-import conf2.Conf2.ConfDataset ;
-import conf2.Conf2.ConfDeploy ;
-import conf2.Conf2.ConfIndex ;
-import conf2.Conf2.ConfIndexElement ;
-import conf2.Conf2.ConfNodeTable ;
-import conf2.Conf2.ConfNodeTableElement ;
-import conf2.Conf2.ConfZookeeper ;
-import conf2.Conf2.NetAddr ;
-import conf2.Conf2.NetHost ;
+import conf2.build.Lz2BuildZk ;
+import conf2.build.Lz2BuilderDataset ;
+import conf2.build.Lz2BuilderIndexServer ;
+import conf2.build.Lz2BuilderNodeServer ;
+import conf2.conf.* ;
 
 public class LzConf {
     static { LogCtl.setLog4j(); }
     
     
     public static void main(String[] args) throws Exception {
+        
+        { mainYAML(args) ; System.exit(0) ; }
+        
         int zkPort = 2188 ;
         
         // Configuration.
@@ -67,9 +65,9 @@ public class LzConf {
 
         ConfCluster confCluster = new ConfCluster(confDatabase) ;
 
+        // The zookeeper server(s).
         ConfZookeeper confZookeeper = ConfZookeeper.create(zkPort, null) ;
         
-        // The zookeeper servers.
         confCluster.zkServer.add(confZookeeper) ;
         confCluster.addIndexElements(posIdx1, psoIdx1) ;
         confCluster.addNodeElements(nt1) ;
@@ -78,11 +76,13 @@ public class LzConf {
         
         // The deployment "here".
         NetHost here = NetHost.create("localhost") ;
-
         
         // Deploy
         //public static Platform build(ConfDeploy deployment) {
 
+        // ConfDeploy
+        // ConfQueryServer = ConfDataset + 
+        
         {
             Location locationDataServers = Location.mem() ;
             Platform platform = new Platform() ;

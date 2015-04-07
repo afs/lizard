@@ -15,7 +15,7 @@
  *  information regarding copyright ownership.
  */
 
-package conf2;
+package conf2.build;
 
 import java.util.ArrayList ;
 import java.util.List ;
@@ -69,15 +69,14 @@ import com.hp.hpl.jena.tdb.sys.DatasetControl ;
 import com.hp.hpl.jena.tdb.sys.DatasetControlMRSW ;
 import com.hp.hpl.jena.tdb.sys.Names ;
 
-import conf2.Conf2.ConfIndex ;
-import conf2.Conf2.ConfNodeTable ;
+import conf2.conf.* ;
 
 
 
 public class Lz2BuilderDataset {
     private static Logger logConf = Config.logConf ;
     
-    public static LzDataset build(Conf2.ConfCluster confCluster, Conf2.ConfDataset confDataset, Location location) {
+    public static LzDataset build(ConfCluster confCluster, ConfDataset confDataset, Location location) {
         Journal journal = Journal.create(location) ;
         TransactionCoordinator txnCoord = new TransactionCoordinator(journal) ;
         Transactional trans = new TransactionalBase(txnCoord) ;
@@ -102,7 +101,7 @@ public class Lz2BuilderDataset {
         return lizard ;
     }
         
-    public static TupleIndex buildIndex(Conf2.ConfCluster confCluster, ConfIndex ci, List<Component> startables) {
+    public static TupleIndex buildIndex(ConfCluster confCluster, ConfIndex ci, List<Component> startables) {
             String idxOrder = ci.indexOrder ;
             int N = idxOrder.length() ;
             if ( N != 3 && N != 4 )
@@ -126,7 +125,7 @@ public class Lz2BuilderDataset {
         }
         
     /** Build a Cluster node table, from the configuration */
-    public static NodeTable buildNodeTable(Conf2.ConfCluster confCluster, ConfNodeTable cn, List<Component> startables) {
+    public static NodeTable buildNodeTable(ConfCluster confCluster, ConfNodeTable cn, List<Component> startables) {
         DistributorNodesReplicate dist = new DistributorNodesReplicate() ;
         List<NodeTableRemote> nodeTableParts = new ArrayList<>() ;
         confCluster.eltsNodeTable.stream()

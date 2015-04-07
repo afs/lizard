@@ -15,23 +15,21 @@
  *  information regarding copyright ownership.
  */
 
-package conf2;
+package conf2.conf;
 
+import org.apache.jena.atlas.lib.ColumnMap ;
 
-public class CONF {
-    // Delete:
-    // lizard-cluster:lizard.conf.*
+public class ConfIndex { 
+    public final String indexOrder ;
+    public final ColumnMap cmap ;
+    public final int readQuorum ;
+    public final int writeQuorum ;
     
-    // Careful logging: info and debug:private static Logger logConf = Config.logConf ;
-    
-    // Component naming:
-    // location/Index/...
-    // location/Nodes/...
-    
-    // Lz2BuildZk : one local zookeeper.
-    // Many front end query servers.
-    // Many Zookeepers
-    
-    // Location = disk.
+    public ConfIndex(ColumnMap cmap, String indexOrder, int readQuorum, int writeQuorum) {
+        super() ;
+        this.indexOrder = indexOrder ;
+        this.readQuorum = readQuorum ;
+        this.writeQuorum = writeQuorum ;
+        this.cmap = cmap ;
+    }
 }
-

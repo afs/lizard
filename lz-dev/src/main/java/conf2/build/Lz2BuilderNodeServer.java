@@ -15,42 +15,42 @@
  *  information regarding copyright ownership.
  */
 
-package conf2;
+package conf2.build;
 
 import lizard.adapters.A ;
 import lizard.cluster.Platform ;
 import lizard.conf.Config ;
 import lizard.conf.LzBuildDBOE ;
-import lizard.index.TServerIndex ;
+import lizard.node.TServerNode ;
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.seaborne.dboe.base.file.Location ;
 import org.slf4j.Logger ;
 
-import com.hp.hpl.jena.tdb.store.tupletable.TupleIndex ;
+import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
 
-import conf2.Conf2.ConfCluster ;
-import conf2.Conf2.ConfIndexElement ;
-import conf2.Conf2.NetHost ;
+import conf2.conf.ConfCluster ;
+import conf2.conf.ConfNodeTableElement ;
+import conf2.conf.NetHost ;
 
-public class Lz2BuilderIndexServer {
+public class Lz2BuilderNodeServer {
     private static Logger logConf = Config.logConf ;    
     
     public static void build(Platform platform, Location location, ConfCluster confCluster, NetHost here) {
-        confCluster.eltsIndex.stream()
+        confCluster.eltsNodeTable.stream()
             .filter(x -> x.netAddr.sameHost(here))
             .forEach(x -> {
-                buildIndexServer(platform, location, x) ;
+                buildNodeServer(platform, location, x) ;
             }) ;
     }
 
-    private static TServerIndex buildIndexServer(Platform platform, Location location, ConfIndexElement x) {
+    private static TServerNode buildNodeServer(Platform platform, Location location, ConfNodeTableElement x) {
         Location loc = location.getSubLocation(x.name) ;
         int port = x.netAddr.port ;
-        FmtLog.info(logConf, "buildIndexServer: %s %s", port, loc) ;
-        TupleIndex tupleIndex = LzBuildDBOE.createTupleIndex(A.convert(loc), x.conf.indexOrder, x.name) ;  
-        TServerIndex serverindex = TServerIndex.create(port, tupleIndex) ;
-        platform.add(serverindex) ;
-        return serverindex ;
+        FmtLog.info(logConf, "buildNodeServer: %s %s", port, loc) ;
+        NodeTable nt = LzBuildDBOE.createNodeTable(A.convert(loc)) ;
+        TServerNode serverNode = TServerNode.create(port, nt) ;
+        platform.add(serverNode) ;
+        return serverNode ;
     }
 }
 

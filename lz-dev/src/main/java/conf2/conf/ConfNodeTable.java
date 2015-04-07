@@ -15,23 +15,13 @@
  *  information regarding copyright ownership.
  */
 
-package conf2;
+package conf2.conf;
 
-
-public class CONF {
-    // Delete:
-    // lizard-cluster:lizard.conf.*
-    
-    // Careful logging: info and debug:private static Logger logConf = Config.logConf ;
-    
-    // Component naming:
-    // location/Index/...
-    // location/Nodes/...
-    
-    // Lz2BuildZk : one local zookeeper.
-    // Many front end query servers.
-    // Many Zookeepers
-    
-    // Location = disk.
+public class ConfNodeTable { 
+    public final int readQuorum ;
+    public final int writeQuorum ;
+    public ConfNodeTable(int readQuorum, int writeQuorum) {
+        this.readQuorum = readQuorum ;
+        this.writeQuorum = writeQuorum ;
+    }
 }
-

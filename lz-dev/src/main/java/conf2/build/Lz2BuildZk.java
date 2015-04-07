@@ -15,7 +15,7 @@
  *  information regarding copyright ownership.
  */
 
-package conf2;
+package conf2.build;
 
 import lizard.conf.Config ;
 import org.apache.curator.test.TestingServer ;
@@ -24,9 +24,9 @@ import org.apache.zookeeper.server.ServerConfig ;
 import org.apache.zookeeper.server.ZooKeeperServerMain ;
 import org.seaborne.dboe.migrate.L ;
 import org.slf4j.Logger ;
-import conf2.Conf2.ConfCluster ;
-import conf2.Conf2.ConfZookeeper ;
-import conf2.Conf2.NetHost ;
+import conf2.conf.ConfCluster ;
+import conf2.conf.ConfZookeeper ;
+import conf2.conf.NetHost ;
 
 public class Lz2BuildZk {
     private static Logger logConf = Config.logConf ;

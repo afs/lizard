@@ -15,23 +15,10 @@
  *  information regarding copyright ownership.
  */
 
-package conf2;
+package conf2.conf;
 
-
-public class CONF {
-    // Delete:
-    // lizard-cluster:lizard.conf.*
-    
-    // Careful logging: info and debug:private static Logger logConf = Config.logConf ;
-    
-    // Component naming:
-    // location/Index/...
-    // location/Nodes/...
-    
-    // Lz2BuildZk : one local zookeeper.
-    // Many front end query servers.
-    // Many Zookeepers
-    
-    // Location = disk.
+public class ConfIndexElement extends ConfElement<ConfIndex> {
+    public ConfIndexElement(String name, ConfIndex index, NetAddr netAddr) {
+        super(name, index, netAddr) ;
+    }
 }
-

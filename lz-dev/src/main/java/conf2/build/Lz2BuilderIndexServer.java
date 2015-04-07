@@ -15,42 +15,42 @@
  *  information regarding copyright ownership.
  */
 
-package conf2;
+package conf2.build;
 
 import lizard.adapters.A ;
 import lizard.cluster.Platform ;
 import lizard.conf.Config ;
 import lizard.conf.LzBuildDBOE ;
-import lizard.node.TServerNode ;
+import lizard.index.TServerIndex ;
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.seaborne.dboe.base.file.Location ;
 import org.slf4j.Logger ;
 
-import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
+import com.hp.hpl.jena.tdb.store.tupletable.TupleIndex ;
 
-import conf2.Conf2.ConfCluster ;
-import conf2.Conf2.ConfNodeTableElement ;
-import conf2.Conf2.NetHost ;
+import conf2.conf.ConfCluster ;
+import conf2.conf.ConfIndexElement ;
+import conf2.conf.NetHost ;
 
-public class Lz2BuilderNodeServer {
+public class Lz2BuilderIndexServer {
     private static Logger logConf = Config.logConf ;    
     
     public static void build(Platform platform, Location location, ConfCluster confCluster, NetHost here) {
-        confCluster.eltsNodeTable.stream()
+        confCluster.eltsIndex.stream()
             .filter(x -> x.netAddr.sameHost(here))
             .forEach(x -> {
-                buildNodeServer(platform, location, x) ;
+                buildIndexServer(platform, location, x) ;
             }) ;
     }
 
-    private static TServerNode buildNodeServer(Platform platform, Location location, ConfNodeTableElement x) {
+    private static TServerIndex buildIndexServer(Platform platform, Location location, ConfIndexElement x) {
         Location loc = location.getSubLocation(x.name) ;
         int port = x.netAddr.port ;
-        FmtLog.info(logConf, "buildNodeServer: %s %s", port, loc) ;
-        NodeTable nt = LzBuildDBOE.createNodeTable(A.convert(loc)) ;
-        TServerNode serverNode = TServerNode.create(port, nt) ;
-        platform.add(serverNode) ;
-        return serverNode ;
+        FmtLog.info(logConf, "buildIndexServer: %s %s", port, loc) ;
+        TupleIndex tupleIndex = LzBuildDBOE.createTupleIndex(A.convert(loc), x.conf.indexOrder, x.name) ;  
+        TServerIndex serverindex = TServerIndex.create(port, tupleIndex) ;
+        platform.add(serverindex) ;
+        return serverindex ;
     }
 }
 

@@ -15,23 +15,28 @@
  *  information regarding copyright ownership.
  */
 
-package conf2;
+package conf2.conf;
 
 
-public class CONF {
-    // Delete:
-    // lizard-cluster:lizard.conf.*
+public class ConfZookeeper implements Deployable {
+    public final int port ;
+    public final String zkConfDir ;
     
-    // Careful logging: info and debug:private static Logger logConf = Config.logConf ;
+    public static ConfZookeeper create(int port, String zkConfDir) {
+        return new ConfZookeeper(port, zkConfDir) ; 
+    }
     
-    // Component naming:
-    // location/Index/...
-    // location/Nodes/...
+    public ConfZookeeper createEphemeral(int port) {
+        return new ConfZookeeper(port, null) ; 
+    }
+
+    private ConfZookeeper(int port, String zkConfDir) {
+        super() ;
+        this.port = port ;
+        this.zkConfDir = zkConfDir ;
+    }
     
-    // Lz2BuildZk : one local zookeeper.
-    // Many front end query servers.
-    // Many Zookeepers
-    
-    // Location = disk.
+    public boolean isEphemeral() {
+        return zkConfDir == null ;
+    }
 }
-

@@ -15,23 +15,19 @@
  *  information regarding copyright ownership.
  */
 
-package conf2;
+package conf2.conf;
 
+import java.util.Arrays ;
+import java.util.List ;
 
-public class CONF {
-    // Delete:
-    // lizard-cluster:lizard.conf.*
+import org.apache.jena.atlas.lib.DS ;
+
+public class ConfDataset {
+    public final List<ConfIndex> indexes = DS.list() ;
+    public final ConfNodeTable nodeTable ;
     
-    // Careful logging: info and debug:private static Logger logConf = Config.logConf ;
-    
-    // Component naming:
-    // location/Index/...
-    // location/Nodes/...
-    
-    // Lz2BuildZk : one local zookeeper.
-    // Many front end query servers.
-    // Many Zookeepers
-    
-    // Location = disk.
+    public ConfDataset(ConfNodeTable nodeTable, ConfIndex... indexes) {
+        this.nodeTable = nodeTable ;
+        this.indexes.addAll(Arrays.asList(indexes)) ;
+    }
 }
-
