@@ -6,6 +6,7 @@ run/
 lz-dev.classpath
 # Databases
 DB*
+zkConf/
 
 # During initial development, allow small data test files.
 ## D.ttl

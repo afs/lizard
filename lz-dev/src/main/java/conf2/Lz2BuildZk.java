@@ -17,14 +17,53 @@
 
 package conf2;
 
+import lizard.conf.Config ;
 import org.apache.curator.test.TestingServer ;
+import org.apache.jena.atlas.logging.FmtLog ;
+import org.apache.zookeeper.server.ServerConfig ;
+import org.apache.zookeeper.server.ZooKeeperServerMain ;
+import org.seaborne.dboe.migrate.L ;
+import org.slf4j.Logger ;
+import conf2.Conf2.ConfCluster ;
+import conf2.Conf2.ConfZookeeper ;
+import conf2.Conf2.NetHost ;
 
 public class Lz2BuildZk {
+    private static Logger logConf = Config.logConf ;
+    
     static TestingServer zkTestServer;
-    public static void zookeeper(int port) {
+    
+    public static String zookeeper(ConfCluster confCluster, NetHost here) {
+        // @@
+        if ( confCluster.zkServer.size() == 0 ) {}
+        if ( confCluster.zkServer.size() > 1 ) {}
+        ConfZookeeper confZookeeper = confCluster.zkServer.get(0) ;
+        zookeeper(confZookeeper);
+        return "localhost:"+confZookeeper.port  ;
+    }
+
+    public static void zookeeper(ConfZookeeper confZookeeper) {
+        if ( confZookeeper.isEphemeral() ) {
+            FmtLog.info(logConf, "Zookeeper (ephemeral): %d", confZookeeper.port) ;
+            zookeeperSimple(confZookeeper.port) ;
+            return ;
+        }
+
+        FmtLog.info(logConf, "Zookeeper %s : %d", confZookeeper.zkConfDir, confZookeeper.port) ;
+        ServerConfig config = new ServerConfig();
+        config.parse(new String[] {Integer.toString(confZookeeper.port), confZookeeper.zkConfDir}) ;
+        ZooKeeperServerMain zk = new ZooKeeperServerMain();
+        L.async(()-> {
+            try { zk.runFromConfig(config) ; }
+            catch (Exception e) { FmtLog.warn(logConf, "Failed to run zookeeper: "+e.getMessage(), e); }
+        }) ;
+    }
+    
+    public static void zookeeperSimple(int port) {
         try { zkTestServer = new TestingServer(port) ; }
         catch (Exception e) { e.printStackTrace(); }
     }
+
 
 
 }

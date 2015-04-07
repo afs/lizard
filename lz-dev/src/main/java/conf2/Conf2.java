@@ -39,7 +39,7 @@ public class Conf2 {
     
     /** Static description configuration */
     public static class ConfCluster {
-        public final List<NetAddr> zkServer = new ArrayList<>() ;
+        public final List<ConfZookeeper> zkServer = new ArrayList<>() ;
         public final ConfDataset   dataset ;
         public final List<ConfNodeTableElement> eltsNodeTable = new ArrayList<>() ;
         public final List<ConfIndexElement> eltsIndex = new ArrayList<>() ;
@@ -180,10 +180,22 @@ public class Conf2 {
         public final int port ;
         public final String zkConfDir ;
         
-        public ConfZookeeper(int port, String zkConfDir) {
+        public static ConfZookeeper create(int port, String zkConfDir) {
+            return new ConfZookeeper(port, zkConfDir) ; 
+        }
+        
+        public ConfZookeeper createEphemeral(int port) {
+            return new ConfZookeeper(port, null) ; 
+        }
+
+        private ConfZookeeper(int port, String zkConfDir) {
             super() ;
             this.port = port ;
             this.zkConfDir = zkConfDir ;
+        }
+        
+        public boolean isEphemeral() {
+            return zkConfDir == null ;
         }
     }
 

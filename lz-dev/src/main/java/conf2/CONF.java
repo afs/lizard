@@ -27,5 +27,7 @@ public class CONF {
     // Component naming:
     // location/Index/...
     // location/Nodes/...
+    
+    // Lz2BuildZk : one local zookeeper.
 }
 

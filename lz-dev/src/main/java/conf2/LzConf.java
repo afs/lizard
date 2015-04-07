@@ -23,11 +23,7 @@ import java.util.Map ;
 
 import lizard.cluster.Cluster ;
 import lizard.cluster.Platform ;
-import lizard.conf.dataset.LzDatasetDesc ;
-import lizard.conf.index.IndexServer ;
-import lizard.conf.node.NodeServer ;
 import lizard.query.LzDataset ;
-import org.apache.curator.test.TestingServer ;
 import org.apache.jena.atlas.io.IO ;
 import org.apache.jena.atlas.io.IndentedWriter ;
 import org.apache.jena.atlas.lib.ColumnMap ;
@@ -57,6 +53,7 @@ public class LzConf {
     public static void main(String[] args) throws Exception {
         int zkPort = 2188 ;
         
+        // Configuration.
         // Describe the cluster, not deployment details.
         ConfNodeTable confNT = new ConfNodeTable(1, 1) ;
         ConfIndex posIdx =  new ConfIndex(new ColumnMap("SPO", "POS"), "POS", 1, 1) ;
@@ -69,41 +66,46 @@ public class LzConf {
         ConfNodeTableElement nt1 = new ConfNodeTableElement("Nodes-1", confNT, NetAddr.create("localhost", 2014)) ;
 
         ConfCluster confCluster = new ConfCluster(confDatabase) ;
+
+        ConfZookeeper confZookeeper = ConfZookeeper.create(zkPort, null) ;
+        
         // The zookeeper servers.
-        confCluster.zkServer.add(NetAddr.create("localhost", zkPort)) ;
+        confCluster.zkServer.add(confZookeeper) ;
         confCluster.addIndexElements(posIdx1, psoIdx1) ;
         confCluster.addNodeElements(nt1) ;
         
-        
         // Rewrite any host names. 
         
-        // The deployment here.
+        // The deployment "here".
         NetHost here = NetHost.create("localhost") ;
-        ConfZookeeper confZooKeeper = new ConfZookeeper(zkPort, "zkConf") ;
-        
-        Lz2BuildZk.zookeeper(zkPort) ;
-        String zkConnect = "localhost:"+zkPort ;
-        Cluster.createSystem(zkConnect);
+
         
         // Deploy
         //public static Platform build(ConfDeploy deployment) {
-        Location locationDataServers = Location.mem() ;
-        Platform platform = new Platform() ;
-        Lz2BuilderNodeServer.build(platform, locationDataServers, confCluster, here); 
+
+        {
+            Location locationDataServers = Location.mem() ;
+            Platform platform = new Platform() ;
+            Lz2BuilderNodeServer.build(platform, locationDataServers, confCluster, here); 
+            Lz2BuilderIndexServer.build(platform, locationDataServers, confCluster, here);
+            platform.start(); 
+        }
+        {   
+            ConfZookeeper confZooKeeper = ConfZookeeper.create(zkPort, "zkConf") ;
+            String zkConnect = Lz2BuildZk.zookeeper(confCluster, here) ;
+            Cluster.createSystem(zkConnect);
+        }
         
-        Lz2BuilderIndexServer.build(platform, locationDataServers, confCluster, here);
-        
-        platform.start(); 
-        
-        
-        Location locationQueryServer = Location.mem() ; 
-        LzDataset lzdsg = Lz2BuilderDataset.build(confCluster, confDatabase, locationQueryServer) ;
-        
-        lzdsg.getStartables().forEach(s -> {
-            s.start();
-        });
-        
-        Dataset ds = Lz2BuilderDataset.dataset(lzdsg, locationQueryServer) ;
+        Dataset ds = null ;
+        {
+            Location locationQueryServer = Location.mem() ; 
+            LzDataset lzdsg = Lz2BuilderDataset.build(confCluster, confDatabase, locationQueryServer) ;
+
+            lzdsg.getStartables().forEach(s -> {
+                s.start();
+            });
+            ds = Lz2BuilderDataset.dataset(lzdsg, locationQueryServer) ;
+        }
         ds.begin(ReadWrite.WRITE);
         RDFDataMgr.read(ds, "D.ttl");
         ds.commit() ;
@@ -114,47 +116,6 @@ public class LzConf {
         ds.end() ;
         
         System.exit(0) ;
-        
-        
-//        public static Deployment parse(Configuration config, String deploymentFile) {
-//            Model model = LzLib.readAll(deploymentFile) ;
-//            
-//            List<NodeServer> nodeServers = ConfigLib.dataServers(model, ":NodeServer").values().stream()
-//                .map(ds -> { return config.getConfNode().findNodeServer(ds.resource);})
-//                .collect(Collectors.toList()) ;
-//            List<IndexServer> indexServers = ConfigLib.dataServers(model, ":IndexServer").values().stream()
-//                .map(ds -> { return config.getConfIndex().findIndexServer(ds.resource);})
-//                .collect(Collectors.toList()) ;
-//            
-//            // ConfigLib.zkServers
-//            LzDatasetDesc desc = config.getConfDataset().descDataset() ;
-//            return new Deployment(indexServers, nodeServers, desc) ;
-//        }
-        
-        List<NodeServer> nodeServers = null ;
-//        NodeServer ns = null ;
-//        ns.ref ;        
-//        ns.data ;       ** Deployment matter
-//        ns.hostname ;   ** NetAddr
-//        ns.name ;
-//        ns.nodeService ;
-//        ns.port ;
-        
-        List<IndexServer> indexServers = null ;
-//        IndexServer idxSrv = null ;
-//        idxSrv.data ;
-//        idxSrv.hostname ;
-//        idxSrv.indexService ;
-//        idxSrv.name ;
-//        idxSrv.port ;
-        
-        LzDatasetDesc desc = null ;
-        
-        //Deployment deployment = new Deployment(indexServers, nodeServers, desc) ;
-        //deployment.datasetDesc ;
-        //deployment.indexServers ;
-        //deployment.nodeServers ;
-        
     }
     
     public static Platform build(ConfDeploy deployment) {
