@@ -17,11 +17,10 @@
 
 package conf2;
 
-import java.util.ArrayList ;
-import java.util.Arrays ;
-import java.util.Collections ;
-import java.util.List ;
+import java.util.* ;
 
+import conf2.Conf2.NetHost ;
+import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.DS ;
 
 public class Conf2 {
@@ -41,8 +40,6 @@ public class Conf2 {
     /** Static description configuration */
     public static class ConfCluster {
         public final List<NetAddr> zkServer = new ArrayList<>() ;
-        public final List<ConfIndexElement> tupelIndexElts = new ArrayList<>() ;
-        public final List<ConfNodeTableElement> nodeTableElts = new ArrayList<>() ;
         public final ConfDataset   dataset ;
         public final List<ConfNodeTableElement> eltsNodeTable = new ArrayList<>() ;
         public final List<ConfIndexElement> eltsIndex = new ArrayList<>() ;
@@ -72,14 +69,54 @@ public class Conf2 {
     
     public static class ConfIndex { 
         public final String indexOrder ;
+        public final ColumnMap cmap ;
         public final int readQuorum ;
         public final int writeQuorum ;
         
-        public ConfIndex(String indexOrder, int readQuorum, int writeQuorum) {
+        public ConfIndex(ColumnMap cmap, String indexOrder, int readQuorum, int writeQuorum) {
             super() ;
             this.indexOrder = indexOrder ;
             this.readQuorum = readQuorum ;
             this.writeQuorum = writeQuorum ;
+            this.cmap = cmap ;
+        }
+    }
+    
+    // Typed string.
+    public static class NetHost {
+        public final String hostname ;
+
+        public static NetHost create(String hostname) {
+            return new NetHost(hostname) ;
+        }
+
+        public NetHost(String hostname) {
+            this.hostname = hostname ;
+        }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31 ;
+            int result = 1 ;
+            result = prime * result + ((hostname == null) ? 0 : hostname.hashCode()) ;
+            return result ;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if ( this == obj )
+                return true ;
+            if ( obj == null )
+                return false ;
+            if ( getClass() != obj.getClass() )
+                return false ;
+            NetHost other = (NetHost)obj ;
+            if ( hostname == null ) {
+                if ( other.hostname != null )
+                    return false ;
+            } else if ( !hostname.equals(other.hostname) )
+                return false ;
+            return true ;
         }
     }
     
@@ -91,6 +128,7 @@ public class Conf2 {
         public final String hostname ;
         public final int port ;
         public NetAddr(String hostname, int port) {
+            Objects.requireNonNull(hostname, "Hostname is null") ;
             this.hostname = hostname ;
             this.port = port ;
         }
@@ -119,7 +157,15 @@ public class Conf2 {
             if ( port != other.port )
                 return false ;
             return true ;
-        }    }
+        }
+        public boolean sameHost(NetHost here) {
+            return sameHost(here.hostname) ;
+        }
+
+        public boolean sameHost(String here) {
+            return Objects.equals(hostname, here) ;
+        }    
+    }
     
     public static class ConfNodeTable { 
         public final int readQuorum ;
@@ -145,23 +191,25 @@ public class Conf2 {
     }
     
     public static class ConfElement<X> {
+        public final String name ;
         public final X conf ;
         public final NetAddr netAddr ; 
-        public ConfElement(X conf, NetAddr netAddr) {
+        public ConfElement(String name, X conf, NetAddr netAddr) {
+            this.name = name ;
             this.conf = conf ;
             this.netAddr = netAddr ;
         }
     }
     
     public static class ConfIndexElement extends ConfElement<ConfIndex> {
-        public ConfIndexElement(ConfIndex index, NetAddr netAddr) {
-            super(index, netAddr) ;
+        public ConfIndexElement(String name, ConfIndex index, NetAddr netAddr) {
+            super(name, index, netAddr) ;
         }
     }
     
     public static class ConfNodeTableElement extends ConfElement<ConfNodeTable> {
-        public ConfNodeTableElement(ConfNodeTable nodetable, NetAddr netAddr) {
-            super(nodetable, netAddr) ;
+        public ConfNodeTableElement(String name, ConfNodeTable nodetable, NetAddr netAddr) {
+            super(name, nodetable, netAddr) ;
         }
     }
 }

@@ -17,7 +17,15 @@
 
 package conf2;
 
-public class LzBuilder {
+import org.apache.curator.test.TestingServer ;
+
+public class Lz2BuildZk {
+    static TestingServer zkTestServer;
+    public static void zookeeper(int port) {
+        try { zkTestServer = new TestingServer(port) ; }
+        catch (Exception e) { e.printStackTrace(); }
+    }
+
 
 }
 

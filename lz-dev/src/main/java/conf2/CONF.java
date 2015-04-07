@@ -15,25 +15,17 @@
  *  information regarding copyright ownership.
  */
 
-package lizard.conf.dataset;
+package conf2;
 
-import lizard.cluster.Cluster ;
-import org.seaborne.dboe.transaction.txn.TransactionalComponentBase ;
-import org.seaborne.dboe.transaction.txn.TxnId ;
 
-import com.hp.hpl.jena.query.ReadWrite ;
-
-final public class TransactionalComponentZkLock extends TransactionalComponentBase<Object> {
-    @Override
-    protected Object _begin(ReadWrite readWrite, TxnId txnId) {
-        if ( readWrite == ReadWrite.WRITE )
-            Cluster.acquireWriteLock() ;
-        return null ;
-    }
-
-    @Override
-    protected void _complete(TxnId txnId, Object state) {
-        if ( getReadWriteMode() == ReadWrite.WRITE )
-            Cluster.releaseWriteLock() ;
-    }
+public class CONF {
+    // Delete:
+    // lizard-cluster:lizard.conf.*
+    
+    // Careful logging: info and debug:private static Logger logConf = Config.logConf ;
+    
+    // Component naming:
+    // location/Index/...
+    // location/Nodes/...
 }
+

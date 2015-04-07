@@ -18,7 +18,6 @@
 package lizard.conf.dataset;
 
 import java.util.ArrayList ;
-import java.util.Iterator ;
 import java.util.List ;
 
 import lizard.adapters.A ;
@@ -27,6 +26,7 @@ import lizard.cluster.Cluster ;
 import lizard.conf.Config ;
 import lizard.query.LzDataset ;
 import lizard.query.QuackLizard ;
+import migrate.TupleIndexEmpty ;
 
 import com.hp.hpl.jena.query.ARQ ;
 import com.hp.hpl.jena.query.Dataset ;
@@ -41,15 +41,12 @@ import com.hp.hpl.jena.tdb.setup.StoreParams ;
 import com.hp.hpl.jena.tdb.store.* ;
 import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
 import com.hp.hpl.jena.tdb.store.tupletable.TupleIndex ;
-import com.hp.hpl.jena.tdb.store.tupletable.TupleIndexBase ;
 import com.hp.hpl.jena.tdb.sys.DatasetControl ;
 import com.hp.hpl.jena.tdb.sys.DatasetControlMRSW ;
 import com.hp.hpl.jena.tdb.sys.Names ;
 
-import org.apache.jena.atlas.iterator.Iter ;
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.StrUtils ;
-import org.apache.jena.atlas.lib.Tuple ;
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.seaborne.dboe.base.file.Location ;
 import org.seaborne.dboe.transaction.Transactional ;
@@ -94,6 +91,7 @@ public class LzBuildClient
     
     static Logger logConf = Config.logConf ;
 
+    // KEEP.
     public static DatasetGraphTDB createDataset(org.seaborne.dboe.base.file.Location _location, TupleIndex[] tripleIndexes, NodeTable nodeTable) {
         com.hp.hpl.jena.tdb.base.file.Location location = A.convert(_location) ;
         DatasetControl policy = new DatasetControlMRSW() ;
@@ -149,52 +147,5 @@ public class LzBuildClient
         dsg.getContext().set(ARQ.optFilterPlacementBGP, false);
         QC.setFactory(dsg.getContext(), QuackLizard.factoryLizard) ;
         return dsg ;
-    }
-    
-    static class TupleIndexEmpty extends TupleIndexBase {
-
-        protected TupleIndexEmpty(ColumnMap colMapping, String name) {
-            super(4, colMapping, name) ;
-        }
-
-        @Override
-        public Iterator<Tuple<NodeId>> all() {
-            return Iter.nullIterator() ;
-        }
-
-        @Override
-        public long size() {
-            return 0 ;
-        }
-
-        @Override
-        public boolean isEmpty() {
-            return true ;
-        }
-
-        @Override
-        public void clear() {}
-
-        @Override
-        public void sync() {}
-
-        @Override
-        public void close() {}
-
-        @Override
-        protected boolean performAdd(Tuple<NodeId> tuple) {
-            return false ;
-        }
-
-        @Override
-        protected boolean performDelete(Tuple<NodeId> tuple) {
-            return false ;
-        }
-
-        @Override
-        protected Iterator<Tuple<NodeId>> performFind(Tuple<NodeId> tuple) {
-            return Iter.nullIterator() ;
-        }
-        
     }
 }

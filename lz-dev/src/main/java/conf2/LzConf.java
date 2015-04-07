@@ -21,32 +21,52 @@ import java.io.InputStream ;
 import java.util.List ;
 import java.util.Map ;
 
+import lizard.cluster.Cluster ;
 import lizard.cluster.Platform ;
 import lizard.conf.dataset.LzDatasetDesc ;
 import lizard.conf.index.IndexServer ;
 import lizard.conf.node.NodeServer ;
-import lizard.sys.Deployment ;
-import conf2.Conf2.* ;
-
+import lizard.query.LzDataset ;
+import org.apache.curator.test.TestingServer ;
 import org.apache.jena.atlas.io.IO ;
 import org.apache.jena.atlas.io.IndentedWriter ;
+import org.apache.jena.atlas.lib.ColumnMap ;
+import org.apache.jena.atlas.logging.LogCtl ;
+import org.apache.jena.riot.RDFDataMgr ;
+import org.seaborne.dboe.base.file.Location ;
 import org.yaml.snakeyaml.Yaml ;
 
+import com.hp.hpl.jena.query.Dataset ;
+import com.hp.hpl.jena.query.ReadWrite ;
+
+import conf2.Conf2.ConfCluster ;
+import conf2.Conf2.ConfDataset ;
+import conf2.Conf2.ConfDeploy ;
+import conf2.Conf2.ConfIndex ;
+import conf2.Conf2.ConfIndexElement ;
+import conf2.Conf2.ConfNodeTable ;
+import conf2.Conf2.ConfNodeTableElement ;
+import conf2.Conf2.ConfZookeeper ;
+import conf2.Conf2.NetAddr ;
+import conf2.Conf2.NetHost ;
+
 public class LzConf {
+    static { LogCtl.setLog4j(); }
+    
     
     public static void main(String[] args) throws Exception {
         int zkPort = 2188 ;
         
         // Describe the cluster, not deployment details.
         ConfNodeTable confNT = new ConfNodeTable(1, 1) ;
-        ConfIndex posIdx =  new ConfIndex("POS", 1, 1) ;
-        ConfIndex psoIdx =  new ConfIndex("PSO", 1, 1) ;
+        ConfIndex posIdx =  new ConfIndex(new ColumnMap("SPO", "POS"), "POS", 1, 1) ;
+        ConfIndex psoIdx =  new ConfIndex(new ColumnMap("SPO", "PSO"), "PSO", 1, 1) ;
         ConfDataset confDatabase = new ConfDataset(confNT, posIdx, psoIdx) ;
         
         // Shards
-        ConfIndexElement posIdx1 = new ConfIndexElement(posIdx, NetAddr.create("localhost", 2010)) ;
-        ConfIndexElement psoIdx1 = new ConfIndexElement(psoIdx, NetAddr.create("localhost", 2012)) ;
-        ConfNodeTableElement nt1 = new ConfNodeTableElement(confNT, NetAddr.create("localhost", 2014)) ;
+        ConfIndexElement posIdx1 = new ConfIndexElement(posIdx.indexOrder+"-1", posIdx, NetAddr.create("localhost", 2010)) ;
+        ConfIndexElement psoIdx1 = new ConfIndexElement(psoIdx.indexOrder+"-1", psoIdx, NetAddr.create("localhost", 2012)) ;
+        ConfNodeTableElement nt1 = new ConfNodeTableElement("Nodes-1", confNT, NetAddr.create("localhost", 2014)) ;
 
         ConfCluster confCluster = new ConfCluster(confDatabase) ;
         // The zookeeper servers.
@@ -54,12 +74,47 @@ public class LzConf {
         confCluster.addIndexElements(posIdx1, psoIdx1) ;
         confCluster.addNodeElements(nt1) ;
         
+        
         // Rewrite any host names. 
         
         // The deployment here.
-        ConfZookeeper confZooKeeper = new ConfZookeeper(zkPort, "zkConf") ; 
-        new ConfQueryServer() ;
-        new ConfDeploy() ;
+        NetHost here = NetHost.create("localhost") ;
+        ConfZookeeper confZooKeeper = new ConfZookeeper(zkPort, "zkConf") ;
+        
+        Lz2BuildZk.zookeeper(zkPort) ;
+        String zkConnect = "localhost:"+zkPort ;
+        Cluster.createSystem(zkConnect);
+        
+        // Deploy
+        //public static Platform build(ConfDeploy deployment) {
+        Location locationDataServers = Location.mem() ;
+        Platform platform = new Platform() ;
+        Lz2BuilderNodeServer.build(platform, locationDataServers, confCluster, here); 
+        
+        Lz2BuilderIndexServer.build(platform, locationDataServers, confCluster, here);
+        
+        platform.start(); 
+        
+        
+        Location locationQueryServer = Location.mem() ; 
+        LzDataset lzdsg = Lz2BuilderDataset.build(confCluster, confDatabase, locationQueryServer) ;
+        
+        lzdsg.getStartables().forEach(s -> {
+            s.start();
+        });
+        
+        Dataset ds = Lz2BuilderDataset.dataset(lzdsg, locationQueryServer) ;
+        ds.begin(ReadWrite.WRITE);
+        RDFDataMgr.read(ds, "D.ttl");
+        ds.commit() ;
+        ds.end() ;
+        
+        ds.begin(ReadWrite.READ);
+        ds.asDatasetGraph().find().forEachRemaining(q -> System.out.println(q)) ;
+        ds.end() ;
+        
+        System.exit(0) ;
+        
         
 //        public static Deployment parse(Configuration config, String deploymentFile) {
 //            Model model = LzLib.readAll(deploymentFile) ;
@@ -95,13 +150,13 @@ public class LzConf {
         
         LzDatasetDesc desc = null ;
         
-        Deployment deployment = new Deployment(indexServers, nodeServers, desc) ;
+        //Deployment deployment = new Deployment(indexServers, nodeServers, desc) ;
         //deployment.datasetDesc ;
         //deployment.indexServers ;
         //deployment.nodeServers ;
         
     }
-
+    
     public static Platform build(ConfDeploy deployment) {
         Platform platform = new Platform() ;
         //platform.add(null);
