@@ -16,7 +16,7 @@ generate malicious information.  No [Byzantine fault tolerance]
 
 License: Apache Software License 
 
-See [LICENSE](LICENSE) and [NOTICE](NOTICE) for details.
+See [LICENCE](LICENCE) and [NOTICE](NOTICE) for details.
 
 ## Status
 
