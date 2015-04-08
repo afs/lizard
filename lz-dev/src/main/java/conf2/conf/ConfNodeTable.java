@@ -17,11 +17,16 @@
 
 package conf2.conf;
 
+import org.apache.jena.atlas.io.IndentedWriter ;
+
 public class ConfNodeTable { 
     public final int readQuorum ;
     public final int writeQuorum ;
     public ConfNodeTable(int readQuorum, int writeQuorum) {
         this.readQuorum = readQuorum ;
         this.writeQuorum = writeQuorum ;
+    }
+    public void print(IndentedWriter out) {
+        out.print("nodetable");
     }
 }

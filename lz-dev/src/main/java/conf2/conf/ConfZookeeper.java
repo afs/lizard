@@ -17,6 +17,8 @@
 
 package conf2.conf;
 
+import org.apache.jena.atlas.io.IndentedWriter ;
+
 
 public class ConfZookeeper implements Deployable {
     public final int port ;
@@ -38,5 +40,9 @@ public class ConfZookeeper implements Deployable {
     
     public boolean isEphemeral() {
         return zkConfDir == null ;
+    }
+
+    public void print(IndentedWriter out) {
+        out.print("zookeeper:"+port) ;
     }
 }

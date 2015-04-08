@@ -76,10 +76,8 @@ import conf2.conf.* ;
 public class Lz2BuilderDataset {
     private static Logger logConf = Config.logConf ;
     
-    public static LzDataset build(ConfCluster confCluster, ConfDataset confDataset, Location location) {
-        Journal journal = Journal.create(location) ;
-        TransactionCoordinator txnCoord = new TransactionCoordinator(journal) ;
-        Transactional trans = new TransactionalBase(txnCoord) ;
+    public static LzDataset build(ConfCluster confCluster, Location location) {
+        ConfDataset confDataset = confCluster.dataset ;
 
         List<Component> startables = new ArrayList<>() ;
         

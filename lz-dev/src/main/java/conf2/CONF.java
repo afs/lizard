@@ -27,11 +27,13 @@ public class CONF {
     // Component naming:
     // location/Index/...
     // location/Nodes/...
+    // Server names -> file areas "data:"
     
-    // Lz2BuildZk : one local zookeeper.
+    // Lz2BuildZk : one local zookeeper - currently ignoring configuration details 
     // Many front end query servers.
     // Many Zookeepers
     
     // Location = disk.
+    //  Journals for NT and IDX shards
 }
 

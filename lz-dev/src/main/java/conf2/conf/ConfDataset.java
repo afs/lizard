@@ -24,7 +24,7 @@ import org.apache.jena.atlas.lib.DS ;
 
 public class ConfDataset {
     public final List<ConfIndex> indexes = DS.list() ;
-    public final ConfNodeTable nodeTable ;
+    public ConfNodeTable nodeTable ;
     
     public ConfDataset(ConfNodeTable nodeTable, ConfIndex... indexes) {
         this.nodeTable = nodeTable ;

@@ -1,17 +1,18 @@
-query:
-  servers: [ qs-1 ]
-  a:
-    b:
-      c: 6
-  
-
-qs-1:
-  hostname: localhost
-  port: 3030
+# This file describes the whole Lizard system.
+# In addition, there is a separate description 
+# of which machine the deployment is happeneing
+# on.
 
 cluster:
-  zookeeper-config:  conf/zoo.cfg
-  root:              "Lizard"
+  zookeeper: [ "localhost:2181" ]
+  fileroot:  LZ
+
+## sparql:
+##   servers: [ qs-1 ]
+## 
+## qs-1:
+##   hostname: localhost
+##   port: 3030
 
 dataset:
   indexes:           [index-pos, index-pso]

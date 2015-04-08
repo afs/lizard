@@ -17,6 +17,7 @@
 
 package conf2.conf;
 
+import org.apache.jena.atlas.io.IndentedWriter ;
 import org.apache.jena.atlas.lib.ColumnMap ;
 
 public class ConfIndex { 
@@ -31,5 +32,9 @@ public class ConfIndex {
         this.readQuorum = readQuorum ;
         this.writeQuorum = writeQuorum ;
         this.cmap = cmap ;
+    }
+
+    public void print(IndentedWriter out) {
+        out.print(indexOrder) ;
     }
 }

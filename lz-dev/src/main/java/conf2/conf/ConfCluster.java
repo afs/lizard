@@ -17,9 +17,14 @@
 
 package conf2.conf;
 
+import java.io.StringWriter ;
 import java.util.ArrayList ;
 import java.util.Collections ;
 import java.util.List ;
+
+import conf2.LzConfParser ;
+
+import org.apache.jena.atlas.io.IndentedWriter ;
 
 /** Static description configuration */
 public class ConfCluster {
@@ -27,6 +32,7 @@ public class ConfCluster {
     public final ConfDataset   dataset ;
     public final List<ConfNodeTableElement> eltsNodeTable = new ArrayList<>() ;
     public final List<ConfIndexElement> eltsIndex = new ArrayList<>() ;
+    public String fileroot = null ;
     
     public ConfCluster(ConfDataset dataset) {
         this.dataset = dataset ;
@@ -39,4 +45,61 @@ public class ConfCluster {
     public void addNodeElements(ConfNodeTableElement...ntElts) {
         Collections.addAll(eltsNodeTable, ntElts) ;
     }
+    
+    @Override
+    public String toString() {
+        StringWriter sw = new StringWriter() ;
+        IndentedWriter out = new IndentedWriter(sw) { } ;
+        print(out) ;
+        out.flush() ;
+        return sw.toString() ; 
+    }
+
+    public void print(IndentedWriter out) {
+        // YAMP.printfield
+        out.print(LzConfParser.objCluster) ;
+        out.println(":") ;
+       
+        if ( fileroot != null ) {
+            out.incIndent();
+            out.print(LzConfParser.fFileroot) ;
+            out.print(":") ;
+            out.println(fileroot) ;
+            out.decIndent();
+        }
+        
+        out.incIndent();
+        out.print(LzConfParser.fZookeeper.substring(1));
+        out.print(": ") ;
+        out.print("[ ") ;
+        zkServer.stream().forEach(zk -> { zk.print(out); out.print(", "); }) ;
+        out.print("]") ;
+        out.decIndent();
+        out.println() ;
+        
+        out.print(LzConfParser.objDataset);
+        out.println(":") ;
+        out.incIndent();
+        out.print("indexes: [") ;
+        eltsIndex.stream().map(elt -> elt.conf).distinct().forEach(idx -> {
+            idx.print(out);
+            out.print(", ");
+        }) ;
+        out.print("]") ;
+        out.println() ;
+        
+        out.print("nodes: ") ;
+        out.print("[ ") ;
+        eltsNodeTable.stream().map(elt -> elt.conf).distinct().forEach(nt -> {
+            nt.print(out);
+            out.print(", ");
+        }) ;
+        out.print("]") ;
+        
+        
+        out.decIndent();
+        out.println() ;
+        
+    }
+    
 }
