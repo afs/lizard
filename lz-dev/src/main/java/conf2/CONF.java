@@ -35,5 +35,7 @@ public class CONF {
     
     // Location = disk.
     //  Journals for NT and IDX shards
+    
+    // Fuseki integration
 }
 
