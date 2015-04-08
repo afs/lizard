@@ -1,0 +1,51 @@
+# This file is the same as the built-in development configuration.
+# All in one JVM, in memory storage, single test zookeeper server,   
+# one server each for POS, PSO and nodetable. 
+
+cluster:
+  zookeeper:    [ "localhost:2281" ]
+  fileroot:    "--mem--"
+
+## sparql:
+##   servers: [ qs-1 ]
+## 
+## qs-1:
+##   hostname: localhost
+##   port: 3030
+
+dataset:
+  indexes:     [ index-pos, index-pso]
+  nodes:       nodetable
+
+# Index
+index-pos:
+  name:        "POS"
+  servers:     [pos-1]
+
+index-pso:
+  name:        "PSO"
+  servers:     [pso-1]
+
+#Index shards
+pos-1:  
+  name:        "Server-POS"
+  hostname:    localhost
+  port:        4012
+  data:        "data/POS-1"
+
+pso-1:
+  name:        "Server-PSO"
+  hostname:    localhost
+  port:        4014
+  data:        "data/PSO-1"
+
+# Node table
+
+nodetable:
+  servers:     [ node-1 ]
+
+node-1:
+  name:        "ServerNode"
+  hostname:    localhost
+  port:        4011
+  data:        "data/N1"

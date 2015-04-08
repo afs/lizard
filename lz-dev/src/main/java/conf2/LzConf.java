@@ -30,6 +30,8 @@ import conf2.conf.* ;
 import org.apache.jena.atlas.io.IO ;
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.logging.LogCtl ;
+import org.apache.jena.fuseki.server.FusekiServer ;
+import org.apache.jena.fuseki.server.ServerInitialConfig ;
 import org.apache.jena.riot.RDFDataMgr ;
 import org.yaml.snakeyaml.Yaml ;
 
@@ -55,15 +57,23 @@ public class LzConf {
 //        ConfCluster conf = setup1() ;
         
         Dataset ds = LzDeploy.deploy(conf, here);
+        // Specialized assembler.
+        // Fire off fuseki.
+
         
-        ds.begin(ReadWrite.WRITE);
-        RDFDataMgr.read(ds, "D.ttl");
-        ds.commit() ;
-        ds.end() ;
         
-        ds.begin(ReadWrite.READ);
-        ds.asDatasetGraph().find().forEachRemaining(q -> System.out.println(q)) ;
-        ds.end() ;
+        if ( false ) {
+            
+        } else {
+            ds.begin(ReadWrite.WRITE);
+            RDFDataMgr.read(ds, "D.ttl");
+            ds.commit() ;
+            ds.end() ;
+
+            ds.begin(ReadWrite.READ);
+            ds.asDatasetGraph().find().forEachRemaining(q -> System.out.println(q)) ;
+            ds.end() ;
+        }
         
         System.exit(0) ;
     }        
