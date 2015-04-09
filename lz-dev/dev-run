@@ -3,8 +3,6 @@
 LIZARD_HOME="${LIZARD_HOME:-$HOME/Lizard}"
 LZ_CMDS="$LIZARD_HOME/lizard-cmds"
 
-
-## Test zookeeper
 CPFILE=lz-dev.classpath
 if [[  -e $CPFILE ]]
 then

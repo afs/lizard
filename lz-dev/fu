@@ -3,11 +3,32 @@
 
 LIZARD_HOME="${LIZARD_HOME:-$HOME/Lizard}"
 LZ_CMDS="$LIZARD_HOME/lizard-cmds"
-source "$LZ_CMDS/bin/init"
-
 VER_FU=2.0.1-SNAPSHOT
 
+# either this or that
+#source "$LZ_CMDS/bin/init"
+
+if false
+then
+    source "$LZ_CMDS/bin/init"
+    CP="$CP:${M2_REPO}/org/yaml/snakeyaml/1.9/snakeyaml-1.9.jar"
+else
+    CPFILE=lz-dev.classpath
+    if [[  -e $CPFILE ]]
+    then
+	CP="$(cat "$CPFILE")"
+    else
+	echo "No classpath file: $CPFILE" 1>&2
+	echo "Run \"mvn dependency:build-classpath -Dmdep.outputFile=$CPFILE\"" ; 1>&2
+	exit 2 
+    fi
+fi
+
+# Fuseki
 CP="$CP:${M2_REPO}/org/apache/jena/jena-fuseki-server/${VER_FU}/jena-fuseki-server-${VER_FU}.jar"
+# Local files.
+CP="$CP:$PWD/target/classes"
+
 # Remove slf4j (inside fuseki server)
 CP="$(echo $CP | perl -p -e 's!:[^:]*/org/slf4j/[^:]*!:!g')"
 
@@ -18,6 +39,8 @@ export FUSEKI_HOME=$HOME/Jena/jena-fuseki2/jena-fuseki-core
 export FUSEKI_BASE=$PWD/run
 [[ -e $FUSEKI_BASE ]] || mkdir -p $FUSEKI_BASE
 
-X=$(echo $CP | sed -e "s/:/\n"/g)
+## X="$(echo $CP | sed -e "s/:/\n"/g)"
+## echo "$X"
+## exit
 
 exec java -cp "$CP" $JVM_ARGS $FUSEKI_LOG org.apache.jena.fuseki.cmd.FusekiCmd "$@"

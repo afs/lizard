@@ -1,0 +1,48 @@
+# This file describes the whole Lizard system.
+# In addition, there is a separate description 
+# of which machine the deployment is happeneing
+# on.
+
+cluster:
+  zookeeper: [ "localhost:2181" ]
+  fileroot:  LZ
+
+## sparql:
+##   servers: [ qs-1 ]
+## 
+## qs-1:
+##   hostname: localhost
+##   port: 3030
+
+dataset:
+  indexes:           [index-pos, index-pso]
+  nodes:             nodetable
+
+# Index
+index-pos:
+  name: "POS"
+  servers: [pos-1]
+
+index-pso:
+  name: "PSO"
+  servers: [pso-1]
+
+#Index shards
+pos-1:
+  hostname: localhost
+  port: 4012
+
+pso-1:
+  hostname: localhost
+  port: 4016
+
+# Node table
+
+nodetable:
+  servers:  [ node-1 ]
+
+node-1:
+  name:       "ServerNode1"
+  hostname:   localhost
+  port:       4011
+  data:       "N1"

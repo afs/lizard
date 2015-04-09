@@ -26,9 +26,7 @@ import com.hp.hpl.jena.query.ReadWrite ;
 
 import conf2.build.LzDeploy ;
 import conf2.conf.* ;
-
 import org.apache.jena.atlas.io.IO ;
-import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.logging.LogCtl ;
 import org.apache.jena.fuseki.server.FusekiServer ;
 import org.apache.jena.fuseki.server.ServerInitialConfig ;
@@ -78,32 +76,6 @@ public class LzConf {
         System.exit(0) ;
     }        
 
-    // Setup for development : one of each, all one JVM; one local zookeeper.
-    public static ConfCluster setup1() {
-        int zkPort = 2188 ;
-
-        // Dataset
-        ConfNodeTable confNT = new ConfNodeTable(1, 1) ;
-        ConfIndex posIdx =  new ConfIndex(new ColumnMap("SPO", "POS"), "POS", 1, 1) ;
-        ConfIndex psoIdx =  new ConfIndex(new ColumnMap("SPO", "PSO"), "PSO", 1, 1) ;
-        ConfDataset confDatabase = new ConfDataset(confNT, posIdx, psoIdx) ;
-        
-        // Shards
-        ConfIndexElement posIdx1 = new ConfIndexElement(posIdx.indexOrder+"-1", posIdx, NetAddr.create("localhost", 2010)) ;
-        ConfIndexElement psoIdx1 = new ConfIndexElement(psoIdx.indexOrder+"-1", psoIdx, NetAddr.create("localhost", 2012)) ;
-        ConfNodeTableElement nt1 = new ConfNodeTableElement("Nodes-1", confNT, NetAddr.create("localhost", 2014)) ;
-
-        // The zookeeper server.
-        ConfZookeeper confZookeeper = ConfZookeeper.create(zkPort, null) ;
-
-        // Cluster
-        ConfCluster confCluster = new ConfCluster(confDatabase) ;
-        confCluster.zkServer.add(confZookeeper) ;
-        confCluster.addIndexElements(posIdx1, psoIdx1) ;
-        confCluster.addNodeElements(nt1) ;
-        return confCluster ;
-    }
-    
     public static void mainYAML(String[] args) throws Exception {
         InputStream inYaml = IO.openFile("data.yaml") ;
         
