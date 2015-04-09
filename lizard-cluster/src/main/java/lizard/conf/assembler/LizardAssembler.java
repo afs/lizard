@@ -58,16 +58,6 @@ public class LizardAssembler extends DatasetAssembler {
         // two versions: in-line RDF (old style) or YAML configuration (new style).
         
         Lizard.init(); 
-        
-        Property property = root.getModel().createProperty("urn:lizard:", "configuration") ;
-        
-        
-        if ( root.hasProperty(property) ) {
-            String confFile  = root.getProperty(property).getString() ;
-            System.err.println("Configuration file: "+confFile) ;
-        }
-        
-        
         LzDataset lz = ConfigLizardDataset.buildDataset(root) ;
         lz.start();
         log.warn("** In-memory journal") ;
