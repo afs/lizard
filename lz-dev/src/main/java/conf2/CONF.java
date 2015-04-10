@@ -18,7 +18,9 @@
 package conf2;
 
 
+
 public class CONF {
+    
     // Delete:
     // lizard-cluster:lizard.conf.*
     

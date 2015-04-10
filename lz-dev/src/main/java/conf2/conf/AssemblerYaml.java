@@ -19,6 +19,7 @@ package conf2.conf;
 
 import lizard.query.LizardQuery ;
 import lizard.sys.Lizard ;
+
 import org.apache.jena.atlas.lib.FileOps ;
 
 import com.hp.hpl.jena.assembler.Assembler ;
@@ -29,9 +30,9 @@ import com.hp.hpl.jena.rdf.model.Property ;
 import com.hp.hpl.jena.rdf.model.Resource ;
 import com.hp.hpl.jena.sparql.core.assembler.DatasetAssembler ;
 
-import conf2.LzConfParserYAML ;
 import conf2.LzConfigDefault ;
 import conf2.build.LzDeploy ;
+import conf2.parsers.LzConfParserYAML ;
 
 public class AssemblerYaml extends DatasetAssembler {
     @Override

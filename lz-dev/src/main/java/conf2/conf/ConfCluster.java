@@ -22,7 +22,7 @@ import java.util.ArrayList ;
 import java.util.Collections ;
 import java.util.List ;
 
-import conf2.LzConfParserYAML ;
+import conf2.parsers.LzConfParserYAML ;
 
 import org.apache.jena.atlas.io.IndentedWriter ;
 

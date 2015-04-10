@@ -15,15 +15,13 @@
  *  information regarding copyright ownership.
  */
 
-package conf2;
+package conf2.parsers;
 
-import java.util.HashMap ;
-import java.util.LinkedHashMap ;
-import java.util.List ;
-import java.util.Map ;
+import java.util.* ;
 import java.util.concurrent.atomic.AtomicInteger ;
 
 import lizard.conf.Config ;
+import lizard.conf.dataset.LzDatasetDesc ;
 import lizard.system.LizardException ;
 import migrate.Q ;
 
@@ -32,6 +30,7 @@ import com.hp.hpl.jena.rdf.model.Model ;
 import com.hp.hpl.jena.rdf.model.Resource ;
 import com.hp.hpl.jena.tdb.sys.Names ;
 
+import conf2.LzConfigurationException ;
 import conf2.conf.* ;
 
 import org.apache.jena.atlas.lib.StrUtils ;
@@ -49,23 +48,20 @@ public class LzConfParserRDF {
         
         ConfCluster confCluster = new ConfCluster(new ConfDataset(null));
         
-        // Zookeeper
-        
-        // Index.
+        // File root
         // @@
         
+        // Zookeeper
+        // @@Fake
+        ConfZookeeper confZookeeper = ConfZookeeper.create(2188, null) ;
+        confCluster.zkServer.add(confZookeeper) ;
+
+        // Index and nodetable.
         indexServers(model, confCluster) ;
         nodeServers(model, confCluster) ;
-
         
         // Dataset
-        
-        // Index
-        
-        
-        
-        // Nodes
-        
+        LzDatasetDesc ldd = dataset(model, confCluster) ;
         return confCluster ;
     }
     
@@ -78,6 +74,53 @@ public class LzConfParserRDF {
     private static void indexServers(Model model, ConfCluster confCluster) {
         Map<Resource, DataServer> servers = dataServers(model, ":IndexServer") ;
         Map<Resource, ConfIndex> indexes = findIndexServices(model, confCluster, servers) ;
+    }
+    
+    private static LzDatasetDesc dataset(Model model, ConfCluster confCluster) {
+        Map<Resource, LzDatasetDesc> datasets = datasets(model) ;
+        if ( datasets.size() == 0 )
+            return null ;
+        if ( datasets.size() > 1 )
+            throw new LizardException("Multiple dataset descriptions") ;
+        Optional<LzDatasetDesc> ldd = datasets.values().stream().findFirst() ;
+        return ldd.get() ; 
+    }
+
+    /** Extract all dataset declarations (often and normally, one) */
+    private static Map<Resource, LzDatasetDesc> datasets(Model model) {
+        String qsDatasets = StrUtils.strjoinNL(Config.prefixes,
+                                               "SELECT * {",
+                                               // lizard: <urn:lizard:ns#>
+                                               " ?lz a lizard:Dataset ;",
+                                               "    OPTIONAL { ?lz :name      ?name }",
+                                               "    OPTIONAL { ?lz :indexes   ?indexes }",
+                                               "    OPTIONAL { ?lz :nodetable ?nodes }",
+                                               "}") ;
+        
+        Map<Resource, LzDatasetDesc> datasets = new HashMap<>() ;
+        for ( QuerySolution row : Q.queryToList(model, qsDatasets) ) {
+            Resource lz = row.getResource("lz") ;
+            if ( datasets.containsKey(lz) )
+                throw new LizardException("Multiple rows about "+lz) ;
+            String name = Q.getStringOrNull(row, "name") ;
+            if ( name == null ) {
+                if ( lz.isAnon() )
+                    name = "ds-"+(datasets.size()+1) ;
+                else 
+                    name = lz.getLocalName() ;
+            }
+            List<Resource> indexes = Q.getListResourceOrNull(row, "indexes") ;
+            if ( indexes == null )
+                throw new LizardException("No :indexes in lizard:Dataset description") ;
+            List<Resource> nodes = Q.getListResourceOrNull(row, "nodes") ;
+            if ( nodes == null )
+                throw new LizardException("No :nodes in lizard:Dataset description") ;
+            
+            LzDatasetDesc desc = new LzDatasetDesc(lz, name, indexes, nodes) ;
+            datasets.put(lz, desc) ;
+        }
+        
+        return datasets ;
     }
     
     private static Map<Resource, ConfIndex> findIndexServices(Model m, ConfCluster confCluster, Map<Resource, DataServer> servers) {
@@ -127,6 +170,7 @@ public class LzConfParserRDF {
                 ConfIndexElement idx = new ConfIndexElement(ds.name, /*confIndex.indexOrder+"-"+i,*/ ds.data, confIndex, ds.addr) ;
                 confCluster.eltsIndex.add(idx) ;
             });
+            confCluster.dataset.indexes.add(confIndex) ;
             svcs.put(svc, confIndex) ;
         }
         return svcs ; 
@@ -141,6 +185,7 @@ public class LzConfParserRDF {
                                                    "}") ;
         Map<Resource, ConfNodeTable> svcs = new LinkedHashMap<>() ;
         for ( QuerySolution row : Q.queryToList(model, qsNodeServices) ) {
+            //@@ Check one nodetable.
             Resource svc = row.getResource("svc") ;
             if ( svcs.containsKey(svc) )
                 throw new LizardException("Malform declaration for: "+svc) ;
@@ -166,7 +211,7 @@ public class LzConfParserRDF {
                 ConfNodeTableElement nt  = new ConfNodeTableElement(ds.name, ds.data, confNode, ds.addr) ;
                 confCluster.eltsNodeTable.add(nt) ;
             });
-
+            confCluster.dataset.nodeTable = confNode ;
             svcs.put(svc, confNode) ;
         }
         return svcs ; 
@@ -175,7 +220,7 @@ public class LzConfParserRDF {
 
     /** Extract all data servers */
     private static Map<Resource, DataServer> dataServers(Model model, String resourceType) {
-        String qs = StrUtils.strjoinNL(ConfigLib2.prefixes,
+        String qs = StrUtils.strjoinNL(prefixes,
                                        "SELECT * {",
                                        " ?nServer a "+resourceType ,
                                        "    OPTIONAL { ?nServer :name     ?name }",

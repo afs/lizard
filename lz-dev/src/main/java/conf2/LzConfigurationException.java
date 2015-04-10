@@ -19,7 +19,7 @@ package conf2;
 
 import lizard.system.LizardException ;
 
-class LzConfigurationException extends LizardException {
+public class LzConfigurationException extends LizardException {
     public LzConfigurationException(String msg, Throwable cause)    { super(msg, cause) ; }
     public LzConfigurationException(String msg)                     { super(msg) ; }
     public LzConfigurationException(Throwable cause)                { super(cause) ; }

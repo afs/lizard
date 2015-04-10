@@ -15,7 +15,7 @@
  *  information regarding copyright ownership.
  */
 
-package conf2;
+package conf2.parsers;
 
 import java.io.InputStream ;
 import java.util.List ;
@@ -23,6 +23,8 @@ import java.util.Objects ;
 
 import com.hp.hpl.jena.tdb.sys.Names ;
 
+import conf2.LzConfigurationException ;
+import conf2.YAML ;
 import conf2.conf.* ;
 
 import org.apache.jena.atlas.io.IO ;
@@ -82,7 +84,8 @@ public class LzConfParserYAML {
         Object x = YAML.get(root, nodes) ;
         parseNodeTable(conf, x, root);
         
-        // // The zookeeper server.
+        // The zookeeper server.
+        // @@
         ConfZookeeper confZookeeper = ConfZookeeper.create(2188, null) ;
         conf.zkServer.add(confZookeeper) ;
         return conf ;

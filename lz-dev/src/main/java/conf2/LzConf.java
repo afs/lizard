@@ -29,6 +29,8 @@ import com.hp.hpl.jena.rdf.model.Model ;
 import conf2.build.LzDeploy ;
 import conf2.conf.ConfCluster ;
 import conf2.conf.NetHost ;
+import conf2.parsers.LzConfParserRDF ;
+import conf2.parsers.LzConfParserYAML ;
 
 import org.apache.jena.atlas.io.IO ;
 import org.apache.jena.atlas.logging.LogCtl ;
@@ -46,30 +48,34 @@ public class LzConf {
     }
     
     public static void main(String[] args) throws Exception {
-        {
+        ConfCluster conf = null ;
+        
+        if ( true ) {
             String dir = "setup-simple" ;
             Model model = Q.readAll
                 (dir+"/conf-dataset.ttl"
-                 ,dir+"/conf-index.ttl"
-                 ,dir+"/conf-node.ttl"
+                ,dir+"/conf-index.ttl"
+                ,dir+"/conf-node.ttl"
                     ) ;
 
-            ConfCluster conf =  LzConfParserRDF.parseConfFile(model) ;
-            System.out.println(conf) ;
-
-
-            System.out.println("DONE");
-            System.exit(0) ;
+            conf =  LzConfParserRDF.parseConfFile(model) ;
         }
-        ConfCluster conf = LzConfParserYAML.parseConfFile("config-dev.yaml") ;
+        if ( false ) {
+            conf = LzConfParserYAML.parseConfFile("config-dev.yaml") ;
+        }
+
+        if ( false )
+            conf = LzConfigDefault.setup_mem_local() ;
         
-//        System.out.println(conf) ;
+        if ( conf == null ) 
+            System.err.println("No configuration") ;
+        
+        
+        System.out.println(conf) ;
 //        System.exit(0) ;
         
-        //{ mainYAML(args) ; System.exit(0) ; }
         // The deployment "here".
         NetHost here = NetHost.create("localhost") ;
-        //ConfCluster conf = LzConfigDefault.setup_mem_local() ;
         
         Dataset ds = LzDeploy.deploy(conf, here);
         // Specialized assembler.
