@@ -60,6 +60,6 @@ node-2:
   name:       "ServerNode2"
   hostname:   localhost
   port:       4013
-  data:       N2
+  data:       "N2"
 ## ---
 ## # Deployment part.

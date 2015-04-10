@@ -29,12 +29,16 @@ index-pso:
 
 #Index shards
 pos-1:
-  hostname: localhost
-  port: 4012
+  hostname:   localhost
+  port:       4012
+  name:       "ServerPOS"
+  data:       "data1/pos"
 
 pso-1:
-  hostname: localhost
-  port: 4016
+  hostname:   localhost
+  port:       4016  
+  name:       "ServerPSO"
+  data:       "data1/pso"
 
 # Node table
 
@@ -45,4 +49,4 @@ node-1:
   name:       "ServerNode1"
   hostname:   localhost
   port:       4011
-  data:       "N1"
+  data:       "data1/Nodes"
