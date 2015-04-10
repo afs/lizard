@@ -29,7 +29,7 @@ import com.hp.hpl.jena.rdf.model.Property ;
 import com.hp.hpl.jena.rdf.model.Resource ;
 import com.hp.hpl.jena.sparql.core.assembler.DatasetAssembler ;
 
-import conf2.LzConfParser ;
+import conf2.LzConfParserYAML ;
 import conf2.LzConfigDefault ;
 import conf2.build.LzDeploy ;
 
@@ -64,7 +64,7 @@ public class AssemblerYaml extends DatasetAssembler {
         
         ConfCluster conf = 
             confFile.isEmpty() ? LzConfigDefault.setup_mem_local() 
-                               : LzConfParser.parseConfFile(confFile) ;
+                               : LzConfParserYAML.parseConfFile(confFile) ;
         NetHost here = NetHost.create("localhost") ;
         Dataset ds = LzDeploy.deploy(conf, here);
         return ds ;

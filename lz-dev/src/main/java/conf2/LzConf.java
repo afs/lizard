@@ -20,16 +20,18 @@ package conf2;
 import java.io.InputStream ;
 
 import lizard.system.LizardException ;
+import migrate.Q ;
 
 import com.hp.hpl.jena.query.Dataset ;
 import com.hp.hpl.jena.query.ReadWrite ;
+import com.hp.hpl.jena.rdf.model.Model ;
 
 import conf2.build.LzDeploy ;
-import conf2.conf.* ;
+import conf2.conf.ConfCluster ;
+import conf2.conf.NetHost ;
+
 import org.apache.jena.atlas.io.IO ;
 import org.apache.jena.atlas.logging.LogCtl ;
-import org.apache.jena.fuseki.server.FusekiServer ;
-import org.apache.jena.fuseki.server.ServerInitialConfig ;
 import org.apache.jena.riot.RDFDataMgr ;
 import org.yaml.snakeyaml.Yaml ;
 
@@ -44,7 +46,22 @@ public class LzConf {
     }
     
     public static void main(String[] args) throws Exception {
-        ConfCluster conf = LzConfParser.parseConfFile("config-dev.yaml") ;
+        {
+            String dir = "setup-simple" ;
+            Model model = Q.readAll
+                (dir+"/conf-dataset.ttl"
+                 ,dir+"/conf-index.ttl"
+                 ,dir+"/conf-node.ttl"
+                    ) ;
+
+            ConfCluster conf =  LzConfParserRDF.parseConfFile(model) ;
+            System.out.println(conf) ;
+
+
+            System.out.println("DONE");
+            System.exit(0) ;
+        }
+        ConfCluster conf = LzConfParserYAML.parseConfFile("config-dev.yaml") ;
         
 //        System.out.println(conf) ;
 //        System.exit(0) ;
@@ -52,7 +69,7 @@ public class LzConf {
         //{ mainYAML(args) ; System.exit(0) ; }
         // The deployment "here".
         NetHost here = NetHost.create("localhost") ;
-//        ConfCluster conf = setup1() ;
+        //ConfCluster conf = LzConfigDefault.setup_mem_local() ;
         
         Dataset ds = LzDeploy.deploy(conf, here);
         // Specialized assembler.

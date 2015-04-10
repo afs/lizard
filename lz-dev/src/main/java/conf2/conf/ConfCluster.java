@@ -22,7 +22,7 @@ import java.util.ArrayList ;
 import java.util.Collections ;
 import java.util.List ;
 
-import conf2.LzConfParser ;
+import conf2.LzConfParserYAML ;
 
 import org.apache.jena.atlas.io.IndentedWriter ;
 
@@ -57,19 +57,19 @@ public class ConfCluster {
 
     public void print(IndentedWriter out) {
         // YAMP.printfield
-        out.print(LzConfParser.objCluster) ;
+        out.print(LzConfParserYAML.objCluster) ;
         out.println(":") ;
        
         if ( fileroot != null ) {
             out.incIndent();
-            out.print(LzConfParser.fFileroot) ;
+            out.print(LzConfParserYAML.fFileroot) ;
             out.print(":") ;
             out.println(fileroot) ;
             out.decIndent();
         }
         
         out.incIndent();
-        out.print(LzConfParser.fZookeeper.substring(1));
+        out.print(LzConfParserYAML.fZookeeper.substring(1));
         out.print(": ") ;
         out.print("[ ") ;
         zkServer.stream().forEach(zk -> { zk.print(out); out.print(", "); }) ;
@@ -77,7 +77,7 @@ public class ConfCluster {
         out.decIndent();
         out.println() ;
         
-        out.print(LzConfParser.objDataset);
+        out.print(LzConfParserYAML.objDataset);
         out.println(":") ;
         out.incIndent();
         out.print("indexes: [") ;

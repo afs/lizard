@@ -22,12 +22,13 @@ public class CONF {
     // Delete:
     // lizard-cluster:lizard.conf.*
     
+    // Robust parsing of YAML/RDF configurations.
+    
     // Careful logging: info and debug:private static Logger logConf = Config.logConf ;
     
     // Component naming:
     // location/Index/...
     // location/Nodes/...
-    // Server names -> file areas "data:"
     
     // Lz2BuildZk : one local zookeeper - currently ignoring configuration details 
     // Many front end query servers.

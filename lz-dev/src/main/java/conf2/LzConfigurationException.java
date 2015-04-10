@@ -15,10 +15,13 @@
  *  information regarding copyright ownership.
  */
 
-package conf2.conf;
+package conf2;
 
-public class ConfIndexElement extends ConfElement<ConfIndex> {
-    public ConfIndexElement(String name, String data, ConfIndex index, NetAddr netAddr) {
-        super(name, data, index, netAddr) ;
-    }
+import lizard.system.LizardException ;
+
+class LzConfigurationException extends LizardException {
+    public LzConfigurationException(String msg, Throwable cause)    { super(msg, cause) ; }
+    public LzConfigurationException(String msg)                     { super(msg) ; }
+    public LzConfigurationException(Throwable cause)                { super(cause) ; }
+    public LzConfigurationException()                               { super() ; }
 }

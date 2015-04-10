@@ -18,7 +18,7 @@
 package conf2.conf;
 
 public class ConfNodeTableElement extends ConfElement<ConfNodeTable> {
-    public ConfNodeTableElement(String name, ConfNodeTable nodetable, NetAddr netAddr) {
-        super(name, nodetable, netAddr) ;
+    public ConfNodeTableElement(String name, String data, ConfNodeTable nodetable, NetAddr netAddr) {
+        super(name, data, nodetable, netAddr) ;
     }
 }

@@ -41,10 +41,9 @@ public class LzDeploy {
         else
             baseLocation = Location.create(confCluster.fileroot) ; 
             
-        Location locationDataServers = baseLocation.getSubLocation("data") ;
         Platform platform = new Platform() ;
-        Lz2BuilderNodeServer.build(platform, locationDataServers, confCluster, here); 
-        Lz2BuilderIndexServer.build(platform, locationDataServers, confCluster, here);
+        Lz2BuilderNodeServer.build(platform, baseLocation, confCluster, here); 
+        Lz2BuilderIndexServer.build(platform, baseLocation, confCluster, here);
         platform.start(); 
 
         Dataset ds = null ;

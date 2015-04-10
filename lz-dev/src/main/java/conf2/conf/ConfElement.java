@@ -19,10 +19,12 @@ package conf2.conf;
 
 public class ConfElement<X> {
     public final String name ;
+    public final String data ;
     public final X conf ;
     public final NetAddr netAddr ; 
-    public ConfElement(String name, X conf, NetAddr netAddr) {
+    public ConfElement(String name, String data, X conf, NetAddr netAddr) {
         this.name = name ;
+        this.data = data ;
         this.conf = conf ;
         this.netAddr = netAddr ;
     }

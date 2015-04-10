@@ -21,8 +21,6 @@ import java.io.InputStream ;
 import java.util.List ;
 import java.util.Objects ;
 
-import lizard.system.LizardException ;
-
 import com.hp.hpl.jena.tdb.sys.Names ;
 
 import conf2.conf.* ;
@@ -31,14 +29,8 @@ import org.apache.jena.atlas.io.IO ;
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.yaml.snakeyaml.Yaml ;
 
-public class LzConfParser {
-    static class LzConfigurationException extends LizardException {
-        public LzConfigurationException(String msg, Throwable cause)    { super(msg, cause) ; }
-        public LzConfigurationException(String msg)                     { super(msg) ; }
-        public LzConfigurationException(Throwable cause)                { super(cause) ; }
-        public LzConfigurationException()                               { super() ; }
-    }
-    
+/** Parser for thr YAML-based format */ 
+public class LzConfParserYAML {
     public static final String objDataset   = "dataset" ;
     public static final String objSparql    = "sparql" ;
     public static final String objCluster   = "cluster" ;
@@ -52,6 +44,7 @@ public class LzConfParser {
     public static final String fName        = ".name" ;
     public static final String fHostname    = ".hostname" ;
     public static final String fPort        = ".port" ;
+    public static final String fData        = ".data" ;
     
     @SuppressWarnings("unchecked")
     public static ConfCluster parseConfFile(String filename) {
@@ -81,7 +74,6 @@ public class LzConfParser {
         String nodes = (String)YAML.get(dataset, fNodes) ;      // name = "nodetable"
         if ( ! Objects.equals(nodes, objNodeTable) )
             throw new LzConfigurationException("Node table not called '"+objNodeTable+"'") ;
-        
         
         for ( Object idx : indexes) {
             Object x = YAML.get(root, (String)idx) ;
@@ -117,7 +109,8 @@ public class LzConfParser {
             // @@ YAML.indirect
             server = YAML.get(root, (String)server);
             NetAddr addr = shard(server) ;
-            ConfIndexElement idx = new ConfIndexElement(confIndex.indexOrder+"-"+(i+1), confIndex, addr) ;
+            String data = (String)YAML.get(server, fData);
+            ConfIndexElement idx = new ConfIndexElement(confIndex.indexOrder+"-"+(i+1), data, confIndex, addr) ;
             confCluster.eltsIndex.add(idx) ;
         }
         
@@ -134,7 +127,8 @@ public class LzConfParser {
             Object server = servers.get(i) ;
             server = YAML.get(root, (String)server);
             NetAddr addr = shard(server) ;
-            ConfNodeTableElement elt = new ConfNodeTableElement("Nodes-"+(i+1), confNT, addr) ;
+            String data = (String)YAML.get(server, fData);
+            ConfNodeTableElement elt = new ConfNodeTableElement("Nodes-"+(i+1), data, confNT, addr) ;
             confCluster.eltsNodeTable.add(elt) ;
         }
         confCluster.dataset.nodeTable = confNT ;
@@ -145,13 +139,4 @@ public class LzConfParser {
         int port = (Integer)YAML.get(shard, fPort) ;
         return NetAddr.create(host, port) ;  
     }
-    
-    
-//    public static Platform build(ConfDeploy deployment) {
-//        Platform platform = new Platform() ;
-//        //platform.add(null);
-//        
-//        return platform ;
-//    }
-    
 }

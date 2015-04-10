@@ -44,9 +44,10 @@ public class Lz2BuilderIndexServer {
     }
 
     private static TServerIndex buildIndexServer(Platform platform, Location location, ConfIndexElement x) {
-        Location loc = location.getSubLocation(x.name) ;
+        Location loc = location.getSubLocation(x.data) ;
         int port = x.netAddr.port ;
-        FmtLog.info(logConf, "buildIndexServer: %s %s", port, loc) ;
+        String data = x.data ; 
+        FmtLog.info(logConf, "buildIndexServer[%s]: %s %s", data, port, loc) ;
         TupleIndex tupleIndex = LzBuildDBOE.createTupleIndex(A.convert(loc), x.conf.indexOrder, x.name) ;  
         TServerIndex serverindex = TServerIndex.create(port, tupleIndex) ;
         platform.add(serverindex) ;
