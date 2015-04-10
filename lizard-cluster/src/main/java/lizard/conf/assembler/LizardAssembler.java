@@ -27,7 +27,6 @@ import com.hp.hpl.jena.assembler.Assembler ;
 import com.hp.hpl.jena.assembler.Mode ;
 import com.hp.hpl.jena.query.Dataset ;
 import com.hp.hpl.jena.query.DatasetFactory ;
-import com.hp.hpl.jena.rdf.model.Property ;
 import com.hp.hpl.jena.rdf.model.Resource ;
 import com.hp.hpl.jena.sparql.core.DatasetGraph ;
 import com.hp.hpl.jena.sparql.core.assembler.AssemblerUtils ;
@@ -39,6 +38,7 @@ import org.slf4j.LoggerFactory ;
 
 /** Create a Lizard dataset */
 public class LizardAssembler extends DatasetAssembler {
+    // RDF version
     private static Logger log = LoggerFactory.getLogger(LizardAssembler.class) ;
     
     @Override
@@ -55,8 +55,6 @@ public class LizardAssembler extends DatasetAssembler {
 
     
     static Dataset make(Resource root) {
-        // two versions: in-line RDF (old style) or YAML configuration (new style).
-        
         Lizard.init(); 
         LzDataset lz = ConfigLizardDataset.buildDataset(root) ;
         lz.start();
