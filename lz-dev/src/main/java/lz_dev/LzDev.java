@@ -50,6 +50,7 @@ import org.slf4j.LoggerFactory ;
 
 import com.hp.hpl.jena.query.* ;
 import com.hp.hpl.jena.rdf.model.Model ;
+import com.hp.hpl.jena.rdf.model.ModelFactory ;
 import com.hp.hpl.jena.sparql.util.QueryExecUtils ;
 
 public class LzDev {
@@ -70,6 +71,11 @@ public class LzDev {
     static int counter = 0 ;
 
     public static void main(String[] args) {
+        Model m = ModelFactory.createDefaultModel() ;
+        System.out.println(m.createResource("http://example/foo"));
+    }
+    
+    public static void main1(String[] args) {
         FileOps.clearAll("DB");
         
         try { main$(args) ; }

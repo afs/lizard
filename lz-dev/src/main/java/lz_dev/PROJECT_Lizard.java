@@ -25,9 +25,26 @@ public class PROJECT_Lizard {
     // B - Batching updates (and flow reversal)
     // C - Block allocate txn ids but still need the lock.
     
+    // ---- Configuration
+    // Robust parsing of YAML/RDF configurations.
+    // Delete! conf1 :: lizard-cluster:lizard.conf.*
+    // Component naming:
+    // location/Index/...
+    // location/Nodes/...
+    
+    // Lz2BuildZk : one local zookeeper - currently ignoring configuration details 
+    // Many front end query servers.
+    // Many Zookeepers
+    
+    // Location = disk.
+    //  Journals for NT and IDX shards
+    
+    // Fuseki integration
+    // ---- Configuration
+    
     // Batching in loads.
     //   add - find/flush - end|commit/flush
-    // Caching nodes info - cache needs to drop back on abort/
+    // **** Caching nodes info - cache needs to drop back on abort.
     
     // Check/get LZ_* commands working.
     // LZ_Deploy + s-put.
