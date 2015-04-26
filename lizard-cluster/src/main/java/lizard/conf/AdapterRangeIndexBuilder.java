@@ -24,11 +24,11 @@ import org.seaborne.dboe.base.record.RecordFactory ;
 import org.seaborne.dboe.index.IndexConst ;
 import org.seaborne.dboe.index.RangeIndex ;
 
-class AdapterRangeIndexBuilder implements com.hp.hpl.jena.tdb.index.RangeIndexBuilder {
+class AdapterRangeIndexBuilder implements org.apache.jena.tdb.index.RangeIndexBuilder {
     @Override
-    public com.hp.hpl.jena.tdb.index.RangeIndex buildRangeIndex(com.hp.hpl.jena.tdb.base.file.FileSet fileSet, 
-                                                                com.hp.hpl.jena.tdb.base.record.RecordFactory recordfactory, 
-                                                                com.hp.hpl.jena.tdb.index.IndexParams indexParams) {
+    public org.apache.jena.tdb.index.RangeIndex buildRangeIndex(org.apache.jena.tdb.base.file.FileSet fileSet, 
+                                                                org.apache.jena.tdb.base.record.RecordFactory recordfactory, 
+                                                                org.apache.jena.tdb.index.IndexParams indexParams) {
         FileSet fs = A.convert(fileSet) ;
         RecordFactory rf = new RecordFactory(recordfactory.keyLength(), recordfactory.valueLength()) ;
         // Override with defaults.

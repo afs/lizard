@@ -17,7 +17,7 @@
 
 package lizard.system;
 
-import com.hp.hpl.jena.query.ReadWrite ;
+import org.apache.jena.query.ReadWrite ;
 
 /** Client-facing component transaction interface */
 public interface ComponentTxn {

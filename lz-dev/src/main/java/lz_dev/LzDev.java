@@ -48,10 +48,10 @@ import org.seaborne.dboe.migrate.L ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
-import com.hp.hpl.jena.query.* ;
-import com.hp.hpl.jena.rdf.model.Model ;
-import com.hp.hpl.jena.rdf.model.ModelFactory ;
-import com.hp.hpl.jena.sparql.util.QueryExecUtils ;
+import org.apache.jena.query.* ;
+import org.apache.jena.rdf.model.Model ;
+import org.apache.jena.rdf.model.ModelFactory ;
+import org.apache.jena.sparql.util.QueryExecUtils ;
 
 public class LzDev {
     static { LogCtl.setLog4j(); } 

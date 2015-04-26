@@ -21,7 +21,7 @@ import lizard.cluster.Cluster ;
 import lizard.cluster.Platform ;
 import lizard.query.LzDataset ;
 
-import com.hp.hpl.jena.query.Dataset ;
+import org.apache.jena.query.Dataset ;
 
 import conf2.conf.ConfCluster ;
 import conf2.conf.NetHost ;

@@ -24,7 +24,7 @@ import java.util.List ;
 import org.apache.jena.atlas.lib.Tuple ;
 import org.seaborne.dboe.engine.access.AccessorBase ;
 
-import com.hp.hpl.jena.tdb.store.NodeId ;
+import org.apache.jena.tdb.store.NodeId ;
 
 /** Needed? Replace ClusterTupleIndex? */
 public class ClusterAccessor extends AccessorBase<NodeId> // implements Accessor<NodeId>

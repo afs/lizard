@@ -21,7 +21,7 @@ import java.util.List ;
 
 import org.apache.jena.atlas.lib.Tuple ;
 
-import com.hp.hpl.jena.tdb.store.NodeId ;
+import org.apache.jena.tdb.store.NodeId ;
 
 /** Policy for the placement of triples (and for finding them). */
 public interface DistributorTupleIndex {

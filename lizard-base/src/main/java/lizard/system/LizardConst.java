@@ -20,7 +20,7 @@ package lizard.system;
 
 import java.util.UUID ;
 
-import com.hp.hpl.jena.shared.uuid.JenaUUID ;
+import org.apache.jena.shared.uuid.JenaUUID ;
 
 public class LizardConst {
     public static UUID uuidNil = JenaUUID.nil().asUUID() ;

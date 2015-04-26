@@ -29,9 +29,9 @@ import org.apache.jena.atlas.logging.FmtLog ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
-import com.hp.hpl.jena.tdb.store.NodeId ;
-import com.hp.hpl.jena.tdb.store.tupletable.TupleIndex ;
-import com.hp.hpl.jena.tdb.store.tupletable.TupleIndexBase ;
+import org.apache.jena.tdb.store.NodeId ;
+import org.apache.jena.tdb.store.tupletable.TupleIndex ;
+import org.apache.jena.tdb.store.tupletable.TupleIndexBase ;
 
 /**
  * A {@link TupleIndex} that deals with the cluster

@@ -33,7 +33,7 @@ import lizard.comms.thrift.ThriftClient ;
 import lizard.system.ComponentTxn ;
 import lizard.system.Pingable ;
 
-import com.hp.hpl.jena.tdb.store.NodeId ;
+import org.apache.jena.tdb.store.NodeId ;
 
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.Tuple ;

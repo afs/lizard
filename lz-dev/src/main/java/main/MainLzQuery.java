@@ -24,7 +24,7 @@ import migrate.Q ;
 
 import org.apache.jena.atlas.logging.LogCtl ;
 
-import com.hp.hpl.jena.rdf.model.Model ;
+import org.apache.jena.rdf.model.Model ;
 
 /** Run a query against a deployed set of servers */
 public class MainLzQuery {

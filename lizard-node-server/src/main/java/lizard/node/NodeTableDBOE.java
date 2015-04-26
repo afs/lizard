@@ -17,23 +17,23 @@
 
 package lizard.node;
 
-import com.hp.hpl.jena.tdb.store.nodetable.NodeTableNative ;
+import org.apache.jena.tdb.store.nodetable.NodeTableNative ;
 
 /** Version of NodeTableNative that exposes the index and object file. */
 public class NodeTableDBOE extends NodeTableNative {
-    public NodeTableDBOE(com.hp.hpl.jena.tdb.index.Index nodeToId, com.hp.hpl.jena.tdb.base.objectfile.ObjectFile objectFile) {
+    public NodeTableDBOE(org.apache.jena.tdb.index.Index nodeToId, org.apache.jena.tdb.base.objectfile.ObjectFile objectFile) {
         super(nodeToId, objectFile) ;
     }
 
-    public com.hp.hpl.jena.tdb.index.Index getIndex() {
+    public org.apache.jena.tdb.index.Index getIndex() {
         return super.nodeHashToId ;
     }
 
-    public com.hp.hpl.jena.tdb.base.objectfile.ObjectFile getObjectFile() {
+    public org.apache.jena.tdb.base.objectfile.ObjectFile getObjectFile() {
         return super.objects ;
     }
 
-    public void set(com.hp.hpl.jena.tdb.index.Index nodeToId, com.hp.hpl.jena.tdb.base.objectfile.ObjectFile objectFile) {
+    public void set(org.apache.jena.tdb.index.Index nodeToId, org.apache.jena.tdb.base.objectfile.ObjectFile objectFile) {
         super.init(nodeToId, objectFile) ;
     }
 }

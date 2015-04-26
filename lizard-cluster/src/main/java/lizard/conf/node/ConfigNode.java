@@ -34,13 +34,13 @@ import lizard.system.Component ;
 import lizard.system.LizardException ;
 import migrate.Q ;
 
-import com.hp.hpl.jena.query.QuerySolution ;
-import com.hp.hpl.jena.rdf.model.Model ;
-import com.hp.hpl.jena.rdf.model.Resource ;
-import com.hp.hpl.jena.tdb.base.file.Location ;
-import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
-import com.hp.hpl.jena.tdb.store.nodetable.NodeTableCache ;
-import com.hp.hpl.jena.tdb.store.nodetable.NodeTableInline ;
+import org.apache.jena.query.QuerySolution ;
+import org.apache.jena.rdf.model.Model ;
+import org.apache.jena.rdf.model.Resource ;
+import org.apache.jena.tdb.base.file.Location ;
+import org.apache.jena.tdb.store.nodetable.NodeTable ;
+import org.apache.jena.tdb.store.nodetable.NodeTableCache ;
+import org.apache.jena.tdb.store.nodetable.NodeTableInline ;
 
 import org.apache.jena.atlas.lib.StrUtils ;
 import org.apache.jena.atlas.logging.FmtLog ;

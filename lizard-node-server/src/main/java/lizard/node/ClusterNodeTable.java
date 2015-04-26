@@ -30,9 +30,9 @@ import org.apache.jena.atlas.logging.FmtLog ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
-import com.hp.hpl.jena.graph.Node ;
-import com.hp.hpl.jena.tdb.store.NodeId ;
-import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
+import org.apache.jena.graph.Node ;
+import org.apache.jena.tdb.store.NodeId ;
+import org.apache.jena.tdb.store.nodetable.NodeTable ;
 
 /** NodeTable of a cluster of client side of remote NodeTables */
 public class ClusterNodeTable implements NodeTable {

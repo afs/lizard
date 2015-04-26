@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicLong ;
 import lizard.api.TxnClient ;
 import lizard.conf.dataset.TransactionalComponentRemote.TxnRemoteState ;
 
-import com.hp.hpl.jena.query.ReadWrite ;
+import org.apache.jena.query.ReadWrite ;
 
 import org.seaborne.dboe.transaction.txn.ComponentId ;
 import org.seaborne.dboe.transaction.txn.TransactionalComponentLifecycle ;

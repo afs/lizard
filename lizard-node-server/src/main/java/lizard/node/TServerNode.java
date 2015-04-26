@@ -21,7 +21,7 @@ package lizard.node;
 import lizard.api.TLZ.TLZ_NodeTable ;
 import lizard.comms.thrift.ThriftServer ;
 
-import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
+import org.apache.jena.tdb.store.nodetable.NodeTable ;
 
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.thrift.protocol.TCompactProtocol ;

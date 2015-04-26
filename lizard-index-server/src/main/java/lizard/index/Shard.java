@@ -23,7 +23,7 @@ import org.apache.jena.atlas.lib.Tuple ;
 import com.google.common.hash.HashCode ;
 import com.google.common.hash.HashFunction ;
 import com.google.common.hash.Hashing ;
-import com.hp.hpl.jena.tdb.store.NodeId ;
+import org.apache.jena.tdb.store.NodeId ;
 
 public class Shard {
     // Copied from proto-lizard:DistributorTuplesBySubject

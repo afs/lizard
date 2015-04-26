@@ -19,7 +19,7 @@ package lizard.conf.dataset ;
 
 import java.util.List ;
 
-import com.hp.hpl.jena.rdf.model.Resource ;
+import org.apache.jena.rdf.model.Resource ;
 
 public class LzDatasetDesc {
     public final Resource          resource ;

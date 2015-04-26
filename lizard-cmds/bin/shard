@@ -56,7 +56,7 @@ do
     cp "$LOC_SRC/$X".* "$LOC_DEST"
 done
 
-CMD_IDX="com.hp.hpl.jena.tdb.store.bulkloader2.CmdIndexCopy"
+CMD_IDX="org.apache.jena.tdb.store.bulkloader2.CmdIndexCopy"
 echo "Rewrite POS to PSO : $LOC_SRC -> $LOC_DEST"
 java -cp "$CP" $CMD_IDX "$LOC_SRC" POS "$LOC_DEST" PSO
 

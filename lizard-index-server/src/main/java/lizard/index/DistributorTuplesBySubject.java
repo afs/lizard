@@ -29,7 +29,7 @@ import org.apache.jena.atlas.lib.MultiMapToList ;
 import org.apache.jena.atlas.lib.Tuple ;
 import org.apache.jena.atlas.logging.Log ;
 
-import com.hp.hpl.jena.tdb.store.NodeId ;
+import org.apache.jena.tdb.store.NodeId ;
 
 /** Policy for the placement of triples (and finding them) partition by subject. */
 

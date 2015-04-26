@@ -26,9 +26,9 @@ import org.apache.jena.atlas.iterator.Iter ;
 import org.apache.jena.atlas.iterator.Transform ;
 import org.apache.jena.atlas.lib.Pair ;
 
-import com.hp.hpl.jena.graph.Node ;
-import com.hp.hpl.jena.tdb.store.NodeId ;
-import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
+import org.apache.jena.graph.Node ;
+import org.apache.jena.tdb.store.NodeId ;
+import org.apache.jena.tdb.store.nodetable.NodeTable ;
 
 /** Simple implemention of a NodeTable to support testing and development */   
 public class SimpleNodeTable implements NodeTable {

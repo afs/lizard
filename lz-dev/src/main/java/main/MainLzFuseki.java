@@ -19,7 +19,7 @@ package main;
 
 import java.nio.file.Paths ;
 
-import com.hp.hpl.jena.rdf.model.Model ;
+import org.apache.jena.rdf.model.Model ;
 
 import lizard.cluster.Cluster ;
 import lizard.conf.Configuration ;

@@ -17,8 +17,8 @@
 
 package lizard.node;
 
-import static com.hp.hpl.jena.query.ReadWrite.READ ;
-import static com.hp.hpl.jena.query.ReadWrite.WRITE ;
+import static org.apache.jena.query.ReadWrite.READ ;
+import static org.apache.jena.query.ReadWrite.WRITE ;
 import lizard.adapters.AdapterObjectFile ;
 import lizard.adapters.AdapterRangeIndex ;
 import lizard.api.TxnHandler ;
@@ -26,12 +26,12 @@ import lizard.api.TLZ.TLZ_Node ;
 import lizard.api.TLZ.TLZ_NodeId ;
 import lizard.api.TLZ.TLZ_NodeTable ;
 
-import com.hp.hpl.jena.graph.Node ;
-import com.hp.hpl.jena.sparql.sse.SSE ;
-import com.hp.hpl.jena.tdb.store.NodeId ;
-import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
-import com.hp.hpl.jena.tdb.store.nodetable.NodeTableCache ;
-import com.hp.hpl.jena.tdb.store.nodetable.NodeTableWrapper ;
+import org.apache.jena.graph.Node ;
+import org.apache.jena.sparql.sse.SSE ;
+import org.apache.jena.tdb.store.NodeId ;
+import org.apache.jena.tdb.store.nodetable.NodeTable ;
+import org.apache.jena.tdb.store.nodetable.NodeTableCache ;
+import org.apache.jena.tdb.store.nodetable.NodeTableWrapper ;
 
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.riot.out.NodeFmtLib ;

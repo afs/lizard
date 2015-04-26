@@ -47,27 +47,27 @@ import org.seaborne.dboe.transaction.txn.TransactionalComponent ;
 import org.seaborne.dboe.transaction.txn.journal.Journal ;
 import org.slf4j.Logger ;
 
-import com.hp.hpl.jena.query.ARQ ;
-import com.hp.hpl.jena.query.Dataset ;
-import com.hp.hpl.jena.query.DatasetFactory ;
-import com.hp.hpl.jena.sparql.core.DatasetGraph ;
-import com.hp.hpl.jena.sparql.engine.main.QC ;
-import com.hp.hpl.jena.sparql.engine.optimizer.reorder.ReorderLib ;
-import com.hp.hpl.jena.tdb.base.file.FileSet ;
-import com.hp.hpl.jena.tdb.base.record.RecordFactory ;
-import com.hp.hpl.jena.tdb.index.* ;
-import com.hp.hpl.jena.tdb.setup.StoreParams ;
-import com.hp.hpl.jena.tdb.store.DatasetGraphTDB ;
-import com.hp.hpl.jena.tdb.store.DatasetPrefixesTDB ;
-import com.hp.hpl.jena.tdb.store.QuadTable ;
-import com.hp.hpl.jena.tdb.store.TripleTable ;
-import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
-import com.hp.hpl.jena.tdb.store.nodetable.NodeTableCache ;
-import com.hp.hpl.jena.tdb.store.nodetable.NodeTableInline ;
-import com.hp.hpl.jena.tdb.store.tupletable.TupleIndex ;
-import com.hp.hpl.jena.tdb.sys.DatasetControl ;
-import com.hp.hpl.jena.tdb.sys.DatasetControlMRSW ;
-import com.hp.hpl.jena.tdb.sys.Names ;
+import org.apache.jena.query.ARQ ;
+import org.apache.jena.query.Dataset ;
+import org.apache.jena.query.DatasetFactory ;
+import org.apache.jena.sparql.core.DatasetGraph ;
+import org.apache.jena.sparql.engine.main.QC ;
+import org.apache.jena.sparql.engine.optimizer.reorder.ReorderLib ;
+import org.apache.jena.tdb.base.file.FileSet ;
+import org.apache.jena.tdb.base.record.RecordFactory ;
+import org.apache.jena.tdb.index.* ;
+import org.apache.jena.tdb.setup.StoreParams ;
+import org.apache.jena.tdb.store.DatasetGraphTDB ;
+import org.apache.jena.tdb.store.DatasetPrefixesTDB ;
+import org.apache.jena.tdb.store.QuadTable ;
+import org.apache.jena.tdb.store.TripleTable ;
+import org.apache.jena.tdb.store.nodetable.NodeTable ;
+import org.apache.jena.tdb.store.nodetable.NodeTableCache ;
+import org.apache.jena.tdb.store.nodetable.NodeTableInline ;
+import org.apache.jena.tdb.store.tupletable.TupleIndex ;
+import org.apache.jena.tdb.sys.DatasetControl ;
+import org.apache.jena.tdb.sys.DatasetControlMRSW ;
+import org.apache.jena.tdb.sys.Names ;
 
 import conf2.conf.* ;
 
@@ -144,7 +144,7 @@ public class Lz2BuilderDataset {
     }
     
     private static DatasetGraphTDB createDataset(Location _location, TupleIndex[] tripleIndexes, NodeTable nodeTable) {
-        com.hp.hpl.jena.tdb.base.file.Location location = A.convert(_location) ;
+        org.apache.jena.tdb.base.file.Location location = A.convert(_location) ;
         DatasetControl policy = new DatasetControlMRSW() ;
         StoreParams params = StoreParams.getDftStoreParams() ;
         

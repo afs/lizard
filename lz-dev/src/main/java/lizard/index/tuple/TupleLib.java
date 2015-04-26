@@ -18,7 +18,7 @@
 
 package lizard.index.tuple;
 
-import static com.hp.hpl.jena.tdb.sys.SystemTDB.SizeOfLong;
+import static org.apache.jena.tdb.sys.SystemTDB.SizeOfLong;
 
 import java.util.Iterator;
 
@@ -32,14 +32,14 @@ import org.apache.jena.atlas.lib.Tuple ;
 
 
 
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.sparql.core.Quad;
-import com.hp.hpl.jena.tdb.TDBException;
-import com.hp.hpl.jena.tdb.base.record.Record;
-import com.hp.hpl.jena.tdb.base.record.RecordFactory;
-import com.hp.hpl.jena.tdb.store.NodeId;
-import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
+import org.apache.jena.graph.Node;
+import org.apache.jena.graph.Triple;
+import org.apache.jena.sparql.core.Quad;
+import org.apache.jena.tdb.TDBException;
+import org.apache.jena.tdb.base.record.Record;
+import org.apache.jena.tdb.base.record.RecordFactory;
+import org.apache.jena.tdb.store.NodeId;
+import org.apache.jena.tdb.store.nodetable.NodeTable ;
 
 public class TupleLib
 {

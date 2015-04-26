@@ -22,13 +22,13 @@ import lizard.sys.Lizard ;
 
 import org.apache.jena.atlas.lib.FileOps ;
 
-import com.hp.hpl.jena.assembler.Assembler ;
-import com.hp.hpl.jena.assembler.Mode ;
-import com.hp.hpl.jena.assembler.exceptions.AssemblerException ;
-import com.hp.hpl.jena.query.Dataset ;
-import com.hp.hpl.jena.rdf.model.Property ;
-import com.hp.hpl.jena.rdf.model.Resource ;
-import com.hp.hpl.jena.sparql.core.assembler.DatasetAssembler ;
+import org.apache.jena.assembler.Assembler ;
+import org.apache.jena.assembler.Mode ;
+import org.apache.jena.assembler.exceptions.AssemblerException ;
+import org.apache.jena.query.Dataset ;
+import org.apache.jena.rdf.model.Property ;
+import org.apache.jena.rdf.model.Resource ;
+import org.apache.jena.sparql.core.assembler.DatasetAssembler ;
 
 import conf2.LzConfigDefault ;
 import conf2.build.LzDeploy ;

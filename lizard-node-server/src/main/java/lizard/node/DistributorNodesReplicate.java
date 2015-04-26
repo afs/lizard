@@ -25,8 +25,8 @@ import lizard.comms.CommsException ;
 import lizard.comms.ConnState ;
 import org.apache.jena.atlas.lib.DS ;
 
-import com.hp.hpl.jena.graph.Node ;
-import com.hp.hpl.jena.tdb.store.NodeId ;
+import org.apache.jena.graph.Node ;
+import org.apache.jena.tdb.store.NodeId ;
 
 /** An implementation of DistributorNodes that randomly places Node */
 public class DistributorNodesReplicate implements DistributorNodes {

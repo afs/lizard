@@ -17,10 +17,10 @@
 
 package lizard.conf.assembler;
 
-import com.hp.hpl.jena.assembler.Assembler ;
-import com.hp.hpl.jena.assembler.assemblers.AssemblerGroup ;
-import com.hp.hpl.jena.rdf.model.Resource ;
-import com.hp.hpl.jena.tdb.assembler.Vocab ;
+import org.apache.jena.assembler.Assembler ;
+import org.apache.jena.assembler.assemblers.AssemblerGroup ;
+import org.apache.jena.rdf.model.Resource ;
+import org.apache.jena.tdb.assembler.Vocab ;
 
 public class VocabLizard {
     public final static String namespace = "urn:lizard:ns#" ;

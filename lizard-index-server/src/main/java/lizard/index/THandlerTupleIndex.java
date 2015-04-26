@@ -17,8 +17,8 @@
 
 package lizard.index;
 
-import static com.hp.hpl.jena.query.ReadWrite.READ ;
-import static com.hp.hpl.jena.query.ReadWrite.WRITE ;
+import static org.apache.jena.query.ReadWrite.READ ;
+import static org.apache.jena.query.ReadWrite.WRITE ;
 
 import java.util.ArrayList ;
 import java.util.Iterator ;
@@ -31,9 +31,9 @@ import lizard.api.TLZ.TLZ_Index ;
 import lizard.api.TLZ.TLZ_ShardIndex ;
 import lizard.api.TLZ.TLZ_TupleNodeId ;
 
-import com.hp.hpl.jena.tdb.store.NodeId ;
-import com.hp.hpl.jena.tdb.store.tupletable.TupleIndex ;
-import com.hp.hpl.jena.tdb.store.tupletable.TupleIndexRecord ;
+import org.apache.jena.tdb.store.NodeId ;
+import org.apache.jena.tdb.store.tupletable.TupleIndex ;
+import org.apache.jena.tdb.store.tupletable.TupleIndexRecord ;
 
 import org.apache.jena.atlas.lib.Tuple ;
 import org.apache.jena.atlas.logging.FmtLog ;

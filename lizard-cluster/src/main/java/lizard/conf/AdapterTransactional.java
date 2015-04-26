@@ -19,7 +19,7 @@ package lizard.conf;
 
 import org.seaborne.dboe.transaction.Transactional ;
 
-import com.hp.hpl.jena.query.ReadWrite ;
+import org.apache.jena.query.ReadWrite ;
 
 // Not needed at present. DatasetGraphLz can do it.
 class AdapterTransactional implements Transactional {

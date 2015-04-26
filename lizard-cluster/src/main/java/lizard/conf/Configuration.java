@@ -20,13 +20,13 @@ package lizard.conf;
 import java.io.PrintStream ;
 import java.util.List ;
 
-import com.hp.hpl.jena.rdf.model.Model ;
-import com.hp.hpl.jena.tdb.base.file.Location ;
-import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
-import com.hp.hpl.jena.tdb.store.nodetupletable.NodeTupleTable ;
-import com.hp.hpl.jena.tdb.store.nodetupletable.NodeTupleTableConcrete ;
-import com.hp.hpl.jena.tdb.store.tupletable.TupleIndex ;
-import com.hp.hpl.jena.tdb.sys.DatasetControlMRSW ;
+import org.apache.jena.rdf.model.Model ;
+import org.apache.jena.tdb.base.file.Location ;
+import org.apache.jena.tdb.store.nodetable.NodeTable ;
+import org.apache.jena.tdb.store.nodetupletable.NodeTupleTable ;
+import org.apache.jena.tdb.store.nodetupletable.NodeTupleTableConcrete ;
+import org.apache.jena.tdb.store.tupletable.TupleIndex ;
+import org.apache.jena.tdb.sys.DatasetControlMRSW ;
 
 import lizard.cluster.Platform ;
 import lizard.conf.dataset.ConfigLizardDataset ;

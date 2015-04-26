@@ -17,7 +17,7 @@
 
 package lizard.node;
 
-import static com.hp.hpl.jena.tdb.lib.NodeLib.setHash ;
+import static org.apache.jena.tdb.lib.NodeLib.setHash ;
 
 import java.util.ArrayList ;
 import java.util.Arrays ;
@@ -27,10 +27,10 @@ import lizard.comms.CommsException ;
 import lizard.comms.ConnState ;
 import org.apache.jena.atlas.lib.* ;
 
-import com.hp.hpl.jena.graph.Node ;
-import com.hp.hpl.jena.tdb.store.Hash ;
-import com.hp.hpl.jena.tdb.store.NodeId ;
-import com.hp.hpl.jena.tdb.sys.SystemTDB ;
+import org.apache.jena.graph.Node ;
+import org.apache.jena.tdb.store.Hash ;
+import org.apache.jena.tdb.store.NodeId ;
+import org.apache.jena.tdb.sys.SystemTDB ;
 
 /** Distribute by segment (in Nodeid)
  *  OLD CODE

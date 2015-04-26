@@ -17,7 +17,7 @@
 
 package lizard.system;
 
-import com.hp.hpl.jena.tdb.TDBException ;
+import org.apache.jena.tdb.TDBException ;
 
 public class LizardException extends TDBException
 {

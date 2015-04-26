@@ -20,8 +20,8 @@ package lizard.node;
 import java.util.Collection ;
 import java.util.List ;
 
-import com.hp.hpl.jena.graph.Node ;
-import com.hp.hpl.jena.tdb.store.NodeId ;
+import org.apache.jena.graph.Node ;
+import org.apache.jena.tdb.store.NodeId ;
 
 public interface DistributorNodes {
     public List<NodeTableRemote> storeAt(Node node) ;

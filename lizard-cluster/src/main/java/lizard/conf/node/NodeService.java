@@ -19,7 +19,7 @@ package lizard.conf.node;
 
 import java.util.List ;
 
-import com.hp.hpl.jena.rdf.model.Resource ;
+import org.apache.jena.rdf.model.Resource ;
 
 public class NodeService {
     public final Resource         resource ;

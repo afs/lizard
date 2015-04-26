@@ -22,7 +22,7 @@ import java.util.List ;
 import lizard.system.Component ;
 import lizard.system.LifeCycle ;
 
-import com.hp.hpl.jena.tdb.store.DatasetGraphTDB ;
+import org.apache.jena.tdb.store.DatasetGraphTDB ;
 
 /** The query platform for Lizard - a dataset and the local compoents (clients to index and nodes) */ 
 public class LzDataset implements LifeCycle {

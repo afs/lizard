@@ -31,9 +31,9 @@ import org.apache.jena.riot.out.NodeFmtLib ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
-import com.hp.hpl.jena.graph.Node ;
-import com.hp.hpl.jena.sparql.sse.SSE ;
-import com.hp.hpl.jena.tdb.store.NodeId ;
+import org.apache.jena.graph.Node ;
+import org.apache.jena.sparql.sse.SSE ;
+import org.apache.jena.tdb.store.NodeId ;
  
 public class TClientNode extends TxnClient<TLZ_NodeTable.Client> implements ComponentTxn, Connection, Pingable
 {

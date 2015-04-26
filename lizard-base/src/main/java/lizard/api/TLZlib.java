@@ -22,7 +22,7 @@ import lizard.api.TLZ.TLZ_TupleNodeId ;
 import org.apache.jena.atlas.lib.InternalErrorException ;
 import org.apache.jena.atlas.lib.Tuple ;
 
-import com.hp.hpl.jena.tdb.store.NodeId ;
+import org.apache.jena.tdb.store.NodeId ;
 
 public class TLZlib {
     public static TLZ_TupleNodeId build(Tuple<NodeId> tuple) {

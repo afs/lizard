@@ -28,7 +28,7 @@ import lizard.system.ComponentBase ;
 import lizard.system.ComponentTxn ;
 import lizard.system.LizardException ;
 
-import com.hp.hpl.jena.query.ReadWrite ;
+import org.apache.jena.query.ReadWrite ;
 
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.atlas.logging.Log ;

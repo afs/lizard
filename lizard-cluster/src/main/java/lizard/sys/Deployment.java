@@ -29,7 +29,7 @@ import lizard.conf.index.IndexServer ;
 import lizard.conf.node.NodeServer ;
 import lizard.system.LzLib ;
 
-import com.hp.hpl.jena.rdf.model.Model ;
+import org.apache.jena.rdf.model.Model ;
 
 /** deployment descriptor */
 public class Deployment {

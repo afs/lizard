@@ -18,7 +18,7 @@
 
 package lizard.index.tuple;
 
-import static com.hp.hpl.jena.tdb.sys.SystemTDB.SizeOfNodeId;
+import static org.apache.jena.tdb.sys.SystemTDB.SizeOfNodeId;
 import static java.lang.String.format;
 
 import java.util.Iterator;
@@ -32,13 +32,13 @@ import org.apache.jena.atlas.lib.Tuple ;
 
 
 
-import com.hp.hpl.jena.tdb.TDBException;
-import com.hp.hpl.jena.tdb.base.record.Record;
-import com.hp.hpl.jena.tdb.base.record.RecordFactory;
-import com.hp.hpl.jena.tdb.index.RangeIndex ;
-import com.hp.hpl.jena.tdb.lib.TupleLib;
-import com.hp.hpl.jena.tdb.store.NodeId;
-import com.hp.hpl.jena.tdb.store.tupletable.TupleIndexBase ;
+import org.apache.jena.tdb.TDBException;
+import org.apache.jena.tdb.base.record.Record;
+import org.apache.jena.tdb.base.record.RecordFactory;
+import org.apache.jena.tdb.index.RangeIndex ;
+import org.apache.jena.tdb.lib.TupleLib;
+import org.apache.jena.tdb.store.NodeId;
+import org.apache.jena.tdb.store.tupletable.TupleIndexBase ;
 
 public class TupleIndexRecord extends TupleIndexBase
 {

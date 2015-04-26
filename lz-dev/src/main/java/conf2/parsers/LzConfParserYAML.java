@@ -21,7 +21,7 @@ import java.io.InputStream ;
 import java.util.List ;
 import java.util.Objects ;
 
-import com.hp.hpl.jena.tdb.sys.Names ;
+import org.apache.jena.tdb.sys.Names ;
 
 import conf2.LzConfigurationException ;
 import conf2.YAML ;

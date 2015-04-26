@@ -20,7 +20,7 @@ package lizard.system;
 import java.util.UUID ;
 import java.util.concurrent.atomic.AtomicLong ;
 
-import com.hp.hpl.jena.shared.uuid.Bits ;
+import org.apache.jena.shared.uuid.Bits ;
 
 public class LzTxnId {
     public static final LzTxnId txnNil = new LzTxnId(LizardConst.uuidNil, 0) ;

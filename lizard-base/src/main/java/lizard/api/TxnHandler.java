@@ -23,7 +23,7 @@ import java.util.function.Supplier ;
 
 import lizard.api.TLZ.TxnCtl ;
 
-import com.hp.hpl.jena.query.ReadWrite ;
+import org.apache.jena.query.ReadWrite ;
 
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.seaborne.dboe.transaction.Txn ;

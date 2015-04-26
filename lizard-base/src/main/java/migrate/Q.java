@@ -23,8 +23,8 @@ import java.util.* ;
 import org.apache.jena.atlas.iterator.Iter ;
 import org.apache.jena.riot.RDFDataMgr ;
 
-import com.hp.hpl.jena.query.* ;
-import com.hp.hpl.jena.rdf.model.* ;
+import org.apache.jena.query.* ;
+import org.apache.jena.rdf.model.* ;
 
 public class Q {
 

@@ -39,10 +39,10 @@ import arq.cmdline.ArgDecl ;
 import arq.cmdline.CmdGeneral ;
 import arq.cmdline.ModQueryIn ;
 
-import com.hp.hpl.jena.query.* ;
-import com.hp.hpl.jena.rdf.model.Model ;
-import com.hp.hpl.jena.sparql.core.DatasetGraph ;
-import com.hp.hpl.jena.sparql.util.QueryExecUtils ;
+import org.apache.jena.query.* ;
+import org.apache.jena.rdf.model.Model ;
+import org.apache.jena.sparql.core.DatasetGraph ;
+import org.apache.jena.sparql.util.QueryExecUtils ;
 
 public class LZ_Query extends CmdGeneral {
     static { LogCtl.setCmdLogging(); }

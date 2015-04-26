@@ -21,7 +21,7 @@ import lizard.conf.assembler.VocabLizard ;
 import lizard.query.LizardQuery ;
 import lizard.system.LzLog ;
 
-import com.hp.hpl.jena.assembler.Assembler ;
+import org.apache.jena.assembler.Assembler ;
 
 import conf2.conf.AssemblerYaml ;
 

@@ -17,7 +17,7 @@
 
 package lizard.comms;
 
-import com.hp.hpl.jena.tdb.TDBException ;
+import org.apache.jena.tdb.TDBException ;
 
 public class CommsException extends TDBException
 {

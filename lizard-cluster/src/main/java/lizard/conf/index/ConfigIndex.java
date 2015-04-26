@@ -40,13 +40,13 @@ import org.apache.jena.riot.RDFDataMgr ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
-import com.hp.hpl.jena.query.QuerySolution ;
-import com.hp.hpl.jena.rdf.model.Model ;
-import com.hp.hpl.jena.rdf.model.Resource ;
-import com.hp.hpl.jena.tdb.base.file.Location ;
-import com.hp.hpl.jena.tdb.setup.Build ;
-import com.hp.hpl.jena.tdb.store.tupletable.TupleIndex ;
-import com.hp.hpl.jena.tdb.sys.Names ;
+import org.apache.jena.query.QuerySolution ;
+import org.apache.jena.rdf.model.Model ;
+import org.apache.jena.rdf.model.Resource ;
+import org.apache.jena.tdb.base.file.Location ;
+import org.apache.jena.tdb.setup.Build ;
+import org.apache.jena.tdb.store.tupletable.TupleIndex ;
+import org.apache.jena.tdb.sys.Names ;
 
 /** Configuration of indexes */
 public class ConfigIndex {

@@ -23,14 +23,14 @@ import lizard.query.LizardQuery ;
 import lizard.query.LzDataset ;
 import lizard.sys.Lizard ;
 
-import com.hp.hpl.jena.assembler.Assembler ;
-import com.hp.hpl.jena.assembler.Mode ;
-import com.hp.hpl.jena.query.Dataset ;
-import com.hp.hpl.jena.query.DatasetFactory ;
-import com.hp.hpl.jena.rdf.model.Resource ;
-import com.hp.hpl.jena.sparql.core.DatasetGraph ;
-import com.hp.hpl.jena.sparql.core.assembler.AssemblerUtils ;
-import com.hp.hpl.jena.sparql.core.assembler.DatasetAssembler ;
+import org.apache.jena.assembler.Assembler ;
+import org.apache.jena.assembler.Mode ;
+import org.apache.jena.query.Dataset ;
+import org.apache.jena.query.DatasetFactory ;
+import org.apache.jena.rdf.model.Resource ;
+import org.apache.jena.sparql.core.DatasetGraph ;
+import org.apache.jena.sparql.core.assembler.AssemblerUtils ;
+import org.apache.jena.sparql.core.assembler.DatasetAssembler ;
 
 import org.seaborne.dboe.base.file.Location ;
 import org.slf4j.Logger ;

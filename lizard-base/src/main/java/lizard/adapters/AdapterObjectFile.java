@@ -24,7 +24,7 @@ import org.apache.jena.atlas.lib.Pair ;
 import org.seaborne.dboe.base.block.Block ;
 import org.seaborne.dboe.base.objectfile.ObjectFile ;
 
-public class AdapterObjectFile implements com.hp.hpl.jena.tdb.base.objectfile.ObjectFile {
+public class AdapterObjectFile implements org.apache.jena.tdb.base.objectfile.ObjectFile {
     private final ObjectFile objFile ;
     public AdapterObjectFile(ObjectFile objFile) {
         this.objFile = objFile ;
@@ -42,21 +42,21 @@ public class AdapterObjectFile implements com.hp.hpl.jena.tdb.base.objectfile.Ob
     public String getLabel() { return objFile.getLabel() ; }
 
     @Override
-    public com.hp.hpl.jena.tdb.base.block.Block allocWrite(int bytesSpace) { return convert(objFile.allocWrite(bytesSpace)) ; }
+    public org.apache.jena.tdb.base.block.Block allocWrite(int bytesSpace) { return convert(objFile.allocWrite(bytesSpace)) ; }
 
-    private com.hp.hpl.jena.tdb.base.block.Block convert(Block block) {
-        return new com.hp.hpl.jena.tdb.base.block.Block(block.getId(),block.getByteBuffer()) ;
+    private org.apache.jena.tdb.base.block.Block convert(Block block) {
+        return new org.apache.jena.tdb.base.block.Block(block.getId(),block.getByteBuffer()) ;
     }
 
-    private Block convert(com.hp.hpl.jena.tdb.base.block.Block block) {
+    private Block convert(org.apache.jena.tdb.base.block.Block block) {
         return new Block(block.getId(),block.getByteBuffer()) ;
     }
 
     @Override
-    public void completeWrite(com.hp.hpl.jena.tdb.base.block.Block buffer) { objFile.completeWrite(convert(buffer)); } 
+    public void completeWrite(org.apache.jena.tdb.base.block.Block buffer) { objFile.completeWrite(convert(buffer)); } 
 
     @Override
-    public void abortWrite(com.hp.hpl.jena.tdb.base.block.Block buffer) { objFile.abortWrite(convert(buffer)); } 
+    public void abortWrite(org.apache.jena.tdb.base.block.Block buffer) { objFile.abortWrite(convert(buffer)); } 
 
     @Override
     public long write(ByteBuffer buffer) { return objFile.write(buffer) ; }

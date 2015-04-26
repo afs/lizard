@@ -26,8 +26,8 @@ import java.util.List ;
 import org.apache.jena.riot.RDFDataMgr ;
 import org.apache.jena.riot.RiotNotFoundException ;
 
-import com.hp.hpl.jena.rdf.model.Model ;
-import com.hp.hpl.jena.rdf.model.ModelFactory ;
+import org.apache.jena.rdf.model.Model ;
+import org.apache.jena.rdf.model.ModelFactory ;
 
 /** General utilities for Lizard.
  *  Not Lizard specific and might usefully migrate to Jena proper.

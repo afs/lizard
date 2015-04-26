@@ -17,7 +17,7 @@
 
 package lizard.adapters;
 
-import com.hp.hpl.jena.tdb.sys.Names ;
+import org.apache.jena.tdb.sys.Names ;
 
 import org.seaborne.dboe.base.file.FileSet ;
 import org.seaborne.dboe.base.file.Location ;
@@ -25,12 +25,12 @@ import org.seaborne.dboe.base.record.Record ;
 import org.seaborne.dboe.base.record.RecordFactory ;
 
 public class A {
-    public static FileSet convert(com.hp.hpl.jena.tdb.base.file.FileSet fileSet) {
+    public static FileSet convert(org.apache.jena.tdb.base.file.FileSet fileSet) {
         Location loc = convert(fileSet.getLocation()) ;
         return new FileSet(loc, fileSet.getBasename()) ;
     }
     
-    public static Location convert(com.hp.hpl.jena.tdb.base.file.Location location) {
+    public static Location convert(org.apache.jena.tdb.base.file.Location location) {
         if ( location.isMemUnique() )
             // Call once.
             return Location.mem() ;
@@ -42,25 +42,25 @@ public class A {
         return Location.create(location.getDirectoryPath()) ;
     }
     
-    public static com.hp.hpl.jena.tdb.base.file.Location convert(Location location) {
+    public static org.apache.jena.tdb.base.file.Location convert(Location location) {
         if ( location.isMemUnique() )
             // Call once.
-            return com.hp.hpl.jena.tdb.base.file.Location.mem() ;
+            return org.apache.jena.tdb.base.file.Location.mem() ;
         if ( location.isMem() ) {
             String x = location.getDirectoryPath() ;
             x = x.substring(Names.memName.length()+1) ;
-            return com.hp.hpl.jena.tdb.base.file.Location.mem(x) ;
+            return org.apache.jena.tdb.base.file.Location.mem(x) ;
         }
-        return com.hp.hpl.jena.tdb.base.file.Location.create(location.getDirectoryPath()) ;
+        return org.apache.jena.tdb.base.file.Location.create(location.getDirectoryPath()) ;
     }
 
-    public static com.hp.hpl.jena.tdb.base.record.Record convertToTDB(com.hp.hpl.jena.tdb.base.record.RecordFactory tdbFactory, Record r) {
+    public static org.apache.jena.tdb.base.record.Record convertToTDB(org.apache.jena.tdb.base.record.RecordFactory tdbFactory, Record r) {
         if ( r == null )
             return null ;
         return tdbFactory.create(r.getKey(), r.getValue()) ;
     }
     
-    public static Record convertToMantis(RecordFactory dboeFactory, com.hp.hpl.jena.tdb.base.record.Record r) {
+    public static Record convertToMantis(RecordFactory dboeFactory, org.apache.jena.tdb.base.record.Record r) {
         if ( r == null )
             return null ;
         return dboeFactory.create(r.getKey(), r.getValue()) ;

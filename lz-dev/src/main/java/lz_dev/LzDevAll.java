@@ -20,9 +20,9 @@ package lz_dev;
 import java.nio.file.Paths ;
 import java.util.concurrent.Semaphore ;
 
-import com.hp.hpl.jena.query.* ;
-import com.hp.hpl.jena.rdf.model.Model ;
-import com.hp.hpl.jena.sparql.util.QueryExecUtils ;
+import org.apache.jena.query.* ;
+import org.apache.jena.rdf.model.Model ;
+import org.apache.jena.sparql.util.QueryExecUtils ;
 
 import lizard.cluster.Cluster ;
 import lizard.conf.Configuration ;

@@ -28,17 +28,17 @@ import org.seaborne.dboe.trans.bplustree.RangeIndexBuilderBPTree ;
 import org.seaborne.dboe.transaction.txn.ComponentId ;
 import org.slf4j.Logger ;
 
-import com.hp.hpl.jena.tdb.base.file.Location ;
-import com.hp.hpl.jena.tdb.setup.BuilderStdDB ;
-import com.hp.hpl.jena.tdb.setup.NodeTableBuilder ;
-import com.hp.hpl.jena.tdb.setup.StoreParams ;
-import com.hp.hpl.jena.tdb.setup.TupleIndexBuilder ;
-import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
-import com.hp.hpl.jena.tdb.store.nodetable.NodeTableCache ;
-import com.hp.hpl.jena.tdb.store.nodetable.NodeTableInline ;
-import com.hp.hpl.jena.tdb.store.tupletable.TupleIndex ;
-import com.hp.hpl.jena.tdb.sys.Names ;
-import com.hp.hpl.jena.tdb.sys.SystemTDB ;
+import org.apache.jena.tdb.base.file.Location ;
+import org.apache.jena.tdb.setup.BuilderStdDB ;
+import org.apache.jena.tdb.setup.NodeTableBuilder ;
+import org.apache.jena.tdb.setup.StoreParams ;
+import org.apache.jena.tdb.setup.TupleIndexBuilder ;
+import org.apache.jena.tdb.store.nodetable.NodeTable ;
+import org.apache.jena.tdb.store.nodetable.NodeTableCache ;
+import org.apache.jena.tdb.store.nodetable.NodeTableInline ;
+import org.apache.jena.tdb.store.tupletable.TupleIndex ;
+import org.apache.jena.tdb.sys.Names ;
+import org.apache.jena.tdb.sys.SystemTDB ;
 
 /** Build a dataset using DBOE components */
 public class LzBuildDBOE
@@ -55,9 +55,9 @@ public class LzBuildDBOE
 
     // DBOE to TDB class hierarchies.
     // Build TDB style but using Mantis.
-    static com.hp.hpl.jena.tdb.index.RangeIndexBuilder rangeIndexBuilderTDB     = new AdapterRangeIndexBuilder() ;
-    static com.hp.hpl.jena.tdb.index.IndexBuilder      indexBuilderTDB          = new AdapterIndexBuilder() ;
-    static com.hp.hpl.jena.tdb.setup.ObjectFileBuilder objectFileBuilderTDB     = new AdapterObjectFileBuilder() ;
+    static org.apache.jena.tdb.index.RangeIndexBuilder rangeIndexBuilderTDB     = new AdapterRangeIndexBuilder() ;
+    static org.apache.jena.tdb.index.IndexBuilder      indexBuilderTDB          = new AdapterIndexBuilder() ;
+    static org.apache.jena.tdb.setup.ObjectFileBuilder objectFileBuilderTDB     = new AdapterObjectFileBuilder() ;
 
     private static TupleIndexBuilder tupleIndexBuilder     = new BuilderStdDB.TupleIndexBuilderStd(rangeIndexBuilderTDB) ;
     private static NodeTableBuilder nodeTableBuilder       = new NodeTableBuilderDBOE(indexBuilderTDB, objectFileBuilderTDB) ;
@@ -65,15 +65,15 @@ public class LzBuildDBOE
     private static StoreParams params = StoreParams.builder().build() ;
 
     public static TupleIndex createTupleIndex(Location loc, String order, String name) {
-        com.hp.hpl.jena.tdb.base.file.FileSet fs = new com.hp.hpl.jena.tdb.base.file.FileSet(loc, order) ;
+        org.apache.jena.tdb.base.file.FileSet fs = new org.apache.jena.tdb.base.file.FileSet(loc, order) ;
         ColumnMap cMap = new ColumnMap(Names.primaryIndexTriples, order) ;   // Primary order.
         TupleIndex tupleIndex = tupleIndexBuilder.buildTupleIndex(fs, cMap, name, params) ;
         return tupleIndex ;
     }
 
     public static NodeTable createNodeTable(Location location) {
-        com.hp.hpl.jena.tdb.base.file.FileSet fsNodeToId  = new com.hp.hpl.jena.tdb.base.file.FileSet(location, Names.indexNode2Id) ;
-        com.hp.hpl.jena.tdb.base.file.FileSet fsId2Node   = new com.hp.hpl.jena.tdb.base.file.FileSet(location, Names.indexId2Node) ;
+        org.apache.jena.tdb.base.file.FileSet fsNodeToId  = new org.apache.jena.tdb.base.file.FileSet(location, Names.indexNode2Id) ;
+        org.apache.jena.tdb.base.file.FileSet fsId2Node   = new org.apache.jena.tdb.base.file.FileSet(location, Names.indexId2Node) ;
         StoreParams params2 = StoreParams.builder(params)
             .node2NodeIdCacheSize(-1)
             .nodeId2NodeCacheSize(-1)
@@ -96,16 +96,16 @@ public class LzBuildDBOE
     
     static class NodeTableBuilderDBOE implements NodeTableBuilder
     {
-        public NodeTableBuilderDBOE(com.hp.hpl.jena.tdb.index.IndexBuilder indexBuilder, com.hp.hpl.jena.tdb.setup.ObjectFileBuilder objectFileBuilder) {
+        public NodeTableBuilderDBOE(org.apache.jena.tdb.index.IndexBuilder indexBuilder, org.apache.jena.tdb.setup.ObjectFileBuilder objectFileBuilder) {
             
         }
     
         @Override
-        public NodeTable buildNodeTable(com.hp.hpl.jena.tdb.base.file.FileSet fsIndex,
-                                        com.hp.hpl.jena.tdb.base.file.FileSet fsObjectFile, StoreParams params) {
-            com.hp.hpl.jena.tdb.base.record.RecordFactory recordFactory = new com.hp.hpl.jena.tdb.base.record.RecordFactory(SystemTDB.LenNodeHash, SystemTDB.SizeOfNodeId) ;
-            com.hp.hpl.jena.tdb.index.Index idx = indexBuilderTDB.buildIndex(fsIndex, recordFactory, params) ;
-            com.hp.hpl.jena.tdb.base.objectfile.ObjectFile objectFile = objectFileBuilderTDB.buildObjectFile(fsObjectFile, Names.extNodeData) ;
+        public NodeTable buildNodeTable(org.apache.jena.tdb.base.file.FileSet fsIndex,
+                                        org.apache.jena.tdb.base.file.FileSet fsObjectFile, StoreParams params) {
+            org.apache.jena.tdb.base.record.RecordFactory recordFactory = new org.apache.jena.tdb.base.record.RecordFactory(SystemTDB.LenNodeHash, SystemTDB.SizeOfNodeId) ;
+            org.apache.jena.tdb.index.Index idx = indexBuilderTDB.buildIndex(fsIndex, recordFactory, params) ;
+            org.apache.jena.tdb.base.objectfile.ObjectFile objectFile = objectFileBuilderTDB.buildObjectFile(fsObjectFile, Names.extNodeData) ;
             NodeTable nodeTable = new NodeTableDBOE(idx, objectFile) ;
             nodeTable = NodeTableCache.create(nodeTable, 
                                               params.getNode2NodeIdCacheSize(),

@@ -24,12 +24,12 @@ import migrate.Q ;
 import org.apache.jena.riot.Lang ;
 import org.apache.jena.riot.RDFDataMgr ;
 
-import com.hp.hpl.jena.rdf.model.Model ;
-import com.hp.hpl.jena.rdf.model.Resource ;
-import com.hp.hpl.jena.sparql.ARQException ;
-import com.hp.hpl.jena.sparql.core.assembler.DatasetAssemblerVocab ;
-import com.hp.hpl.jena.sparql.util.TypeNotUniqueException ;
-import com.hp.hpl.jena.sparql.util.graph.GraphUtils ;
+import org.apache.jena.rdf.model.Model ;
+import org.apache.jena.rdf.model.Resource ;
+import org.apache.jena.sparql.ARQException ;
+import org.apache.jena.sparql.core.assembler.DatasetAssemblerVocab ;
+import org.apache.jena.sparql.util.TypeNotUniqueException ;
+import org.apache.jena.sparql.util.graph.GraphUtils ;
 
 /** Setup for query engine and servers */  
 public class Local {

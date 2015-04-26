@@ -19,7 +19,7 @@ package lizard.conf.index;
 
 import lizard.conf.DataServer ;
 
-import com.hp.hpl.jena.rdf.model.Resource ;
+import org.apache.jena.rdf.model.Resource ;
 
 public class IndexServer extends DataServer {
     public final IndexService indexService ;

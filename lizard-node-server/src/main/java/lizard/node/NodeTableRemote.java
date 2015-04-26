@@ -30,10 +30,10 @@ import org.apache.jena.atlas.lib.Pair ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
-import com.hp.hpl.jena.graph.Node ;
-import com.hp.hpl.jena.query.ReadWrite ;
-import com.hp.hpl.jena.tdb.store.NodeId ;
-import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
+import org.apache.jena.graph.Node ;
+import org.apache.jena.query.ReadWrite ;
+import org.apache.jena.tdb.store.NodeId ;
+import org.apache.jena.tdb.store.nodetable.NodeTable ;
 
 /** NodeTable interface to a remote node table server */
 public class NodeTableRemote implements ComponentTxn, Component, NodeTable, Pingable, TxnClient.Accessor {

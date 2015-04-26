@@ -22,9 +22,9 @@ import java.io.InputStream ;
 import lizard.system.LizardException ;
 import migrate.Q ;
 
-import com.hp.hpl.jena.query.Dataset ;
-import com.hp.hpl.jena.query.ReadWrite ;
-import com.hp.hpl.jena.rdf.model.Model ;
+import org.apache.jena.query.Dataset ;
+import org.apache.jena.query.ReadWrite ;
+import org.apache.jena.rdf.model.Model ;
 
 import conf2.build.LzDeploy ;
 import conf2.conf.ConfCluster ;

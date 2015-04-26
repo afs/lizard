@@ -24,20 +24,20 @@ import org.apache.jena.atlas.logging.FmtLog ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
-import com.hp.hpl.jena.query.ARQ ;
-import com.hp.hpl.jena.sparql.engine.main.QC ;
-import com.hp.hpl.jena.sparql.engine.optimizer.reorder.ReorderTransformation ;
-import com.hp.hpl.jena.tdb.TDBException ;
-import com.hp.hpl.jena.tdb.base.file.FileSet ;
-import com.hp.hpl.jena.tdb.base.file.Location ;
-import com.hp.hpl.jena.tdb.index.IndexBuilder ;
-import com.hp.hpl.jena.tdb.index.RangeIndexBuilder ;
-import com.hp.hpl.jena.tdb.setup.* ;
-import com.hp.hpl.jena.tdb.store.* ;
-import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
-import com.hp.hpl.jena.tdb.store.tupletable.TupleIndex ;
-import com.hp.hpl.jena.tdb.sys.DatasetControl ;
-import com.hp.hpl.jena.tdb.sys.DatasetControlMRSW ;
+import org.apache.jena.query.ARQ ;
+import org.apache.jena.sparql.engine.main.QC ;
+import org.apache.jena.sparql.engine.optimizer.reorder.ReorderTransformation ;
+import org.apache.jena.tdb.TDBException ;
+import org.apache.jena.tdb.base.file.FileSet ;
+import org.apache.jena.tdb.base.file.Location ;
+import org.apache.jena.tdb.index.IndexBuilder ;
+import org.apache.jena.tdb.index.RangeIndexBuilder ;
+import org.apache.jena.tdb.setup.* ;
+import org.apache.jena.tdb.store.* ;
+import org.apache.jena.tdb.store.nodetable.NodeTable ;
+import org.apache.jena.tdb.store.tupletable.TupleIndex ;
+import org.apache.jena.tdb.sys.DatasetControl ;
+import org.apache.jena.tdb.sys.DatasetControlMRSW ;
 
 /** Make TDB storage dataset graphs : not for transactional datasets */ 
 
@@ -143,7 +143,7 @@ public class DatasetBuilderLizard implements DatasetBuilder
 
     public DatasetPrefixesTDB makePrefixTable(Location location, DatasetControl policy)
     {    
-        return com.hp.hpl.jena.tdb.setup.Build.makePrefixes(location, policy) ;
+        return org.apache.jena.tdb.setup.Build.makePrefixes(location, policy) ;
     }
     
     private TupleIndex[] makeTupleIndexes(Location location, String primary, String[] indexNames, StoreParams params)

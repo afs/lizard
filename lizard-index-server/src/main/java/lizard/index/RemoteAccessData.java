@@ -24,7 +24,7 @@ import org.seaborne.dboe.engine.access.AccessData ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
-import com.hp.hpl.jena.tdb.store.NodeId ;
+import org.apache.jena.tdb.store.NodeId ;
 
 /** Adapter from TClientIndex to AccessData<NodeId> */
 

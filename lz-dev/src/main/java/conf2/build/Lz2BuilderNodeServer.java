@@ -26,7 +26,7 @@ import org.apache.jena.atlas.logging.FmtLog ;
 import org.seaborne.dboe.base.file.Location ;
 import org.slf4j.Logger ;
 
-import com.hp.hpl.jena.tdb.store.nodetable.NodeTable ;
+import org.apache.jena.tdb.store.nodetable.NodeTable ;
 
 import conf2.conf.ConfCluster ;
 import conf2.conf.ConfNodeTableElement ;

@@ -21,7 +21,7 @@ import lizard.cluster.Cluster ;
 import org.seaborne.dboe.transaction.txn.TransactionalComponentBase ;
 import org.seaborne.dboe.transaction.txn.TxnId ;
 
-import com.hp.hpl.jena.query.ReadWrite ;
+import org.apache.jena.query.ReadWrite ;
 
 final public class TransactionalComponentZkLock extends TransactionalComponentBase<Object> {
     @Override

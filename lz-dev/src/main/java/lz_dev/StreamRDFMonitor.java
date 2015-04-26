@@ -17,8 +17,8 @@
 
 package lz_dev;
 
-import com.hp.hpl.jena.graph.Triple ;
-import com.hp.hpl.jena.sparql.core.Quad ;
+import org.apache.jena.graph.Triple ;
+import org.apache.jena.sparql.core.Quad ;
 
 import org.apache.jena.atlas.logging.ProgressLogger ;
 import org.apache.jena.riot.system.StreamRDF ;

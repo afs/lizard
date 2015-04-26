@@ -23,8 +23,8 @@ import org.apache.jena.atlas.iterator.Iter ;
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.Tuple ;
 
-import com.hp.hpl.jena.tdb.store.NodeId ;
-import com.hp.hpl.jena.tdb.store.tupletable.TupleIndexBase ;
+import org.apache.jena.tdb.store.NodeId ;
+import org.apache.jena.tdb.store.tupletable.TupleIndexBase ;
 
 /** An immutably empty tuple idnex - it is a sink (add provided but does nothing) */
 public class TupleIndexEmpty extends TupleIndexBase {

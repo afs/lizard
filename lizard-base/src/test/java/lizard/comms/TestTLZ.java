@@ -28,7 +28,7 @@ import org.apache.thrift.transport.TMemoryBuffer ;
 import org.apache.thrift.transport.TTransport ;
 import org.junit.Test ;
 
-import com.hp.hpl.jena.tdb.store.NodeId ;
+import org.apache.jena.tdb.store.NodeId ;
 
 /**
  * This class is just a few test to make sure things look OK.

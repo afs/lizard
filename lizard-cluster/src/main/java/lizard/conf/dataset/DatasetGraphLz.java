@@ -17,11 +17,11 @@
 
 package lizard.conf.dataset;
 
-import com.hp.hpl.jena.query.ReadWrite ;
-import com.hp.hpl.jena.sparql.core.DatasetGraph ;
-import com.hp.hpl.jena.sparql.core.DatasetGraphTrackActive ;
-import com.hp.hpl.jena.sparql.util.Context ;
-import com.hp.hpl.jena.tdb.store.DatasetGraphTDB ;
+import org.apache.jena.query.ReadWrite ;
+import org.apache.jena.sparql.core.DatasetGraph ;
+import org.apache.jena.sparql.core.DatasetGraphTrackActive ;
+import org.apache.jena.sparql.util.Context ;
+import org.apache.jena.tdb.store.DatasetGraphTDB ;
 
 import org.seaborne.dboe.transaction.Transactional ;
 import org.seaborne.dboe.transaction.txn.TransactionCoordinator ;

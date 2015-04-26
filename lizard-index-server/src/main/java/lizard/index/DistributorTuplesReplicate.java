@@ -26,7 +26,7 @@ import lizard.comms.ConnState ;
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.Tuple ;
 
-import com.hp.hpl.jena.tdb.store.NodeId ;
+import org.apache.jena.tdb.store.NodeId ;
 
 /** Policy for the placement of triples based on eventual consistent replication.
  *  For simplicity, for N replicas, R=1 W=N
