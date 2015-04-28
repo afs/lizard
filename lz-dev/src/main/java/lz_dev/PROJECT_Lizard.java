@@ -25,6 +25,11 @@ public class PROJECT_Lizard {
     // B - Batching updates (and flow reversal)
     // C - Block allocate txn ids but still need the lock.
     
+    // Node caching
+    //  1 - move to hash NodeId
+    //  2 - move to 10 byte NodeIds
+    //  Cache abort isa commit!
+    
     // ---- Configuration
     // Robust parsing of YAML/RDF configurations.
     // Delete! conf1 :: lizard-cluster:lizard.conf.*
