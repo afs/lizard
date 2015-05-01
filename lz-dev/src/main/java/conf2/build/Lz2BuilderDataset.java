@@ -19,7 +19,6 @@ package conf2.build;
 
 import java.util.ArrayList ;
 import java.util.List ;
-import java.util.stream.Collector ;
 
 import lizard.adapters.A ;
 import lizard.api.TxnClient ;
@@ -36,18 +35,14 @@ import lizard.query.LzDataset ;
 import lizard.query.QuackLizard ;
 import lizard.system.Component ;
 import migrate.TupleIndexEmpty ;
+import conf2.conf.ConfCluster ;
+import conf2.conf.ConfDataset ;
+import conf2.conf.ConfIndex ;
+import conf2.conf.ConfNodeTable ;
 
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.StrUtils ;
 import org.apache.jena.atlas.logging.FmtLog ;
-import org.seaborne.dboe.base.file.Location ;
-import org.seaborne.dboe.transaction.Transactional ;
-import org.seaborne.dboe.transaction.txn.ComponentId ;
-import org.seaborne.dboe.transaction.txn.TransactionCoordinator ;
-import org.seaborne.dboe.transaction.txn.TransactionalBase ;
-import org.seaborne.dboe.transaction.txn.TransactionalComponent ;
-import org.seaborne.dboe.transaction.txn.journal.Journal ;
-import org.slf4j.Logger ;
 import org.apache.jena.query.ARQ ;
 import org.apache.jena.query.Dataset ;
 import org.apache.jena.query.DatasetFactory ;
@@ -69,8 +64,14 @@ import org.apache.jena.tdb.store.tupletable.TupleIndex ;
 import org.apache.jena.tdb.sys.DatasetControl ;
 import org.apache.jena.tdb.sys.DatasetControlMRSW ;
 import org.apache.jena.tdb.sys.Names ;
-
-import conf2.conf.* ;
+import org.seaborne.dboe.base.file.Location ;
+import org.seaborne.dboe.transaction.Transactional ;
+import org.seaborne.dboe.transaction.txn.ComponentId ;
+import org.seaborne.dboe.transaction.txn.TransactionCoordinator ;
+import org.seaborne.dboe.transaction.txn.TransactionalBase ;
+import org.seaborne.dboe.transaction.txn.TransactionalComponent ;
+import org.seaborne.dboe.transaction.txn.journal.Journal ;
+import org.slf4j.Logger ;
 
 
 
