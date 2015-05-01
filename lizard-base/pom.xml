@@ -47,7 +47,14 @@
       <artifactId>apache-jena-libs</artifactId>
       <type>pom</type>
     </dependency>
-
+    
+    <dependency>
+      <groupId>org.apache.jena</groupId>
+      <artifactId>jena-base</artifactId>
+      <classifier>tests</classifier>
+      <scope>test</scope>
+    </dependency>
+    
     <dependency>
       <groupId>org.apache.jena</groupId>
       <artifactId>jena-arq</artifactId>

@@ -30,19 +30,19 @@ import lizard.conf.dataset.ConfigLizardDataset ;
 import lizard.query.LzDataset ;
 import lizard.system.LizardException ;
 import lizard.system.LzLib ;
-import org.apache.jena.atlas.logging.LogCtl ;
-import org.seaborne.dboe.engine.explain.ExplainCategory ;
-import org.apache.jena.riot.Lang ;
-import org.apache.jena.riot.RDFDataMgr ;
+import arq.cmd.ArgDecl ;
 import arq.cmd.CmdException ;
-import arq.cmdline.ArgDecl ;
 import arq.cmdline.CmdGeneral ;
 import arq.cmdline.ModQueryIn ;
 
+import org.apache.jena.atlas.logging.LogCtl ;
 import org.apache.jena.query.* ;
 import org.apache.jena.rdf.model.Model ;
+import org.apache.jena.riot.Lang ;
+import org.apache.jena.riot.RDFDataMgr ;
 import org.apache.jena.sparql.core.DatasetGraph ;
 import org.apache.jena.sparql.util.QueryExecUtils ;
+import org.seaborne.dboe.engine.explain.ExplainCategory ;
 
 public class LZ_Query extends CmdGeneral {
     static { LogCtl.setCmdLogging(); }

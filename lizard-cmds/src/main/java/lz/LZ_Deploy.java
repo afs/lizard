@@ -20,13 +20,14 @@ package lz;
 import lizard.conf.Configuration ;
 import lizard.sys.Deploy ;
 import lizard.sys.Deployment ;
+import arq.cmd.ArgDecl ;
+import arq.cmd.CmdException ;
+import arq.cmdline.CmdGeneral ;
+
 import org.apache.jena.atlas.lib.Lib ;
 import org.apache.jena.atlas.logging.LogCtl ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
-import arq.cmd.CmdException ;
-import arq.cmdline.ArgDecl ;
-import arq.cmdline.CmdGeneral ;
 
 /** Take a general configuration file and deployment file
  *  for this machine, build servers and run here.

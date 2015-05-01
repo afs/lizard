@@ -20,24 +20,25 @@ package lz ;
 import java.util.Iterator ;
 
 import lizard.index.Shard ;
+import arq.cmd.ArgDecl ;
+import arq.cmd.CmdException ;
+import arq.cmdline.CmdARQ ;
+
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.Tuple ;
 import org.apache.jena.atlas.logging.LogCtl ;
 import org.apache.jena.atlas.logging.ProgressLogger ;
-import org.apache.jena.riot.RIOT ;
-import org.slf4j.Logger ;
-import org.slf4j.LoggerFactory ;
-import quack.IndexLib ;
-import quack.IndexRef ;
-import arq.cmd.CmdException ;
-import arq.cmdline.ArgDecl ;
-import arq.cmdline.CmdARQ ;
-
 import org.apache.jena.query.ARQ ;
+import org.apache.jena.riot.RIOT ;
 import org.apache.jena.tdb.TDB ;
 import org.apache.jena.tdb.base.file.Location ;
 import org.apache.jena.tdb.store.NodeId ;
 import org.apache.jena.tdb.store.tupletable.TupleIndex ;
+import org.slf4j.Logger ;
+import org.slf4j.LoggerFactory ;
+
+import quack.IndexLib ;
+import quack.IndexRef ;
 
 /** Shard a TDB index. */
 public class LZ_ShardIndex extends CmdARQ {
