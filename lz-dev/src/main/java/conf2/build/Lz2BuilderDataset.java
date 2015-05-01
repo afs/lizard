@@ -19,6 +19,7 @@ package conf2.build;
 
 import java.util.ArrayList ;
 import java.util.List ;
+import java.util.stream.Collector ;
 
 import lizard.adapters.A ;
 import lizard.api.TxnClient ;
@@ -35,6 +36,7 @@ import lizard.query.LzDataset ;
 import lizard.query.QuackLizard ;
 import lizard.system.Component ;
 import migrate.TupleIndexEmpty ;
+
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.StrUtils ;
 import org.apache.jena.atlas.logging.FmtLog ;
@@ -46,7 +48,6 @@ import org.seaborne.dboe.transaction.txn.TransactionalBase ;
 import org.seaborne.dboe.transaction.txn.TransactionalComponent ;
 import org.seaborne.dboe.transaction.txn.journal.Journal ;
 import org.slf4j.Logger ;
-
 import org.apache.jena.query.ARQ ;
 import org.apache.jena.query.Dataset ;
 import org.apache.jena.query.DatasetFactory ;
@@ -107,10 +108,10 @@ public class Lz2BuilderDataset {
             ColumnMap cmap = new ColumnMap("SPO", idxOrder) ;
             DistributorTuplesReplicate dist = new DistributorTuplesReplicate(cmap) ;  
             List<TupleIndexRemote> indexes = new ArrayList<>() ;
-            
             // Scan shards for index.
-            confCluster.eltsIndex.stream()
+            confCluster.eltsIndex.stream().sequential()
                 .filter(x -> ci.indexOrder.equals(x.conf.indexOrder))
+                .sequential()
                 .forEach(x -> {
                     TupleIndexRemote idx = TupleIndexRemote.create(x.netAddr.hostname, x.netAddr.port, idxOrder, cmap) ;
                     indexes.add(idx) ;
@@ -127,6 +128,7 @@ public class Lz2BuilderDataset {
         DistributorNodesReplicate dist = new DistributorNodesReplicate() ;
         List<NodeTableRemote> nodeTableParts = new ArrayList<>() ;
         confCluster.eltsNodeTable.stream()
+            .sequential()
             .forEach(x -> {
                 NodeTableRemote ntr = NodeTableRemote.create(x.netAddr.hostname, x.netAddr.port) ;
                 nodeTableParts.add(ntr) ;

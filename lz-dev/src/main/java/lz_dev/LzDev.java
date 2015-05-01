@@ -136,7 +136,7 @@ public class LzDev {
     }
     
     private static void ping(LzDataset lz) {
-        lz.getComponents().stream().forEach(c -> {
+        lz.getComponents().stream().sequential().forEach(c -> {
             //System.out.println("Component: "+c.getClass().getTypeName()) ;
             if ( c instanceof Pingable ) {
                 Pingable p = (Pingable)c ;
