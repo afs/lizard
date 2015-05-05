@@ -21,12 +21,16 @@ import static org.apache.jena.tdb.lib.NodeLib.setHash ;
 
 import java.util.ArrayList ;
 import java.util.Arrays ;
+import java.util.Collection ;
 import java.util.List ;
 
 import lizard.comms.CommsException ;
 import lizard.comms.ConnState ;
-import org.apache.jena.atlas.lib.* ;
-
+import org.apache.jena.atlas.lib.BitsLong ;
+import org.apache.jena.atlas.lib.Bytes ;
+import org.apache.jena.atlas.lib.InternalErrorException ;
+import org.apache.jena.ext.com.google.common.collect.ArrayListMultimap ;
+import org.apache.jena.ext.com.google.common.collect.ListMultimap ;
 import org.apache.jena.graph.Node ;
 import org.apache.jena.tdb.store.Hash ;
 import org.apache.jena.tdb.store.NodeId ;
@@ -39,7 +43,7 @@ public class DistributorNodesBySegment implements DistributorNodes {
     
     //@@ Replication.
     
-    MultiMapToList<Long, NodeTableRemote> places = MultiMap.createMapList() ;
+    ListMultimap<Long, NodeTableRemote> places = ArrayListMultimap.create() ;
     private final int size ;
     
     public DistributorNodesBySegment(int N) {
@@ -95,8 +99,8 @@ public class DistributorNodesBySegment implements DistributorNodes {
     }
     
     @Override
-    public List<NodeTableRemote> allStore() {
-        List<NodeTableRemote> placesToGo = places.values() ;
+    public Collection<NodeTableRemote> allStore() {
+        Collection<NodeTableRemote> placesToGo = places.values() ;
         for ( NodeTableRemote ntr : placesToGo ) {
             if ( ntr.getStatus() != ConnState.OK )
                 throw new CommsException("Can't store - an index is unavailable") ;

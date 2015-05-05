@@ -19,22 +19,22 @@ package lizard.index;
 
 import java.util.ArrayList ;
 import java.util.Arrays ;
+import java.util.Collection ;
 import java.util.List ;
 
 import lizard.comms.CommsException ;
 import lizard.comms.ConnState ;
 import org.apache.jena.atlas.lib.ColumnMap ;
-import org.apache.jena.atlas.lib.MultiMap ;
-import org.apache.jena.atlas.lib.MultiMapToList ;
 import org.apache.jena.atlas.lib.Tuple ;
 import org.apache.jena.atlas.logging.Log ;
-
+import org.apache.jena.ext.com.google.common.collect.ArrayListMultimap ;
+import org.apache.jena.ext.com.google.common.collect.ListMultimap ;
 import org.apache.jena.tdb.store.NodeId ;
 
 /** Policy for the placement of triples (and finding them) partition by subject. */
 
 public class DistributorTuplesBySubject implements DistributorTupleIndex {
-    private MultiMapToList<Long, TupleIndexRemote> places = MultiMap.createMapList() ;
+    private ListMultimap<Long, TupleIndexRemote> places = ArrayListMultimap.create() ;
     private final ColumnMap mapper ;
     private final int size ;
     
@@ -87,8 +87,8 @@ public class DistributorTuplesBySubject implements DistributorTupleIndex {
     }
     
     @Override
-    public List<TupleIndexRemote> allStore() {
-        List<TupleIndexRemote> placesToGo = places.values() ;
+    public Collection<TupleIndexRemote> allStore() {
+        Collection<TupleIndexRemote> placesToGo = places.values() ;
         for ( TupleIndexRemote idx : placesToGo ) {
             if ( idx.getStatus() != ConnState.OK )
                 throw new CommsException("Can't store - an index is unavailable") ;

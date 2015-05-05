@@ -17,10 +17,10 @@
 
 package lizard.index;
 
+import java.util.Collection ;
 import java.util.List ;
 
 import org.apache.jena.atlas.lib.Tuple ;
-
 import org.apache.jena.tdb.store.NodeId ;
 
 /** Policy for the placement of triples (and for finding them). */
@@ -41,8 +41,8 @@ public interface DistributorTupleIndex {
     public List<TupleIndexRemote> findAt(Tuple<NodeId> tuple) ;
     
     /** A set of places that covers the entire space, with one replicator per possible place */  
-    public List<TupleIndexRemote> allFind() ;
+    public Collection<TupleIndexRemote> allFind() ;
     
     /** A set of places that covers the entire space, all places, for storage */  
-    public List<TupleIndexRemote> allStore() ;
+    public Collection<TupleIndexRemote> allStore() ;
 }
