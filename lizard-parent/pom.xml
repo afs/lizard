@@ -90,6 +90,7 @@
       <dependency>
 	<groupId>com.google.guava</groupId>
 	<artifactId>guava</artifactId>
+	<!-- Ideally, align to jena-shaded-guava artifacty -->
 	<version>18.0</version>
       </dependency>
 
