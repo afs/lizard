@@ -32,6 +32,7 @@ import lizard.sys.Deployment ;
 import lizard.system.LizardException ;
 import lizard.system.Pingable ;
 import migrate.Q ;
+
 import org.apache.curator.test.TestingServer ;
 import org.apache.jena.atlas.lib.FileOps ;
 import org.apache.jena.atlas.lib.Lib ;
@@ -40,18 +41,16 @@ import org.apache.jena.atlas.logging.LogCtl ;
 import org.apache.jena.atlas.logging.ProgressLogger ;
 import org.apache.jena.fuseki.cmd.FusekiCmd ;
 import org.apache.jena.fuseki.server.FusekiEnv ;
+import org.apache.jena.query.* ;
+import org.apache.jena.rdf.model.Model ;
 import org.apache.jena.riot.RDFDataMgr ;
 import org.apache.jena.riot.system.StreamRDF ;
 import org.apache.jena.riot.system.StreamRDFLib ;
+import org.apache.jena.sparql.util.QueryExecUtils ;
 import org.seaborne.dboe.base.file.Location ;
 import org.seaborne.dboe.migrate.L ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
-
-import org.apache.jena.query.* ;
-import org.apache.jena.rdf.model.Model ;
-import org.apache.jena.rdf.model.ModelFactory ;
-import org.apache.jena.sparql.util.QueryExecUtils ;
 
 public class LzDev {
     static { LogCtl.setLog4j(); } 
@@ -71,11 +70,6 @@ public class LzDev {
     static int counter = 0 ;
 
     public static void main(String[] args) {
-        Model m = ModelFactory.createDefaultModel() ;
-        System.out.println(m.createResource("http://example/foo"));
-    }
-    
-    public static void main1(String[] args) {
         FileOps.clearAll("DB");
         
         try { main$(args) ; }
