@@ -42,21 +42,21 @@ public class AdapterObjectFile implements org.apache.jena.tdb.base.objectfile.Ob
     public String getLabel() { return objFile.getLabel() ; }
 
     @Override
-    public org.apache.jena.tdb.base.block.Block allocWrite(int bytesSpace) { return convert(objFile.allocWrite(bytesSpace)) ; }
+    public org.apache.jena.tdb.base.block.Block allocWrite(int bytesSpace) { return apply(objFile.allocWrite(bytesSpace)) ; }
 
-    private org.apache.jena.tdb.base.block.Block convert(Block block) {
+    private org.apache.jena.tdb.base.block.Block apply(Block block) {
         return new org.apache.jena.tdb.base.block.Block(block.getId(),block.getByteBuffer()) ;
     }
 
-    private Block convert(org.apache.jena.tdb.base.block.Block block) {
+    private Block apply(org.apache.jena.tdb.base.block.Block block) {
         return new Block(block.getId(),block.getByteBuffer()) ;
     }
 
     @Override
-    public void completeWrite(org.apache.jena.tdb.base.block.Block buffer) { objFile.completeWrite(convert(buffer)); } 
+    public void completeWrite(org.apache.jena.tdb.base.block.Block buffer) { objFile.completeWrite(apply(buffer)); } 
 
     @Override
-    public void abortWrite(org.apache.jena.tdb.base.block.Block buffer) { objFile.abortWrite(convert(buffer)); } 
+    public void abortWrite(org.apache.jena.tdb.base.block.Block buffer) { objFile.abortWrite(apply(buffer)); } 
 
     @Override
     public long write(ByteBuffer buffer) { return objFile.write(buffer) ; }

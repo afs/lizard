@@ -18,26 +18,25 @@
 
 package lizard.index.tuple;
 
-import static org.apache.jena.tdb.sys.SystemTDB.SizeOfNodeId;
-import static java.lang.String.format;
+import static java.lang.String.format ;
+import static org.apache.jena.tdb.sys.SystemTDB.SizeOfNodeId ;
 
-import java.util.Iterator;
+import java.util.Iterator ;
+import java.util.function.Function ;
+import java.util.function.Predicate ;
 
-import org.apache.jena.atlas.iterator.* ;
+import org.apache.jena.atlas.iterator.Iter ;
+import org.apache.jena.atlas.iterator.NullIterator ;
+import org.apache.jena.atlas.iterator.SingletonIterator ;
 import org.apache.jena.atlas.lib.Bytes ;
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.Tuple ;
-
-
-
-
-
-import org.apache.jena.tdb.TDBException;
-import org.apache.jena.tdb.base.record.Record;
-import org.apache.jena.tdb.base.record.RecordFactory;
+import org.apache.jena.tdb.TDBException ;
+import org.apache.jena.tdb.base.record.Record ;
+import org.apache.jena.tdb.base.record.RecordFactory ;
 import org.apache.jena.tdb.index.RangeIndex ;
-import org.apache.jena.tdb.lib.TupleLib;
-import org.apache.jena.tdb.store.NodeId;
+import org.apache.jena.tdb.lib.TupleLib ;
+import org.apache.jena.tdb.store.NodeId ;
 import org.apache.jena.tdb.store.tupletable.TupleIndexBase ;
 
 public class TupleIndexRecord extends TupleIndexBase
@@ -190,36 +189,23 @@ public class TupleIndexRecord extends TupleIndexBase
         return Iter.map(iter, transformToTuple) ;
     }
     
-    private final Transform<Record, Tuple<NodeId>> transformToTuple = new Transform<Record, Tuple<NodeId>>()
-    {
-        @Override
-        public final Tuple<NodeId> convert(Record item)
-        {
-            return TupleLib.tuple(item, colMap) ;
-        }
-    } ; 
+    private final Function<Record, Tuple<NodeId>> transformToTuple = (item)->TupleLib.tuple(item, colMap) ;
     
     private Iterator<Tuple<NodeId>> scan(Iterator<Tuple<NodeId>> iter,
                                          final Tuple<NodeId> pattern)
     {
-        Filter<Tuple<NodeId>> filter = new Filter<Tuple<NodeId>>()
-        {
-            @Override
-            public boolean accept(Tuple<NodeId> item)
+        Predicate<Tuple<NodeId>> filter = (item)->{
+            // Check on pattern and item (both in natural order)
+            for ( int i = 0 ; i < tupleLength ; i++ )
             {
-                // Check on pattern and item (both in natural order)
-                for ( int i = 0 ; i < tupleLength ; i++ )
-                {
-                    NodeId n = pattern.get(i) ;
-                    // The pattern must be null/Any or match the tuple being tested.
-                    if ( ! NodeId.isAny(n) )
-                        if ( ! item.get(i).equals(n) ) 
-                            return false ;
-                }
-                return true ;
+                NodeId n = pattern.get(i) ;
+                // The pattern must be null/Any or match the tuple being tested.
+                if ( ! NodeId.isAny(n) )
+                    if ( ! item.get(i).equals(n) ) 
+                        return false ;
             }
+            return true ;
         } ;
-        
         return Iter.filter(iter, filter) ;
     }
     

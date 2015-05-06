@@ -48,7 +48,7 @@ public class Lz2BuilderIndexServer {
         int port = x.netAddr.port ;
         String data = x.data ; 
         FmtLog.info(logConf, "buildIndexServer[%s]: %s %s", data, port, loc) ;
-        TupleIndex tupleIndex = LzBuildDBOE.createTupleIndex(A.convert(loc), x.conf.indexOrder, x.name) ;  
+        TupleIndex tupleIndex = LzBuildDBOE.createTupleIndex(A.apply(loc), x.conf.indexOrder, x.name) ;  
         TServerIndex serverindex = TServerIndex.create(port, tupleIndex) ;
         platform.add(serverindex) ;
         return serverindex ;

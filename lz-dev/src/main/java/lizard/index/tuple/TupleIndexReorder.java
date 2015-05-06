@@ -207,7 +207,7 @@ public class TupleIndexReorder {}
 //    private final Transform<Record, Tuple<NodeId>> transformToTuple = new Transform<Record, Tuple<NodeId>>()
 //    {
 //        @Override
-//        public final Tuple<NodeId> convert(Record item)
+//        public final Tuple<NodeId> apply(Record item)
 //        {
 //            return TupleLib.tuple(item, colMap) ;
 //        }

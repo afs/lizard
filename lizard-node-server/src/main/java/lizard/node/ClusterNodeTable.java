@@ -20,19 +20,18 @@ package lizard.node;
 import java.util.Collection ;
 import java.util.Iterator ;
 import java.util.List ;
+import java.util.Objects ;
 
 import org.apache.jena.atlas.iterator.Iter ;
 import org.apache.jena.atlas.lib.InternalErrorException ;
-import org.apache.jena.atlas.lib.Lib ;
 import org.apache.jena.atlas.lib.NotImplemented ;
 import org.apache.jena.atlas.lib.Pair ;
 import org.apache.jena.atlas.logging.FmtLog ;
-import org.slf4j.Logger ;
-import org.slf4j.LoggerFactory ;
-
 import org.apache.jena.graph.Node ;
 import org.apache.jena.tdb.store.NodeId ;
 import org.apache.jena.tdb.store.nodetable.NodeTable ;
+import org.slf4j.Logger ;
+import org.slf4j.LoggerFactory ;
 
 /** NodeTable of a cluster of client side of remote NodeTables */
 public class ClusterNodeTable implements NodeTable {
@@ -57,7 +56,7 @@ public class ClusterNodeTable implements NodeTable {
             if ( nid == null )
                 nid = nid1 ;
             else {
-                if ( ! Lib.equal(nid, nid1) )
+                if ( ! Objects.equals(nid, nid1) )
                     FmtLog.warn(log, "Different NodeIds allocated for %s : %s != %s", node, nid, nid1) ;
             }
         }

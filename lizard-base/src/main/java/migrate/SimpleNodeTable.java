@@ -17,15 +17,13 @@
 
 package migrate;
 
+import static java.util.stream.Collectors.toList ;
+
 import java.util.HashMap ;
 import java.util.Iterator ;
 import java.util.Map ;
-import java.util.Map.Entry ;
 
-import org.apache.jena.atlas.iterator.Iter ;
-import org.apache.jena.atlas.iterator.Transform ;
 import org.apache.jena.atlas.lib.Pair ;
-
 import org.apache.jena.graph.Node ;
 import org.apache.jena.tdb.store.NodeId ;
 import org.apache.jena.tdb.store.nodetable.NodeTable ;
@@ -77,14 +75,11 @@ public class SimpleNodeTable implements NodeTable {
     
     @Override
     public Iterator<Pair<NodeId, Node>> all() {
-        Transform<Entry<NodeId, Node>, Pair<NodeId, Node>> transform = new Transform<Entry<NodeId, Node>, Pair<NodeId, Node>>() {
-            @Override
-            public Pair<NodeId, Node> convert(Entry<NodeId, Node> item) {
-                return Pair.create(item.getKey(), item.getValue()) ;
-            }
-        } ;
         // Materialize for simplicity.
-        return Iter.iter(idToNode.entrySet()).map(transform).toList().iterator() ;
+        return idToNode.entrySet().stream()
+            .map(item->Pair.create(item.getKey(), item.getValue()))
+            .collect(toList())
+            .iterator() ;
     }
 
     @Override

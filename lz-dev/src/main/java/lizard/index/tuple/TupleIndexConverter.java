@@ -101,7 +101,7 @@ public class TupleIndexConverter extends TupleIndexBase {
 //        {
 //            Transform<Tuple<NodeId>, Tuple<Node>> action =  new Transform<Tuple<NodeId>, Tuple<Node>>(){
 //                @Override
-//                public Tuple<Node> convert(Tuple<NodeId> item)
+//                public Tuple<Node> apply(Tuple<NodeId> item)
 //                {
 //                    return tupleNodes(nodeTable, item) ;
 //                }} ;
@@ -112,7 +112,7 @@ public class TupleIndexConverter extends TupleIndexBase {
 //        {
 //            Transform<Tuple<Node>, Tuple<NodeId>> action =  new Transform<Tuple<Node>, Tuple<NodeId>>(){
 //                @Override
-//                public Tuple<NodeId> convert(Tuple<Node> item)
+//                public Tuple<NodeId> apply(Tuple<Node> item)
 //                {
 //                    return tupleNodeIds(nodeTable, item) ;
 //                }} ;
@@ -124,7 +124,7 @@ public class TupleIndexConverter extends TupleIndexBase {
 //        {
 //            Transform<Tuple<NodeId>, Triple> action =  new Transform<Tuple<NodeId>, Triple>(){
 //                @Override
-//                public Triple convert(Tuple<NodeId> item)
+//                public Triple apply(Tuple<NodeId> item)
 //                {
 //                    return triple(nodeTable, item) ;
 //                }} ;
@@ -135,7 +135,7 @@ public class TupleIndexConverter extends TupleIndexBase {
 //        {
 //            Transform<Tuple<NodeId>, Quad> action =  new Transform<Tuple<NodeId>, Quad>(){
 //                @Override
-//                public Quad convert(Tuple<NodeId> item)
+//                public Quad apply(Tuple<NodeId> item)
 //                {
 //                    return quad(nodeTable, item) ;
 //                }} ;

@@ -47,7 +47,7 @@ public class Lz2BuilderNodeServer {
         Location loc = location.getSubLocation(x.data) ;
         int port = x.netAddr.port ;
         FmtLog.info(logConf, "buildNodeServer: %s %s", port, loc) ;
-        NodeTable nt = LzBuildDBOE.createNodeTable(A.convert(loc)) ;
+        NodeTable nt = LzBuildDBOE.createNodeTable(A.apply(loc)) ;
         TServerNode serverNode = TServerNode.create(port, nt) ;
         platform.add(serverNode) ;
         return serverNode ;

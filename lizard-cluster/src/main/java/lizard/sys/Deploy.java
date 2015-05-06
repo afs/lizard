@@ -73,7 +73,7 @@ public class Deploy {
         Location location = Location.create(idxSvc.data) ;
         FmtLog.info(Config.logConf, "BuildIndexServer: %s %s", idxSvc.port, location) ;
         String indexOrder = idxSvc.indexService.indexOrder ;
-        TupleIndex index = LzBuildDBOE.createTupleIndex(A.convert(location), indexOrder, "Idx"+indexOrder) ;
+        TupleIndex index = LzBuildDBOE.createTupleIndex(A.apply(location), indexOrder, "Idx"+indexOrder) ;
         TServerIndex serverIdx = TServerIndex.create(idxSvc.port, index) ;
         platform.add(serverIdx) ;
     }
@@ -82,7 +82,7 @@ public class Deploy {
     private static void buildNodeServer(NodeServer ns, Platform platform) {
         Location location = Location.create(ns.data) ;
         FmtLog.info(Config.logConf, "buildNodeServer: %s %s", ns.port, location) ;
-        NodeTable nt = LzBuildDBOE.createNodeTable(A.convert(location)) ;
+        NodeTable nt = LzBuildDBOE.createNodeTable(A.apply(location)) ;
         TServerNode serverNode = TServerNode.create(ns.port, nt) ;
         platform.add(serverNode) ;
     }

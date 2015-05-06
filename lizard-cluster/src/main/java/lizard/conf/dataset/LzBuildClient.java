@@ -93,7 +93,7 @@ public class LzBuildClient
 
     // KEEP.
     public static DatasetGraphTDB createDataset(org.seaborne.dboe.base.file.Location _location, TupleIndex[] tripleIndexes, NodeTable nodeTable) {
-        org.apache.jena.tdb.base.file.Location location = A.convert(_location) ;
+        org.apache.jena.tdb.base.file.Location location = A.apply(_location) ;
         DatasetControl policy = new DatasetControlMRSW() ;
         StoreParams params = StoreParams.getDftStoreParams() ;
         

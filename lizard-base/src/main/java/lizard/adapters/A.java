@@ -25,12 +25,12 @@ import org.seaborne.dboe.base.record.Record ;
 import org.seaborne.dboe.base.record.RecordFactory ;
 
 public class A {
-    public static FileSet convert(org.apache.jena.tdb.base.file.FileSet fileSet) {
-        Location loc = convert(fileSet.getLocation()) ;
+    public static FileSet apply(org.apache.jena.tdb.base.file.FileSet fileSet) {
+        Location loc = apply(fileSet.getLocation()) ;
         return new FileSet(loc, fileSet.getBasename()) ;
     }
     
-    public static Location convert(org.apache.jena.tdb.base.file.Location location) {
+    public static Location apply(org.apache.jena.tdb.base.file.Location location) {
         if ( location.isMemUnique() )
             // Call once.
             return Location.mem() ;
@@ -42,7 +42,7 @@ public class A {
         return Location.create(location.getDirectoryPath()) ;
     }
     
-    public static org.apache.jena.tdb.base.file.Location convert(Location location) {
+    public static org.apache.jena.tdb.base.file.Location apply(Location location) {
         if ( location.isMemUnique() )
             // Call once.
             return org.apache.jena.tdb.base.file.Location.mem() ;
