@@ -39,11 +39,11 @@ public class TLZ_NodeTable {
 
     public void nodePing() throws org.apache.thrift.TException;
 
-    public TLZ_NodeId allocNodeId(long requestId, long txnId, TLZ_Node node) throws org.apache.thrift.TException;
+    public TLZ_NodeId allocNodeId(long requestId, long txnId, TLZ_RDF_Term node) throws org.apache.thrift.TException;
 
-    public TLZ_NodeId findByNode(long requestId, long txnId, TLZ_Node node) throws org.apache.thrift.TException;
+    public TLZ_NodeId findByNode(long requestId, long txnId, TLZ_RDF_Term node) throws org.apache.thrift.TException;
 
-    public TLZ_Node findByNodeId(long requestId, long txnId, TLZ_NodeId nodeId) throws org.apache.thrift.TException;
+    public TLZ_RDF_Term findByNodeId(long requestId, long txnId, TLZ_NodeId nodeId) throws org.apache.thrift.TException;
 
   }
 
@@ -51,9 +51,9 @@ public class TLZ_NodeTable {
 
     public void nodePing(org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
-    public void allocNodeId(long requestId, long txnId, TLZ_Node node, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
+    public void allocNodeId(long requestId, long txnId, TLZ_RDF_Term node, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
-    public void findByNode(long requestId, long txnId, TLZ_Node node, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
+    public void findByNode(long requestId, long txnId, TLZ_RDF_Term node, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
     public void findByNodeId(long requestId, long txnId, TLZ_NodeId nodeId, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
@@ -98,13 +98,13 @@ public class TLZ_NodeTable {
       return;
     }
 
-    public TLZ_NodeId allocNodeId(long requestId, long txnId, TLZ_Node node) throws org.apache.thrift.TException
+    public TLZ_NodeId allocNodeId(long requestId, long txnId, TLZ_RDF_Term node) throws org.apache.thrift.TException
     {
       send_allocNodeId(requestId, txnId, node);
       return recv_allocNodeId();
     }
 
-    public void send_allocNodeId(long requestId, long txnId, TLZ_Node node) throws org.apache.thrift.TException
+    public void send_allocNodeId(long requestId, long txnId, TLZ_RDF_Term node) throws org.apache.thrift.TException
     {
       allocNodeId_args args = new allocNodeId_args();
       args.setRequestId(requestId);
@@ -123,13 +123,13 @@ public class TLZ_NodeTable {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "allocNodeId failed: unknown result");
     }
 
-    public TLZ_NodeId findByNode(long requestId, long txnId, TLZ_Node node) throws org.apache.thrift.TException
+    public TLZ_NodeId findByNode(long requestId, long txnId, TLZ_RDF_Term node) throws org.apache.thrift.TException
     {
       send_findByNode(requestId, txnId, node);
       return recv_findByNode();
     }
 
-    public void send_findByNode(long requestId, long txnId, TLZ_Node node) throws org.apache.thrift.TException
+    public void send_findByNode(long requestId, long txnId, TLZ_RDF_Term node) throws org.apache.thrift.TException
     {
       findByNode_args args = new findByNode_args();
       args.setRequestId(requestId);
@@ -148,7 +148,7 @@ public class TLZ_NodeTable {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "findByNode failed: unknown result");
     }
 
-    public TLZ_Node findByNodeId(long requestId, long txnId, TLZ_NodeId nodeId) throws org.apache.thrift.TException
+    public TLZ_RDF_Term findByNodeId(long requestId, long txnId, TLZ_NodeId nodeId) throws org.apache.thrift.TException
     {
       send_findByNodeId(requestId, txnId, nodeId);
       return recv_findByNodeId();
@@ -163,7 +163,7 @@ public class TLZ_NodeTable {
       sendBase("findByNodeId", args);
     }
 
-    public TLZ_Node recv_findByNodeId() throws org.apache.thrift.TException
+    public TLZ_RDF_Term recv_findByNodeId() throws org.apache.thrift.TException
     {
       findByNodeId_result result = new findByNodeId_result();
       receiveBase(result, "findByNodeId");
@@ -220,7 +220,7 @@ public class TLZ_NodeTable {
       }
     }
 
-    public void allocNodeId(long requestId, long txnId, TLZ_Node node, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
+    public void allocNodeId(long requestId, long txnId, TLZ_RDF_Term node, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
       checkReady();
       allocNodeId_call method_call = new allocNodeId_call(requestId, txnId, node, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
@@ -230,8 +230,8 @@ public class TLZ_NodeTable {
     public static class allocNodeId_call extends org.apache.thrift.async.TAsyncMethodCall {
       private long requestId;
       private long txnId;
-      private TLZ_Node node;
-      public allocNodeId_call(long requestId, long txnId, TLZ_Node node, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private TLZ_RDF_Term node;
+      public allocNodeId_call(long requestId, long txnId, TLZ_RDF_Term node, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.requestId = requestId;
         this.txnId = txnId;
@@ -258,7 +258,7 @@ public class TLZ_NodeTable {
       }
     }
 
-    public void findByNode(long requestId, long txnId, TLZ_Node node, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
+    public void findByNode(long requestId, long txnId, TLZ_RDF_Term node, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
       checkReady();
       findByNode_call method_call = new findByNode_call(requestId, txnId, node, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
@@ -268,8 +268,8 @@ public class TLZ_NodeTable {
     public static class findByNode_call extends org.apache.thrift.async.TAsyncMethodCall {
       private long requestId;
       private long txnId;
-      private TLZ_Node node;
-      public findByNode_call(long requestId, long txnId, TLZ_Node node, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private TLZ_RDF_Term node;
+      public findByNode_call(long requestId, long txnId, TLZ_RDF_Term node, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.requestId = requestId;
         this.txnId = txnId;
@@ -324,7 +324,7 @@ public class TLZ_NodeTable {
         prot.writeMessageEnd();
       }
 
-      public TLZ_Node getResult() throws org.apache.thrift.TException {
+      public TLZ_RDF_Term getResult() throws org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
@@ -606,7 +606,7 @@ public class TLZ_NodeTable {
       }
     }
 
-    public static class findByNodeId<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, findByNodeId_args, TLZ_Node> {
+    public static class findByNodeId<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, findByNodeId_args, TLZ_RDF_Term> {
       public findByNodeId() {
         super("findByNodeId");
       }
@@ -615,10 +615,10 @@ public class TLZ_NodeTable {
         return new findByNodeId_args();
       }
 
-      public AsyncMethodCallback<TLZ_Node> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
+      public AsyncMethodCallback<TLZ_RDF_Term> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new AsyncMethodCallback<TLZ_Node>() { 
-          public void onComplete(TLZ_Node o) {
+        return new AsyncMethodCallback<TLZ_RDF_Term>() { 
+          public void onComplete(TLZ_RDF_Term o) {
             findByNodeId_result result = new findByNodeId_result();
             result.success = o;
             try {
@@ -652,7 +652,7 @@ public class TLZ_NodeTable {
         return false;
       }
 
-      public void start(I iface, findByNodeId_args args, org.apache.thrift.async.AsyncMethodCallback<TLZ_Node> resultHandler) throws TException {
+      public void start(I iface, findByNodeId_args args, org.apache.thrift.async.AsyncMethodCallback<TLZ_RDF_Term> resultHandler) throws TException {
         iface.findByNodeId(args.requestId, args.txnId, args.nodeId,resultHandler);
       }
     }
@@ -1166,7 +1166,7 @@ public class TLZ_NodeTable {
 
     public long requestId; // required
     public long txnId; // required
-    public TLZ_Node node; // required
+    public TLZ_RDF_Term node; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -1244,7 +1244,7 @@ public class TLZ_NodeTable {
       tmpMap.put(_Fields.TXN_ID, new org.apache.thrift.meta_data.FieldMetaData("txnId", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64          , "TxnId")));
       tmpMap.put(_Fields.NODE, new org.apache.thrift.meta_data.FieldMetaData("node", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_Node.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_RDF_Term.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(allocNodeId_args.class, metaDataMap);
     }
@@ -1255,7 +1255,7 @@ public class TLZ_NodeTable {
     public allocNodeId_args(
       long requestId,
       long txnId,
-      TLZ_Node node)
+      TLZ_RDF_Term node)
     {
       this();
       this.requestId = requestId;
@@ -1273,7 +1273,7 @@ public class TLZ_NodeTable {
       this.requestId = other.requestId;
       this.txnId = other.txnId;
       if (other.isSetNode()) {
-        this.node = new TLZ_Node(other.node);
+        this.node = new TLZ_RDF_Term(other.node);
       }
     }
 
@@ -1336,11 +1336,11 @@ public class TLZ_NodeTable {
       __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __TXNID_ISSET_ID, value);
     }
 
-    public TLZ_Node getNode() {
+    public TLZ_RDF_Term getNode() {
       return this.node;
     }
 
-    public allocNodeId_args setNode(TLZ_Node node) {
+    public allocNodeId_args setNode(TLZ_RDF_Term node) {
       this.node = node;
       return this;
     }
@@ -1382,7 +1382,7 @@ public class TLZ_NodeTable {
         if (value == null) {
           unsetNode();
         } else {
-          setNode((TLZ_Node)value);
+          setNode((TLZ_RDF_Term)value);
         }
         break;
 
@@ -1549,9 +1549,6 @@ public class TLZ_NodeTable {
     public void validate() throws org.apache.thrift.TException {
       // check for required fields
       // check for sub-struct validity
-      if (node != null) {
-        node.validate();
-      }
     }
 
     private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
@@ -1608,7 +1605,7 @@ public class TLZ_NodeTable {
               break;
             case 3: // NODE
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.node = new TLZ_Node();
+                struct.node = new TLZ_RDF_Term();
                 struct.node.read(iprot);
                 struct.setNodeIsSet(true);
               } else { 
@@ -1693,7 +1690,7 @@ public class TLZ_NodeTable {
           struct.setTxnIdIsSet(true);
         }
         if (incoming.get(2)) {
-          struct.node = new TLZ_Node();
+          struct.node = new TLZ_RDF_Term();
           struct.node.read(iprot);
           struct.setNodeIsSet(true);
         }
@@ -2076,7 +2073,7 @@ public class TLZ_NodeTable {
 
     public long requestId; // required
     public long txnId; // required
-    public TLZ_Node node; // required
+    public TLZ_RDF_Term node; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -2154,7 +2151,7 @@ public class TLZ_NodeTable {
       tmpMap.put(_Fields.TXN_ID, new org.apache.thrift.meta_data.FieldMetaData("txnId", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64          , "TxnId")));
       tmpMap.put(_Fields.NODE, new org.apache.thrift.meta_data.FieldMetaData("node", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_Node.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_RDF_Term.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(findByNode_args.class, metaDataMap);
     }
@@ -2165,7 +2162,7 @@ public class TLZ_NodeTable {
     public findByNode_args(
       long requestId,
       long txnId,
-      TLZ_Node node)
+      TLZ_RDF_Term node)
     {
       this();
       this.requestId = requestId;
@@ -2183,7 +2180,7 @@ public class TLZ_NodeTable {
       this.requestId = other.requestId;
       this.txnId = other.txnId;
       if (other.isSetNode()) {
-        this.node = new TLZ_Node(other.node);
+        this.node = new TLZ_RDF_Term(other.node);
       }
     }
 
@@ -2246,11 +2243,11 @@ public class TLZ_NodeTable {
       __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __TXNID_ISSET_ID, value);
     }
 
-    public TLZ_Node getNode() {
+    public TLZ_RDF_Term getNode() {
       return this.node;
     }
 
-    public findByNode_args setNode(TLZ_Node node) {
+    public findByNode_args setNode(TLZ_RDF_Term node) {
       this.node = node;
       return this;
     }
@@ -2292,7 +2289,7 @@ public class TLZ_NodeTable {
         if (value == null) {
           unsetNode();
         } else {
-          setNode((TLZ_Node)value);
+          setNode((TLZ_RDF_Term)value);
         }
         break;
 
@@ -2459,9 +2456,6 @@ public class TLZ_NodeTable {
     public void validate() throws org.apache.thrift.TException {
       // check for required fields
       // check for sub-struct validity
-      if (node != null) {
-        node.validate();
-      }
     }
 
     private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
@@ -2518,7 +2512,7 @@ public class TLZ_NodeTable {
               break;
             case 3: // NODE
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.node = new TLZ_Node();
+                struct.node = new TLZ_RDF_Term();
                 struct.node.read(iprot);
                 struct.setNodeIsSet(true);
               } else { 
@@ -2603,7 +2597,7 @@ public class TLZ_NodeTable {
           struct.setTxnIdIsSet(true);
         }
         if (incoming.get(2)) {
-          struct.node = new TLZ_Node();
+          struct.node = new TLZ_RDF_Term();
           struct.node.read(iprot);
           struct.setNodeIsSet(true);
         }
@@ -3533,7 +3527,7 @@ public class TLZ_NodeTable {
       schemes.put(TupleScheme.class, new findByNodeId_resultTupleSchemeFactory());
     }
 
-    public TLZ_Node success; // required
+    public TLZ_RDF_Term success; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -3598,7 +3592,7 @@ public class TLZ_NodeTable {
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_Node.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_RDF_Term.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(findByNodeId_result.class, metaDataMap);
     }
@@ -3607,7 +3601,7 @@ public class TLZ_NodeTable {
     }
 
     public findByNodeId_result(
-      TLZ_Node success)
+      TLZ_RDF_Term success)
     {
       this();
       this.success = success;
@@ -3618,7 +3612,7 @@ public class TLZ_NodeTable {
      */
     public findByNodeId_result(findByNodeId_result other) {
       if (other.isSetSuccess()) {
-        this.success = new TLZ_Node(other.success);
+        this.success = new TLZ_RDF_Term(other.success);
       }
     }
 
@@ -3631,11 +3625,11 @@ public class TLZ_NodeTable {
       this.success = null;
     }
 
-    public TLZ_Node getSuccess() {
+    public TLZ_RDF_Term getSuccess() {
       return this.success;
     }
 
-    public findByNodeId_result setSuccess(TLZ_Node success) {
+    public findByNodeId_result setSuccess(TLZ_RDF_Term success) {
       this.success = success;
       return this;
     }
@@ -3661,7 +3655,7 @@ public class TLZ_NodeTable {
         if (value == null) {
           unsetSuccess();
         } else {
-          setSuccess((TLZ_Node)value);
+          setSuccess((TLZ_RDF_Term)value);
         }
         break;
 
@@ -3772,9 +3766,6 @@ public class TLZ_NodeTable {
     public void validate() throws org.apache.thrift.TException {
       // check for required fields
       // check for sub-struct validity
-      if (success != null) {
-        success.validate();
-      }
     }
 
     private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
@@ -3813,7 +3804,7 @@ public class TLZ_NodeTable {
           switch (schemeField.id) {
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.success = new TLZ_Node();
+                struct.success = new TLZ_RDF_Term();
                 struct.success.read(iprot);
                 struct.setSuccessIsSet(true);
               } else { 
@@ -3872,7 +3863,7 @@ public class TLZ_NodeTable {
         TTupleProtocol iprot = (TTupleProtocol) prot;
         BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
-          struct.success = new TLZ_Node();
+          struct.success = new TLZ_RDF_Term();
           struct.success.read(iprot);
           struct.setSuccessIsSet(true);
         }

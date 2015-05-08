@@ -96,12 +96,12 @@ public class ClusterTupleIndex extends TupleIndexBase
 
     @Override
     protected boolean performAdd(Tuple<NodeId> tuple) {
-        log.debug("Add - "+tuple) ;
+        FmtLog.debug(log, "Add - %s", tuple);
         List<TupleIndexRemote> places = distributor.storeAt(tuple) ;
         // ----
         boolean b = false ;
         for ( TupleIndexRemote idx : places ) {
-            log.debug("  Add @"+idx.getLabel()) ;
+            FmtLog.debug(log, "  Add @%s", idx.getLabel()) ;
             boolean b2 = idx.add(tuple) ;
             b = b2 | b ;
         }
@@ -110,7 +110,7 @@ public class ClusterTupleIndex extends TupleIndexBase
 
     @Override
     protected boolean performDelete(Tuple<NodeId> tuple) {
-        log.debug("Del - "+tuple) ;
+        FmtLog.debug(log, "Del - %s", tuple) ;
         List<TupleIndexRemote> places = distributor.storeAt(tuple) ;
         // ----
 
@@ -135,7 +135,6 @@ public class ClusterTupleIndex extends TupleIndexBase
     private Iterator<Tuple<NodeId>> performFindOnce(Tuple<NodeId> tuple) {
         List<TupleIndexRemote> places = distributor.findAt(tuple) ;
         // ----
-        
         FmtLog.info(log, "Going to: %s",places) ;
         
         for ( TupleIndexRemote idx : places ) {

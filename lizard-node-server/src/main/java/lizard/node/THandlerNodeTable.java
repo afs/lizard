@@ -22,19 +22,18 @@ import static org.apache.jena.query.ReadWrite.WRITE ;
 import lizard.adapters.AdapterObjectFile ;
 import lizard.adapters.AdapterRangeIndex ;
 import lizard.api.TxnHandler ;
-import lizard.api.TLZ.TLZ_Node ;
 import lizard.api.TLZ.TLZ_NodeId ;
 import lizard.api.TLZ.TLZ_NodeTable ;
+import lizard.api.TLZ.TLZ_RDF_Term ;
+import lizard.comms.thrift.ThriftLib ;
 
+import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.graph.Node ;
-import org.apache.jena.sparql.sse.SSE ;
+import org.apache.jena.riot.out.NodeFmtLib ;
 import org.apache.jena.tdb.store.NodeId ;
 import org.apache.jena.tdb.store.nodetable.NodeTable ;
 import org.apache.jena.tdb.store.nodetable.NodeTableCache ;
 import org.apache.jena.tdb.store.nodetable.NodeTableWrapper ;
-
-import org.apache.jena.atlas.logging.FmtLog ;
-import org.apache.jena.riot.out.NodeFmtLib ;
 import org.apache.thrift.TException ;
 import org.seaborne.dboe.base.file.Location ;
 import org.seaborne.dboe.index.RangeIndex ;
@@ -94,10 +93,10 @@ import org.slf4j.LoggerFactory ;
     }
 
     @Override
-    public TLZ_NodeId allocNodeId(long id, long txnId, TLZ_Node nz) throws TException {
+    public TLZ_NodeId allocNodeId(long id, long txnId, TLZ_RDF_Term nz) throws TException {
         if ( txnId <= 0 )
             FmtLog.info(log, "[%d] txnId = %d", id, txnId) ;
-        Node n = SSE.parseNode(nz.getNodeStr()) ;
+        Node n = ThriftLib.decodeFromTLZ(nz) ;
         return txnAlwaysReturn(txnId, WRITE, ()-> {
             NodeId nid = nodeTable.getAllocateNodeId(n) ;
             TLZ_NodeId nidz = new TLZ_NodeId() ;
@@ -108,8 +107,8 @@ import org.slf4j.LoggerFactory ;
     }
 
     @Override
-    public TLZ_NodeId findByNode(long id, long txnId, TLZ_Node nz) throws TException {
-        Node n = SSE.parseNode(nz.getNodeStr()) ;
+    public TLZ_NodeId findByNode(long id, long txnId, TLZ_RDF_Term nz) throws TException {
+        Node n = ThriftLib.decodeFromTLZ(nz) ;
         return txnAlwaysReturn(txnId, READ, ()-> {
             NodeId nid = nodeTable.getNodeIdForNode(n) ;
             // XXX Remove little structs
@@ -121,7 +120,7 @@ import org.slf4j.LoggerFactory ;
     }
 
     @Override
-    public TLZ_Node findByNodeId(long id, long txnId, TLZ_NodeId nz) throws TException {
+    public TLZ_RDF_Term findByNodeId(long id, long txnId, TLZ_NodeId nz) throws TException {
         NodeId nid = NodeId.create(nz.getNodeId()) ;
         return txnAlwaysReturn(txnId, READ, ()-> {
             Node n = nodeTable.getNodeForNodeId(nid) ;
@@ -129,7 +128,7 @@ import org.slf4j.LoggerFactory ;
                 FmtLog.error(log, "NodeId not found: "+nid) ;
             String str = NodeFmtLib.str(n) ;
             FmtLog.info(log, "[%d:%d] NodeId get request : %s => %s", id, txnId, nid, n) ;
-            TLZ_Node nlz = new TLZ_Node().setNodeStr(str) ;
+            TLZ_RDF_Term nlz = ThriftLib.encodeToTLZ(n) ;
             return nlz ;
         }) ;
     }

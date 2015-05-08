@@ -70,8 +70,6 @@ public class LzDev {
     static int counter = 0 ;
 
     public static void main(String[] args) {
-        FileOps.clearAll("DB");
-        
         try { main$(args) ; }
         catch (Exception ex) { 
             System.out.flush() ;
@@ -82,6 +80,8 @@ public class LzDev {
     }
 
     public static void main$(String[] args) {
+        FileOps.clearAll("DB");
+
         log.info("SERVERS") ;
         try { 
             Deployment deployment = Deploy.deployServers(config, deploymentFile);
@@ -101,14 +101,16 @@ public class LzDev {
         LzDataset lz = buildDataset(config) ;
         Dataset ds = LzBuildClient.dataset(lz, Location.mem()) ;
 
-        // Do a long, slow load.
-        ds.begin(ReadWrite.WRITE);
-        RDFDataMgr.read(ds, "D.ttl") ;
-        ds.commit() ;
-        ds.end() ;
+        load(ds,"/home/afs/Datasets/BSBM/bsbm-5m.nt.gz");
+        System.exit(0) ;
         
-        L.async(()->load(ds,"/home/afs/Datasets/BSBM/bsbm-1m.nt.gz")) ;
-        Lib.sleep(1000);
+//        ds.begin(ReadWrite.WRITE);
+//        RDFDataMgr.read(ds, "D.ttl") ;
+//        ds.commit() ;
+//        ds.end() ;
+        
+        //L.async(()->load(ds,"/home/afs/Datasets/BSBM/bsbm-5m.nt.gz")) ;
+        //Lib.sleep(1000);
 
         log.info("QUERY") ;
         ds.begin(ReadWrite.READ) ;
