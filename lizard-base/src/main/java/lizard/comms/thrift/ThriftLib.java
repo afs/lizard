@@ -80,8 +80,7 @@ public class ThriftLib {
             return term ;
         }
         if ( node.isLiteral() ) {
-            // XXX
-            // Specific encodings.
+            // XXX Specific encodings: integer, double, etc. 
             TLZ_RDF_Literal lit = new TLZ_RDF_Literal() ;
             term.setLiteral(lit) ;
             lit.setLex(node.getLiteralLexicalForm()) ;
@@ -112,6 +111,4 @@ public class ThriftLib {
         }
         throw new LizardException("Unrecognized RDF Term: "+tlz_node) ;
     }
-    
-
 }

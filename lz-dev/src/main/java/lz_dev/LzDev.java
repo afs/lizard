@@ -48,7 +48,6 @@ import org.apache.jena.riot.system.StreamRDF ;
 import org.apache.jena.riot.system.StreamRDFLib ;
 import org.apache.jena.sparql.util.QueryExecUtils ;
 import org.seaborne.dboe.base.file.Location ;
-import org.seaborne.dboe.migrate.L ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
@@ -68,7 +67,8 @@ public class LzDev {
     static NodeTableRemote ntr = null ;
     //static TupleIndexRemote tir = null ;
     static int counter = 0 ;
-
+    
+    
     public static void main(String[] args) {
         try { main$(args) ; }
         catch (Exception ex) { 

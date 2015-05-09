@@ -20,10 +20,15 @@ package lz_dev ;
 public class PROJECT_Lizard {
     // Tasks
     
+    // Share Thrift encoding with RIOT
+    // ThriftConvert is better that ThriftLib?
+    
     // Scaling:
     // A - Fix locks on ThriftLib.
     // B - Batching updates (and flow reversal)
     // C - Block allocate txn ids but still need the lock.
+    
+    // Thriftlib: Specific encodings: integer, double, etc. 
     
     // Node caching
     //  1 - move to hash NodeId

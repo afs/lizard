@@ -49,18 +49,19 @@ public class LzBuildDBOE
     // Temporary - for object files.
     static ComponentId cid2 = ComponentId.allocLocal() ;
 
-    private static BlockMgrBuilder blockMgrBuilder                 = new BlockMgrBuilderStd() ;
-    /*package*/ static IndexBuilder indexBuilderDBoe               = new IndexBuilderBPTree(cid1, blockMgrBuilder, blockMgrBuilder) ;
-    /*package*/ static RangeIndexBuilder rangeIndexBuilderDBoe     = new RangeIndexBuilderBPTree(cid1, blockMgrBuilder, blockMgrBuilder) ;
+    // Public for development only */
+    public/*package*/ static BlockMgrBuilder blockMgrBuilder                 = new BlockMgrBuilderStd() ;
+    public/*package*/ static IndexBuilder indexBuilderDBoe               = new IndexBuilderBPTree(cid1, blockMgrBuilder, blockMgrBuilder) ;
+    public/*package*/ static RangeIndexBuilder rangeIndexBuilderDBoe     = new RangeIndexBuilderBPTree(cid1, blockMgrBuilder, blockMgrBuilder) ;
 
     // DBOE to TDB class hierarchies.
     // Build TDB style but using Mantis.
-    static org.apache.jena.tdb.index.RangeIndexBuilder rangeIndexBuilderTDB     = new AdapterRangeIndexBuilder() ;
-    static org.apache.jena.tdb.index.IndexBuilder      indexBuilderTDB          = new AdapterIndexBuilder() ;
-    static org.apache.jena.tdb.setup.ObjectFileBuilder objectFileBuilderTDB     = new AdapterObjectFileBuilder() ;
+    public/*private*/ static org.apache.jena.tdb.index.RangeIndexBuilder rangeIndexBuilderTDB     = new AdapterRangeIndexBuilder() ;
+    public/*private*/ static org.apache.jena.tdb.index.IndexBuilder      indexBuilderTDB          = new AdapterIndexBuilder() ;
+    public/*private*/ static org.apache.jena.tdb.setup.ObjectFileBuilder objectFileBuilderTDB     = new AdapterObjectFileBuilder() ;
 
-    private static TupleIndexBuilder tupleIndexBuilder     = new BuilderStdDB.TupleIndexBuilderStd(rangeIndexBuilderTDB) ;
-    private static NodeTableBuilder nodeTableBuilder       = new NodeTableBuilderDBOE(indexBuilderTDB, objectFileBuilderTDB) ;
+    public/*private*/ static TupleIndexBuilder tupleIndexBuilder     = new BuilderStdDB.TupleIndexBuilderStd(rangeIndexBuilderTDB) ;
+    public/*private*/ static NodeTableBuilder nodeTableBuilder       = new NodeTableBuilderDBOE(indexBuilderTDB, objectFileBuilderTDB) ;
 
     private static StoreParams params = StoreParams.builder().build() ;
 
