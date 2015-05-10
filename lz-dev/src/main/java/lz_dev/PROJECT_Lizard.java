@@ -23,6 +23,10 @@ public class PROJECT_Lizard {
     // Share Thrift encoding with RIOT
     // ThriftConvert is better that ThriftLib?
     
+    // From TDB2 - combined transaction and DatasetGraphTDB.
+    // NodeTableNative2, NodeTableTLZ
+    // Use TDB2, not TDB?
+    
     // Scaling:
     // A - Fix locks on ThriftLib.
     // B - Batching updates (and flow reversal)
