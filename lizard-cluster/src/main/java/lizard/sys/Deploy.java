@@ -17,8 +17,8 @@
 
 package lizard.sys;
 
-import org.apache.jena.tdb.store.nodetable.NodeTable ;
-import org.apache.jena.tdb.store.tupletable.TupleIndex ;
+import org.seaborne.tdb2.store.nodetable.NodeTable ;
+import org.seaborne.tdb2.store.tupletable.TupleIndex ;
 
 import lizard.adapters.A ;
 import lizard.cluster.Platform ;

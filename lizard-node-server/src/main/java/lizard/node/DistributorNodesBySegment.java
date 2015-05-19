@@ -17,8 +17,6 @@
 
 package lizard.node;
 
-import static org.apache.jena.tdb.lib.NodeLib.setHash ;
-
 import java.util.ArrayList ;
 import java.util.Arrays ;
 import java.util.Collection ;
@@ -32,9 +30,10 @@ import org.apache.jena.atlas.lib.InternalErrorException ;
 import org.apache.jena.ext.com.google.common.collect.ArrayListMultimap ;
 import org.apache.jena.ext.com.google.common.collect.ListMultimap ;
 import org.apache.jena.graph.Node ;
-import org.apache.jena.tdb.store.Hash ;
-import org.apache.jena.tdb.store.NodeId ;
-import org.apache.jena.tdb.sys.SystemTDB ;
+import org.seaborne.tdb2.lib.NodeLib ;
+import org.seaborne.tdb2.store.Hash ;
+import org.seaborne.tdb2.store.NodeId ;
+import org.seaborne.tdb2.sys.SystemTDB ;
 
 /** Distribute by segment (in Nodeid)
  *  OLD CODE
@@ -159,7 +158,7 @@ public class DistributorNodesBySegment implements DistributorNodes {
     private long segment(Node node) {
         // @@ Overly expensive
         Hash hash = new Hash(SystemTDB.LenNodeHash) ;
-        setHash(hash, node) ;
+        NodeLib.setHash(hash, node) ;
         byte k[] = hash.getBytes() ;
         // Positive 
         int x = Bytes.getInt(k, 0) & 0x8FFFFFF ;

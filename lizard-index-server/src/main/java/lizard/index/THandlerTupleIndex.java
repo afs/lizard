@@ -24,26 +24,22 @@ import java.util.ArrayList ;
 import java.util.Iterator ;
 import java.util.List ;
 
-import lizard.adapters.AdapterRangeIndex ;
 import lizard.api.TLZlib ;
 import lizard.api.TxnHandler ;
 import lizard.api.TLZ.TLZ_Index ;
 import lizard.api.TLZ.TLZ_ShardIndex ;
 import lizard.api.TLZ.TLZ_TupleNodeId ;
-
-import org.apache.jena.tdb.store.NodeId ;
-import org.apache.jena.tdb.store.tupletable.TupleIndex ;
-import org.apache.jena.tdb.store.tupletable.TupleIndexRecord ;
-
 import org.apache.jena.atlas.lib.Tuple ;
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.thrift.TException ;
 import org.seaborne.dboe.base.file.Location ;
-import org.seaborne.dboe.index.RangeIndex ;
 import org.seaborne.dboe.trans.bplustree.BPlusTree ;
 import org.seaborne.dboe.transaction.txn.TransactionalBase ;
 import org.seaborne.dboe.transaction.txn.TransactionalSystem ;
 import org.seaborne.dboe.transaction.txn.journal.Journal ;
+import org.seaborne.tdb2.store.NodeId ;
+import org.seaborne.tdb2.store.tupletable.TupleIndex ;
+import org.seaborne.tdb2.store.tupletable.TupleIndexRecord ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
@@ -76,9 +72,7 @@ import org.slf4j.LoggerFactory ;
 
     static BPlusTree unwrap(TupleIndex index) {
         TupleIndexRecord tir = (TupleIndexRecord)index ;
-        AdapterRangeIndex ari = (AdapterRangeIndex)(tir.getRangeIndex()) ;
-        RangeIndex ri = ari.getUnderlyingRangeIndex() ;
-        return (BPlusTree)ri ;
+        return (BPlusTree)(tir.getRangeIndex()) ;
     }
     
     @Override

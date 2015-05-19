@@ -20,7 +20,7 @@ package lizard.index;
 import lizard.api.TLZ.TLZ_Index ;
 import lizard.comms.thrift.ThriftServer ;
 
-import org.apache.jena.tdb.store.tupletable.TupleIndex ;
+import org.seaborne.tdb2.store.tupletable.TupleIndex ;
 
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.thrift.protocol.TCompactProtocol ;

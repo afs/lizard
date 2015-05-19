@@ -32,8 +32,8 @@ import org.slf4j.LoggerFactory ;
 
 import org.apache.jena.graph.Node ;
 import org.apache.jena.query.ReadWrite ;
-import org.apache.jena.tdb.store.NodeId ;
-import org.apache.jena.tdb.store.nodetable.NodeTable ;
+import org.seaborne.tdb2.store.NodeId ;
+import org.seaborne.tdb2.store.nodetable.NodeTable ;
 
 /** NodeTable interface to a remote node table server */
 public class NodeTableRemote implements ComponentTxn, Component, NodeTable, Pingable, TxnClient.Accessor {
@@ -91,11 +91,6 @@ public class NodeTableRemote implements ComponentTxn, Component, NodeTable, Ping
 
     @Override
     public Iterator<Pair<NodeId, Node>> all() {
-        throw new NotImplemented() ;
-    }
-
-    @Override
-    public NodeId allocOffset() {
         throw new NotImplemented() ;
     }
 

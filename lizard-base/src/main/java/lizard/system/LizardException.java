@@ -17,9 +17,9 @@
 
 package lizard.system;
 
-import org.apache.jena.tdb.TDBException ;
+import org.seaborne.dboe.DBOpEnvException ;
 
-public class LizardException extends TDBException
+public class LizardException extends DBOpEnvException
 {
     public LizardException(String msg, Throwable cause)    { super(msg, cause) ; }
     public LizardException(String msg)                     { super(msg) ; }

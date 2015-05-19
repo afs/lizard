@@ -21,12 +21,12 @@ import java.io.PrintStream ;
 import java.util.List ;
 
 import org.apache.jena.rdf.model.Model ;
-import org.apache.jena.tdb.base.file.Location ;
-import org.apache.jena.tdb.store.nodetable.NodeTable ;
-import org.apache.jena.tdb.store.nodetupletable.NodeTupleTable ;
-import org.apache.jena.tdb.store.nodetupletable.NodeTupleTableConcrete ;
-import org.apache.jena.tdb.store.tupletable.TupleIndex ;
-import org.apache.jena.tdb.sys.DatasetControlMRSW ;
+import org.seaborne.tdb2.base.file.Location ;
+import org.seaborne.tdb2.store.nodetable.NodeTable ;
+import org.seaborne.tdb2.store.nodetupletable.NodeTupleTable ;
+import org.seaborne.tdb2.store.nodetupletable.NodeTupleTableConcrete ;
+import org.seaborne.tdb2.store.tupletable.TupleIndex ;
+import org.seaborne.tdb2.sys.DatasetControlMRSW ;
 
 import lizard.cluster.Platform ;
 import lizard.conf.dataset.ConfigLizardDataset ;

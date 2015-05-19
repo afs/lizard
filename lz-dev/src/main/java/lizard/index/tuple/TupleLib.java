@@ -30,11 +30,11 @@ import org.apache.jena.atlas.lib.Tuple ;
 import org.apache.jena.graph.Node ;
 import org.apache.jena.graph.Triple ;
 import org.apache.jena.sparql.core.Quad ;
-import org.apache.jena.tdb.TDBException ;
-import org.apache.jena.tdb.base.record.Record ;
-import org.apache.jena.tdb.base.record.RecordFactory ;
-import org.apache.jena.tdb.store.NodeId ;
-import org.apache.jena.tdb.store.nodetable.NodeTable ;
+import org.seaborne.dboe.base.record.Record ;
+import org.seaborne.dboe.base.record.RecordFactory ;
+import org.seaborne.tdb2.TDBException ;
+import org.seaborne.tdb2.store.NodeId ;
+import org.seaborne.tdb2.store.nodetable.NodeTable ;
 
 public class TupleLib
 {

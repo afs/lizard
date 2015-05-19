@@ -21,7 +21,7 @@ import java.util.Collection ;
 import java.util.List ;
 
 import org.apache.jena.graph.Node ;
-import org.apache.jena.tdb.store.NodeId ;
+import org.seaborne.tdb2.store.NodeId ;
 
 public interface DistributorNodes {
     public List<NodeTableRemote> storeAt(Node node) ;

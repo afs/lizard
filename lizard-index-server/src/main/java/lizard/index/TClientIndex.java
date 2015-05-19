@@ -32,12 +32,10 @@ import lizard.comms.Connection ;
 import lizard.comms.thrift.ThriftClient ;
 import lizard.system.ComponentTxn ;
 import lizard.system.Pingable ;
-
-import org.apache.jena.tdb.store.NodeId ;
-
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.Tuple ;
 import org.apache.jena.atlas.logging.FmtLog ;
+import org.seaborne.tdb2.store.NodeId ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 

@@ -20,7 +20,6 @@ package conf2.build;
 import java.util.ArrayList ;
 import java.util.List ;
 
-import lizard.adapters.A ;
 import lizard.api.TxnClient ;
 import lizard.cluster.Cluster ;
 import lizard.conf.Config ;
@@ -35,11 +34,6 @@ import lizard.query.LzDataset ;
 import lizard.query.QuackLizard ;
 import lizard.system.Component ;
 import migrate.TupleIndexEmpty ;
-import conf2.conf.ConfCluster ;
-import conf2.conf.ConfDataset ;
-import conf2.conf.ConfIndex ;
-import conf2.conf.ConfNodeTable ;
-
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.StrUtils ;
 import org.apache.jena.atlas.logging.FmtLog ;
@@ -49,29 +43,33 @@ import org.apache.jena.query.DatasetFactory ;
 import org.apache.jena.sparql.core.DatasetGraph ;
 import org.apache.jena.sparql.engine.main.QC ;
 import org.apache.jena.sparql.engine.optimizer.reorder.ReorderLib ;
-import org.apache.jena.tdb.base.file.FileSet ;
-import org.apache.jena.tdb.base.record.RecordFactory ;
-import org.apache.jena.tdb.index.* ;
-import org.apache.jena.tdb.setup.StoreParams ;
-import org.apache.jena.tdb.store.DatasetGraphTDB ;
-import org.apache.jena.tdb.store.DatasetPrefixesTDB ;
-import org.apache.jena.tdb.store.QuadTable ;
-import org.apache.jena.tdb.store.TripleTable ;
-import org.apache.jena.tdb.store.nodetable.NodeTable ;
-import org.apache.jena.tdb.store.nodetable.NodeTableCache ;
-import org.apache.jena.tdb.store.nodetable.NodeTableInline ;
-import org.apache.jena.tdb.store.tupletable.TupleIndex ;
-import org.apache.jena.tdb.sys.DatasetControl ;
-import org.apache.jena.tdb.sys.DatasetControlMRSW ;
-import org.apache.jena.tdb.sys.Names ;
+import org.seaborne.dboe.base.file.FileSet ;
 import org.seaborne.dboe.base.file.Location ;
+import org.seaborne.dboe.base.record.RecordFactory ;
+import org.seaborne.dboe.index.* ;
+import org.seaborne.dboe.sys.Names ;
 import org.seaborne.dboe.transaction.Transactional ;
 import org.seaborne.dboe.transaction.txn.ComponentId ;
 import org.seaborne.dboe.transaction.txn.TransactionCoordinator ;
 import org.seaborne.dboe.transaction.txn.TransactionalBase ;
 import org.seaborne.dboe.transaction.txn.TransactionalComponent ;
 import org.seaborne.dboe.transaction.txn.journal.Journal ;
+import org.seaborne.tdb2.setup.StoreParams ;
+import org.seaborne.tdb2.store.DatasetGraphTDB ;
+import org.seaborne.tdb2.store.DatasetPrefixesTDB ;
+import org.seaborne.tdb2.store.QuadTable ;
+import org.seaborne.tdb2.store.TripleTable ;
+import org.seaborne.tdb2.store.nodetable.NodeTable ;
+import org.seaborne.tdb2.store.nodetable.NodeTableCache ;
+import org.seaborne.tdb2.store.nodetable.NodeTableInline ;
+import org.seaborne.tdb2.store.tupletable.TupleIndex ;
+import org.seaborne.tdb2.sys.DatasetControl ;
+import org.seaborne.tdb2.sys.DatasetControlMRSW ;
 import org.slf4j.Logger ;
+import conf2.conf.ConfCluster ;
+import conf2.conf.ConfDataset ;
+import conf2.conf.ConfIndex ;
+import conf2.conf.ConfNodeTable ;
 
 
 
@@ -146,8 +144,7 @@ public class Lz2BuilderDataset {
         return nodeTable ;
     }
     
-    private static DatasetGraphTDB createDataset(Location _location, TupleIndex[] tripleIndexes, NodeTable nodeTable) {
-        org.apache.jena.tdb.base.file.Location location = A.apply(_location) ;
+    private static DatasetGraphTDB createDataset(Location location, TupleIndex[] tripleIndexes, NodeTable nodeTable) {
         DatasetControl policy = new DatasetControlMRSW() ;
         StoreParams params = StoreParams.getDftStoreParams() ;
         

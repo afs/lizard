@@ -32,7 +32,7 @@ import lizard.system.Pingable ;
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.graph.Node ;
 import org.apache.jena.riot.out.NodeFmtLib ;
-import org.apache.jena.tdb.store.NodeId ;
+import org.seaborne.tdb2.store.NodeId ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
  

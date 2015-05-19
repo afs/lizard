@@ -25,7 +25,7 @@ import org.seaborne.dboe.engine.tdb.OpExecutorQuackTDB.OpExecSetup ;
 import org.apache.jena.sparql.engine.ExecutionContext ;
 import org.apache.jena.sparql.engine.main.OpExecutor ;
 import org.apache.jena.sparql.engine.main.OpExecutorFactory ;
-import org.apache.jena.tdb.store.DatasetGraphTDB ;
+import org.seaborne.tdb2.store.DatasetGraphTDB ;
 
 public class QuackLizard {
 

@@ -43,10 +43,10 @@ import org.slf4j.LoggerFactory ;
 import org.apache.jena.query.QuerySolution ;
 import org.apache.jena.rdf.model.Model ;
 import org.apache.jena.rdf.model.Resource ;
-import org.apache.jena.tdb.base.file.Location ;
-import org.apache.jena.tdb.setup.Build ;
-import org.apache.jena.tdb.store.tupletable.TupleIndex ;
-import org.apache.jena.tdb.sys.Names ;
+import org.seaborne.tdb2.base.file.Location ;
+import org.seaborne.tdb2.setup.Build ;
+import org.seaborne.tdb2.store.tupletable.TupleIndex ;
+import org.seaborne.tdb2.sys.Names ;
 
 /** Configuration of indexes */
 public class ConfigIndex {

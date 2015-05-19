@@ -27,8 +27,7 @@ import org.apache.thrift.protocol.TProtocol ;
 import org.apache.thrift.transport.TMemoryBuffer ;
 import org.apache.thrift.transport.TTransport ;
 import org.junit.Test ;
-
-import org.apache.jena.tdb.store.NodeId ;
+import org.seaborne.tdb2.store.NodeId ;
 
 /**
  * This class is just a few test to make sure things look OK.

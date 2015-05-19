@@ -29,7 +29,7 @@ import org.apache.jena.atlas.lib.Tuple ;
 import org.apache.jena.atlas.logging.Log ;
 import org.apache.jena.ext.com.google.common.collect.ArrayListMultimap ;
 import org.apache.jena.ext.com.google.common.collect.ListMultimap ;
-import org.apache.jena.tdb.store.NodeId ;
+import org.seaborne.tdb2.store.NodeId ;
 
 /** Policy for the placement of triples (and finding them) partition by subject. */
 

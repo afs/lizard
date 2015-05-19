@@ -22,9 +22,8 @@ import java.util.Iterator ;
 import org.apache.jena.atlas.iterator.Iter ;
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.Tuple ;
-
-import org.apache.jena.tdb.store.NodeId ;
-import org.apache.jena.tdb.store.tupletable.TupleIndexBase ;
+import org.seaborne.tdb2.store.NodeId ;
+import org.seaborne.tdb2.store.tupletable.TupleIndexBase ;
 
 /** An immutably empty tuple idnex - it is a sink (add provided but does nothing) */
 public class TupleIndexEmpty extends TupleIndexBase {

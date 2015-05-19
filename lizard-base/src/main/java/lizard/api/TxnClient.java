@@ -27,11 +27,9 @@ import lizard.comms.thrift.ThriftLib.ThriftRunnable ;
 import lizard.system.ComponentBase ;
 import lizard.system.ComponentTxn ;
 import lizard.system.LizardException ;
-
-import org.apache.jena.query.ReadWrite ;
-
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.atlas.logging.Log ;
+import org.apache.jena.query.ReadWrite ;
 import org.slf4j.Logger ;
 
 public abstract class TxnClient<X extends TxnCtl.Client> extends ComponentBase implements ComponentTxn {

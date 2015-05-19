@@ -24,19 +24,16 @@ import lizard.conf.Config ;
 import lizard.conf.dataset.LzDatasetDesc ;
 import lizard.system.LizardException ;
 import migrate.Q ;
-
 import org.apache.jena.query.QuerySolution ;
 import org.apache.jena.rdf.model.Model ;
 import org.apache.jena.rdf.model.Resource ;
-import org.apache.jena.tdb.sys.Names ;
-
 import conf2.LzConfigurationException ;
 import conf2.conf.* ;
-
 import org.apache.jena.atlas.lib.StrUtils ;
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.riot.system.PrefixMap ;
 import org.apache.jena.riot.system.PrefixMapFactory ;
+import org.seaborne.dboe.sys.Names ;
 import org.slf4j.Logger ;
 
 public class LzConfParserRDF {

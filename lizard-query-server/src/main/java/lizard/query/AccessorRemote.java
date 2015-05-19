@@ -29,7 +29,7 @@ import org.seaborne.dboe.engine.tdb.AccessorTDB ;
 import org.seaborne.dboe.engine.tdb.AccessorTDBDebug ;
 import org.seaborne.dboe.engine.tdb.StorageTDB ;
 
-import org.apache.jena.tdb.store.NodeId ;
+import org.seaborne.tdb2.store.NodeId ;
 
 public class AccessorRemote extends AccessorTDB implements Accessor<NodeId> {
     public static AccessorTDB create(StorageTDB db) {

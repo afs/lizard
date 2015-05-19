@@ -37,9 +37,9 @@ import org.apache.jena.sparql.ARQException ;
 import org.apache.jena.sparql.core.assembler.DatasetAssemblerVocab ;
 import org.apache.jena.sparql.util.TypeNotUniqueException ;
 import org.apache.jena.sparql.util.graph.GraphUtils ;
-import org.apache.jena.tdb.store.DatasetGraphTDB ;
-import org.apache.jena.tdb.store.nodetable.NodeTable ;
-import org.apache.jena.tdb.store.tupletable.TupleIndex ;
+import org.seaborne.tdb2.store.DatasetGraphTDB ;
+import org.seaborne.tdb2.store.nodetable.NodeTable ;
+import org.seaborne.tdb2.store.tupletable.TupleIndex ;
 
 import org.apache.jena.atlas.logging.Log ;
 import org.seaborne.dboe.base.file.Location ;

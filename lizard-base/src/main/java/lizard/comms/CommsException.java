@@ -17,9 +17,9 @@
 
 package lizard.comms;
 
-import org.apache.jena.tdb.TDBException ;
+import lizard.system.LizardException ;
 
-public class CommsException extends TDBException
+public class CommsException extends LizardException
 {
     public CommsException(String msg, Throwable cause)    { super(msg, cause) ; }
     public CommsException(String msg)                     { super(msg) ; }

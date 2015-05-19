@@ -24,12 +24,11 @@ import java.util.Objects ;
 
 import org.apache.jena.atlas.iterator.Iter ;
 import org.apache.jena.atlas.lib.InternalErrorException ;
-import org.apache.jena.atlas.lib.NotImplemented ;
 import org.apache.jena.atlas.lib.Pair ;
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.graph.Node ;
-import org.apache.jena.tdb.store.NodeId ;
-import org.apache.jena.tdb.store.nodetable.NodeTable ;
+import org.seaborne.tdb2.store.NodeId ;
+import org.seaborne.tdb2.store.nodetable.NodeTable ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
@@ -117,11 +116,6 @@ public class ClusterNodeTable implements NodeTable {
                 iter = iter1 ;
         }
         return iter ; 
-    }
-
-    @Override
-    public NodeId allocOffset() {
-        throw new NotImplemented("ClusterNodeTable") ; 
     }
 
     @Override

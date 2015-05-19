@@ -27,17 +27,17 @@ import org.slf4j.LoggerFactory ;
 import org.apache.jena.query.ARQ ;
 import org.apache.jena.sparql.engine.main.QC ;
 import org.apache.jena.sparql.engine.optimizer.reorder.ReorderTransformation ;
-import org.apache.jena.tdb.TDBException ;
-import org.apache.jena.tdb.base.file.FileSet ;
-import org.apache.jena.tdb.base.file.Location ;
-import org.apache.jena.tdb.index.IndexBuilder ;
-import org.apache.jena.tdb.index.RangeIndexBuilder ;
-import org.apache.jena.tdb.setup.* ;
-import org.apache.jena.tdb.store.* ;
-import org.apache.jena.tdb.store.nodetable.NodeTable ;
-import org.apache.jena.tdb.store.tupletable.TupleIndex ;
-import org.apache.jena.tdb.sys.DatasetControl ;
-import org.apache.jena.tdb.sys.DatasetControlMRSW ;
+import org.seaborne.tdb2.TDBException ;
+import org.seaborne.tdb2.base.file.FileSet ;
+import org.seaborne.tdb2.base.file.Location ;
+import org.seaborne.tdb2.index.IndexBuilder ;
+import org.seaborne.tdb2.index.RangeIndexBuilder ;
+import org.seaborne.tdb2.setup.* ;
+import org.seaborne.tdb2.store.* ;
+import org.seaborne.tdb2.store.nodetable.NodeTable ;
+import org.seaborne.tdb2.store.tupletable.TupleIndex ;
+import org.seaborne.tdb2.sys.DatasetControl ;
+import org.seaborne.tdb2.sys.DatasetControlMRSW ;
 
 /** Make TDB storage dataset graphs : not for transactional datasets */ 
 

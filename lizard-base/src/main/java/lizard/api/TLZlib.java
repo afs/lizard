@@ -21,8 +21,7 @@ import lizard.api.TLZ.TLZ_IndexName ;
 import lizard.api.TLZ.TLZ_TupleNodeId ;
 import org.apache.jena.atlas.lib.InternalErrorException ;
 import org.apache.jena.atlas.lib.Tuple ;
-
-import org.apache.jena.tdb.store.NodeId ;
+import org.seaborne.tdb2.store.NodeId ;
 
 public class TLZlib {
     public static TLZ_TupleNodeId build(Tuple<NodeId> tuple) {

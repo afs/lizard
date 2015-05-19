@@ -29,8 +29,8 @@ import lizard.system.ComponentTxn ;
 import lizard.system.Pingable ;
 
 import org.apache.jena.query.ReadWrite ;
-import org.apache.jena.tdb.store.NodeId ;
-import org.apache.jena.tdb.store.tupletable.TupleIndexBase ;
+import org.seaborne.tdb2.store.NodeId ;
+import org.seaborne.tdb2.store.tupletable.TupleIndexBase ;
 
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.NotImplemented ;

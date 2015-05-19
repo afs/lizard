@@ -31,13 +31,13 @@ import org.apache.jena.atlas.iterator.SingletonIterator ;
 import org.apache.jena.atlas.lib.Bytes ;
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.Tuple ;
-import org.apache.jena.tdb.TDBException ;
-import org.apache.jena.tdb.base.record.Record ;
-import org.apache.jena.tdb.base.record.RecordFactory ;
-import org.apache.jena.tdb.index.RangeIndex ;
-import org.apache.jena.tdb.lib.TupleLib ;
-import org.apache.jena.tdb.store.NodeId ;
-import org.apache.jena.tdb.store.tupletable.TupleIndexBase ;
+import org.seaborne.dboe.base.record.Record ;
+import org.seaborne.dboe.base.record.RecordFactory ;
+import org.seaborne.dboe.index.RangeIndex ;
+import org.seaborne.tdb2.TDBException ;
+import org.seaborne.tdb2.lib.TupleLib ;
+import org.seaborne.tdb2.store.NodeId ;
+import org.seaborne.tdb2.store.tupletable.TupleIndexBase ;
 
 public class TupleIndexRecord extends TupleIndexBase
 {
@@ -60,7 +60,7 @@ public class TupleIndexRecord extends TupleIndexBase
     protected boolean performAdd(Tuple<NodeId> tuple) 
     { 
         Record r = TupleLib.record(factory, tuple, colMap) ;
-        return index.add(r) ;
+        return index.insert(r) ;
     }
     
     /** Delete a tuple - return true if it was deleted, false if it didn't exist */

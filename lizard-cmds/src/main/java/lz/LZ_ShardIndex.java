@@ -30,10 +30,10 @@ import org.apache.jena.atlas.logging.LogCtl ;
 import org.apache.jena.atlas.logging.ProgressLogger ;
 import org.apache.jena.query.ARQ ;
 import org.apache.jena.riot.RIOT ;
-import org.apache.jena.tdb.TDB ;
-import org.apache.jena.tdb.base.file.Location ;
-import org.apache.jena.tdb.store.NodeId ;
-import org.apache.jena.tdb.store.tupletable.TupleIndex ;
+import org.seaborne.tdb2.TDB ;
+import org.seaborne.tdb2.base.file.Location ;
+import org.seaborne.tdb2.store.NodeId ;
+import org.seaborne.tdb2.store.tupletable.TupleIndex ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 

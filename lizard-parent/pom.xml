@@ -39,7 +39,7 @@
 
   <properties>
     <ver.jena>3.0.0-SNAPSHOT</ver.jena>
-    <ver.tdb>3.0.0-SNAPSHOT</ver.tdb>
+    <ver.tdb>${ver.jena}</ver.tdb>
     <ver.fuseki>2.3.0-SNAPSHOT</ver.fuseki>
     <ver.junit>4.12</ver.junit>
     <ver.slf4j>1.7.7</ver.slf4j>
@@ -56,13 +56,20 @@
   <dependencyManagement>
     <dependencies>
 
+      <!--
       <dependency>
 	<groupId>org.apache.jena</groupId>
 	<artifactId>apache-jena-libs</artifactId>
 	<version>${ver.jena}</version>
 	<type>pom</type>
       </dependency>
-
+      -->
+      <dependency>
+	<groupId>org.apache.jena</groupId>
+	<artifactId>jena-arq</artifactId>
+	<version>${ver.jena}</version>
+      </dependency>
+      
       <dependency>
 	<groupId>org.apache.jena</groupId>
 	<artifactId>jena-base</artifactId>
@@ -70,7 +77,15 @@
 	<classifier>tests</classifier>
 	<scope>test</scope>
       </dependency>
-
+      
+     <dependency>
+	<groupId>org.apache.jena</groupId>
+	<artifactId>jena-core</artifactId>
+	<version>${ver.jena}</version>
+	<classifier>tests</classifier>
+	<scope>test</scope>
+      </dependency>
+     
       <dependency>
 	<groupId>org.apache.jena</groupId>
 	<artifactId>jena-arq</artifactId>
@@ -79,6 +94,7 @@
 	<scope>test</scope>
       </dependency>
 
+      <!--
       <dependency>
 	<groupId>org.apache.jena</groupId>
 	<artifactId>jena-tdb</artifactId>
@@ -86,7 +102,7 @@
 	<classifier>tests</classifier>
 	<scope>test</scope>
       </dependency>
-
+      -->
       <dependency>
 	<groupId>com.google.guava</groupId>
 	<artifactId>guava</artifactId>
@@ -128,19 +144,7 @@
 
       <dependency>
 	 <groupId>org.seaborne.mantis</groupId>
-	 <artifactId>dboe-transaction</artifactId>
-	 <version>${ver.mantis}</version>
-      </dependency>
-
-      <dependency>
-	 <groupId>org.seaborne.mantis</groupId>
-	 <artifactId>dboe-trans-data</artifactId>
-	 <version>${ver.mantis}</version>
-      </dependency>
-
-      <dependency>
-	 <groupId>org.seaborne.mantis</groupId>
-	 <artifactId>dboe-index</artifactId>
+	 <artifactId>tdb2</artifactId>
 	 <version>${ver.mantis}</version>
       </dependency>
 

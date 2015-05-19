@@ -21,7 +21,7 @@ import org.apache.jena.query.ReadWrite ;
 import org.apache.jena.sparql.core.DatasetGraph ;
 import org.apache.jena.sparql.core.DatasetGraphTrackActive ;
 import org.apache.jena.sparql.util.Context ;
-import org.apache.jena.tdb.store.DatasetGraphTDB ;
+import org.seaborne.tdb2.store.DatasetGraphTDB ;
 
 import org.seaborne.dboe.transaction.Transactional ;
 import org.seaborne.dboe.transaction.txn.TransactionCoordinator ;

@@ -19,8 +19,8 @@ package lizard.index.tuple;
 
 import java.util.Iterator ;
 
-import org.apache.jena.tdb.store.NodeId ;
-import org.apache.jena.tdb.store.tupletable.TupleIndexBase ;
+import org.seaborne.tdb2.store.NodeId ;
+import org.seaborne.tdb2.store.tupletable.TupleIndexBase ;
 
 import org.apache.jena.atlas.lib.Bytes ;
 import org.apache.jena.atlas.lib.ColumnMap ;

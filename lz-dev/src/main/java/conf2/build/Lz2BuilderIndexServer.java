@@ -26,7 +26,7 @@ import org.apache.jena.atlas.logging.FmtLog ;
 import org.seaborne.dboe.base.file.Location ;
 import org.slf4j.Logger ;
 
-import org.apache.jena.tdb.store.tupletable.TupleIndex ;
+import org.seaborne.tdb2.store.tupletable.TupleIndex ;
 
 import conf2.conf.ConfCluster ;
 import conf2.conf.ConfIndexElement ;

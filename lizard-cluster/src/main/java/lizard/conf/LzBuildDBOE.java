@@ -17,28 +17,23 @@
 
 package lizard.conf;
 
-import lizard.node.NodeTableDBOE ;
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.seaborne.dboe.base.block.BlockMgrBuilder ;
 import org.seaborne.dboe.base.block.BlockMgrBuilderStd ;
+import org.seaborne.dboe.base.file.Location ;
 import org.seaborne.dboe.index.IndexBuilder ;
 import org.seaborne.dboe.index.RangeIndexBuilder ;
+import org.seaborne.dboe.sys.Names ;
 import org.seaborne.dboe.trans.bplustree.IndexBuilderBPTree ;
 import org.seaborne.dboe.trans.bplustree.RangeIndexBuilderBPTree ;
 import org.seaborne.dboe.transaction.txn.ComponentId ;
+import org.seaborne.tdb2.setup.StoreParams ;
+import org.seaborne.tdb2.store.nodetable.NodeTable ;
+import org.seaborne.tdb2.store.nodetable.NodeTableCache ;
+import org.seaborne.tdb2.store.nodetable.NodeTableInline ;
+import org.seaborne.tdb2.store.tupletable.TupleIndex ;
+import org.seaborne.tdb2.sys.SystemTDB ;
 import org.slf4j.Logger ;
-
-import org.apache.jena.tdb.base.file.Location ;
-import org.apache.jena.tdb.setup.BuilderStdDB ;
-import org.apache.jena.tdb.setup.NodeTableBuilder ;
-import org.apache.jena.tdb.setup.StoreParams ;
-import org.apache.jena.tdb.setup.TupleIndexBuilder ;
-import org.apache.jena.tdb.store.nodetable.NodeTable ;
-import org.apache.jena.tdb.store.nodetable.NodeTableCache ;
-import org.apache.jena.tdb.store.nodetable.NodeTableInline ;
-import org.apache.jena.tdb.store.tupletable.TupleIndex ;
-import org.apache.jena.tdb.sys.Names ;
-import org.apache.jena.tdb.sys.SystemTDB ;
 
 /** Build a dataset using DBOE components */
 public class LzBuildDBOE

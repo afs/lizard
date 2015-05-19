@@ -21,15 +21,13 @@ import java.io.InputStream ;
 import java.util.List ;
 import java.util.Objects ;
 
-import org.apache.jena.tdb.sys.Names ;
-
+import org.apache.jena.atlas.io.IO ;
+import org.apache.jena.atlas.lib.ColumnMap ;
+import org.seaborne.dboe.sys.Names ;
+import org.yaml.snakeyaml.Yaml ;
 import conf2.LzConfigurationException ;
 import conf2.YAML ;
 import conf2.conf.* ;
-
-import org.apache.jena.atlas.io.IO ;
-import org.apache.jena.atlas.lib.ColumnMap ;
-import org.yaml.snakeyaml.Yaml ;
 
 /** Parser for thr YAML-based format */ 
 public class LzConfParserYAML {
