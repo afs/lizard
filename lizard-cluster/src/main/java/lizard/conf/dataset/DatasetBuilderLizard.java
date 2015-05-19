@@ -21,23 +21,23 @@ import lizard.query.QuackLizard ;
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.StrUtils ;
 import org.apache.jena.atlas.logging.FmtLog ;
-import org.slf4j.Logger ;
-import org.slf4j.LoggerFactory ;
-
 import org.apache.jena.query.ARQ ;
 import org.apache.jena.sparql.engine.main.QC ;
 import org.apache.jena.sparql.engine.optimizer.reorder.ReorderTransformation ;
+import org.seaborne.dboe.base.file.FileSet ;
+import org.seaborne.dboe.base.file.Location ;
+import org.seaborne.dboe.base.objectfile.ObjectFileBuilder ;
+import org.seaborne.dboe.index.IndexBuilder ;
+import org.seaborne.dboe.index.RangeIndexBuilder ;
 import org.seaborne.tdb2.TDBException ;
-import org.seaborne.tdb2.base.file.FileSet ;
-import org.seaborne.tdb2.base.file.Location ;
-import org.seaborne.tdb2.index.IndexBuilder ;
-import org.seaborne.tdb2.index.RangeIndexBuilder ;
-import org.seaborne.tdb2.setup.* ;
+import org.seaborne.tdb2.setup.StoreParams ;
 import org.seaborne.tdb2.store.* ;
 import org.seaborne.tdb2.store.nodetable.NodeTable ;
 import org.seaborne.tdb2.store.tupletable.TupleIndex ;
 import org.seaborne.tdb2.sys.DatasetControl ;
 import org.seaborne.tdb2.sys.DatasetControlMRSW ;
+import org.slf4j.Logger ;
+import org.slf4j.LoggerFactory ;
 
 /** Make TDB storage dataset graphs : not for transactional datasets */ 
 

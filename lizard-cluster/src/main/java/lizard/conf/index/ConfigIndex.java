@@ -32,21 +32,19 @@ import lizard.index.TupleIndexRemote ;
 import lizard.system.Component ;
 import lizard.system.LizardException ;
 import migrate.Q ;
-
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.StrUtils ;
 import org.apache.jena.atlas.logging.FmtLog ;
-import org.apache.jena.riot.RDFDataMgr ;
-import org.slf4j.Logger ;
-import org.slf4j.LoggerFactory ;
-
 import org.apache.jena.query.QuerySolution ;
 import org.apache.jena.rdf.model.Model ;
 import org.apache.jena.rdf.model.Resource ;
-import org.seaborne.tdb2.base.file.Location ;
-import org.seaborne.tdb2.setup.Build ;
+import org.apache.jena.riot.RDFDataMgr ;
+import org.apache.jena.sparql.sse.builders.BuilderExpr.Build ;
+import org.seaborne.dboe.base.file.Location ;
+import org.seaborne.dboe.sys.Names ;
 import org.seaborne.tdb2.store.tupletable.TupleIndex ;
-import org.seaborne.tdb2.sys.Names ;
+import org.slf4j.Logger ;
+import org.slf4j.LoggerFactory ;
 
 /** Configuration of indexes */
 public class ConfigIndex {

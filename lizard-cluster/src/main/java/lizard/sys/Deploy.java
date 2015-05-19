@@ -17,10 +17,6 @@
 
 package lizard.sys;
 
-import org.seaborne.tdb2.store.nodetable.NodeTable ;
-import org.seaborne.tdb2.store.tupletable.TupleIndex ;
-
-import lizard.adapters.A ;
 import lizard.cluster.Platform ;
 import lizard.conf.Config ;
 import lizard.conf.Configuration ;
@@ -30,9 +26,10 @@ import lizard.conf.index.IndexServer ;
 import lizard.conf.node.NodeServer ;
 import lizard.index.TServerIndex ;
 import lizard.node.TServerNode ;
-
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.seaborne.dboe.base.file.Location ;
+import org.seaborne.tdb2.store.nodetable.NodeTable ;
+import org.seaborne.tdb2.store.tupletable.TupleIndex ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
@@ -73,7 +70,7 @@ public class Deploy {
         Location location = Location.create(idxSvc.data) ;
         FmtLog.info(Config.logConf, "BuildIndexServer: %s %s", idxSvc.port, location) ;
         String indexOrder = idxSvc.indexService.indexOrder ;
-        TupleIndex index = LzBuildDBOE.createTupleIndex(A.apply(location), indexOrder, "Idx"+indexOrder) ;
+        TupleIndex index = LzBuildDBOE.createTupleIndex(location, indexOrder, "Idx"+indexOrder) ;
         TServerIndex serverIdx = TServerIndex.create(idxSvc.port, index) ;
         platform.add(serverIdx) ;
     }
@@ -82,7 +79,7 @@ public class Deploy {
     private static void buildNodeServer(NodeServer ns, Platform platform) {
         Location location = Location.create(ns.data) ;
         FmtLog.info(Config.logConf, "buildNodeServer: %s %s", ns.port, location) ;
-        NodeTable nt = LzBuildDBOE.createNodeTable(A.apply(location)) ;
+        NodeTable nt = LzBuildDBOE.createNodeTable(location) ;
         TServerNode serverNode = TServerNode.create(ns.port, nt) ;
         platform.add(serverNode) ;
     }

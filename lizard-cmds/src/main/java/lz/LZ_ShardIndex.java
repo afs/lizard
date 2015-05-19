@@ -20,25 +20,23 @@ package lz ;
 import java.util.Iterator ;
 
 import lizard.index.Shard ;
-import arq.cmd.ArgDecl ;
-import arq.cmd.CmdException ;
-import arq.cmdline.CmdARQ ;
-
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.Tuple ;
 import org.apache.jena.atlas.logging.LogCtl ;
 import org.apache.jena.atlas.logging.ProgressLogger ;
 import org.apache.jena.query.ARQ ;
 import org.apache.jena.riot.RIOT ;
+import org.seaborne.dboe.base.file.Location ;
 import org.seaborne.tdb2.TDB ;
-import org.seaborne.tdb2.base.file.Location ;
 import org.seaborne.tdb2.store.NodeId ;
 import org.seaborne.tdb2.store.tupletable.TupleIndex ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
-
 import quack.IndexLib ;
 import quack.IndexRef ;
+import arq.cmd.ArgDecl ;
+import arq.cmd.CmdException ;
+import arq.cmdline.CmdARQ ;
 
 /** Shard a TDB index. */
 public class LZ_ShardIndex extends CmdARQ {
@@ -48,7 +46,6 @@ public class LZ_ShardIndex extends CmdARQ {
     static final ArgDecl argLocation = new ArgDecl(true, "loc", "location") ;
 
     static public void main(String... argv) {
-        TDB.setOptimizerWarningFlag(false) ;
         new LZ_ShardIndex(argv).mainRun() ;
     }
 
@@ -103,6 +100,7 @@ public class LZ_ShardIndex extends CmdARQ {
         //FmtLog.info(log, "dump %s", idx);
 
         int N = idx.getIndexName().length() ;
+        // was quack.IndexLib
         String primaryIndex = IndexLib.choosePrimary(idx); 
 
         String index = idx.getIndexName().toUpperCase() ;

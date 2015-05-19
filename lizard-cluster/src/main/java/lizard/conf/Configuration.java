@@ -20,14 +20,6 @@ package lizard.conf;
 import java.io.PrintStream ;
 import java.util.List ;
 
-import org.apache.jena.rdf.model.Model ;
-import org.seaborne.tdb2.base.file.Location ;
-import org.seaborne.tdb2.store.nodetable.NodeTable ;
-import org.seaborne.tdb2.store.nodetupletable.NodeTupleTable ;
-import org.seaborne.tdb2.store.nodetupletable.NodeTupleTableConcrete ;
-import org.seaborne.tdb2.store.tupletable.TupleIndex ;
-import org.seaborne.tdb2.sys.DatasetControlMRSW ;
-
 import lizard.cluster.Platform ;
 import lizard.conf.dataset.ConfigLizardDataset ;
 import lizard.conf.index.ConfigIndex ;
@@ -35,6 +27,13 @@ import lizard.conf.index.IndexService ;
 import lizard.conf.node.ConfigNode ;
 import lizard.system.Component ;
 import migrate.Q ;
+import org.apache.jena.rdf.model.Model ;
+import org.seaborne.dboe.base.file.Location ;
+import org.seaborne.tdb2.store.nodetable.NodeTable ;
+import org.seaborne.tdb2.store.nodetupletable.NodeTupleTable ;
+import org.seaborne.tdb2.store.nodetupletable.NodeTupleTableConcrete ;
+import org.seaborne.tdb2.store.tupletable.TupleIndex ;
+import org.seaborne.tdb2.sys.DatasetControlMRSW ;
 
 /** Cluster configuration - this covers node and index servers,
  * not the (stateless) query server. 

@@ -33,18 +33,16 @@ import lizard.node.TServerNode ;
 import lizard.system.Component ;
 import lizard.system.LizardException ;
 import migrate.Q ;
-
+import org.apache.jena.atlas.lib.StrUtils ;
+import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.query.QuerySolution ;
 import org.apache.jena.rdf.model.Model ;
 import org.apache.jena.rdf.model.Resource ;
-import org.seaborne.tdb2.base.file.Location ;
+import org.apache.jena.riot.RDFDataMgr ;
+import org.seaborne.dboe.base.file.Location ;
 import org.seaborne.tdb2.store.nodetable.NodeTable ;
 import org.seaborne.tdb2.store.nodetable.NodeTableCache ;
 import org.seaborne.tdb2.store.nodetable.NodeTableInline ;
-
-import org.apache.jena.atlas.lib.StrUtils ;
-import org.apache.jena.atlas.logging.FmtLog ;
-import org.apache.jena.riot.RDFDataMgr ;
 import org.slf4j.Logger ;
 
 /** Configuration of NodeTables */
