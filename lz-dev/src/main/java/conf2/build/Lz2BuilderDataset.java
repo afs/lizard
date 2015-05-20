@@ -193,8 +193,7 @@ public class Lz2BuilderDataset {
             FmtLog.debug(logConf, "Quad table: %s :: %s", indexes[0], StrUtils.strjoin(",", indexes)) ; 
         }
         
-        DatasetGraphTDB dsg = new DatasetGraphTDB(tableTriples, tableQuads, prefixes, ReorderLib.fixed(), null) ;
-        
+        DatasetGraphTDB dsg = new DatasetGraphTDB(tableTriples, tableQuads, prefixes, ReorderLib.fixed(), null, params) ;
         dsg.getContext().set(ARQ.optFilterPlacementBGP, false);
         QC.setFactory(dsg.getContext(), QuackLizard.factoryLizard) ;
         return dsg ;

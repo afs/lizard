@@ -17,17 +17,13 @@
 
 package conf2.build;
 
-import lizard.adapters.A ;
 import lizard.cluster.Platform ;
 import lizard.conf.Config ;
-import lizard.conf.LzBuildDBOE ;
 import lizard.index.TServerIndex ;
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.seaborne.dboe.base.file.Location ;
-import org.slf4j.Logger ;
-
 import org.seaborne.tdb2.store.tupletable.TupleIndex ;
-
+import org.slf4j.Logger ;
 import conf2.conf.ConfCluster ;
 import conf2.conf.ConfIndexElement ;
 import conf2.conf.NetHost ;
@@ -48,7 +44,7 @@ public class Lz2BuilderIndexServer {
         int port = x.netAddr.port ;
         String data = x.data ; 
         FmtLog.info(logConf, "buildIndexServer[%s]: %s %s", data, port, loc) ;
-        TupleIndex tupleIndex = LzBuildDBOE.createTupleIndex(A.apply(loc), x.conf.indexOrder, x.name) ;  
+        TupleIndex tupleIndex = Lz2BuildDBOE.createTupleIndex(loc, x.conf.indexOrder, x.name) ;  
         TServerIndex serverindex = TServerIndex.create(port, tupleIndex) ;
         platform.add(serverindex) ;
         return serverindex ;

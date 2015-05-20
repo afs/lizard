@@ -23,15 +23,29 @@ import java.util.Set ;
 import lizard.system.Component ;
 import lizard.system.ComponentBase ;
 import lizard.system.LifeCycle ;
+import org.seaborne.dboe.base.file.Location ;
+import org.seaborne.dboe.transaction.txn.journal.Journal ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
+/** Set of server components on one machine (not query engines) */
 public class Platform implements LifeCycle {
     
     private static Logger log = LoggerFactory.getLogger(Platform.class) ;
     
+    private final Journal journal ;
     private Set<Component> components = new LinkedHashSet<>() ;
     private ComponentBase lifecycle = new ComponentBase() ;
+    
+    public Platform(Location baseLocation) {
+        if ( baseLocation.isMem() )
+            log.warn("** In-memory journal") ;
+        this.journal = Journal.create(baseLocation) ;
+    }
+    
+    public Journal getJounrnal() {
+        return journal ;
+    }
     
     @Override
     public void start() {

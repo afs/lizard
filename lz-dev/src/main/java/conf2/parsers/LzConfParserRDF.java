@@ -253,7 +253,7 @@ public class LzConfParserRDF {
     private static final String prefixes = StrUtils.strjoinNL
         ("PREFIX :          <urn:lizard:>",
          "PREFIX lizard:    <urn:lizard:ns#>",
-         "PREFIX list:      <http://jena.hpl.hp.com/ARQ/list#>" ,
+         "PREFIX list:      <http://jena.apache.org/ARQ/list#>" ,
          "PREFIX xsd:       <http://www.w3.org/2001/XMLSchema#>",
          "PREFIX rdf:       <http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
          "PREFIX rdfs:      <http://www.w3.org/2000/01/rdf-schema#>",
@@ -263,7 +263,7 @@ public class LzConfParserRDF {
     static {
         confPrefixes.add("",        "urn:lizard:") ;
         confPrefixes.add("lizard",  "urn:lizard:ns#") ;
-        confPrefixes.add("list",    "http://jena.hpl.hp.com/ARQ/list#") ;
+        confPrefixes.add("list",    "http://jena.apache.org/ARQ/list#") ;
         confPrefixes.add("xsd",     "http://www.w3.org/2001/XMLSchema#") ;
         confPrefixes.add("rdf",     "http://www.w3.org/1999/02/22-rdf-syntax-ns#") ;
         confPrefixes.add("rdfs",    "http://www.w3.org/2000/01/rdf-schema#") ;

@@ -17,17 +17,13 @@
 
 package conf2.build;
 
-import lizard.adapters.A ;
 import lizard.cluster.Platform ;
 import lizard.conf.Config ;
-import lizard.conf.LzBuildDBOE ;
 import lizard.node.TServerNode ;
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.seaborne.dboe.base.file.Location ;
-import org.slf4j.Logger ;
-
 import org.seaborne.tdb2.store.nodetable.NodeTable ;
-
+import org.slf4j.Logger ;
 import conf2.conf.ConfCluster ;
 import conf2.conf.ConfNodeTableElement ;
 import conf2.conf.NetHost ;
@@ -47,7 +43,7 @@ public class Lz2BuilderNodeServer {
         Location loc = location.getSubLocation(x.data) ;
         int port = x.netAddr.port ;
         FmtLog.info(logConf, "buildNodeServer: %s %s", port, loc) ;
-        NodeTable nt = LzBuildDBOE.createNodeTable(A.apply(loc)) ;
+        NodeTable nt = Lz2BuildDBOE.createNodeTable(loc) ;
         TServerNode serverNode = TServerNode.create(port, nt) ;
         platform.add(serverNode) ;
         return serverNode ;

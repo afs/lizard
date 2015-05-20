@@ -40,8 +40,8 @@ public class LzDeploy {
             baseLocation = Location.mem() ;
         else
             baseLocation = Location.create(confCluster.fileroot) ; 
-            
-        Platform platform = new Platform() ;
+
+        Platform platform = new Platform(baseLocation) ;
         Lz2BuilderNodeServer.build(platform, baseLocation, confCluster, here); 
         Lz2BuilderIndexServer.build(platform, baseLocation, confCluster, here);
         platform.start(); 

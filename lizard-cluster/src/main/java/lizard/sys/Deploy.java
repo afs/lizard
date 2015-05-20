@@ -37,7 +37,11 @@ public class Deploy {
     public static Logger log = LoggerFactory.getLogger("Deploy") ;
     /** Deploy a deployment */
     public static Platform deploy(Deployment deployment) {
-        Platform platform = new Platform() ;
+        // XXX Get from somewhere!
+        // Where the cluster coordinator has a journal. 
+        Location location = Location.mem();
+        Platform platform = new Platform(location) ;
+        
         deployment.nodeServers.stream().forEach(ns -> {
             log.info("Build N: " + ns.resource) ;
             buildNodeServer(ns, platform) ;
@@ -48,7 +52,6 @@ public class Deploy {
             buildIndexServer(idx, platform) ;
         }) ;
 
-        Location location = Location.mem();
         ConfigLizardDataset.buildDataset(location, deployment.datasetDesc) ;
         
         platform.start() ;

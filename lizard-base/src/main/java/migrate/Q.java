@@ -58,7 +58,7 @@ public class Q {
     }
 
     public static List<Resource> listResources(Resource r) {
-        String qs = "PREFIX list: <http://jena.hpl.hp.com/ARQ/list#> SELECT * { ?r list:index (?idx ?member) }" ;
+        String qs = "PREFIX list: <http://jena.apache.org/ARQ/list#> SELECT * { ?r list:index (?idx ?member) }" ;
         List<QuerySolution> rows = queryToList(r.getModel(), qs, "r", r) ;
         List<Resource> elts = new ArrayList<>() ;
         for ( QuerySolution row : rows ) {
@@ -69,7 +69,7 @@ public class Q {
     }
 
     public static List<String> listStrings(Resource r) {
-        String qs = "PREFIX list: <http://jena.hpl.hp.com/ARQ/list#> SELECT * { ?r list:index (?idx ?member) }" ;
+        String qs = "PREFIX list: <http://jena.apache.org/ARQ/list#> SELECT * { ?r list:index (?idx ?member) }" ;
         List<QuerySolution> rows = queryToList(r.getModel(), qs, "r", r) ;
         List<String> elts = new ArrayList<>() ;
         for ( QuerySolution row : rows ) {
@@ -80,7 +80,7 @@ public class Q {
     }
 
     public static List<RDFNode> listMembers(Resource r) {
-        String qs = "PREFIX list: <http://jena.hpl.hp.com/ARQ/list#> SELECT * { ?r list:index (?idx ?member) }" ;
+        String qs = "PREFIX list: <http://jena.apache.org/ARQ/list#> SELECT * { ?r list:index (?idx ?member) }" ;
         List<QuerySolution> rows = queryToList(r.getModel(), qs, "r", r) ;
         List<RDFNode> elts = new ArrayList<>() ;
         for ( QuerySolution row : rows ) {

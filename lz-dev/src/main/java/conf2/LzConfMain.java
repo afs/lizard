@@ -37,7 +37,7 @@ import org.apache.jena.atlas.logging.LogCtl ;
 import org.apache.jena.riot.RDFDataMgr ;
 import org.yaml.snakeyaml.Yaml ;
 
-public class LzConf {
+public class LzConfMain {
     static { LogCtl.setLog4j(); }
     
     static class LzConfigurationException extends LizardException {
