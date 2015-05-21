@@ -74,7 +74,7 @@ public class Configuration {
     /** Replace with deployment code */
     @Deprecated
     public Platform buildServers(Location location) {
-        Platform platform = new Platform();
+        Platform platform = new Platform(location);
         ConfigNode.buildServers(confNode, platform, location); 
         ConfigIndex.buildServers(confIndex, platform, location) ;
         return platform ;

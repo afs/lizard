@@ -18,20 +18,41 @@
 package conf2.build;
 
 import org.seaborne.dboe.base.file.Location ;
+import org.seaborne.dboe.base.record.RecordFactory ;
+import org.seaborne.dboe.index.Index ;
+import org.seaborne.dboe.index.RangeIndex ;
+import org.seaborne.dboe.transaction.txn.TransactionCoordinator ;
+import org.seaborne.tdb2.setup.StoreParams ;
 import org.seaborne.tdb2.store.nodetable.NodeTable ;
+import org.seaborne.tdb2.store.nodetable.NodeTableCache ;
 import org.seaborne.tdb2.store.tupletable.TupleIndex ;
 
 public class Lz2BuildDBOE {
 
-    public static TupleIndex createTupleIndex(Location loc, String indexOrder, String name) {
+    public static TupleIndex createTupleIndex(TransactionCoordinator coord, Location loc, StoreParams params, String indexOrder, String name) {
         System.err.println("createTupleIndex") ;
-        return null ;
+        return Builder2.buildTupleIndex(coord, /*compoentid*/null, loc, /*StoreParams*/null, name, indexOrder) ;
     }
 
-    public static NodeTable createNodeTable(Location loc) {
+    public static NodeTable createNodeTable(TransactionCoordinator coord, Location loc, StoreParams params, String name) {
         System.err.println("createNodeTable") ;
+        NodeTable nt = Builder2.buildBaseNodeTable(coord, /*componentid*/null, loc, params, name) ;
+        // No inline.
+        nt = NodeTableCache.create(nt, params) ;
+        return nt ;
+    }
+
+    public static Index createIndex(Location loc, String name) {
+        System.err.println("createIndex") ;
         return null ;
     }
 
+    
+    public static RangeIndex createRangeIndex(TransactionCoordinator coord, Location loc, RecordFactory recordFactory, String indexOrder) {
+        System.err.println("createRangeIndex") ;
+        return null ;
+    }
+
+    
 }
 

@@ -22,6 +22,7 @@ import lizard.conf.Config ;
 import lizard.index.TServerIndex ;
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.seaborne.dboe.base.file.Location ;
+import org.seaborne.dboe.transaction.txn.TransactionCoordinator ;
 import org.seaborne.tdb2.store.tupletable.TupleIndex ;
 import org.slf4j.Logger ;
 import conf2.conf.ConfCluster ;
@@ -32,19 +33,20 @@ public class Lz2BuilderIndexServer {
     private static Logger logConf = Config.logConf ;    
     
     public static void build(Platform platform, Location location, ConfCluster confCluster, NetHost here) {
+        TransactionCoordinator coord = null ;
         confCluster.eltsIndex.stream()
             .filter(x -> x.netAddr.sameHost(here))
             .forEach(x -> {
-                buildIndexServer(platform, location, x) ;
+                buildIndexServer(platform, coord, location, x) ;
             }) ;
     }
 
-    private static TServerIndex buildIndexServer(Platform platform, Location location, ConfIndexElement x) {
+    private static TServerIndex buildIndexServer(Platform platform, TransactionCoordinator coord, Location location, ConfIndexElement x) {
         Location loc = location.getSubLocation(x.data) ;
         int port = x.netAddr.port ;
         String data = x.data ; 
         FmtLog.info(logConf, "buildIndexServer[%s]: %s %s", data, port, loc) ;
-        TupleIndex tupleIndex = Lz2BuildDBOE.createTupleIndex(loc, x.conf.indexOrder, x.name) ;  
+        TupleIndex tupleIndex = Lz2BuildDBOE.createTupleIndex(coord, loc, null, x.conf.indexOrder, x.name) ;  
         TServerIndex serverindex = TServerIndex.create(port, tupleIndex) ;
         platform.add(serverindex) ;
         return serverindex ;

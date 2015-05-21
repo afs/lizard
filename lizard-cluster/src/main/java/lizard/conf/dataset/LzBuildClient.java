@@ -29,6 +29,7 @@ import migrate.TupleIndexEmpty ;
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.StrUtils ;
 import org.apache.jena.atlas.logging.FmtLog ;
+import org.apache.jena.atlas.logging.Log ;
 import org.apache.jena.query.ARQ ;
 import org.apache.jena.query.Dataset ;
 import org.apache.jena.query.DatasetFactory ;
@@ -114,10 +115,12 @@ public class LzBuildClient
             }
         } ;
         
-        //DatasetBuilderLizard dbb = new DatasetBuilderLizard(LzBuildClient.indexBuilder, LzBuildClient.rangeIndexBuilder) ;
-        DatasetBuilderLizard dbb = new DatasetBuilderLizard(indexBuilder, rangeIndexBuilder) ;
-        // Hack node table.
-        DatasetPrefixesTDB prefixes = dbb.makePrefixTable(location, policy) ; 
+//        //DatasetBuilderLizard dbb = new DatasetBuilderLizard(LzBuildClient.indexBuilder, LzBuildClient.rangeIndexBuilder) ;
+//        DatasetBuilderLizard dbb = new DatasetBuilderLizard(indexBuilder, rangeIndexBuilder) ;
+//        // Hack node table.
+//        DatasetPrefixesTDB prefixes = dbb.makePrefixTable(location, policy) ; 
+        DatasetPrefixesTDB prefixes = null ;
+        Log.warn(LzBuildClient.class,"No DatasetPrefixesTDB") ;
         
         // Special triple table
         TripleTable tableTriples ;
@@ -144,7 +147,7 @@ public class LzBuildClient
             FmtLog.debug(logConf, "Quad table: %s :: %s", indexes[0], StrUtils.strjoin(",", indexes)) ; 
         }
         
-        DatasetGraphTDB dsg = new DatasetGraphTDB(tableTriples, tableQuads, prefixes, ReorderLib.fixed(), null) ;
+        DatasetGraphTDB dsg = new DatasetGraphTDB(tableTriples, tableQuads, prefixes, ReorderLib.fixed(), null, params) ;
         
         dsg.getContext().set(ARQ.optFilterPlacementBGP, false);
         QC.setFactory(dsg.getContext(), QuackLizard.factoryLizard) ;

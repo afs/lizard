@@ -25,6 +25,7 @@ import lizard.cluster.Platform ;
 import lizard.conf.Config ;
 import lizard.conf.ConfigLib ;
 import lizard.conf.DataServer ;
+import lizard.conf.LzBuildDBOE ;
 import lizard.index.ClusterTupleIndex ;
 import lizard.index.DistributorTuplesReplicate ;
 import lizard.index.TServerIndex ;
@@ -117,7 +118,7 @@ public class ConfigIndex {
         FmtLog.info(logConf, "buildIndexServer: %s %s %s", indexOrder, ds.port, loc) ;
         if ( indexOrder.length() != 3 ) 
             throw new LizardException("Not a triple index") ;
-        TupleIndex index = Build.openTupleIndex(loc, "Idx"+indexOrder, Names.primaryIndexTriples, indexOrder) ;
+        TupleIndex index = LzBuildDBOE.createTupleIndex(loc, Names.primaryIndexTriples, indexOrder) ;
         TServerIndex serverIdx = TServerIndex.create(ds.port, index) ;
         return serverIdx ; 
     }

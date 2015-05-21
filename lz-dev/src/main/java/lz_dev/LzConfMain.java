@@ -15,23 +15,22 @@
  *  information regarding copyright ownership.
  */
 
-package conf2;
+package lz_dev;
 
 import java.io.InputStream ;
 
 import lizard.system.LizardException ;
 import migrate.Q ;
-
 import org.apache.jena.query.Dataset ;
 import org.apache.jena.query.ReadWrite ;
 import org.apache.jena.rdf.model.Model ;
-
+import conf2.LzConfigDefault ;
+import conf2.YAML ;
 import conf2.build.LzDeploy ;
 import conf2.conf.ConfCluster ;
 import conf2.conf.NetHost ;
 import conf2.parsers.LzConfParserRDF ;
 import conf2.parsers.LzConfParserYAML ;
-
 import org.apache.jena.atlas.io.IO ;
 import org.apache.jena.atlas.logging.LogCtl ;
 import org.apache.jena.riot.RDFDataMgr ;
@@ -59,9 +58,14 @@ public class LzConfMain {
                     ) ;
 
             conf =  LzConfParserRDF.parseConfFile(model) ;
+            System.out.println("== RDF") ;
+            System.out.println(conf) ;
         }
-        if ( false ) {
+        if ( true ) {
             conf = LzConfParserYAML.parseConfFile("config-dev.yaml") ;
+            System.out.println("== YAML") ;
+            System.out.println(conf) ;
+            
         }
 
         if ( false )
@@ -70,8 +74,9 @@ public class LzConfMain {
         if ( conf == null ) 
             System.err.println("No configuration") ;
         
-        
+        System.out.println("== Using") ;
         System.out.println(conf) ;
+        System.out.println("==") ;
 //        System.exit(0) ;
         
         // The deployment "here".

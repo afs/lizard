@@ -20,6 +20,17 @@ package lz_dev ;
 public class PROJECT_Lizard {
     // Tasks
     
+    // Rework building, using new configuration.
+    // Delete:replace cluster/lizard/conf/ etc.
+    // BuildContext
+    //   Location,
+    //   Coordinator
+    //   StoreParams
+    //   UUID
+    // ==> to Mantis, TDB2 etc
+    // tdbdev.ComponentIdMgr
+    
+    
     // Share Thrift encoding with RIOT
     // ThriftConvert is better that ThriftLib?
     

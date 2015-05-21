@@ -37,6 +37,7 @@ import migrate.TupleIndexEmpty ;
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.StrUtils ;
 import org.apache.jena.atlas.logging.FmtLog ;
+import org.apache.jena.atlas.logging.Log ;
 import org.apache.jena.query.ARQ ;
 import org.apache.jena.query.Dataset ;
 import org.apache.jena.query.DatasetFactory ;
@@ -164,9 +165,10 @@ public class Lz2BuilderDataset {
         } ;
         
         //DatasetBuilderLizard dbb = new DatasetBuilderLizard(LzBuildClient.indexBuilder, LzBuildClient.rangeIndexBuilder) ;
-        DatasetBuilderLizard dbb = new DatasetBuilderLizard(indexBuilder, rangeIndexBuilder) ;
+        DatasetBuilderLizard dbb = null ; // new DatasetBuilderLizard(indexBuilder, rangeIndexBuilder) ;
         // Hack node table.
-        DatasetPrefixesTDB prefixes = dbb.makePrefixTable(location, policy) ; 
+        DatasetPrefixesTDB prefixes = null ; //dbb.makePrefixTable(location, policy) ;
+        Log.warn(Lz2BuilderDataset.class, "Need to sort out prefixes") ;
         
         // Special triple table
         TripleTable tableTriples ;

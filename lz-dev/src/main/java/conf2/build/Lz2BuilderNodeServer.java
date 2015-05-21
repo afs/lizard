@@ -21,8 +21,19 @@ import lizard.cluster.Platform ;
 import lizard.conf.Config ;
 import lizard.node.TServerNode ;
 import org.apache.jena.atlas.logging.FmtLog ;
-import org.seaborne.dboe.base.file.Location ;
+import org.seaborne.dboe.base.file.* ;
+import org.seaborne.dboe.base.record.RecordFactory ;
+import org.seaborne.dboe.index.Index ;
+import org.seaborne.dboe.sys.Names ;
+import org.seaborne.dboe.trans.data.TransBinaryDataFile ;
+import org.seaborne.dboe.transaction.txn.ComponentId ;
+import org.seaborne.dboe.transaction.txn.TransactionCoordinator ;
+import org.seaborne.dboe.transaction.txn.journal.Journal ;
+import org.seaborne.tdb2.setup.StoreParams ;
+import org.seaborne.tdb2.setup.TDB2Builder ;
 import org.seaborne.tdb2.store.nodetable.NodeTable ;
+import org.seaborne.tdb2.store.nodetable.NodeTableTRDF ;
+import org.seaborne.tdb2.sys.SystemTDB ;
 import org.slf4j.Logger ;
 import conf2.conf.ConfCluster ;
 import conf2.conf.ConfNodeTableElement ;
@@ -41,9 +52,16 @@ public class Lz2BuilderNodeServer {
 
     private static TServerNode buildNodeServer(Platform platform, Location location, ConfNodeTableElement x) {
         Location loc = location.getSubLocation(x.data) ;
+        Journal journal = Journal.create(location) ;
         int port = x.netAddr.port ;
         FmtLog.info(logConf, "buildNodeServer: %s %s", port, loc) ;
-        NodeTable nt = Lz2BuildDBOE.createNodeTable(loc) ;
+        
+        TDB2Builder tb = new TDB2Builder(location, StoreParams.getDftStoreParams()) ;
+        // (Transaction Coordinator,  ComponentId, name) ;
+        //tb.buildNodeTable(null, null, null) ;
+        
+        
+        NodeTable nt = Lz2BuildDBOE.createNodeTable(null, loc, null, null) ;
         TServerNode serverNode = TServerNode.create(port, nt) ;
         platform.add(serverNode) ;
         return serverNode ;
