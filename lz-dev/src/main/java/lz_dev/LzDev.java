@@ -55,18 +55,16 @@ public class LzDev {
     public static Logger log = LoggerFactory.getLogger("Main") ;
 
     static String confDir           = "setup-disk" ;
+    //static String confDir           = "setup-simple" ;
     static String confNode          = Q.filename(confDir, "conf-node.ttl") ;
     static String confIndex         = Q.filename(confDir, "conf-index.ttl") ;
     static String confDataset       = Q.filename(confDir, "conf-dataset.ttl") ;
     static Model configurationModel = Q.readAll(confNode, confIndex, confDataset) ;
     static ConfCluster config       = LzConfParserRDF.parseConfFile(configurationModel) ; 
     
-    static String deploymentFile        = Q.filename(confDir, "deploy-jvm.ttl") ;
-    
     static NodeTableRemote ntr = null ;
     //static TupleIndexRemote tir = null ;
     static int counter = 0 ;
-    
     
     public static void main(String[] args) {
         try { main$(args) ; }
@@ -85,8 +83,6 @@ public class LzDev {
         // The deployment "here".
         NetHost here = NetHost.create("localhost") ;
         
-        LzDeploy.deployServers(config, here);
-        
         try { 
             LzDeploy.deployServers(config, here);
         } catch ( LizardException ex) {
@@ -100,8 +96,8 @@ public class LzDev {
         // Multiple query servers?
         log.info("DATASET") ;
         Dataset ds = LzDeploy.deployDataset(config, here) ;
-        load(ds,"/home/afs/Datasets/BSBM/bsbm-5m.nt.gz");
-        System.exit(0) ;
+        load(ds,"/home/afs/Datasets/BSBM/bsbm-250k.nt.gz");
+        //System.exit(0) ;
         
 //        ds.begin(ReadWrite.WRITE);
 //        RDFDataMgr.read(ds, "D.ttl") ;
