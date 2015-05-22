@@ -52,6 +52,7 @@ import org.seaborne.dboe.transaction.txn.ComponentId ;
 import org.seaborne.dboe.transaction.txn.TransactionCoordinator ;
 import org.seaborne.dboe.transaction.txn.TransactionalBase ;
 import org.seaborne.dboe.transaction.txn.TransactionalComponent ;
+import org.seaborne.tdb2.setup.TDBBuilder ;
 import org.seaborne.tdb2.setup.StoreParams ;
 import org.seaborne.tdb2.store.* ;
 import org.seaborne.tdb2.store.nodetable.NodeTable ;
@@ -123,7 +124,7 @@ public class Lz2BuilderDataset {
         }
         
         // Local only.
-        Builder2 builder = Builder2.create(txnCoord, location, params) ;
+        TDBBuilder builder = TDBBuilder.create(txnCoord, location, params) ;
         NodeTable nodeTablePrefixes = builder.buildNodeTable(params.getPrefixTableBaseName()) ;
         DatasetPrefixesTDB prefixes = builder.buildPrefixTable(nodeTablePrefixes) ;
         DatasetGraphTDB dsg = new DatasetGraphTDB(tableTriples, tableQuads, prefixes, ReorderLib.fixed(), builder.getLocation(), builder.getParams()) ;

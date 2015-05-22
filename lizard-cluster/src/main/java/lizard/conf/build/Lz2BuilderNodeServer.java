@@ -29,6 +29,7 @@ import org.seaborne.dboe.base.file.Location ;
 import org.seaborne.dboe.transaction.txn.TransactionCoordinator ;
 import org.seaborne.dboe.transaction.txn.TransactionalBase ;
 import org.seaborne.dboe.transaction.txn.TransactionalSystem ;
+import org.seaborne.tdb2.setup.TDBBuilder ;
 import org.seaborne.tdb2.setup.StoreParams ;
 import org.seaborne.tdb2.store.nodetable.NodeTable ;
 import org.slf4j.Logger ;
@@ -48,8 +49,8 @@ public class Lz2BuilderNodeServer {
         Location loc = location.getSubLocation(x.data) ;
         int port = x.netAddr.port ;
         FmtLog.info(logConf, "buildNodeServer: %s %s", port, loc) ;
-        TransactionCoordinator coord = Builder2.buildTransactionCoordinator(location) ;
-        Builder2 builder = Builder2.create(coord, location, params) ;
+        TransactionCoordinator coord = TDBBuilder.buildTransactionCoordinator(location) ;
+        TDBBuilder builder = TDBBuilder.create(coord, location, params) ;
         NodeTable nt = builder.buildNodeTable(params.getNodeTableBaseName()) ;
         TransactionalSystem txnSystem = new TransactionalBase(x.toString(), coord) ;
         TServerNode serverNode = TServerNode.create(txnSystem, port, nt) ;
@@ -57,4 +58,3 @@ public class Lz2BuilderNodeServer {
         return serverNode ;
     }
 }
-
