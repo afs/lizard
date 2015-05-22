@@ -40,7 +40,6 @@ public class NodeTableRemote implements ComponentTxn, Component, NodeTable, Ping
 
     public static NodeTableRemote create(String hostname, int port) {
         TClientNode remote = TClientNode.create(hostname, port) ;
-        // ConnectionMgr.
         NodeTableRemote nt = new NodeTableRemote(remote) ;
         return nt ;
     }

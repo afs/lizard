@@ -30,23 +30,6 @@ import org.slf4j.LoggerFactory ;
 public class ComponentIdMgr {
     private static Logger log = LoggerFactory.getLogger(ComponentIdMgr.class) ; 
     
-    /* nextComponentId unit names:
-        nodes
-        nodes-data
-        SPO
-        POS
-        OSP
-        GSPO
-        GPOS
-        GOSP
-        POSG
-        OSPG
-        SPOG
-        prefixes
-        prefixes-data
-        GPU
-        */
-    
     private static Map<String, Integer> names = new HashMap<>() ;  
     static {
         // Well know names.
@@ -100,6 +83,10 @@ public class ComponentIdMgr {
     }
     
     public ComponentId getComponentId(String name) {
+        // Trace duplicates
+//        final String tracename = "PSO" ;
+//        if ( tracename.equals(name) )
+//            log.info("Name '"+name+"'") ;
         if ( ! names.containsKey(name))
             log.error("Name '"+name+"' is not registered") ;
         if ( allocated.containsKey(name) ) {
@@ -109,11 +96,6 @@ public class ComponentIdMgr {
         ComponentId cid = ComponentId.alloc(name, base, names.get(name)) ;
         allocated.put(name, cid) ;
         return cid ;
-    }
-    
-    
-    static class ComponentId2 {
-        
     }
 }
 

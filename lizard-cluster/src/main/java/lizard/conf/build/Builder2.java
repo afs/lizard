@@ -69,28 +69,17 @@ import org.slf4j.LoggerFactory ;
  * <b>Do not call these operations directly - use StoreConnection.</b>
  */
 public class Builder2 {
-    private static Logger log = LoggerFactory.getLogger(Builder2.class) ;
+    private Logger log = LoggerFactory.getLogger(Builder2.class) ;
     
-    public static DatasetGraph build(Location location) {
+    public DatasetGraph build(Location location) {
         return build(location, StoreParams.getDftStoreParams()) ;
     }
 
-//    // Recover from existing.
-//    // Align component ids from existing.
-//    
-//    private final ComponentId tdbComponentId ;
-    private static int componentCounter = 1 ; // TEMPORARY HACK
-    
-//    private final Location location ;
-//    private final StoreParams params ;
-    private static DatasetControl createPolicy() { return new DatasetControlMRSW() ; }
-    
-    // Or state?
-    private static ComponentIdMgr componentIdMgr = new ComponentIdMgr(UUID.randomUUID()) ;
-    // BuildContext
+// BuildContext
     //   Location,
-    //   Coordinator
+    //   TxnCoordinator
     //   StoreParams
+    //   componentIdMgr
     //   UUID
     
     
@@ -102,10 +91,70 @@ public class Builder2 {
         if ( newArea ) {
         }
         StoreParams params = StoreParamsFactory.decideStoreParams(location, newArea, appParams, locParams, dftParams) ;
-        //return new TDB2Builder(location, params).build() ;
-        return build$(location, params) ;
+        return create(location, params).build$() ;
     }
-    
+
+    private DatasetGraphTxn build$() {
+        NodeTable nodeTable = buildNodeTable(params.getNodeTableBaseName()) ;
+        
+        TripleTable tripleTable = buildTripleTable(nodeTable) ;
+        QuadTable quadTable = buildQuadTable(nodeTable) ;
+        
+        NodeTable nodeTablePrefixes = buildNodeTable(params.getPrefixTableBaseName()) ;
+        DatasetPrefixesTDB prefixes = buildPrefixTable(nodeTablePrefixes) ;
+        
+        DatasetGraphTDB dsg = new DatasetGraphTDB(tripleTable, quadTable, prefixes, ReorderLib.fixed(), location, params) ;
+        Transactional trans = new TransactionalBase(txnCoord) ;
+        DatasetGraphTxn dsgtxn = new DatasetGraphTxn(dsg, trans, txnCoord) ;
+        QC.setFactory(dsgtxn.getContext(), OpExecutorTDB1.OpExecFactoryTDB) ;
+        return dsgtxn ;
+    }
+
+    public static TransactionCoordinator buildTransactionCoordinator(Location location) {
+        Journal journal = Journal.create(location) ;
+        TransactionCoordinator txnCoord = new TransactionCoordinator(journal) ;
+        return txnCoord ;
+    }
+
+    public static String choosePrimaryForIndex(StoreParams params, String index) {
+        String primary3 = params.getPrimaryIndexTriples() ;
+        String primary4 = params.getPrimaryIndexQuads() ;
+        
+        if ( index.length() == primary3.length() )
+            return primary3 ;
+        if ( index.length() == primary4.length() )
+            return primary4 ;
+        throw new DBOpEnvException("Can't find primary for '"+index+"'") ;
+    }
+
+    // ---- Object starts
+    final Location location ;
+    final StoreParams params ;
+    final ComponentIdMgr componentIdMgr ;
+    final TransactionCoordinator txnCoord ;
+
+    private Builder2(TransactionCoordinator txnCoord, Location location, StoreParams params, ComponentIdMgr componentIdMgr) {
+        this.txnCoord = txnCoord ;
+        this.location = location ;
+        this.params = params ;
+        this.componentIdMgr = componentIdMgr ;
+    }
+
+    public Location getLocation()               { return location ; }
+    public StoreParams getParams()              { return params ; }
+    public TransactionCoordinator getTxnCoord() { return txnCoord ; }
+
+    public static Builder2 create(Location location, StoreParams params) {
+        TransactionCoordinator txnCoord = buildTransactionCoordinator(location) ;
+        return new Builder2(txnCoord, location, params, new ComponentIdMgr(UUID.randomUUID())) ;
+    }
+
+    public static Builder2 create(TransactionCoordinator txnCoord, Location location, StoreParams params) {
+        return new Builder2(txnCoord, location, params, new ComponentIdMgr(UUID.randomUUID())) ;
+    }
+
+    private DatasetControl createPolicy() { return new DatasetControlMRSW() ; }
+
     /** Look at a directory and see if it is a new area */
     private static boolean isNewDatabaseArea(Location location) {
         if ( location.isMem() )
@@ -122,7 +171,7 @@ public class Builder2 {
      * Skips "..", "." and "tdb.cfg"
      * 
      */
-    static FileFilter fileFilterNewDB  = (pathname)->{
+  private static  FileFilter fileFilterNewDB  = (pathname)->{
         String fn = pathname.getName() ;
         if ( fn.equals(".") || fn.equals("..") )
             return false ;
@@ -133,35 +182,7 @@ public class Builder2 {
         return true ;
     } ;
     
-    public static TransactionCoordinator buildTransactionCoordinator(Location location) {
-        Journal journal = Journal.create(location) ;
-        TransactionCoordinator txnCoord = new TransactionCoordinator(journal) ;
-        return txnCoord ;
-    }
-
-    private static DatasetGraphTxn build$(Location location, StoreParams params) {
-        TransactionCoordinator txnCoord = buildTransactionCoordinator(location) ;
-        
-        NodeTable nodeTable = buildNodeTable(txnCoord, location, params, params.getNodeTableBaseName()) ;
-        
-        TripleTable tripleTable = buildTripleTable(txnCoord, location, params, nodeTable) ;
-        QuadTable quadTable = buildQuadTable(txnCoord, location, params, nodeTable) ;
-        
-        NodeTable nodeTablePrefixes = buildNodeTable(txnCoord, 
-                                                     location, params, params.getPrefixTableBaseName()) ;
-        DatasetPrefixesTDB prefixes = buildPrefixTable(txnCoord, location, params, nodeTablePrefixes) ;
-        
-        DatasetGraphTDB dsg = new DatasetGraphTDB(tripleTable, quadTable, prefixes, ReorderLib.fixed(), location, params) ;
-        Transactional trans = new TransactionalBase(txnCoord) ;
-        DatasetGraphTxn dsgtxn = new DatasetGraphTxn(dsg, trans, txnCoord) ;
-        QC.setFactory(dsgtxn.getContext(), OpExecutorTDB1.OpExecFactoryTDB) ;
-        return dsgtxn ;
-    }
-
-    public static TripleTable buildTripleTable(TransactionCoordinator txnCoord, 
-                                                Location location, StoreParams params,
-                                                NodeTable nodeTable)
-    {    
+    public TripleTable buildTripleTable(NodeTable nodeTable) {    
         String primary = params.getPrimaryIndexTriples() ;
         String[] indexes = params.getTripleIndexes() ;
 
@@ -169,7 +190,7 @@ public class Builder2 {
             error(log, "Wrong number of triple table indexes: "+StrUtils.strjoin(",", indexes)) ;
         log.debug("Triple table: "+primary+" :: "+StrUtils.strjoin(",", indexes)) ;
 
-        TupleIndex tripleIndexes[] = makeTupleIndexes(txnCoord, location, params, primary, indexes) ;
+        TupleIndex tripleIndexes[] = makeTupleIndexes(primary, indexes) ;
 
         if ( tripleIndexes.length != indexes.length )
             error(log, "Wrong number of triple table tuples indexes: "+tripleIndexes.length) ;
@@ -177,10 +198,7 @@ public class Builder2 {
         return tripleTable ;
     }
 
-    public static QuadTable buildQuadTable(TransactionCoordinator txnCoord, 
-                                            Location location, StoreParams params,
-                                            NodeTable nodeTable)
-    {    
+    public QuadTable buildQuadTable(NodeTable nodeTable) {    
         String primary = params.getPrimaryIndexQuads() ;
         String[] indexes = params.getQuadIndexes() ;
 
@@ -188,7 +206,7 @@ public class Builder2 {
             error(log, "Wrong number of quad table indexes: "+StrUtils.strjoin(",", indexes)) ;
         log.debug("Quad table: "+primary+" :: "+StrUtils.strjoin(",", indexes)) ;
 
-        TupleIndex tripleIndexes[] = makeTupleIndexes(txnCoord, location, params, primary, indexes) ;
+        TupleIndex tripleIndexes[] = makeTupleIndexes(primary, indexes) ;
 
         if ( tripleIndexes.length != indexes.length )
             error(log, "Wrong number of triple table tuples indexes: "+tripleIndexes.length) ;
@@ -196,15 +214,11 @@ public class Builder2 {
         return tripleTable ;
     }
 
-    public static DatasetPrefixesTDB buildPrefixTable(TransactionCoordinator txnCoord,
-                                                       Location location, StoreParams params,
-                                                       NodeTable prefixNodes) {
+    public DatasetPrefixesTDB buildPrefixTable(NodeTable prefixNodes) {
         String primary = params.getPrimaryIndexPrefix() ;
         String[] indexes = params.getPrefixIndexes() ;
 
-        TupleIndex prefixIndexes[] = makeTupleIndexes(txnCoord, 
-                                                      location, params, 
-                                                      primary, indexes) ;
+        TupleIndex prefixIndexes[] = makeTupleIndexes(primary, indexes) ;
         if ( prefixIndexes.length != 1 )
             error(log, "Wrong number of triple table tuples indexes: "+prefixIndexes.length) ;
 
@@ -220,73 +234,52 @@ public class Builder2 {
 
     // ---- Build structures
 
-    public static TupleIndex[] makeTupleIndexes(TransactionCoordinator txnCoord,
-                                                 Location location, StoreParams params,
-                                                 String primary, String[] indexNames) {
+    public TupleIndex[] makeTupleIndexes(String primary, String[] indexNames) {
         int indexRecordLen = primary.length()*SystemTDB.SizeOfNodeId ;
         TupleIndex indexes[] = new TupleIndex[indexNames.length] ;
         for (int i = 0 ; i < indexes.length ; i++) {
             String indexName = indexNames[i] ;
             String indexLabel = indexNames[i] ;
-            indexes[i] = buildTupleIndex(txnCoord, location, params, primary, indexName, indexLabel) ;
+            indexes[i] = buildTupleIndex(primary, indexName, indexLabel) ;
         }
         return indexes ;
     }
 
-    public static String choosePrimaryForIndex(StoreParams params, String index) {
-        String primary3 = params.getPrimaryIndexTriples() ;
-        String primary4 = params.getPrimaryIndexQuads() ;
-        
-        if ( index.length() == primary3.length() )
-            return primary3 ;
-        if ( index.length() == primary4.length() )
-            return primary4 ;
-        throw new DBOpEnvException("Can't find primary for '"+index+"'") ;
-    }
-
-    public static TupleIndex buildTupleIndex(TransactionCoordinator txnMgr,
-                                             Location location, StoreParams params,
-                                             String primary, String index, String name) {
+    public TupleIndex buildTupleIndex(String primary, String index, String name) {
         ColumnMap cmap = new ColumnMap(primary, index) ;
         RecordFactory rf = new RecordFactory(SystemTDB.SizeOfNodeId * cmap.length(), 0) ;
-        ComponentId cid1 = componentIdMgr.getComponentId(index) ;
-        RangeIndex rIdx = buildRangeIndex(txnMgr, cid1, location, params, rf, index) ;
+        RangeIndex rIdx = buildRangeIndex(rf, index) ;
         TupleIndex tIdx = new TupleIndexRecord(primary.length(), cmap, index, rf, rIdx) ;
         return tIdx ;
     }
     
-    public static RangeIndex buildRangeIndex(TransactionCoordinator coord, ComponentId cid,
-                                             Location location, StoreParams params,
-                                             RecordFactory recordFactory,
-                                             String name) {
+    public RangeIndex buildRangeIndex(RecordFactory recordFactory, String name) {
+        ComponentId cid = componentIdMgr.getComponentId(name) ;
         FileSet fs = new FileSet(location, name) ;
         BPlusTree bpt = BPlusTreeFactory.createBPTree(cid, fs, recordFactory) ;
-        coord.add(bpt) ;
+        txnCoord.add(bpt) ;
         return bpt ;
     }
     
-    public static NodeTable buildNodeTable(TransactionCoordinator coord, Location location, StoreParams params, String name) {
-        NodeTable nodeTable = buildBaseNodeTable(coord, location, params, name) ;
+    public NodeTable buildNodeTable(String name) {
+        NodeTable nodeTable = buildBaseNodeTable(name) ;
         nodeTable = NodeTableCache.create(nodeTable, params) ;
         nodeTable = NodeTableInline.create(nodeTable) ;
-        return nodeTable ; 
+        return nodeTable ;
     }
 
-    public static NodeTable buildBaseNodeTable(TransactionCoordinator coord, Location location, StoreParams params, String name) {
+    public NodeTable buildBaseNodeTable(String name) {
         RecordFactory recordFactory = new RecordFactory(SystemTDB.LenNodeHash, SystemTDB.SizeOfNodeId) ;
-        
-        ComponentId cid1 = componentIdMgr.getComponentId(name) ;
-        Index index = buildRangeIndex(coord, cid1, location, params, recordFactory, name) ;
+        Index index = buildRangeIndex(recordFactory, name) ;
         
         String dataname = name+"-data" ; 
-        ComponentId cid2 = componentIdMgr.getComponentId(dataname) ;
-        TransBinaryDataFile transBinFile = buildBinaryDataFile(coord, cid2, location, params, dataname) ;
-        coord.add(transBinFile) ;
+        TransBinaryDataFile transBinFile = buildBinaryDataFile(dataname) ;
+        txnCoord.add(transBinFile) ;
         return new NodeTableTRDF(index, transBinFile) ;
     }
     
-    public static TransBinaryDataFile buildBinaryDataFile(TransactionCoordinator coord, ComponentId cid,
-                                                          Location location, StoreParams params, String name) {
+    public TransBinaryDataFile buildBinaryDataFile(String name) {
+        ComponentId cid = componentIdMgr.getComponentId(name) ;
         FileSet fs = new FileSet(location, name) ; 
         BinaryDataFile binFile = FileFactory.createBinaryDataFile(fs, Names.extObjNodeData) ;
         BufferChannel pState = FileFactory.createBufferChannel(fs, Names.extBdfState) ;
@@ -295,7 +288,7 @@ public class Builder2 {
         return transBinFile ;
     }
     
-    private static void error(Logger log, String msg)
+    private void error(Logger log, String msg)
     {
         if ( log != null )
             log.error(msg) ;

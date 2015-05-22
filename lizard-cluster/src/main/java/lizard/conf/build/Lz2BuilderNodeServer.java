@@ -48,12 +48,9 @@ public class Lz2BuilderNodeServer {
         Location loc = location.getSubLocation(x.data) ;
         int port = x.netAddr.port ;
         FmtLog.info(logConf, "buildNodeServer: %s %s", port, loc) ;
-        // Per individual server (for the moment?)
         TransactionCoordinator coord = Builder2.buildTransactionCoordinator(location) ;
-        
-        NodeTable nt = Builder2.buildNodeTable(coord, location, params, params.getNodeTableBaseName()) ;
-        // No cache for now.
-        
+        Builder2 builder = Builder2.create(coord, location, params) ;
+        NodeTable nt = builder.buildNodeTable(params.getNodeTableBaseName()) ;
         TransactionalSystem txnSystem = new TransactionalBase(x.toString(), coord) ;
         TServerNode serverNode = TServerNode.create(txnSystem, port, nt) ;
         platform.add(serverNode) ;

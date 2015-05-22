@@ -19,6 +19,7 @@ package lz_dev;
 
 import java.nio.file.Paths ;
 
+import lizard.cluster.Cluster ;
 import lizard.conf.ConfCluster ;
 import lizard.conf.NetHost ;
 import lizard.conf.build.LzDeploy ;
@@ -90,13 +91,10 @@ public class LzDev {
             System.exit(0) ;
         }
 
-        LzDeploy.deployDataset(config, here) ;
-
-        
         // Multiple query servers?
         log.info("DATASET") ;
         Dataset ds = LzDeploy.deployDataset(config, here) ;
-        load(ds,"/home/afs/Datasets/BSBM/bsbm-250k.nt.gz");
+        load(ds,"/home/afs/Datasets/BSBM/bsbm-1m.nt.gz");
         //System.exit(0) ;
         
 //        ds.begin(ReadWrite.WRITE);
@@ -116,8 +114,8 @@ public class LzDev {
         LogCtl.set("lizard", "info");
         LogCtl.set("org.seaborne", "info");
         
-        //Cluster.close();
-        //System.exit(0) ;
+        Cluster.close();
+        System.exit(0) ;
     }
 
     private static void ping(LzDataset lz) {
@@ -138,13 +136,20 @@ public class LzDev {
             LogCtl.set(TServerNode.class, "WARN") ;
             LogCtl.set(TServerIndex.class, "WARN") ;
 
+            StreamRDF s1 = StreamRDFLib.dataset(ds.asDatasetGraph()) ;
+            ProgressLogger plog = new ProgressLogger(LoggerFactory.getLogger("LOAD"), 
+                                                     "Triples", 50000, 10) ;
+            StreamRDFMonitor s2 = new StreamRDFMonitor(s1, plog) ;
+            // Ensure transaction overheads acccounted for
+            StreamRDFDepth s3 = new StreamRDFDepth(s2) ;
+            s3.start();
+            
+            // Unwrap a layer of start/finish.
             TDBTxn.executeWrite(ds, () -> {
-                StreamRDF s = StreamRDFLib.dataset(ds.asDatasetGraph()) ;
-                ProgressLogger plog = new ProgressLogger(LoggerFactory.getLogger("LOAD"), 
-                                                         "Triples", 50000, 10) ;
-                s = new StreamRDFMonitor(s, plog) ;
-                RDFDataMgr.parse(s, datafile) ;
+                RDFDataMgr.parse(s3, datafile) ;
             }) ;
+            s3.finish();
+            
             LogCtl.set(ClusterNodeTable.class, "INFO") ;
             LogCtl.set(TServerNode.class, "INFO") ;
             LogCtl.set(TServerIndex.class, "INFO") ;

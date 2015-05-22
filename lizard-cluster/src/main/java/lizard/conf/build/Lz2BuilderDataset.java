@@ -20,8 +20,11 @@ package lizard.conf.build;
 import java.util.ArrayList ;
 import java.util.List ;
 
+import lizard.api.TxnClient ;
 import lizard.cluster.Cluster ;
 import lizard.conf.* ;
+import lizard.conf.dataset.TransactionalComponentRemote ;
+import lizard.conf.dataset.TransactionalComponentZkLock ;
 import lizard.index.ClusterTupleIndex ;
 import lizard.index.DistributorTuplesReplicate ;
 import lizard.index.TupleIndexRemote ;
@@ -45,8 +48,10 @@ import org.apache.jena.sparql.engine.optimizer.reorder.ReorderLib ;
 import org.seaborne.dboe.base.file.Location ;
 import org.seaborne.dboe.sys.Names ;
 import org.seaborne.dboe.transaction.Transactional ;
+import org.seaborne.dboe.transaction.txn.ComponentId ;
 import org.seaborne.dboe.transaction.txn.TransactionCoordinator ;
 import org.seaborne.dboe.transaction.txn.TransactionalBase ;
+import org.seaborne.dboe.transaction.txn.TransactionalComponent ;
 import org.seaborne.tdb2.setup.StoreParams ;
 import org.seaborne.tdb2.store.* ;
 import org.seaborne.tdb2.store.nodetable.NodeTable ;
@@ -88,6 +93,7 @@ public class Lz2BuilderDataset {
         return lizard ;
     }
     
+    // Move to Builder2?
     private static DatasetGraphTDB createDataset(TransactionCoordinator txnCoord, Location location, TupleIndex[] tripleIndexes, NodeTable nodeTable) {
         DatasetControl policy = new DatasetControlMRSW() ;
         StoreParams params = StoreParams.getDftStoreParams() ;
@@ -117,11 +123,10 @@ public class Lz2BuilderDataset {
         }
         
         // Local only.
-        NodeTable nodeTablePrefixes = Builder2.buildNodeTable(txnCoord, 
-                                                              location, params, params.getPrefixTableBaseName()) ;
-        
-        DatasetPrefixesTDB prefixes = Builder2.buildPrefixTable(txnCoord, location, params, nodeTablePrefixes) ;
-        DatasetGraphTDB dsg = new DatasetGraphTDB(tableTriples, tableQuads, prefixes, ReorderLib.fixed(), null, params) ;
+        Builder2 builder = Builder2.create(txnCoord, location, params) ;
+        NodeTable nodeTablePrefixes = builder.buildNodeTable(params.getPrefixTableBaseName()) ;
+        DatasetPrefixesTDB prefixes = builder.buildPrefixTable(nodeTablePrefixes) ;
+        DatasetGraphTDB dsg = new DatasetGraphTDB(tableTriples, tableQuads, prefixes, ReorderLib.fixed(), builder.getLocation(), builder.getParams()) ;
         // Development.
         dsg.getContext().set(ARQ.optFilterPlacementBGP, false);
         // Query engine.
@@ -175,7 +180,22 @@ public class Lz2BuilderDataset {
     }
     
     public static DatasetGraph datasetGraph(LzDataset lz) {
+        // Not persistent across restarts
+        ComponentId cidZk = ComponentId.allocLocal() ;
+        TransactionalComponentZkLock zkLock = new TransactionalComponentZkLock(cidZk) ;
         TransactionCoordinator transCoord = lz.getTxnMgr() ;
+        transCoord.add(zkLock) ;
+
+        ComponentId base = ComponentId.allocLocal() ;
+        lz.getComponents().forEach(c->{
+            if ( c instanceof TxnClient.Accessor ) {
+                TxnClient<?> wire = ((TxnClient.Accessor)c).getWireClient() ;
+                ComponentId cid = ComponentId.allocLocal() ;
+                TransactionalComponent x = new TransactionalComponentRemote<>(cid, wire) ;
+                transCoord.add(x) ;
+            }
+        });
+        
         // Use Zookeeper for transaction ids.
         transCoord.setTxnIdGenerator(Cluster.getTxnIdGenerator());
         Transactional transactional = new TransactionalBase(transCoord) ;

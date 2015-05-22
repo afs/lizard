@@ -61,10 +61,6 @@ public class LzDeploy {
         LzDataset lzdsg = Lz2BuilderDataset.build(confCluster, locationQueryServer) ;
         if ( lzdsg == null )
             return null ;
-
-        lzdsg.getStartables().forEach(s -> {
-            s.start();
-        });
         return Lz2BuilderDataset.dataset(lzdsg) ;
     }
 }

@@ -76,9 +76,6 @@ public class TupleIndexRemote extends TupleIndexBase implements Component, Compo
     
     public ConnState getStatus() { return client.getConnectionStatus() ; }
     
-//    /** Testing / debugging */
-//    public Connection getConnection() { return access.getConnection() ; }
-    
     @Override
     public Iterator<Tuple<NodeId>> all() {
         return performFind(anyTuple) ;

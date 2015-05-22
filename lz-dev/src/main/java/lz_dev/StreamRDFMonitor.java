@@ -39,7 +39,6 @@ public class StreamRDFMonitor extends StreamRDFWrapper {
         //monitor.startMessage(); 
         monitor.start();
         super.start() ;
-        
     }
 
     @Override

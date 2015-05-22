@@ -51,9 +51,9 @@ public class Lz2BuilderIndexServer {
         FmtLog.info(logConf, "buildIndexServer[%s]: %s %s", data, port, loc) ;
         TransactionCoordinator coord = Builder2.buildTransactionCoordinator(location) ;
         TransactionalSystem txnSystem = new TransactionalBase(x.toString(), coord) ;
-        
-        String primary = Builder2.choosePrimaryForIndex(params, x.conf.indexOrder) ; 
-        TupleIndex tupleIndex = Builder2.buildTupleIndex(coord, loc, params, primary, x.conf.indexOrder, x.name) ;  
+        String primary = Builder2.choosePrimaryForIndex(params, x.conf.indexOrder) ;
+        Builder2 builder = Builder2.create(coord, location, params) ;
+        TupleIndex tupleIndex = builder.buildTupleIndex(primary, x.conf.indexOrder, x.name) ;  
         TServerIndex serverindex = TServerIndex.create(txnSystem, port, tupleIndex) ;
         platform.add(serverindex) ;
         return serverindex ;

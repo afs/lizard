@@ -20,6 +20,7 @@ package lz_dev ;
 public class PROJECT_Lizard {
     // === Tasks
     // Track down "autocommit"
+    // Need TransactionalComponentRemote<X extends TxnClient<?>>  
 
     // Share Thrift encoding with RIOT
     // ThriftConvert is better that ThriftLib?
