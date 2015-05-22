@@ -21,7 +21,7 @@ public class PROJECT_Lizard {
     // Tasks
     
     // Rework building, using new configuration.
-    // Delete:replace cluster/lizard/conf/ etc.
+    // Delete:replace cluster/lizard/conf,sys etc.
     // BuildContext
     //   Location,
     //   Coordinator
@@ -42,6 +42,9 @@ public class PROJECT_Lizard {
     // A - Fix locks on ThriftLib.
     // B - Batching updates (and flow reversal)
     // C - Block allocate txn ids but still need the lock.
+    
+    // Should all servers on one machine share a TransactionCoordinator?
+    //   And update talsk to the TransactionCoordinator?
     
     // Thriftlib: Specific encodings: integer, double, etc. 
     

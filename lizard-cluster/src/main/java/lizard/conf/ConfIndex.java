@@ -15,22 +15,26 @@
  *  information regarding copyright ownership.
  */
 
-package conf2;
+package lizard.conf;
 
-import lizard.conf.assembler.AssemblerYaml ;
-import lizard.conf.assembler.VocabLizard ;
-import lizard.query.LizardQuery ;
-import lizard.system.LzLog ;
+import org.apache.jena.atlas.io.IndentedWriter ;
+import org.apache.jena.atlas.lib.ColumnMap ;
 
-import org.apache.jena.assembler.Assembler ;
+public class ConfIndex { 
+    public final String indexOrder ;
+    public final ColumnMap cmap ;
+    public final int readQuorum ;
+    public final int writeQuorum ;
+    
+    public ConfIndex(ColumnMap cmap, String indexOrder, int readQuorum, int writeQuorum) {
+        super() ;
+        this.indexOrder = indexOrder ;
+        this.readQuorum = readQuorum ;
+        this.writeQuorum = writeQuorum ;
+        this.cmap = cmap ;
+    }
 
-public class Lizard2 {
-    static { init() ; } // Via assembler.
-    public synchronized static void init() {
-        LzLog.logSystem.info("Lizard.init") ;
-        //VocabLizard.init();
-        Assembler.general.implementWith(VocabLizard.lzDataset, new AssemblerYaml()) ;
-        LizardQuery.init(); 
+    public void print(IndentedWriter out) {
+        out.print(indexOrder) ;
     }
 }
-

@@ -24,21 +24,14 @@ import lizard.api.TLZ.TLZ_NodeId ;
 import lizard.api.TLZ.TLZ_NodeTable ;
 import lizard.api.TLZ.TLZ_RDF_Term ;
 import lizard.comms.thrift.ThriftLib ;
+
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.graph.Node ;
 import org.apache.jena.riot.out.NodeFmtLib ;
 import org.apache.thrift.TException ;
-import org.seaborne.dboe.base.file.Location ;
-import org.seaborne.dboe.trans.bplustree.BPlusTree ;
-import org.seaborne.dboe.trans.data.TransBinaryDataFile ;
-import org.seaborne.dboe.transaction.txn.TransactionalBase ;
 import org.seaborne.dboe.transaction.txn.TransactionalSystem ;
-import org.seaborne.dboe.transaction.txn.journal.Journal ;
 import org.seaborne.tdb2.store.NodeId ;
 import org.seaborne.tdb2.store.nodetable.NodeTable ;
-import org.seaborne.tdb2.store.nodetable.NodeTableCache ;
-import org.seaborne.tdb2.store.nodetable.NodeTableTRDF ;
-import org.seaborne.tdb2.store.nodetable.NodeTableWrapper ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
@@ -54,27 +47,10 @@ import org.slf4j.LoggerFactory ;
     @Override
     protected String getLabel() { return label ; }    
 
-    public THandlerNodeTable(String label, NodeTable nodeTable) {
-        super(init(nodeTable)) ;
+    public THandlerNodeTable(TransactionalSystem txnSystem, String label, NodeTable nodeTable) {
+        super(txnSystem) ;
         this.label = label ;
         this.nodeTable = nodeTable ;
-    }
-    
-    private static TransactionalSystem init(NodeTable nodeTable) {
-        while ( nodeTable instanceof NodeTableWrapper )
-            nodeTable = ((NodeTableWrapper)nodeTable).wrapped() ;
-        if ( nodeTable instanceof NodeTableCache )
-            nodeTable = ((NodeTableCache)nodeTable).wrapped() ;
-        if ( ! ( nodeTable instanceof NodeTableTRDF ) )
-            log.warn("Not a TDB2 node table") ;
-        NodeTableTRDF nt = (NodeTableTRDF)nodeTable ;
-        
-        BPlusTree bpt = (BPlusTree)nt.getIndex() ; 
-        TransBinaryDataFile bdf = (TransBinaryDataFile)nt.getData() ;
-        // XXX !!!!!
-        log.warn("Ad-hoc memory journal");  
-        Journal journal = Journal.create(Location.mem()) ; 
-        return new TransactionalBase(journal, bdf, bpt) ;
     }
     
     @Override

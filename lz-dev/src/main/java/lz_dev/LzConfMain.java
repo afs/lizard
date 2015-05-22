@@ -19,18 +19,21 @@ package lz_dev;
 
 import java.io.InputStream ;
 
+import lizard.conf.ConfCluster ;
+import lizard.conf.NetHost ;
+import lizard.conf.build.LzDeploy ;
+import lizard.conf.parsers.LzConfParserRDF ;
+import lizard.conf.parsers.LzConfParserYAML ;
+import lizard.conf.parsers.YAML ;
 import lizard.system.LizardException ;
 import migrate.Q ;
+
 import org.apache.jena.query.Dataset ;
 import org.apache.jena.query.ReadWrite ;
 import org.apache.jena.rdf.model.Model ;
+
 import conf2.LzConfigDefault ;
-import conf2.YAML ;
-import conf2.build.LzDeploy ;
-import conf2.conf.ConfCluster ;
-import conf2.conf.NetHost ;
-import conf2.parsers.LzConfParserRDF ;
-import conf2.parsers.LzConfParserYAML ;
+
 import org.apache.jena.atlas.io.IO ;
 import org.apache.jena.atlas.logging.LogCtl ;
 import org.apache.jena.riot.RDFDataMgr ;
@@ -81,8 +84,9 @@ public class LzConfMain {
         
         // The deployment "here".
         NetHost here = NetHost.create("localhost") ;
+        LzDeploy.deployServers(conf, here);
+        Dataset ds = LzDeploy.deployDataset(conf, here) ;
         
-        Dataset ds = LzDeploy.deploy(conf, here);
         // Specialized assembler.
         // Fire off fuseki.
 

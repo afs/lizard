@@ -17,14 +17,11 @@
 
 package main;
 
-import lizard.conf.Configuration ;
 import lz.LZ_Query ;
 import lz_dev.Setup ;
 import migrate.Q ;
 
 import org.apache.jena.atlas.logging.LogCtl ;
-
-import org.apache.jena.rdf.model.Model ;
 
 /** Run a query against a deployed set of servers */
 public class MainLzQuery {
@@ -33,8 +30,6 @@ public class MainLzQuery {
     static String confNode          = Q.filename(Setup.confDir, "conf-node.ttl") ;
     static String confIndex         = Q.filename(Setup.confDir, "conf-index.ttl") ;
     static String confDataset       = Q.filename(Setup.confDir, "conf-dataset.ttl") ;
-    static Model configurationModel = Q.readAll(confNode, confIndex, confDataset) ;
-    static Configuration config     = Configuration.fromModel(configurationModel) ;
     
     public static void main(String...argv) {
         LZ_Query.main(confNode, confIndex, confDataset) ;

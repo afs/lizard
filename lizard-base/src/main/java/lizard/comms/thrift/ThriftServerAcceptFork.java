@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory ;
 
 /** This is a very raw ThriftServer that accepts connections and passes to a handler.
  *  The handler is expecting to engage in a long term interation with client,
- *  possibly steram based.
+ *  possibly stream based.
  */
 public class ThriftServerAcceptFork extends ThriftServer {
     
@@ -37,7 +37,7 @@ public class ThriftServerAcceptFork extends ThriftServer {
     private final Handler handler ;
 
     public ThriftServerAcceptFork(int port, Handler handler) {
-        super(port) ;
+        super(null, port) ;
         this.handler = handler ;
     }
     

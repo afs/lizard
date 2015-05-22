@@ -18,12 +18,18 @@
 package lizard.conf.dataset;
 
 import lizard.cluster.Cluster ;
+
+import org.seaborne.dboe.transaction.txn.ComponentId ;
 import org.seaborne.dboe.transaction.txn.TransactionalComponentBase ;
 import org.seaborne.dboe.transaction.txn.TxnId ;
-
 import org.apache.jena.query.ReadWrite ;
 
 final public class TransactionalComponentZkLock extends TransactionalComponentBase<Object> {
+    
+    public TransactionalComponentZkLock(ComponentId id) {
+        super(id) ;
+    }
+
     @Override
     protected Object _begin(ReadWrite readWrite, TxnId txnId) {
         if ( readWrite == ReadWrite.WRITE )

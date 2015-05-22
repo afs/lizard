@@ -29,14 +29,12 @@ import lizard.api.TxnHandler ;
 import lizard.api.TLZ.TLZ_Index ;
 import lizard.api.TLZ.TLZ_ShardIndex ;
 import lizard.api.TLZ.TLZ_TupleNodeId ;
+
 import org.apache.jena.atlas.lib.Tuple ;
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.thrift.TException ;
-import org.seaborne.dboe.base.file.Location ;
 import org.seaborne.dboe.trans.bplustree.BPlusTree ;
-import org.seaborne.dboe.transaction.txn.TransactionalBase ;
 import org.seaborne.dboe.transaction.txn.TransactionalSystem ;
-import org.seaborne.dboe.transaction.txn.journal.Journal ;
 import org.seaborne.tdb2.store.NodeId ;
 import org.seaborne.tdb2.store.tupletable.TupleIndex ;
 import org.seaborne.tdb2.store.tupletable.TupleIndexRecord ;
@@ -55,21 +53,12 @@ import org.slf4j.LoggerFactory ;
 
     private final TupleIndex index ;
 
-    public THandlerTupleIndex(String label, TupleIndex index) {
-        super(init(index)) ;
-        
+    public THandlerTupleIndex(TransactionalSystem txnSystem, String label, TupleIndex index) {
+        super(txnSystem) ;
         this.label = label ;
         this.index = index ;
     }
     
-    private static TransactionalSystem init(TupleIndex index) {
-        BPlusTree x = unwrap(index) ;
-        // XXX !!!!!
-        log.warn("Ad-hoc memory journal");  
-        Journal journal = Journal.create(Location.mem()) ; 
-        return new TransactionalBase(journal, x) ;
-    }
-
     static BPlusTree unwrap(TupleIndex index) {
         TupleIndexRecord tir = (TupleIndexRecord)index ;
         return (BPlusTree)(tir.getRangeIndex()) ;

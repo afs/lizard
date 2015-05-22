@@ -26,9 +26,6 @@ import java.util.ArrayList ;
 import java.util.Arrays ;
 import java.util.List ;
 
-import lizard.conf.dataset.ConfigLizardDataset ;
-import lizard.query.LzDataset ;
-import lizard.system.LizardException ;
 import lizard.system.LzLib ;
 import arq.cmd.ArgDecl ;
 import arq.cmd.CmdException ;
@@ -38,8 +35,6 @@ import arq.cmdline.ModQueryIn ;
 import org.apache.jena.atlas.logging.LogCtl ;
 import org.apache.jena.query.* ;
 import org.apache.jena.rdf.model.Model ;
-import org.apache.jena.riot.Lang ;
-import org.apache.jena.riot.RDFDataMgr ;
 import org.apache.jena.sparql.core.DatasetGraph ;
 import org.apache.jena.sparql.util.QueryExecUtils ;
 import org.seaborne.dboe.engine.explain.ExplainCategory ;
@@ -100,19 +95,20 @@ public class LZ_Query extends CmdGeneral {
         
         try {
             Model m = LzLib.readAll(confFiles) ;
-            ConfigLizardDataset cf ;
-            try {
-                cf = ConfigLizardDataset.create(m) ;
-            } catch (LizardException ex) {
-                RDFDataMgr.write(System.err, m, Lang.TTL) ;
-                System.exit(1) ;
-                return ;
-            }
-            
-            LzDataset lzdsg = cf.buildDataset() ;
-            lzdsg.start() ;
-            // "start" in getDataset?
-            DatasetGraph dsg = lzdsg.getDataset() ;
+            if ( true ) throw new CmdException("Needs updatring to new configuation and deployment") ;
+//            ConfigLizardDataset cf ;
+//            try {
+//                cf = ConfigLizardDataset.create(m) ;
+//            } catch (LizardException ex) {
+//                RDFDataMgr.write(System.err, m, Lang.TTL) ;
+//                System.exit(1) ;
+//                return ;
+//            }
+//            
+//            LzDataset lzdsg = cf.buildDataset() ;
+//            lzdsg.start() ;
+//            // "start" in getDataset?
+            DatasetGraph dsg = null ; // lzdsg.getDataset() ;
             Dataset ds = DatasetFactory.create(dsg) ;
 
             Query query = modQuery.getQuery() ;

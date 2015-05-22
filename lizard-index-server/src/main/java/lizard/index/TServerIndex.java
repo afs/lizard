@@ -20,27 +20,26 @@ package lizard.index;
 import lizard.api.TLZ.TLZ_Index ;
 import lizard.comms.thrift.ThriftServer ;
 
-import org.seaborne.tdb2.store.tupletable.TupleIndex ;
-
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.thrift.protocol.TCompactProtocol ;
 import org.apache.thrift.server.TServer ;
 import org.apache.thrift.server.TThreadPoolServer ;
+import org.seaborne.dboe.transaction.txn.TransactionalSystem ;
+import org.seaborne.tdb2.store.tupletable.TupleIndex ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
-
 
 public class TServerIndex extends ThriftServer
 {
     private static Logger log = LoggerFactory.getLogger(TServerIndex.class) ;
     private TupleIndex index ;
     
-    public static TServerIndex create(int port, TupleIndex index) {
-        return new TServerIndex(port, index) ;
+    public static TServerIndex create(TransactionalSystem txnSystem, int port, TupleIndex index) {
+        return new TServerIndex(txnSystem, port, index) ;
     }
 
-    private TServerIndex(int port, TupleIndex index) {
-        super(port) ;
+    private TServerIndex(TransactionalSystem txnSystem, int port, TupleIndex index) {
+        super(txnSystem, port) ;
         setLabel("IndexServer["+port+"]") ;
         this.index = index ;
     }
@@ -53,7 +52,8 @@ public class TServerIndex extends ThriftServer
         
         new Thread(()-> {
             try {
-                TLZ_Index.Iface handler = new THandlerTupleIndex(getLabel(), index) ;
+                getTxnSystem().getTxnMgr().start();
+                TLZ_Index.Iface handler = new THandlerTupleIndex(getTxnSystem(), getLabel(), index) ;
                 TLZ_Index.Processor<TLZ_Index.Iface> processor = new TLZ_Index.Processor<TLZ_Index.Iface>(handler);
                 TThreadPoolServer.Args args = new TThreadPoolServer.Args(serverTransport) ;
                 args.processor(processor) ;
@@ -64,6 +64,7 @@ public class TServerIndex extends ThriftServer
                 //sema.release(1);
                 server.serve();
                 FmtLog.info(log, "Finished index server: port = %d", getPort()) ;
+                getTxnSystem().getTxnMgr().shutdown();
               } catch (Exception e) {
                 e.printStackTrace();
               }

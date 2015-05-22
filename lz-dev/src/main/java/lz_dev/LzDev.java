@@ -19,16 +19,15 @@ package lz_dev;
 
 import java.nio.file.Paths ;
 
-import lizard.cluster.Cluster ;
-import lizard.conf.Configuration ;
-import lizard.conf.dataset.LzBuildClient ;
+import lizard.conf.ConfCluster ;
+import lizard.conf.NetHost ;
+import lizard.conf.build.LzDeploy ;
+import lizard.conf.parsers.LzConfParserRDF ;
 import lizard.index.TServerIndex ;
 import lizard.node.ClusterNodeTable ;
 import lizard.node.NodeTableRemote ;
 import lizard.node.TServerNode ;
 import lizard.query.LzDataset ;
-import lizard.sys.Deploy ;
-import lizard.sys.Deployment ;
 import lizard.system.LizardException ;
 import lizard.system.Pingable ;
 import migrate.Q ;
@@ -47,7 +46,7 @@ import org.apache.jena.riot.RDFDataMgr ;
 import org.apache.jena.riot.system.StreamRDF ;
 import org.apache.jena.riot.system.StreamRDFLib ;
 import org.apache.jena.sparql.util.QueryExecUtils ;
-import org.seaborne.dboe.base.file.Location ;
+import org.seaborne.tdb2.lib.TDBTxn ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
@@ -60,7 +59,7 @@ public class LzDev {
     static String confIndex         = Q.filename(confDir, "conf-index.ttl") ;
     static String confDataset       = Q.filename(confDir, "conf-dataset.ttl") ;
     static Model configurationModel = Q.readAll(confNode, confIndex, confDataset) ;
-    static Configuration config     = Configuration.fromModel(configurationModel) ;
+    static ConfCluster config       = LzConfParserRDF.parseConfFile(configurationModel) ; 
     
     static String deploymentFile        = Q.filename(confDir, "deploy-jvm.ttl") ;
     
@@ -83,24 +82,24 @@ public class LzDev {
         FileOps.clearAll("DB");
 
         log.info("SERVERS") ;
+        // The deployment "here".
+        NetHost here = NetHost.create("localhost") ;
+        
+        LzDeploy.deployServers(config, here);
+        
         try { 
-            Deployment deployment = Deploy.deployServers(config, deploymentFile);
+            LzDeploy.deployServers(config, here);
         } catch ( LizardException ex) {
             System.err.println(ex.getMessage());
             System.exit(0) ;
         }
 
-        // Init a simple ZK
-        int zkPort = 2281 ;
-        zookeeper(zkPort) ;
-        String zkConnect = "localhost:"+zkPort ;
-        Cluster.createSystem(zkConnect);
+        LzDeploy.deployDataset(config, here) ;
+
         
         // Multiple query servers?
         log.info("DATASET") ;
-        LzDataset lz = buildDataset(config) ;
-        Dataset ds = LzBuildClient.dataset(lz, Location.mem()) ;
-
+        Dataset ds = LzDeploy.deployDataset(config, here) ;
         load(ds,"/home/afs/Datasets/BSBM/bsbm-5m.nt.gz");
         System.exit(0) ;
         
@@ -125,12 +124,6 @@ public class LzDev {
         //System.exit(0) ;
     }
 
-    // -------- Dataset
-    private static LzDataset buildDataset(Configuration config) {
-        LzDataset lz = Local.buildDataset(configurationModel) ;
-        return lz ;
-    }
-    
     private static void ping(LzDataset lz) {
         lz.getComponents().stream().sequential().forEach(c -> {
             //System.out.println("Component: "+c.getClass().getTypeName()) ;
@@ -149,15 +142,13 @@ public class LzDev {
             LogCtl.set(TServerNode.class, "WARN") ;
             LogCtl.set(TServerIndex.class, "WARN") ;
 
-            ds.begin(ReadWrite.WRITE) ;
-            StreamRDF s = StreamRDFLib.dataset(ds.asDatasetGraph()) ;
-            ProgressLogger plog = new ProgressLogger(LoggerFactory.getLogger("LOAD"), 
-                                                     "Triples", 50000, 10) ;
-            s = new StreamRDFMonitor(s, plog) ; 
-            RDFDataMgr.parse(s, datafile);
-            ds.commit();
-            ds.end() ;
-
+            TDBTxn.executeWrite(ds, () -> {
+                StreamRDF s = StreamRDFLib.dataset(ds.asDatasetGraph()) ;
+                ProgressLogger plog = new ProgressLogger(LoggerFactory.getLogger("LOAD"), 
+                                                         "Triples", 50000, 10) ;
+                s = new StreamRDFMonitor(s, plog) ;
+                RDFDataMgr.parse(s, datafile) ;
+            }) ;
             LogCtl.set(ClusterNodeTable.class, "INFO") ;
             LogCtl.set(TServerNode.class, "INFO") ;
             LogCtl.set(TServerIndex.class, "INFO") ;

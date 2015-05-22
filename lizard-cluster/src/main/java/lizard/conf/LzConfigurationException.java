@@ -15,22 +15,13 @@
  *  information regarding copyright ownership.
  */
 
-package conf2;
+package lizard.conf;
 
-import lizard.conf.assembler.AssemblerYaml ;
-import lizard.conf.assembler.VocabLizard ;
-import lizard.query.LizardQuery ;
-import lizard.system.LzLog ;
+import lizard.system.LizardException ;
 
-import org.apache.jena.assembler.Assembler ;
-
-public class Lizard2 {
-    static { init() ; } // Via assembler.
-    public synchronized static void init() {
-        LzLog.logSystem.info("Lizard.init") ;
-        //VocabLizard.init();
-        Assembler.general.implementWith(VocabLizard.lzDataset, new AssemblerYaml()) ;
-        LizardQuery.init(); 
-    }
+public class LzConfigurationException extends LizardException {
+    public LzConfigurationException(String msg, Throwable cause)    { super(msg, cause) ; }
+    public LzConfigurationException(String msg)                     { super(msg) ; }
+    public LzConfigurationException(Throwable cause)                { super(cause) ; }
+    public LzConfigurationException()                               { super() ; }
 }
-

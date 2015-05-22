@@ -21,12 +21,12 @@ package lizard.node;
 import lizard.api.TLZ.TLZ_NodeTable ;
 import lizard.comms.thrift.ThriftServer ;
 
-import org.seaborne.tdb2.store.nodetable.NodeTable ;
-
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.thrift.protocol.TCompactProtocol ;
 import org.apache.thrift.server.TServer ;
 import org.apache.thrift.server.TThreadPoolServer ;
+import org.seaborne.dboe.transaction.txn.TransactionalSystem ;
+import org.seaborne.tdb2.store.nodetable.NodeTable ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
@@ -35,26 +35,26 @@ public class TServerNode extends ThriftServer
     private static Logger log = LoggerFactory.getLogger(TServerNode.class) ;
     private final NodeTable nodeTable ;
     
-    public static TServerNode create(int port, NodeTable nodeTable) {
-        return new TServerNode(port, nodeTable) ;
+    public static TServerNode create(TransactionalSystem txnSystem, int port, NodeTable nodeTable) {
+        return new TServerNode(txnSystem, port, nodeTable) ;
     }
     
-    private TServerNode(int port, NodeTable nodeTable) {
-        super(port) ;
+    private TServerNode(TransactionalSystem txnSystem, int port, NodeTable nodeTable) {
+        super(txnSystem, port) ;
         setLabel("NodeServer["+port+"]") ;
-        //server = new ThriftServer(port, new Handler(getLabel(), nodeTable)) ;
         this.nodeTable = nodeTable ; 
     }
     
     @Override
     public void start() {
         //FmtLog.debug(log, "Start node server, port = %d", getPort()) ;
-        TLZ_NodeTable.Iface handler = new THandlerNodeTable(getLabel(), nodeTable) ;
+        TLZ_NodeTable.Iface handler = new THandlerNodeTable(getTxnSystem(), getLabel(), nodeTable) ;
         TLZ_NodeTable.Processor<TLZ_NodeTable.Iface> processor = new TLZ_NodeTable.Processor<TLZ_NodeTable.Iface>(handler);
 
         // Semapahores to sync??
         new Thread(()-> {
             try {
+                getTxnSystem().getTxnMgr().start();
                 TThreadPoolServer.Args args = new TThreadPoolServer.Args(serverTransport) ;
                 args.processor(processor) ;
                 args.inputProtocolFactory(new TCompactProtocol.Factory()) ;
@@ -63,6 +63,7 @@ public class TServerNode extends ThriftServer
                 FmtLog.info(log, "Started index server: port = %d", getPort()) ;
                 server.serve();
                 FmtLog.info(log, "Finished index server: port = %d", getPort()) ;
+                getTxnSystem().getTxnMgr().shutdown();
               } catch (Exception e) {
                 e.printStackTrace();
               }

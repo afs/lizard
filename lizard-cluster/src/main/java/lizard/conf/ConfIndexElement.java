@@ -15,22 +15,10 @@
  *  information regarding copyright ownership.
  */
 
-package conf2;
+package lizard.conf;
 
-import lizard.conf.assembler.AssemblerYaml ;
-import lizard.conf.assembler.VocabLizard ;
-import lizard.query.LizardQuery ;
-import lizard.system.LzLog ;
-
-import org.apache.jena.assembler.Assembler ;
-
-public class Lizard2 {
-    static { init() ; } // Via assembler.
-    public synchronized static void init() {
-        LzLog.logSystem.info("Lizard.init") ;
-        //VocabLizard.init();
-        Assembler.general.implementWith(VocabLizard.lzDataset, new AssemblerYaml()) ;
-        LizardQuery.init(); 
+public class ConfIndexElement extends ConfElement<ConfIndex> {
+    public ConfIndexElement(String name, String data, ConfIndex index, NetAddr netAddr) {
+        super(name, data, index, netAddr) ;
     }
 }
-

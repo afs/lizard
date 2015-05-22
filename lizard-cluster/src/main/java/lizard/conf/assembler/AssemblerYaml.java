@@ -1,4 +1,4 @@
-/*
+/**
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
@@ -18,28 +18,22 @@
 package lizard.conf.assembler;
 
 import lizard.conf.ConfCluster ;
-import lizard.conf.ConfDataset ;
-import lizard.conf.build.Lz2BuilderDataset ;
-import lizard.conf.parsers.LzConfParserRDF ;
+import lizard.conf.NetHost ;
+import lizard.conf.build.LzDeploy ;
+import lizard.conf.parsers.LzConfParserYAML ;
 import lizard.query.LizardQuery ;
-import lizard.query.LzDataset ;
 import lizard.sys.Lizard ;
 
 import org.apache.jena.assembler.Assembler ;
 import org.apache.jena.assembler.Mode ;
+import org.apache.jena.assembler.exceptions.AssemblerException ;
+import org.apache.jena.atlas.lib.FileOps ;
 import org.apache.jena.query.Dataset ;
+import org.apache.jena.rdf.model.Property ;
 import org.apache.jena.rdf.model.Resource ;
-import org.apache.jena.sparql.core.assembler.AssemblerUtils ;
 import org.apache.jena.sparql.core.assembler.DatasetAssembler ;
-import org.seaborne.dboe.base.file.Location ;
-import org.slf4j.Logger ;
-import org.slf4j.LoggerFactory ;
 
-/** Create a Lizard dataset */
-public class LizardAssembler extends DatasetAssembler {
-    // RDF version
-    private static Logger log = LoggerFactory.getLogger(LizardAssembler.class) ;
-    
+public class AssemblerYaml extends DatasetAssembler {
     @Override
     public Dataset createDataset(Assembler a, Resource root, Mode mode)
     {
@@ -47,24 +41,24 @@ public class LizardAssembler extends DatasetAssembler {
         return make(root) ;
     }
 
-  /* Example:
-  <r> rdf:type lizard:Dataset ;
-       ...      
-     */
     
     static Dataset make(Resource root) {
+        // YAML configuration
         Lizard.init(); 
-        ConfCluster confCluster = LzConfParserRDF.parseConfFile(root.getModel()) ; 
-        ConfDataset confDataset = confCluster.dataset ;
-        Location baseLocation = null ;
-        if ( confCluster.fileroot == null )
-            baseLocation = Location.mem() ;
-        else
-            baseLocation = Location.create(confCluster.fileroot) ; 
-        Location locationQueryServer = baseLocation.getSubLocation("query") ;
-        LzDataset lz = Lz2BuilderDataset.build(confCluster, locationQueryServer) ;
-        Dataset ds = Lz2BuilderDataset.dataset(lz) ;
-        AssemblerUtils.setContext(root, ds.getContext());
+        Property property = root.getModel().createProperty("urn:lizard:", "configuration") ;
+        
+        if ( ! root.hasProperty(property) )
+            throw new AssemblerException(root, "Missing the Lizard config file via "+property) ;  
+        
+        String confFile  = root.getProperty(property).getString() ;
+        
+        if ( ! FileOps.exists(confFile) )
+            throw new AssemblerException(root, "No such file: "+confFile) ;
+        
+        ConfCluster conf = LzConfParserYAML.parseConfFile(confFile) ;
+        NetHost here = NetHost.create("localhost") ;
+        Dataset ds = LzDeploy.deployDataset(conf, here);
         return ds ;
     }
 }
+

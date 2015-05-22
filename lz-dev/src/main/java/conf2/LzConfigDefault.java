@@ -17,8 +17,9 @@
 
 package conf2;
 
+import lizard.conf.* ;
+
 import org.apache.jena.atlas.lib.ColumnMap ;
-import conf2.conf.* ;
 
 /** An assortment of ConfCluster configurations */ 
 public class LzConfigDefault {

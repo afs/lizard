@@ -19,23 +19,22 @@ package main;
 
 import java.nio.file.Paths ;
 
-import org.apache.jena.rdf.model.Model ;
-
-import lizard.cluster.Cluster ;
-import lizard.conf.Configuration ;
-import lizard.sys.Deploy ;
-import lizard.sys.Deployment ;
-import lizard.system.LizardException ;
+import lizard.conf.ConfCluster ;
+import lizard.conf.NetHost ;
+import lizard.conf.build.LzDeploy ;
+import lizard.conf.parsers.LzConfParserRDF ;
 import migrate.Q ;
-import org.apache.curator.test.TestingServer ;
+
 import org.apache.jena.atlas.lib.FileOps ;
 import org.apache.jena.atlas.logging.LogCtl ;
 import org.apache.jena.fuseki.cmd.FusekiCmd ;
 import org.apache.jena.fuseki.server.FusekiEnv ;
+import org.apache.jena.rdf.model.Model ;
 
 public class MainLzFuseki {
     static { LogCtl.setLog4j() ; }
     
+    // Run all inside a fuseki server.
     public static void main(String...argv) {
         String confFile = "setup-simple/fuseki.ttl" ;
         if ( argv.length == 1 )
@@ -46,25 +45,9 @@ public class MainLzFuseki {
         }
         
         Model configurationModel = Q.readAll(confFile) ;
-        Configuration config     = Configuration.fromModel(configurationModel) ;
-        
-        try { 
-            Deployment deployment = Deploy.deployServers(config, confFile);
-        } catch ( LizardException ex) {
-            System.err.println(ex.getMessage());
-            System.exit(0) ;
-        }
-
-        // Init a simple ZK
-        int zkPort = 2281 ;
-        TestingServer zkTestServer;
-        try { zkTestServer = new TestingServer(zkPort) ; }
-        catch (Exception e) { e.printStackTrace(); }
-        
-        String zkConnect = "localhost:"+zkPort ;
-        Cluster.createSystem(zkConnect);
-        
-        // ----------------------
+        ConfCluster conf =  LzConfParserRDF.parseConfFile(configurationModel) ;
+        NetHost here = NetHost.create("localhost") ;
+        LzDeploy.deployServers(conf, here) ;
         
         System.setProperty("FUSEKI_HOME", "/home/afs/Jena/jena-fuseki2/jena-fuseki-core/") ;
         FusekiEnv.FUSEKI_BASE = Paths.get("setup-simple/run").toAbsolutePath() ;

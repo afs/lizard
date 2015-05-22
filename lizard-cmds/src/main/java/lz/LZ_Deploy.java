@@ -17,9 +17,6 @@
 
 package lz;
 
-import lizard.conf.Configuration ;
-import lizard.sys.Deploy ;
-import lizard.sys.Deployment ;
 import arq.cmd.ArgDecl ;
 import arq.cmd.CmdException ;
 import arq.cmdline.CmdGeneral ;
@@ -38,7 +35,7 @@ public class LZ_Deploy extends CmdGeneral {
     public static Logger log        = LoggerFactory.getLogger("Lizard") ;  
     public static Logger logConf    = LoggerFactory.getLogger("Conf") ;
     protected ArgDecl argDeploy     = new ArgDecl(ArgDecl.HasValue, "deploy", "server") ;
-    private Deployment deployment = null ;
+    //private Deployment deployment = null ;
     
     public static void main(String ...args) {
         new LZ_Deploy(args).mainRun() ;
@@ -64,14 +61,17 @@ public class LZ_Deploy extends CmdGeneral {
 
         String deploymentFile = super.getValue(argDeploy) ;
         String [] a = super.getPositional().toArray(new String[0]) ;
-        Configuration config = Configuration.fromFile(a) ;
-        deployment = Deployment.parse(config, deploymentFile) ; 
+        
+        throw new CmdException("NEEDS FIXING (new design)") ;
+       
+//        Configuration config = Configuration.fromFile(a) ;
+//        deployment = Deployment.parse(config, deploymentFile) ; 
     }
 
     @Override
     protected void exec() {
         try {
-            Deploy.deploy(deployment) ;
+            //Deploy.deploy(deployment) ;
             while (true) {
                 Lib.sleep(10000) ;
             }

@@ -25,6 +25,7 @@ import org.apache.jena.atlas.logging.Log ;
 import org.apache.thrift.TException ;
 import org.apache.thrift.transport.TServerSocket ;
 import org.apache.thrift.transport.TServerTransport ;
+import org.seaborne.dboe.transaction.txn.TransactionalSystem ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
@@ -33,15 +34,18 @@ public class ThriftServer extends ComponentBase implements Component {
     private static Logger log = LoggerFactory.getLogger(ThriftServer.class) ; 
     
     private final int port ;
+    private final TransactionalSystem txnSystem ;
     protected final TServerTransport serverTransport ;
 
-    public ThriftServer(int port) {
+    public ThriftServer(TransactionalSystem txnSystem, int port) {
+        this.txnSystem = txnSystem ; 
         this.port = port;
         try { serverTransport = new TServerSocket(port) ; }
         catch (TException e) { throw new LizardException(e) ; } 
     }
     
-    public int getPort() { return port ; }
+    public int getPort()                            { return port ; }
+    public TransactionalSystem getTxnSystem()       { return txnSystem ; }
     
     @Override
     public void start() {

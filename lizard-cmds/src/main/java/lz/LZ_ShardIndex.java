@@ -100,7 +100,6 @@ public class LZ_ShardIndex extends CmdARQ {
         //FmtLog.info(log, "dump %s", idx);
 
         int N = idx.getIndexName().length() ;
-        // was quack.IndexLib
         String primaryIndex = IndexLib.choosePrimary(idx); 
 
         String index = idx.getIndexName().toUpperCase() ;

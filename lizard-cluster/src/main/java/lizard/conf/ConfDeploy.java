@@ -15,22 +15,17 @@
  *  information regarding copyright ownership.
  */
 
-package conf2;
+package lizard.conf;
 
-import lizard.conf.assembler.AssemblerYaml ;
-import lizard.conf.assembler.VocabLizard ;
-import lizard.query.LizardQuery ;
-import lizard.system.LzLog ;
+import java.util.List ;
 
-import org.apache.jena.assembler.Assembler ;
+import org.apache.jena.atlas.lib.DS ;
 
-public class Lizard2 {
-    static { init() ; } // Via assembler.
-    public synchronized static void init() {
-        LzLog.logSystem.info("Lizard.init") ;
-        //VocabLizard.init();
-        Assembler.general.implementWith(VocabLizard.lzDataset, new AssemblerYaml()) ;
-        LizardQuery.init(); 
-    }
+// Here : cf ConfCluster which is cluster wide.
+public class ConfDeploy {
+    public ConfCluster confCluster = null ;
+    public ConfZookeeper localZk = null ;
+    public List<ConfNodeTableElement> ntReplicas = DS.list() ;
+    public List<ConfIndexElement> idxReplicas  = DS.list() ;
+    public ConfDataset confDataset = null ;
 }
-

@@ -22,21 +22,28 @@ import java.util.List ;
 import lizard.system.Component ;
 import lizard.system.LifeCycle ;
 
+import org.seaborne.dboe.transaction.txn.TransactionCoordinator ;
 import org.seaborne.tdb2.store.DatasetGraphTDB ;
 
-/** The query platform for Lizard - a dataset and the local compoents (clients to index and nodes) */ 
+/** The query platform for Lizard - a dataset and the local components (clients to index and nodes) */ 
 public class LzDataset implements LifeCycle {
     private DatasetGraphTDB dsg ;
     private List<Component> components ;
     private boolean started = false ;
+    private TransactionCoordinator txnCoord ;
 
-    public LzDataset(DatasetGraphTDB dsg, List<Component> components) {
+    public LzDataset(TransactionCoordinator txnCoord, DatasetGraphTDB dsg, List<Component> components) {
+        this.txnCoord = txnCoord ;
         this.dsg = dsg ;
         this.components = components ;
     }
 
     public DatasetGraphTDB getDataset() { return dsg ; }
     
+    public TransactionCoordinator getTxnMgr() {
+        return txnCoord ;
+    }
+
     public List<Component> getStartables() {
         return components ;
     }
@@ -47,6 +54,7 @@ public class LzDataset implements LifeCycle {
 
     @Override
     public void start() {
+        txnCoord.start();
         components.stream().forEach(s -> s.start() );
         started = true ;
     }
@@ -55,6 +63,7 @@ public class LzDataset implements LifeCycle {
     public void stop() {
         components.stream().forEach(s -> s.stop());
         started = false ;
+        txnCoord.shutdown();
     }
 
     @Override

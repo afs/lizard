@@ -1,4 +1,4 @@
-/**
+/*
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
@@ -15,22 +15,26 @@
  *  information regarding copyright ownership.
  */
 
-package conf2;
+package lizard.conf.parsers ;
 
-import lizard.conf.assembler.AssemblerYaml ;
-import lizard.conf.assembler.VocabLizard ;
-import lizard.query.LizardQuery ;
-import lizard.system.LzLog ;
+import java.util.List ;
 
-import org.apache.jena.assembler.Assembler ;
+import org.apache.jena.rdf.model.Resource ;
 
-public class Lizard2 {
-    static { init() ; } // Via assembler.
-    public synchronized static void init() {
-        LzLog.logSystem.info("Lizard.init") ;
-        //VocabLizard.init();
-        Assembler.general.implementWith(VocabLizard.lzDataset, new AssemblerYaml()) ;
-        LizardQuery.init(); 
+public class LzDatasetDesc {
+    public final Resource          resource ;
+    public final String            name ;
+    public final List<Resource>    indexes ;
+    public final List<Resource>    nodes ;
+
+    public LzDatasetDesc(Resource r, String name, List<Resource> indexes, List<Resource> nodes) {
+        this.resource = r ;
+        this.name = name ;
+        this.indexes = indexes ;
+        this.nodes = nodes ;
     }
+    
+    @Override
+    public String toString() { return name ; } 
 }
-
+ 
