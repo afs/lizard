@@ -18,11 +18,31 @@
 package lz_dev;
 
 import org.apache.jena.graph.Triple ;
+import org.apache.jena.sparql.core.DatasetChanges ;
+import org.apache.jena.sparql.core.DatasetGraph ;
+import org.apache.jena.sparql.core.DatasetGraphMonitor ;
 import org.apache.jena.sparql.core.Quad ;
-
 import org.apache.jena.atlas.logging.ProgressLogger ;
 import org.apache.jena.riot.system.StreamRDF ;
 import org.apache.jena.riot.system.StreamRDFWrapper ;
+
+/**
+ * Attach a {@link ProgressLogger} to an {@link StreamRDF}. The
+ * {@link ProgressLogger} is called for each triple and quad that goes through
+ * the stream. {@link #start} and {@link #finish} signal the beginning and end 
+ * of stream operations.
+ * <p>
+ * See {@link StreamRDFMerge} for monitoring multiple Stream start/finish
+ * seuences as a single unit.
+ * <p>
+ * {@link DatasetChanges} is a related interface for notification of changes to
+ * a DatasetGraph. {@link DatasetGraphMonitor} adds that functionality to a
+ * {@link DatasetGraph}.
+ * 
+ * @see StreamRDFMerge
+ * @see DatasetChanges
+ * @see DatasetGraphMonitor
+ */
 
 public class StreamRDFMonitor extends StreamRDFWrapper {
     //DatasetChanges - version for add only? 

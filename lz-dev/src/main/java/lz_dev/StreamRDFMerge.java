@@ -20,11 +20,29 @@ package lz_dev;
 import org.apache.jena.riot.system.StreamRDF ;
 import org.apache.jena.riot.system.StreamRDFWrapper ;
 
-public class StreamRDFDepth extends StreamRDFWrapper {
-    //DatasetChanges - version for add only? 
+/** Merge a number of start-finish calls into one.
+ * This is done by passing on start and finiish only when the call depth is zero.
+ * When this class is used, call {@link #start} to start a sequence 
+ * and {@link #finish} to end it.  Then, provided the
+ * <p>
+ * Example of usage : loading a number of files and havig a single, 
+ * overall progress counter. 
+ * <pre>
+ *    StreamRDF dest = ...
+ *    ProgressMonitor progress = ...
+ *    StreamRDF monitor = new StreamRDFMonitor(dest, progress) ;
+ *    StreamRDF merged = new StreamRDFMerge(monitor) ;
+ *    merged.start() ;
+ *    RDFDataMgr.parse(merged, datafile1) ;
+ *    RDFDataMgr.parse(merged, datafile2) ;
+ *    RDFDataMgr.parse(merged, datafile3) ;
+ *    merged.finish() ;
+ * </pre>    
+ */
+public class StreamRDFMerge extends StreamRDFWrapper {
     private int depth = 0 ; 
     
-    public StreamRDFDepth(StreamRDF other) {
+    public StreamRDFMerge(StreamRDF other) {
         super(other) ;
     }
     

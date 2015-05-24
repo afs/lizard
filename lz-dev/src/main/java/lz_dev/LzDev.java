@@ -94,7 +94,7 @@ public class LzDev {
         // Multiple query servers?
         log.info("DATASET") ;
         Dataset ds = LzDeploy.deployDataset(config, here) ;
-        load(ds,"/home/afs/Datasets/BSBM/bsbm-1m.nt.gz");
+        load(ds,"/home/afs/Datasets/BSBM/bsbm-5m.nt.gz");
         //System.exit(0) ;
         
 //        ds.begin(ReadWrite.WRITE);
@@ -141,7 +141,7 @@ public class LzDev {
                                                      "Triples", 50000, 10) ;
             StreamRDFMonitor s2 = new StreamRDFMonitor(s1, plog) ;
             // Ensure transaction overheads acccounted for
-            StreamRDFDepth s3 = new StreamRDFDepth(s2) ;
+            StreamRDFMerge s3 = new StreamRDFMerge(s2) ;
             s3.start();
             
             // Unwrap a layer of start/finish.
