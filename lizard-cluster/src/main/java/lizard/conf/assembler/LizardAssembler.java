@@ -19,7 +19,7 @@ package lizard.conf.assembler;
 
 import lizard.conf.ConfCluster ;
 import lizard.conf.ConfDataset ;
-import lizard.conf.build.Lz2BuilderDataset ;
+import lizard.conf.build.LzBuilderDataset ;
 import lizard.conf.parsers.LzConfParserRDF ;
 import lizard.query.LizardQuery ;
 import lizard.query.LzDataset ;
@@ -62,8 +62,8 @@ public class LizardAssembler extends DatasetAssembler {
         else
             baseLocation = Location.create(confCluster.fileroot) ; 
         Location locationQueryServer = baseLocation.getSubLocation("query") ;
-        LzDataset lz = Lz2BuilderDataset.build(confCluster, locationQueryServer) ;
-        Dataset ds = Lz2BuilderDataset.dataset(lz) ;
+        LzDataset lz = LzBuilderDataset.build(confCluster, locationQueryServer) ;
+        Dataset ds = LzBuilderDataset.dataset(lz) ;
         AssemblerUtils.setContext(root, ds.getContext());
         return ds ;
     }

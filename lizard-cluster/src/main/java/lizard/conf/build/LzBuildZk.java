@@ -17,10 +17,7 @@
 
 package lizard.conf.build;
 
-import lizard.conf.ConfCluster ;
-import lizard.conf.ConfZookeeper ;
-import lizard.conf.Config ;
-import lizard.conf.NetHost ;
+import lizard.conf.* ;
 
 import org.apache.curator.test.TestingServer ;
 import org.apache.jena.atlas.logging.FmtLog ;
@@ -29,15 +26,16 @@ import org.apache.zookeeper.server.ZooKeeperServerMain ;
 import org.seaborne.dboe.migrate.L ;
 import org.slf4j.Logger ;
 
-public class Lz2BuildZk {
+public class LzBuildZk {
     private static Logger logConf = Config.logConf ;
     
     static TestingServer zkTestServer;
     
     public static String zookeeper(ConfCluster confCluster, NetHost here) {
-        // @@
-        if ( confCluster.zkServer.size() == 0 ) {}
-        if ( confCluster.zkServer.size() > 1 ) {}
+        if ( confCluster.zkServer.size() == 0 )
+            throw new LzConfigurationException("No zookeeper details in cluster configuration") ;
+        if ( confCluster.zkServer.size() > 1 )
+            throw new LzConfigurationException("Multiple zookeeper details in cluster configuration") ;
         ConfZookeeper confZookeeper = confCluster.zkServer.get(0) ;
         zookeeper(confZookeeper);
         return "localhost:"+confZookeeper.port  ;

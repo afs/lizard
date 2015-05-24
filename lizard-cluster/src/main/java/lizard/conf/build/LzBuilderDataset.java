@@ -63,7 +63,7 @@ import org.seaborne.tdb2.sys.DatasetControl ;
 import org.seaborne.tdb2.sys.DatasetControlMRSW ;
 import org.slf4j.Logger ;
 
-public class Lz2BuilderDataset {
+public class LzBuilderDataset {
     private static Logger logConf = Config.logConf ;
     
     public static LzDataset build(ConfCluster confCluster, Location location) {
@@ -175,7 +175,7 @@ public class Lz2BuilderDataset {
     }
     
     public static NodeTable stackNodeTable(NodeTable nodeTable) {
-        nodeTable = NodeTableCache.create(nodeTable, 10000, 10000, 100) ; 
+        nodeTable = NodeTableCache.create(nodeTable, 100000, 100000, 1000) ; 
         nodeTable =  NodeTableInline.create(nodeTable) ;
         return nodeTable ;
     }

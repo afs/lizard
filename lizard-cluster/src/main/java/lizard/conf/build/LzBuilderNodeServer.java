@@ -34,7 +34,7 @@ import org.seaborne.tdb2.setup.StoreParams ;
 import org.seaborne.tdb2.store.nodetable.NodeTable ;
 import org.slf4j.Logger ;
 
-public class Lz2BuilderNodeServer {
+public class LzBuilderNodeServer {
     private static Logger logConf = Config.logConf ;    
     
     public static void build(Platform platform, Location location, StoreParams params, ConfCluster confCluster, NetHost here) {

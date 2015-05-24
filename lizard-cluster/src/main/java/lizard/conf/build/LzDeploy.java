@@ -31,7 +31,7 @@ public class LzDeploy {
     
     /** Deploy the server-side of a configuration here */
     public static void deployServers(ConfCluster confCluster, NetHost here) {
-        String zkConnect = Lz2BuildZk.zookeeper(confCluster, here) ;
+        String zkConnect = LzBuildZk.zookeeper(confCluster, here) ;
         Cluster.createSystem(zkConnect);
         Location baseLocation = null ;
         
@@ -44,8 +44,8 @@ public class LzDeploy {
         StoreParams params = StoreParams.getDftStoreParams() ; 
         
         // Each server has it's own journal - it'll be part of the distributed transaction.
-        Lz2BuilderNodeServer.build(platform, baseLocation, params, confCluster, here);
-        Lz2BuilderIndexServer.build(platform, baseLocation, params, confCluster, here);
+        LzBuilderNodeServer.build(platform, baseLocation, params, confCluster, here);
+        LzBuilderIndexServer.build(platform, baseLocation, params, confCluster, here);
         
         platform.start(); 
 
@@ -58,10 +58,10 @@ public class LzDeploy {
         else
             baseLocation = Location.create(confCluster.fileroot) ; 
         Location locationQueryServer = baseLocation.getSubLocation("query") ;
-        LzDataset lzdsg = Lz2BuilderDataset.build(confCluster, locationQueryServer) ;
+        LzDataset lzdsg = LzBuilderDataset.build(confCluster, locationQueryServer) ;
         if ( lzdsg == null )
             return null ;
-        return Lz2BuilderDataset.dataset(lzdsg) ;
+        return LzBuilderDataset.dataset(lzdsg) ;
     }
 }
 
