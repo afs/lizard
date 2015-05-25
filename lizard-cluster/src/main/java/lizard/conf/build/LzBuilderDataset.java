@@ -48,13 +48,13 @@ import org.apache.jena.sparql.engine.optimizer.reorder.ReorderLib ;
 import org.seaborne.dboe.base.file.Location ;
 import org.seaborne.dboe.sys.Names ;
 import org.seaborne.dboe.transaction.Transactional ;
-import org.seaborne.dboe.transaction.txn.ComponentId ;
-import org.seaborne.dboe.transaction.txn.TransactionCoordinator ;
-import org.seaborne.dboe.transaction.txn.TransactionalBase ;
-import org.seaborne.dboe.transaction.txn.TransactionalComponent ;
-import org.seaborne.tdb2.setup.TDBBuilder ;
+import org.seaborne.dboe.transaction.txn.* ;
 import org.seaborne.tdb2.setup.StoreParams ;
-import org.seaborne.tdb2.store.* ;
+import org.seaborne.tdb2.setup.TDBBuilder ;
+import org.seaborne.tdb2.store.DatasetGraphTDB ;
+import org.seaborne.tdb2.store.DatasetPrefixesTDB ;
+import org.seaborne.tdb2.store.QuadTable ;
+import org.seaborne.tdb2.store.TripleTable ;
 import org.seaborne.tdb2.store.nodetable.NodeTable ;
 import org.seaborne.tdb2.store.nodetable.NodeTableCache ;
 import org.seaborne.tdb2.store.nodetable.NodeTableInline ;
@@ -125,9 +125,10 @@ public class LzBuilderDataset {
         
         // Local only.
         TDBBuilder builder = TDBBuilder.create(txnCoord, location, params) ;
+        TransactionalSystem txnSys = new TransactionalBase(txnCoord) ;
         NodeTable nodeTablePrefixes = builder.buildNodeTable(params.getPrefixTableBaseName()) ;
         DatasetPrefixesTDB prefixes = builder.buildPrefixTable(nodeTablePrefixes) ;
-        DatasetGraphTDB dsg = new DatasetGraphTDB(tableTriples, tableQuads, prefixes, ReorderLib.fixed(), builder.getLocation(), builder.getParams()) ;
+        DatasetGraphTDB dsg = new DatasetGraphTDB(txnSys, tableTriples, tableQuads, prefixes, ReorderLib.fixed(), builder.getLocation(), builder.getParams()) ;
         // Development.
         dsg.getContext().set(ARQ.optFilterPlacementBGP, false);
         // Query engine.
@@ -201,9 +202,8 @@ public class LzBuilderDataset {
         transCoord.setTxnIdGenerator(Cluster.getTxnIdGenerator());
         Transactional transactional = new TransactionalBase(transCoord) ;
         DatasetGraphTDB dsgtdb = lz.getDataset() ;
-        DatasetGraph dsg = new DatasetGraphTxn(dsgtdb, transactional, transCoord) ;
         lz.start();
-        return dsg ;
+        return dsgtdb ;
     }
 
     public static Dataset dataset(LzDataset lz) {

@@ -55,8 +55,8 @@ public class LzDev {
     static { LogCtl.setLog4j(); } 
     public static Logger log = LoggerFactory.getLogger("Main") ;
 
-    static String confDir           = "setup-disk" ;
-    //static String confDir           = "setup-simple" ;
+    //static String confDir           = "setup-disk" ;
+    static String confDir           = "setup-simple" ;
     static String confNode          = Q.filename(confDir, "conf-node.ttl") ;
     static String confIndex         = Q.filename(confDir, "conf-index.ttl") ;
     static String confDataset       = Q.filename(confDir, "conf-dataset.ttl") ;
@@ -94,7 +94,7 @@ public class LzDev {
         // Multiple query servers?
         log.info("DATASET") ;
         Dataset ds = LzDeploy.deployDataset(config, here) ;
-        load(ds,"/home/afs/Datasets/BSBM/bsbm-5m.nt.gz");
+        load(ds,"/home/afs/Datasets/BSBM/bsbm-250k.nt.gz");
         //System.exit(0) ;
         
 //        ds.begin(ReadWrite.WRITE);
