@@ -19,9 +19,10 @@ package lz_dev ;
 
 public class PROJECT_Lizard {
     // === Tasks
-    // Track down "autocommit"
-    // Need TransactionalComponentRemote<X extends TxnClient<?>>  
-
+    // Direct interconnect for comparison purposes.
+    // Batchign
+    // Parallelism.
+    
     // Share Thrift encoding with RIOT
     // ThriftConvert is better that ThriftLib?
     
@@ -47,16 +48,11 @@ public class PROJECT_Lizard {
     // location/Index/...
     // location/Nodes/...
     
-    // Lz2BuildZk : one local zookeeper - currently ignoring configuration details 
-    // Many front end query servers.
-    // Many Zookeepers
-    
     // ---- Configuration
-    
     // Check/get LZ_* commands working.
     // LZ_Deploy + s-put.
 
-    //  prepare-abort testing.
+    // prepare-abort testing.
     // From Mantis: Component has W lifecycle and an R lifecycle
     
     // README to wiki
@@ -69,7 +65,6 @@ public class PROJECT_Lizard {
     // 1. RemoteAcces improvements. Include a filter? predicate list Jump start
     //   find(...) from S=foo ==> filter between X and Y
     // Stream find()
-
     
     // index to index copy "tdbidxcopy --loc=DB SPO POS no overwrite 2.
     // splitter : conf+existing TDB -> set of directories. 3. zloader
