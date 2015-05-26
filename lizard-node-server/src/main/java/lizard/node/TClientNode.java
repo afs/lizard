@@ -65,8 +65,6 @@ public class TClientNode extends TxnClient<TLZ_NodeTable.Client> implements Comp
     }
     
     public NodeId getAllocateNodeId(Node node) {
-        // XXX Can do away with little structs
-        // XXX Reforator for common code
         long id = allocRequestId() ;
         long txnId = getTxnId() ;
         String x =  NodeFmtLib.str(node) ;

@@ -69,6 +69,11 @@ import org.slf4j.LoggerFactory ;
         log.info("ping") ;
     }
 
+    // Single tuple add/delete. Not efficient.  Sort of autocommit.
+    // Batches are better; this code helps in small scale changes
+    // and setting up tests.  Autocommit per node is not safe/consistent
+    // across the cluster but at least does not corrupt local storage.
+    
     @Override
     public boolean idxAdd(long id, long txnId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws TException {
         Tuple<NodeId> tuple2 = TLZlib.build(tuple) ;
@@ -76,11 +81,6 @@ import org.slf4j.LoggerFactory ;
         return txnAlwaysReturn(txnId, WRITE, () -> index.add(tuple2)) ;
     }
 
-    // Single tuple add/delete. Not efficient.  Sort of autocommit.
-    // Batches are better; this code helps in small scale changes
-    // and setting up tests.  Autocommit per node is not safe/consistent
-    // across the cluster but at least does not corrupt local storage.
-    
     @Override
     public boolean idxDelete(long id, long txnId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws TException {
         Tuple<NodeId> tuple2 = TLZlib.build(tuple) ;
@@ -94,7 +94,6 @@ import org.slf4j.LoggerFactory ;
         
         FmtLog.info(log, "[%d:%d] find %s %s", id, txnId, index.getName(), pattern) ;
         // TODO XXX Revisit and stream this.
-        // TODO Respect transaction id.
         List<TLZ_TupleNodeId> result = new ArrayList<>() ;
         txnAlways(txnId, READ, ()->{
             Iterator<Tuple<NodeId>> iter = index.find(pattern) ;

@@ -39,7 +39,7 @@ import org.seaborne.tdb2.store.NodeId ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
-class TClientIndex extends TxnClient<TLZ_Index.Client> implements Connection, ComponentTxn, Pingable 
+class TClientIndex extends TxnClient<TLZ_Index.Client> implements TClientIndexOps, Connection, ComponentTxn, Pingable 
 {
     private static Logger log = LoggerFactory.getLogger(TClientIndex.class) ;
     @Override protected Logger getLog() { return log ; }
@@ -82,6 +82,7 @@ class TClientIndex extends TxnClient<TLZ_Index.Client> implements Connection, Co
     }
     
     /** Insert a tuple - return true if it was really added, false if it was a duplicate */
+    @Override
     public boolean add(Tuple<NodeId> tuple) {
         long id = allocRequestId() ;
         long txnId = getTxnId() ;
@@ -90,6 +91,7 @@ class TClientIndex extends TxnClient<TLZ_Index.Client> implements Connection, Co
     }
 
     /** Delete a tuple - return true if it was deleted, false if it didn't exist */
+    @Override
     public boolean delete(Tuple<NodeId> tuple)  {
         long id = allocRequestId() ;
         long txnId = getTxnId() ;
@@ -102,6 +104,7 @@ class TClientIndex extends TxnClient<TLZ_Index.Client> implements Connection, Co
         exec("ping", ()-> rpc.idxPing()) ;
     }
 
+    @Override
     public Iterator<Tuple<NodeId>> find(Tuple<NodeId> pattern) {
         long id = allocRequestId() ;
         long txnId = getTxnId() ;
@@ -116,6 +119,7 @@ class TClientIndex extends TxnClient<TLZ_Index.Client> implements Connection, Co
     private static Tuple<NodeId> tupleAny3 = Tuple.createTuple(NodeId.NodeIdAny, NodeId.NodeIdAny, NodeId.NodeIdAny) ; 
     
     /** return an iterator of everything */
+    @Override
     public Iterator<Tuple<NodeId>> all()                        { return find(tupleAny3) ; }  
     
     @Override
