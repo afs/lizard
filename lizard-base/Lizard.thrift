@@ -55,8 +55,8 @@ struct TLZ_Patch {
 // ---- Index
 service TLZ_Index extends TxnCtl {
     void idxPing()    
-    bool idxAdd (1: i64 requestId, 9: TxnId txnId, 3: TLZ_ShardIndex shard, 4: TLZ_TupleNodeId tuple)
-    bool idxDelete(1: i64 requestId, 9: TxnId txnId, 3: TLZ_ShardIndex shard, 4: TLZ_TupleNodeId tuple)
+    void idxAdd (1: i64 requestId, 9: TxnId txnId, 3: TLZ_ShardIndex shard, 4: TLZ_TupleNodeId tuple)
+    void idxDelete(1: i64 requestId, 9: TxnId txnId, 3: TLZ_ShardIndex shard, 4: TLZ_TupleNodeId tuple)
     list<TLZ_TupleNodeId> idxFind(1: i64 requestId, 9: TxnId txnId, 3: TLZ_ShardIndex shard, 4: TLZ_TupleNodeId pattern)
 
 

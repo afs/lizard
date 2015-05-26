@@ -75,17 +75,17 @@ import org.slf4j.LoggerFactory ;
     // across the cluster but at least does not corrupt local storage.
     
     @Override
-    public boolean idxAdd(long id, long txnId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws TException {
+    public void idxAdd(long id, long txnId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws TException {
         Tuple<NodeId> tuple2 = TLZlib.build(tuple) ;
         FmtLog.info(log, "[%d:%d] add %s %s", id, txnId, index.getName(), tuple2) ;
-        return txnAlwaysReturn(txnId, WRITE, () -> index.add(tuple2)) ;
+        txnAlways(txnId, WRITE, () -> index.add(tuple2)) ;
     }
 
     @Override
-    public boolean idxDelete(long id, long txnId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws TException {
+    public void idxDelete(long id, long txnId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws TException {
         Tuple<NodeId> tuple2 = TLZlib.build(tuple) ;
         FmtLog.info(log, "[%d:%d] delete %s %s", id, txnId, index.getName(), tuple2) ;
-        return txnAlwaysReturn(txnId, WRITE, () -> index.delete(tuple2) ) ;
+        txnAlways(txnId, WRITE, () -> index.delete(tuple2) ) ;
     }
 
     @Override

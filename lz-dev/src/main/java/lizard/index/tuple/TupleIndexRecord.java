@@ -57,18 +57,18 @@ public class TupleIndexRecord extends TupleIndexBase
     
     /** Insert a tuple - return true if it was really added, false if it was a duplicate */
     @Override
-    protected boolean performAdd(Tuple<NodeId> tuple) 
+    protected void performAdd(Tuple<NodeId> tuple) 
     { 
         Record r = TupleLib.record(factory, tuple, colMap) ;
-        return index.insert(r) ;
+        index.insert(r) ;
     }
     
     /** Delete a tuple - return true if it was deleted, false if it didn't exist */
     @Override
-    protected boolean performDelete(Tuple<NodeId> tuple) 
+    protected void performDelete(Tuple<NodeId> tuple) 
     { 
         Record r = TupleLib.record(factory, tuple, colMap) ;
-        return index.delete(r) ;
+        index.delete(r) ;
     }
     
     /** Find all matching tuples - a slot of NodeId.NodeIdAny (or null) means match any.

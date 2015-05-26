@@ -83,20 +83,20 @@ class TClientIndex extends TxnClient<TLZ_Index.Client> implements TClientIndexOp
     
     /** Insert a tuple - return true if it was really added, false if it was a duplicate */
     @Override
-    public boolean add(Tuple<NodeId> tuple) {
+    public void add(Tuple<NodeId> tuple) {
         long id = allocRequestId() ;
         long txnId = getTxnId() ;
         TLZ_TupleNodeId x = TLZlib.build(tuple) ;
-        return call("add", ()->rpc.idxAdd(id, txnId, shard, x)) ;
+        exec("add", ()->rpc.idxAdd(id, txnId, shard, x)) ;
     }
 
     /** Delete a tuple - return true if it was deleted, false if it didn't exist */
     @Override
-    public boolean delete(Tuple<NodeId> tuple)  {
+    public void delete(Tuple<NodeId> tuple)  {
         long id = allocRequestId() ;
         long txnId = getTxnId() ;
         TLZ_TupleNodeId x = TLZlib.build(tuple) ;
-        return call("delete", ()->rpc.idxDelete(id, txnId, shard, x)) ;
+        exec("delete", ()->rpc.idxDelete(id, txnId, shard, x)) ;
     }
     
     @Override

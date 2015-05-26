@@ -39,9 +39,9 @@ public class TLZ_Index {
 
     public void idxPing() throws org.apache.thrift.TException;
 
-    public boolean idxAdd(long requestId, long txnId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws org.apache.thrift.TException;
+    public void idxAdd(long requestId, long txnId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws org.apache.thrift.TException;
 
-    public boolean idxDelete(long requestId, long txnId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws org.apache.thrift.TException;
+    public void idxDelete(long requestId, long txnId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws org.apache.thrift.TException;
 
     public List<TLZ_TupleNodeId> idxFind(long requestId, long txnId, TLZ_ShardIndex shard, TLZ_TupleNodeId pattern) throws org.apache.thrift.TException;
 
@@ -98,10 +98,10 @@ public class TLZ_Index {
       return;
     }
 
-    public boolean idxAdd(long requestId, long txnId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws org.apache.thrift.TException
+    public void idxAdd(long requestId, long txnId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws org.apache.thrift.TException
     {
       send_idxAdd(requestId, txnId, shard, tuple);
-      return recv_idxAdd();
+      recv_idxAdd();
     }
 
     public void send_idxAdd(long requestId, long txnId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws org.apache.thrift.TException
@@ -114,20 +114,17 @@ public class TLZ_Index {
       sendBase("idxAdd", args);
     }
 
-    public boolean recv_idxAdd() throws org.apache.thrift.TException
+    public void recv_idxAdd() throws org.apache.thrift.TException
     {
       idxAdd_result result = new idxAdd_result();
       receiveBase(result, "idxAdd");
-      if (result.isSetSuccess()) {
-        return result.success;
-      }
-      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "idxAdd failed: unknown result");
+      return;
     }
 
-    public boolean idxDelete(long requestId, long txnId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws org.apache.thrift.TException
+    public void idxDelete(long requestId, long txnId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws org.apache.thrift.TException
     {
       send_idxDelete(requestId, txnId, shard, tuple);
-      return recv_idxDelete();
+      recv_idxDelete();
     }
 
     public void send_idxDelete(long requestId, long txnId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws org.apache.thrift.TException
@@ -140,14 +137,11 @@ public class TLZ_Index {
       sendBase("idxDelete", args);
     }
 
-    public boolean recv_idxDelete() throws org.apache.thrift.TException
+    public void recv_idxDelete() throws org.apache.thrift.TException
     {
       idxDelete_result result = new idxDelete_result();
       receiveBase(result, "idxDelete");
-      if (result.isSetSuccess()) {
-        return result.success;
-      }
-      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "idxDelete failed: unknown result");
+      return;
     }
 
     public List<TLZ_TupleNodeId> idxFind(long requestId, long txnId, TLZ_ShardIndex shard, TLZ_TupleNodeId pattern) throws org.apache.thrift.TException
@@ -254,13 +248,13 @@ public class TLZ_Index {
         prot.writeMessageEnd();
       }
 
-      public boolean getResult() throws org.apache.thrift.TException {
+      public void getResult() throws org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_idxAdd();
+        (new Client(prot)).recv_idxAdd();
       }
     }
 
@@ -295,13 +289,13 @@ public class TLZ_Index {
         prot.writeMessageEnd();
       }
 
-      public boolean getResult() throws org.apache.thrift.TException {
+      public void getResult() throws org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_idxDelete();
+        (new Client(prot)).recv_idxDelete();
       }
     }
 
@@ -401,8 +395,7 @@ public class TLZ_Index {
 
       public idxAdd_result getResult(I iface, idxAdd_args args) throws org.apache.thrift.TException {
         idxAdd_result result = new idxAdd_result();
-        result.success = iface.idxAdd(args.requestId, args.txnId, args.shard, args.tuple);
-        result.setSuccessIsSet(true);
+        iface.idxAdd(args.requestId, args.txnId, args.shard, args.tuple);
         return result;
       }
     }
@@ -422,8 +415,7 @@ public class TLZ_Index {
 
       public idxDelete_result getResult(I iface, idxDelete_args args) throws org.apache.thrift.TException {
         idxDelete_result result = new idxDelete_result();
-        result.success = iface.idxDelete(args.requestId, args.txnId, args.shard, args.tuple);
-        result.setSuccessIsSet(true);
+        iface.idxDelete(args.requestId, args.txnId, args.shard, args.tuple);
         return result;
       }
     }
@@ -518,7 +510,7 @@ public class TLZ_Index {
       }
     }
 
-    public static class idxAdd<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, idxAdd_args, Boolean> {
+    public static class idxAdd<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, idxAdd_args, Void> {
       public idxAdd() {
         super("idxAdd");
       }
@@ -527,13 +519,11 @@ public class TLZ_Index {
         return new idxAdd_args();
       }
 
-      public AsyncMethodCallback<Boolean> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
+      public AsyncMethodCallback<Void> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new AsyncMethodCallback<Boolean>() { 
-          public void onComplete(Boolean o) {
+        return new AsyncMethodCallback<Void>() { 
+          public void onComplete(Void o) {
             idxAdd_result result = new idxAdd_result();
-            result.success = o;
-            result.setSuccessIsSet(true);
             try {
               fcall.sendResponse(fb,result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
               return;
@@ -565,12 +555,12 @@ public class TLZ_Index {
         return false;
       }
 
-      public void start(I iface, idxAdd_args args, org.apache.thrift.async.AsyncMethodCallback<Boolean> resultHandler) throws TException {
+      public void start(I iface, idxAdd_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws TException {
         iface.idxAdd(args.requestId, args.txnId, args.shard, args.tuple,resultHandler);
       }
     }
 
-    public static class idxDelete<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, idxDelete_args, Boolean> {
+    public static class idxDelete<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, idxDelete_args, Void> {
       public idxDelete() {
         super("idxDelete");
       }
@@ -579,13 +569,11 @@ public class TLZ_Index {
         return new idxDelete_args();
       }
 
-      public AsyncMethodCallback<Boolean> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
+      public AsyncMethodCallback<Void> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new AsyncMethodCallback<Boolean>() { 
-          public void onComplete(Boolean o) {
+        return new AsyncMethodCallback<Void>() { 
+          public void onComplete(Void o) {
             idxDelete_result result = new idxDelete_result();
-            result.success = o;
-            result.setSuccessIsSet(true);
             try {
               fcall.sendResponse(fb,result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
               return;
@@ -617,7 +605,7 @@ public class TLZ_Index {
         return false;
       }
 
-      public void start(I iface, idxDelete_args args, org.apache.thrift.async.AsyncMethodCallback<Boolean> resultHandler) throws TException {
+      public void start(I iface, idxDelete_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws TException {
         iface.idxDelete(args.requestId, args.txnId, args.shard, args.tuple,resultHandler);
       }
     }
@@ -1826,7 +1814,6 @@ public class TLZ_Index {
   public static class idxAdd_result implements org.apache.thrift.TBase<idxAdd_result, idxAdd_result._Fields>, java.io.Serializable, Cloneable, Comparable<idxAdd_result>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("idxAdd_result");
 
-    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.BOOL, (short)0);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -1834,11 +1821,10 @@ public class TLZ_Index {
       schemes.put(TupleScheme.class, new idxAdd_resultTupleSchemeFactory());
     }
 
-    public boolean success; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      SUCCESS((short)0, "success");
+;
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -1853,8 +1839,6 @@ public class TLZ_Index {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
-          case 0: // SUCCESS
-            return SUCCESS;
           default:
             return null;
         }
@@ -1893,15 +1877,9 @@ public class TLZ_Index {
         return _fieldName;
       }
     }
-
-    // isset id assignments
-    private static final int __SUCCESS_ISSET_ID = 0;
-    private byte __isset_bitfield = 0;
     public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(idxAdd_result.class, metaDataMap);
     }
@@ -1909,20 +1887,10 @@ public class TLZ_Index {
     public idxAdd_result() {
     }
 
-    public idxAdd_result(
-      boolean success)
-    {
-      this();
-      this.success = success;
-      setSuccessIsSet(true);
-    }
-
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public idxAdd_result(idxAdd_result other) {
-      __isset_bitfield = other.__isset_bitfield;
-      this.success = other.success;
     }
 
     public idxAdd_result deepCopy() {
@@ -1931,51 +1899,15 @@ public class TLZ_Index {
 
     @Override
     public void clear() {
-      setSuccessIsSet(false);
-      this.success = false;
-    }
-
-    public boolean isSuccess() {
-      return this.success;
-    }
-
-    public idxAdd_result setSuccess(boolean success) {
-      this.success = success;
-      setSuccessIsSet(true);
-      return this;
-    }
-
-    public void unsetSuccess() {
-      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __SUCCESS_ISSET_ID);
-    }
-
-    /** Returns true if field success is set (has been assigned a value) and false otherwise */
-    public boolean isSetSuccess() {
-      return EncodingUtils.testBit(__isset_bitfield, __SUCCESS_ISSET_ID);
-    }
-
-    public void setSuccessIsSet(boolean value) {
-      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __SUCCESS_ISSET_ID, value);
     }
 
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
-      case SUCCESS:
-        if (value == null) {
-          unsetSuccess();
-        } else {
-          setSuccess((Boolean)value);
-        }
-        break;
-
       }
     }
 
     public Object getFieldValue(_Fields field) {
       switch (field) {
-      case SUCCESS:
-        return Boolean.valueOf(isSuccess());
-
       }
       throw new IllegalStateException();
     }
@@ -1987,8 +1919,6 @@ public class TLZ_Index {
       }
 
       switch (field) {
-      case SUCCESS:
-        return isSetSuccess();
       }
       throw new IllegalStateException();
     }
@@ -2006,15 +1936,6 @@ public class TLZ_Index {
       if (that == null)
         return false;
 
-      boolean this_present_success = true;
-      boolean that_present_success = true;
-      if (this_present_success || that_present_success) {
-        if (!(this_present_success && that_present_success))
-          return false;
-        if (this.success != that.success)
-          return false;
-      }
-
       return true;
     }
 
@@ -2031,16 +1952,6 @@ public class TLZ_Index {
 
       int lastComparison = 0;
 
-      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetSuccess()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
       return 0;
     }
 
@@ -2061,9 +1972,6 @@ public class TLZ_Index {
       StringBuilder sb = new StringBuilder("idxAdd_result(");
       boolean first = true;
 
-      sb.append("success:");
-      sb.append(this.success);
-      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -2083,8 +1991,6 @@ public class TLZ_Index {
 
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
       try {
-        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
-        __isset_bitfield = 0;
         read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
       } catch (org.apache.thrift.TException te) {
         throw new java.io.IOException(te);
@@ -2109,14 +2015,6 @@ public class TLZ_Index {
             break;
           }
           switch (schemeField.id) {
-            case 0: // SUCCESS
-              if (schemeField.type == org.apache.thrift.protocol.TType.BOOL) {
-                struct.success = iprot.readBool();
-                struct.setSuccessIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -2132,11 +2030,6 @@ public class TLZ_Index {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
-        if (struct.isSetSuccess()) {
-          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
-          oprot.writeBool(struct.success);
-          oprot.writeFieldEnd();
-        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -2154,24 +2047,11 @@ public class TLZ_Index {
       @Override
       public void write(org.apache.thrift.protocol.TProtocol prot, idxAdd_result struct) throws org.apache.thrift.TException {
         TTupleProtocol oprot = (TTupleProtocol) prot;
-        BitSet optionals = new BitSet();
-        if (struct.isSetSuccess()) {
-          optionals.set(0);
-        }
-        oprot.writeBitSet(optionals, 1);
-        if (struct.isSetSuccess()) {
-          oprot.writeBool(struct.success);
-        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, idxAdd_result struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
-        BitSet incoming = iprot.readBitSet(1);
-        if (incoming.get(0)) {
-          struct.success = iprot.readBool();
-          struct.setSuccessIsSet(true);
-        }
       }
     }
 
@@ -2836,7 +2716,6 @@ public class TLZ_Index {
   public static class idxDelete_result implements org.apache.thrift.TBase<idxDelete_result, idxDelete_result._Fields>, java.io.Serializable, Cloneable, Comparable<idxDelete_result>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("idxDelete_result");
 
-    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.BOOL, (short)0);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -2844,11 +2723,10 @@ public class TLZ_Index {
       schemes.put(TupleScheme.class, new idxDelete_resultTupleSchemeFactory());
     }
 
-    public boolean success; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      SUCCESS((short)0, "success");
+;
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -2863,8 +2741,6 @@ public class TLZ_Index {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
-          case 0: // SUCCESS
-            return SUCCESS;
           default:
             return null;
         }
@@ -2903,15 +2779,9 @@ public class TLZ_Index {
         return _fieldName;
       }
     }
-
-    // isset id assignments
-    private static final int __SUCCESS_ISSET_ID = 0;
-    private byte __isset_bitfield = 0;
     public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(idxDelete_result.class, metaDataMap);
     }
@@ -2919,20 +2789,10 @@ public class TLZ_Index {
     public idxDelete_result() {
     }
 
-    public idxDelete_result(
-      boolean success)
-    {
-      this();
-      this.success = success;
-      setSuccessIsSet(true);
-    }
-
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public idxDelete_result(idxDelete_result other) {
-      __isset_bitfield = other.__isset_bitfield;
-      this.success = other.success;
     }
 
     public idxDelete_result deepCopy() {
@@ -2941,51 +2801,15 @@ public class TLZ_Index {
 
     @Override
     public void clear() {
-      setSuccessIsSet(false);
-      this.success = false;
-    }
-
-    public boolean isSuccess() {
-      return this.success;
-    }
-
-    public idxDelete_result setSuccess(boolean success) {
-      this.success = success;
-      setSuccessIsSet(true);
-      return this;
-    }
-
-    public void unsetSuccess() {
-      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __SUCCESS_ISSET_ID);
-    }
-
-    /** Returns true if field success is set (has been assigned a value) and false otherwise */
-    public boolean isSetSuccess() {
-      return EncodingUtils.testBit(__isset_bitfield, __SUCCESS_ISSET_ID);
-    }
-
-    public void setSuccessIsSet(boolean value) {
-      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __SUCCESS_ISSET_ID, value);
     }
 
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
-      case SUCCESS:
-        if (value == null) {
-          unsetSuccess();
-        } else {
-          setSuccess((Boolean)value);
-        }
-        break;
-
       }
     }
 
     public Object getFieldValue(_Fields field) {
       switch (field) {
-      case SUCCESS:
-        return Boolean.valueOf(isSuccess());
-
       }
       throw new IllegalStateException();
     }
@@ -2997,8 +2821,6 @@ public class TLZ_Index {
       }
 
       switch (field) {
-      case SUCCESS:
-        return isSetSuccess();
       }
       throw new IllegalStateException();
     }
@@ -3016,15 +2838,6 @@ public class TLZ_Index {
       if (that == null)
         return false;
 
-      boolean this_present_success = true;
-      boolean that_present_success = true;
-      if (this_present_success || that_present_success) {
-        if (!(this_present_success && that_present_success))
-          return false;
-        if (this.success != that.success)
-          return false;
-      }
-
       return true;
     }
 
@@ -3041,16 +2854,6 @@ public class TLZ_Index {
 
       int lastComparison = 0;
 
-      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetSuccess()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
       return 0;
     }
 
@@ -3071,9 +2874,6 @@ public class TLZ_Index {
       StringBuilder sb = new StringBuilder("idxDelete_result(");
       boolean first = true;
 
-      sb.append("success:");
-      sb.append(this.success);
-      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -3093,8 +2893,6 @@ public class TLZ_Index {
 
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
       try {
-        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
-        __isset_bitfield = 0;
         read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
       } catch (org.apache.thrift.TException te) {
         throw new java.io.IOException(te);
@@ -3119,14 +2917,6 @@ public class TLZ_Index {
             break;
           }
           switch (schemeField.id) {
-            case 0: // SUCCESS
-              if (schemeField.type == org.apache.thrift.protocol.TType.BOOL) {
-                struct.success = iprot.readBool();
-                struct.setSuccessIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -3142,11 +2932,6 @@ public class TLZ_Index {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
-        if (struct.isSetSuccess()) {
-          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
-          oprot.writeBool(struct.success);
-          oprot.writeFieldEnd();
-        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -3164,24 +2949,11 @@ public class TLZ_Index {
       @Override
       public void write(org.apache.thrift.protocol.TProtocol prot, idxDelete_result struct) throws org.apache.thrift.TException {
         TTupleProtocol oprot = (TTupleProtocol) prot;
-        BitSet optionals = new BitSet();
-        if (struct.isSetSuccess()) {
-          optionals.set(0);
-        }
-        oprot.writeBitSet(optionals, 1);
-        if (struct.isSetSuccess()) {
-          oprot.writeBool(struct.success);
-        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, idxDelete_result struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
-        BitSet incoming = iprot.readBitSet(1);
-        if (incoming.get(0)) {
-          struct.success = iprot.readBool();
-          struct.setSuccessIsSet(true);
-        }
       }
     }
 

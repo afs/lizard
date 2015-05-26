@@ -34,11 +34,11 @@ interface TClientIndexOps extends Connection, ComponentTxn, Pingable
     @Override
     public void stop() ;
     
-    /** Insert a tuple - return true if it was really added, false if it was a duplicate */
-    public boolean add(Tuple<NodeId> tuple) ;
+    /** Insert a tuple */
+    public void add(Tuple<NodeId> tuple) ;
 
-    /** Delete a tuple - return true if it was deleted, false if it didn't exist */
-    public boolean delete(Tuple<NodeId> tuple) ;
+    /** Delete a tuple */
+    public void delete(Tuple<NodeId> tuple) ;
     
     @Override
     public void ping() ;

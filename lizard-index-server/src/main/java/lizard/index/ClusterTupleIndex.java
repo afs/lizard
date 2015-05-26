@@ -95,31 +95,25 @@ public class ClusterTupleIndex extends TupleIndexBase
     }
 
     @Override
-    protected boolean performAdd(Tuple<NodeId> tuple) {
+    protected void performAdd(Tuple<NodeId> tuple) {
         FmtLog.debug(log, "Add - %s", tuple);
         List<TupleIndexRemote> places = distributor.storeAt(tuple) ;
         // ----
-        boolean b = false ;
         for ( TupleIndexRemote idx : places ) {
             FmtLog.debug(log, "  Add @%s", idx.getLabel()) ;
-            boolean b2 = idx.add(tuple) ;
-            b = b2 | b ;
+            idx.add(tuple) ;
         }
-        return b ;
     }
 
     @Override
-    protected boolean performDelete(Tuple<NodeId> tuple) {
+    protected void performDelete(Tuple<NodeId> tuple) {
         FmtLog.debug(log, "Del - %s", tuple) ;
         List<TupleIndexRemote> places = distributor.storeAt(tuple) ;
         // ----
-
-        boolean b = false ;
-        for ( TupleIndex idx : places ) {
-            boolean b2 = idx.delete(tuple) ;
-            b = b2 | b ;
+        for ( TupleIndexRemote idx : places ) {
+            FmtLog.debug(log, "  Del @%s", idx.getLabel()) ;
+            idx.delete(tuple) ;
         }
-        return b ;
     }
 
     @Override

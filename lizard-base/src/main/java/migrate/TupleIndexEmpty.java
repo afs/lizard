@@ -57,13 +57,11 @@ public class TupleIndexEmpty extends TupleIndexBase {
     public void close() {}
 
     @Override
-    protected boolean performAdd(Tuple<NodeId> tuple) {
-        return false ;
+    protected void performAdd(Tuple<NodeId> tuple) {
     }
 
     @Override
-    protected boolean performDelete(Tuple<NodeId> tuple) {
-        return false ;
+    protected void performDelete(Tuple<NodeId> tuple) {
     }
 
     @Override

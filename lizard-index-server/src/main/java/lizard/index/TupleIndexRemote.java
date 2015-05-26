@@ -93,13 +93,11 @@ public class TupleIndexRemote extends TupleIndexBase implements Component, Compo
 
     @Override
     public void clear() { 
-        //op0("CLEAR") ;
         throw new NotImplemented("TupleIndexRemote.clear") ;
     }
 
     @Override
     public void sync() {
-        //op0("SYNC") ;
         //throw new NotImplemented("TupleIndexRemote.sync") ;
     }
 
@@ -109,18 +107,17 @@ public class TupleIndexRemote extends TupleIndexBase implements Component, Compo
     }
 
     @Override
-    protected boolean performAdd(Tuple<NodeId> tuple) {
-        return client.add(tuple) ;
+    protected void performAdd(Tuple<NodeId> tuple) {
+        client.add(tuple) ;
     }
     
     @Override
-    protected boolean performDelete(Tuple<NodeId> tuple) {
-        return client.delete(tuple) ;
+    protected void performDelete(Tuple<NodeId> tuple) {
+        client.delete(tuple) ;
     }
 
     @Override
     protected Iterator<Tuple<NodeId>> performFind(Tuple<NodeId> tuple) {
-        //log.info("find["+shard+"] "+tuple) ;
         return access.accessTuples(tuple) ;
     }
 
