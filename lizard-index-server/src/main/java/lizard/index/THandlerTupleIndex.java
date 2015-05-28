@@ -64,11 +64,6 @@ import org.slf4j.LoggerFactory ;
         return (BPlusTree)(tir.getRangeIndex()) ;
     }
     
-    @Override
-    public void idxPing() throws TException {
-        log.info("ping") ;
-    }
-
     // Single tuple add/delete. Not efficient.  Sort of autocommit.
     // Batches are better; this code helps in small scale changes
     // and setting up tests.  Autocommit per node is not safe/consistent

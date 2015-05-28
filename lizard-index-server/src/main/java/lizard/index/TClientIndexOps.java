@@ -22,11 +22,11 @@ import java.util.Iterator ;
 import lizard.comms.ConnState ;
 import lizard.comms.Connection ;
 import lizard.system.ComponentTxn ;
-import lizard.system.Pingable ;
+import lizard.system.NodeControl ;
 import org.apache.jena.atlas.lib.Tuple ;
 import org.seaborne.tdb2.store.NodeId ;
 
-interface TClientIndexOps extends Connection, ComponentTxn, Pingable 
+interface TClientIndexOps extends Connection, ComponentTxn, NodeControl 
 {
     @Override
     public void start() ;

@@ -18,7 +18,8 @@
 package lizard.system;
 
 /** Any software element that can be pinged */
-@FunctionalInterface
-public interface Pingable {
+public interface NodeControl {
     public void ping() ;
+    public void remoteStop() ;
+
 }

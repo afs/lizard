@@ -21,12 +21,14 @@ import java.util.Objects ;
 import java.util.concurrent.atomic.AtomicLong ;
 
 import lizard.api.TLZ.TxnCtl ;
+import lizard.comms.CommsException ;
 import lizard.comms.thrift.ThriftLib ;
 import lizard.comms.thrift.ThriftLib.ThriftCallable ;
 import lizard.comms.thrift.ThriftLib.ThriftRunnable ;
 import lizard.system.ComponentBase ;
 import lizard.system.ComponentTxn ;
 import lizard.system.LizardException ;
+
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.atlas.logging.Log ;
 import org.apache.jena.query.ReadWrite ;
@@ -123,6 +125,7 @@ public abstract class TxnClient<X extends TxnCtl.Client> extends ComponentBase i
     }
     
     protected <T> T call(String label, ThriftCallable<T> action) {
+        checkRunning() ;
         try { return ThriftLib.call(action) ; } 
         catch (Exception ex) {
           FmtLog.error(getLog(), ex, label) ;
@@ -136,6 +139,19 @@ public abstract class TxnClient<X extends TxnCtl.Client> extends ComponentBase i
           FmtLog.error(getLog(), ex, label) ;
           throw new LizardException(ex) ;
         }
+    }
+
+    private void checkRunning() {
+        if ( ! isRunning() )
+            throw new CommsException("not running") ; 
+    }
+
+    public void remoteStop() {
+        exec("remoteStop", ()->rpc.stop()) ;
+    }
+
+    public void ping() {
+        exec("ping", ()->rpc.ping()) ;
     }
 }
 

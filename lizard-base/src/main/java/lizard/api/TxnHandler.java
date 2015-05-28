@@ -23,16 +23,14 @@ import java.util.function.Supplier ;
 
 import lizard.api.TLZ.TxnCtl ;
 
-import org.apache.jena.query.ReadWrite ;
-
 import org.apache.jena.atlas.logging.FmtLog ;
+import org.apache.jena.query.ReadWrite ;
 import org.seaborne.dboe.transaction.Txn ;
 import org.seaborne.dboe.transaction.txn.TransactionCoordinatorState ;
 import org.seaborne.dboe.transaction.txn.TransactionalSystem ;
-import org.slf4j.Logger ;
 
 // Support for the server side. 
-public abstract class TxnHandler implements TxnCtl.Iface {
+public abstract class TxnHandler extends NodeHandler implements TxnCtl.Iface {
     private final static boolean LOG_TXN = true ;
 
     protected final TransactionalSystem transactional ;
@@ -59,8 +57,6 @@ public abstract class TxnHandler implements TxnCtl.Iface {
         return currentWriter ;
     }
     
-    protected abstract Logger log() ;
-    protected abstract String getLabel() ;
     protected boolean activeWriteTransaction() {
         return getCurrentWriter() > 0 ; 
     }

@@ -26,12 +26,11 @@ import lizard.comms.ConnState ;
 import lizard.system.Component ;
 import lizard.system.ComponentBase ;
 import lizard.system.ComponentTxn ;
-import lizard.system.Pingable ;
+import lizard.system.NodeControl ;
 
 import org.apache.jena.query.ReadWrite ;
 import org.seaborne.tdb2.store.NodeId ;
 import org.seaborne.tdb2.store.tupletable.TupleIndexBase ;
-
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.NotImplemented ;
 import org.apache.jena.atlas.lib.Tuple ;
@@ -39,7 +38,7 @@ import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
 /** Client side of a remote index */
-public class TupleIndexRemote extends TupleIndexBase implements Component, ComponentTxn, Pingable, TxnClient.Accessor
+public class TupleIndexRemote extends TupleIndexBase implements Component, ComponentTxn, NodeControl, TxnClient.Accessor
 {
     // Relationship of TupleIndexRemote and TClientIndex
     public static TupleIndexRemote create(String hostname, int port, String indexStr, ColumnMap cmap) {
@@ -107,6 +106,16 @@ public class TupleIndexRemote extends TupleIndexBase implements Component, Compo
     }
 
     @Override
+    public void ping() {
+        client.ping() ;
+    }
+
+    @Override
+    public void remoteStop() {
+        client.remoteStop() ;
+    }
+
+    @Override
     protected void performAdd(Tuple<NodeId> tuple) {
         client.add(tuple) ;
     }
@@ -152,7 +161,4 @@ public class TupleIndexRemote extends TupleIndexBase implements Component, Compo
 
     @Override
     public void setLabel(String label) { component.setLabel(label) ; }
-
-    @Override
-    public void ping() { client.ping(); }
 }

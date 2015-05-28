@@ -31,7 +31,8 @@ import lizard.comms.ConnState ;
 import lizard.comms.Connection ;
 import lizard.comms.thrift.ThriftClient ;
 import lizard.system.ComponentTxn ;
-import lizard.system.Pingable ;
+import lizard.system.NodeControl ;
+
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.Tuple ;
 import org.apache.jena.atlas.logging.FmtLog ;
@@ -39,7 +40,7 @@ import org.seaborne.tdb2.store.NodeId ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
-class TClientIndex extends TxnClient<TLZ_Index.Client> implements TClientIndexOps, Connection, ComponentTxn, Pingable 
+class TClientIndex extends TxnClient<TLZ_Index.Client> implements TClientIndexOps, Connection, ComponentTxn, NodeControl 
 {
     private static Logger log = LoggerFactory.getLogger(TClientIndex.class) ;
     @Override protected Logger getLog() { return log ; }
@@ -100,11 +101,6 @@ class TClientIndex extends TxnClient<TLZ_Index.Client> implements TClientIndexOp
     }
     
     @Override
-    public void ping() {
-        exec("ping", ()-> rpc.idxPing()) ;
-    }
-
-    @Override
     public Iterator<Tuple<NodeId>> find(Tuple<NodeId> pattern) {
         long id = allocRequestId() ;
         long txnId = getTxnId() ;
@@ -137,6 +133,16 @@ class TClientIndex extends TxnClient<TLZ_Index.Client> implements TClientIndexOp
     public void close() {
         client.close() ;
         connState = ConnState.CLOSED ;
+    }
+
+    @Override
+    public void ping() {
+        exec("ping", ()-> rpc.ping()) ;
+    }
+
+    @Override
+    public void remoteStop() {
+        exec("remoteStop", ()-> rpc.stop()) ;
     }
 }
 
