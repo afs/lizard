@@ -45,7 +45,7 @@ public class LzBuilderIndexServer {
             }) ;
     }
 
-    private static TServerIndex buildIndexServer(Platform platform, Location location, StoreParams params, ConfIndexElement x) {
+    public static TServerIndex buildIndexServer(Platform platform, Location location, StoreParams params, ConfIndexElement x) {
         Location loc = location.getSubLocation(x.data) ;
         int port = x.netAddr.port ;
         String data = x.data ; 

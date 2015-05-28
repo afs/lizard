@@ -45,7 +45,7 @@ public class LzBuilderNodeServer {
             }) ;
     }
 
-    private static TServerNode buildNodeServer(Platform platform, Location location, StoreParams params, ConfNodeTableElement x) {
+    public static TServerNode buildNodeServer(Platform platform, Location location, StoreParams params, ConfNodeTableElement x) {
         Location loc = location.getSubLocation(x.data) ;
         int port = x.netAddr.port ;
         FmtLog.info(logConf, "buildNodeServer: %s %s", port, loc) ;
