@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 @SuppressWarnings("all")
 public class TxnCtl {
 
-  public interface Iface {
+  public interface Iface extends NodeCtl.Iface {
 
     public void txnBeginRead(long txnId) throws org.apache.thrift.TException;
 
@@ -51,7 +51,7 @@ public class TxnCtl {
 
   }
 
-  public interface AsyncIface {
+  public interface AsyncIface extends NodeCtl .AsyncIface {
 
     public void txnBeginRead(long txnId, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
@@ -67,7 +67,7 @@ public class TxnCtl {
 
   }
 
-  public static class Client extends org.apache.thrift.TServiceClient implements Iface {
+  public static class Client extends NodeCtl.Client implements Iface {
     public static class Factory implements org.apache.thrift.TServiceClientFactory<Client> {
       public Factory() {}
       public Client getClient(org.apache.thrift.protocol.TProtocol prot) {
@@ -208,7 +208,7 @@ public class TxnCtl {
     }
 
   }
-  public static class AsyncClient extends org.apache.thrift.async.TAsyncClient implements AsyncIface {
+  public static class AsyncClient extends NodeCtl.AsyncClient implements AsyncIface {
     public static class Factory implements org.apache.thrift.async.TAsyncClientFactory<AsyncClient> {
       private org.apache.thrift.async.TAsyncClientManager clientManager;
       private org.apache.thrift.protocol.TProtocolFactory protocolFactory;
@@ -419,7 +419,7 @@ public class TxnCtl {
 
   }
 
-  public static class Processor<I extends Iface> extends org.apache.thrift.TBaseProcessor<I> implements org.apache.thrift.TProcessor {
+  public static class Processor<I extends Iface> extends NodeCtl.Processor<I> implements org.apache.thrift.TProcessor {
     private static final Logger LOGGER = LoggerFactory.getLogger(Processor.class.getName());
     public Processor(I iface) {
       super(iface, getProcessMap(new HashMap<String, org.apache.thrift.ProcessFunction<I, ? extends org.apache.thrift.TBase>>()));
@@ -561,7 +561,7 @@ public class TxnCtl {
 
   }
 
-  public static class AsyncProcessor<I extends AsyncIface> extends org.apache.thrift.TBaseAsyncProcessor<I> {
+  public static class AsyncProcessor<I extends AsyncIface> extends NodeCtl.AsyncProcessor<I> {
     private static final Logger LOGGER = LoggerFactory.getLogger(AsyncProcessor.class.getName());
     public AsyncProcessor(I iface) {
       super(iface, getProcessMap(new HashMap<String, org.apache.thrift.AsyncProcessFunction<I, ? extends org.apache.thrift.TBase, ?>>()));

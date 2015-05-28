@@ -37,25 +37,25 @@ public class TLZ_NodeTable {
 
   public interface Iface extends TxnCtl.Iface {
 
-    public void nodePing() throws org.apache.thrift.TException;
-
     public TLZ_NodeId allocNodeId(long requestId, long txnId, TLZ_RDF_Term node) throws org.apache.thrift.TException;
 
     public TLZ_NodeId findByNode(long requestId, long txnId, TLZ_RDF_Term node) throws org.apache.thrift.TException;
 
     public TLZ_RDF_Term findByNodeId(long requestId, long txnId, TLZ_NodeId nodeId) throws org.apache.thrift.TException;
 
+    public List<TLZ_NodeId> allocNodeIds(long requestId, long txnId, List<TLZ_RDF_Term> nodes) throws org.apache.thrift.TException;
+
   }
 
   public interface AsyncIface extends TxnCtl .AsyncIface {
-
-    public void nodePing(org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
     public void allocNodeId(long requestId, long txnId, TLZ_RDF_Term node, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
     public void findByNode(long requestId, long txnId, TLZ_RDF_Term node, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
     public void findByNodeId(long requestId, long txnId, TLZ_NodeId nodeId, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
+
+    public void allocNodeIds(long requestId, long txnId, List<TLZ_RDF_Term> nodes, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
   }
 
@@ -77,25 +77,6 @@ public class TLZ_NodeTable {
 
     public Client(org.apache.thrift.protocol.TProtocol iprot, org.apache.thrift.protocol.TProtocol oprot) {
       super(iprot, oprot);
-    }
-
-    public void nodePing() throws org.apache.thrift.TException
-    {
-      send_nodePing();
-      recv_nodePing();
-    }
-
-    public void send_nodePing() throws org.apache.thrift.TException
-    {
-      nodePing_args args = new nodePing_args();
-      sendBase("nodePing", args);
-    }
-
-    public void recv_nodePing() throws org.apache.thrift.TException
-    {
-      nodePing_result result = new nodePing_result();
-      receiveBase(result, "nodePing");
-      return;
     }
 
     public TLZ_NodeId allocNodeId(long requestId, long txnId, TLZ_RDF_Term node) throws org.apache.thrift.TException
@@ -173,6 +154,31 @@ public class TLZ_NodeTable {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "findByNodeId failed: unknown result");
     }
 
+    public List<TLZ_NodeId> allocNodeIds(long requestId, long txnId, List<TLZ_RDF_Term> nodes) throws org.apache.thrift.TException
+    {
+      send_allocNodeIds(requestId, txnId, nodes);
+      return recv_allocNodeIds();
+    }
+
+    public void send_allocNodeIds(long requestId, long txnId, List<TLZ_RDF_Term> nodes) throws org.apache.thrift.TException
+    {
+      allocNodeIds_args args = new allocNodeIds_args();
+      args.setRequestId(requestId);
+      args.setTxnId(txnId);
+      args.setNodes(nodes);
+      sendBase("allocNodeIds", args);
+    }
+
+    public List<TLZ_NodeId> recv_allocNodeIds() throws org.apache.thrift.TException
+    {
+      allocNodeIds_result result = new allocNodeIds_result();
+      receiveBase(result, "allocNodeIds");
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "allocNodeIds failed: unknown result");
+    }
+
   }
   public static class AsyncClient extends TxnCtl.AsyncClient implements AsyncIface {
     public static class Factory implements org.apache.thrift.async.TAsyncClientFactory<AsyncClient> {
@@ -189,35 +195,6 @@ public class TLZ_NodeTable {
 
     public AsyncClient(org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.async.TAsyncClientManager clientManager, org.apache.thrift.transport.TNonblockingTransport transport) {
       super(protocolFactory, clientManager, transport);
-    }
-
-    public void nodePing(org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
-      checkReady();
-      nodePing_call method_call = new nodePing_call(resultHandler, this, ___protocolFactory, ___transport);
-      this.___currentMethod = method_call;
-      ___manager.call(method_call);
-    }
-
-    public static class nodePing_call extends org.apache.thrift.async.TAsyncMethodCall {
-      public nodePing_call(org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
-        super(client, protocolFactory, transport, resultHandler, false);
-      }
-
-      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("nodePing", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        nodePing_args args = new nodePing_args();
-        args.write(prot);
-        prot.writeMessageEnd();
-      }
-
-      public void getResult() throws org.apache.thrift.TException {
-        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
-          throw new IllegalStateException("Method call not finished!");
-        }
-        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
-        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        (new Client(prot)).recv_nodePing();
-      }
     }
 
     public void allocNodeId(long requestId, long txnId, TLZ_RDF_Term node, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
@@ -334,6 +311,44 @@ public class TLZ_NodeTable {
       }
     }
 
+    public void allocNodeIds(long requestId, long txnId, List<TLZ_RDF_Term> nodes, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
+      checkReady();
+      allocNodeIds_call method_call = new allocNodeIds_call(requestId, txnId, nodes, resultHandler, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class allocNodeIds_call extends org.apache.thrift.async.TAsyncMethodCall {
+      private long requestId;
+      private long txnId;
+      private List<TLZ_RDF_Term> nodes;
+      public allocNodeIds_call(long requestId, long txnId, List<TLZ_RDF_Term> nodes, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+        super(client, protocolFactory, transport, resultHandler, false);
+        this.requestId = requestId;
+        this.txnId = txnId;
+        this.nodes = nodes;
+      }
+
+      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("allocNodeIds", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        allocNodeIds_args args = new allocNodeIds_args();
+        args.setRequestId(requestId);
+        args.setTxnId(txnId);
+        args.setNodes(nodes);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public List<TLZ_NodeId> getResult() throws org.apache.thrift.TException {
+        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
+          throw new IllegalStateException("Method call not finished!");
+        }
+        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
+        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_allocNodeIds();
+      }
+    }
+
   }
 
   public static class Processor<I extends Iface> extends TxnCtl.Processor<I> implements org.apache.thrift.TProcessor {
@@ -347,31 +362,11 @@ public class TLZ_NodeTable {
     }
 
     private static <I extends Iface> Map<String,  org.apache.thrift.ProcessFunction<I, ? extends  org.apache.thrift.TBase>> getProcessMap(Map<String,  org.apache.thrift.ProcessFunction<I, ? extends  org.apache.thrift.TBase>> processMap) {
-      processMap.put("nodePing", new nodePing());
       processMap.put("allocNodeId", new allocNodeId());
       processMap.put("findByNode", new findByNode());
       processMap.put("findByNodeId", new findByNodeId());
+      processMap.put("allocNodeIds", new allocNodeIds());
       return processMap;
-    }
-
-    public static class nodePing<I extends Iface> extends org.apache.thrift.ProcessFunction<I, nodePing_args> {
-      public nodePing() {
-        super("nodePing");
-      }
-
-      public nodePing_args getEmptyArgsInstance() {
-        return new nodePing_args();
-      }
-
-      protected boolean isOneway() {
-        return false;
-      }
-
-      public nodePing_result getResult(I iface, nodePing_args args) throws org.apache.thrift.TException {
-        nodePing_result result = new nodePing_result();
-        iface.nodePing();
-        return result;
-      }
     }
 
     public static class allocNodeId<I extends Iface> extends org.apache.thrift.ProcessFunction<I, allocNodeId_args> {
@@ -434,6 +429,26 @@ public class TLZ_NodeTable {
       }
     }
 
+    public static class allocNodeIds<I extends Iface> extends org.apache.thrift.ProcessFunction<I, allocNodeIds_args> {
+      public allocNodeIds() {
+        super("allocNodeIds");
+      }
+
+      public allocNodeIds_args getEmptyArgsInstance() {
+        return new allocNodeIds_args();
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      public allocNodeIds_result getResult(I iface, allocNodeIds_args args) throws org.apache.thrift.TException {
+        allocNodeIds_result result = new allocNodeIds_result();
+        result.success = iface.allocNodeIds(args.requestId, args.txnId, args.nodes);
+        return result;
+      }
+    }
+
   }
 
   public static class AsyncProcessor<I extends AsyncIface> extends TxnCtl.AsyncProcessor<I> {
@@ -447,61 +462,11 @@ public class TLZ_NodeTable {
     }
 
     private static <I extends AsyncIface> Map<String,  org.apache.thrift.AsyncProcessFunction<I, ? extends  org.apache.thrift.TBase,?>> getProcessMap(Map<String,  org.apache.thrift.AsyncProcessFunction<I, ? extends  org.apache.thrift.TBase, ?>> processMap) {
-      processMap.put("nodePing", new nodePing());
       processMap.put("allocNodeId", new allocNodeId());
       processMap.put("findByNode", new findByNode());
       processMap.put("findByNodeId", new findByNodeId());
+      processMap.put("allocNodeIds", new allocNodeIds());
       return processMap;
-    }
-
-    public static class nodePing<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, nodePing_args, Void> {
-      public nodePing() {
-        super("nodePing");
-      }
-
-      public nodePing_args getEmptyArgsInstance() {
-        return new nodePing_args();
-      }
-
-      public AsyncMethodCallback<Void> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
-        final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new AsyncMethodCallback<Void>() { 
-          public void onComplete(Void o) {
-            nodePing_result result = new nodePing_result();
-            try {
-              fcall.sendResponse(fb,result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
-              return;
-            } catch (Exception e) {
-              LOGGER.error("Exception writing to internal frame buffer", e);
-            }
-            fb.close();
-          }
-          public void onError(Exception e) {
-            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
-            org.apache.thrift.TBase msg;
-            nodePing_result result = new nodePing_result();
-            {
-              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
-              msg = (org.apache.thrift.TBase)new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
-            }
-            try {
-              fcall.sendResponse(fb,msg,msgType,seqid);
-              return;
-            } catch (Exception ex) {
-              LOGGER.error("Exception writing to internal frame buffer", ex);
-            }
-            fb.close();
-          }
-        };
-      }
-
-      protected boolean isOneway() {
-        return false;
-      }
-
-      public void start(I iface, nodePing_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws TException {
-        iface.nodePing(resultHandler);
-      }
     }
 
     public static class allocNodeId<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, allocNodeId_args, TLZ_NodeId> {
@@ -657,495 +622,54 @@ public class TLZ_NodeTable {
       }
     }
 
-  }
-
-  public static class nodePing_args implements org.apache.thrift.TBase<nodePing_args, nodePing_args._Fields>, java.io.Serializable, Cloneable, Comparable<nodePing_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("nodePing_args");
-
-
-    private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
-    static {
-      schemes.put(StandardScheme.class, new nodePing_argsStandardSchemeFactory());
-      schemes.put(TupleScheme.class, new nodePing_argsTupleSchemeFactory());
-    }
-
-
-    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
-    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-;
-
-      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
-
-      static {
-        for (_Fields field : EnumSet.allOf(_Fields.class)) {
-          byName.put(field.getFieldName(), field);
-        }
+    public static class allocNodeIds<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, allocNodeIds_args, List<TLZ_NodeId>> {
+      public allocNodeIds() {
+        super("allocNodeIds");
       }
 
-      /**
-       * Find the _Fields constant that matches fieldId, or null if its not found.
-       */
-      public static _Fields findByThriftId(int fieldId) {
-        switch(fieldId) {
-          default:
-            return null;
-        }
+      public allocNodeIds_args getEmptyArgsInstance() {
+        return new allocNodeIds_args();
       }
 
-      /**
-       * Find the _Fields constant that matches fieldId, throwing an exception
-       * if it is not found.
-       */
-      public static _Fields findByThriftIdOrThrow(int fieldId) {
-        _Fields fields = findByThriftId(fieldId);
-        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
-        return fields;
-      }
-
-      /**
-       * Find the _Fields constant that matches name, or null if its not found.
-       */
-      public static _Fields findByName(String name) {
-        return byName.get(name);
-      }
-
-      private final short _thriftId;
-      private final String _fieldName;
-
-      _Fields(short thriftId, String fieldName) {
-        _thriftId = thriftId;
-        _fieldName = fieldName;
-      }
-
-      public short getThriftFieldId() {
-        return _thriftId;
-      }
-
-      public String getFieldName() {
-        return _fieldName;
-      }
-    }
-    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
-    static {
-      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      metaDataMap = Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(nodePing_args.class, metaDataMap);
-    }
-
-    public nodePing_args() {
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public nodePing_args(nodePing_args other) {
-    }
-
-    public nodePing_args deepCopy() {
-      return new nodePing_args(this);
-    }
-
-    @Override
-    public void clear() {
-    }
-
-    public void setFieldValue(_Fields field, Object value) {
-      switch (field) {
-      }
-    }
-
-    public Object getFieldValue(_Fields field) {
-      switch (field) {
-      }
-      throw new IllegalStateException();
-    }
-
-    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
-    public boolean isSet(_Fields field) {
-      if (field == null) {
-        throw new IllegalArgumentException();
-      }
-
-      switch (field) {
-      }
-      throw new IllegalStateException();
-    }
-
-    @Override
-    public boolean equals(Object that) {
-      if (that == null)
-        return false;
-      if (that instanceof nodePing_args)
-        return this.equals((nodePing_args)that);
-      return false;
-    }
-
-    public boolean equals(nodePing_args that) {
-      if (that == null)
-        return false;
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      return 0;
-    }
-
-    @Override
-    public int compareTo(nodePing_args other) {
-      if (!getClass().equals(other.getClass())) {
-        return getClass().getName().compareTo(other.getClass().getName());
-      }
-
-      int lastComparison = 0;
-
-      return 0;
-    }
-
-    public _Fields fieldForId(int fieldId) {
-      return _Fields.findByThriftId(fieldId);
-    }
-
-    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
-      schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
-    }
-
-    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
-      schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
-    }
-
-    @Override
-    public String toString() {
-      StringBuilder sb = new StringBuilder("nodePing_args(");
-      boolean first = true;
-
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws org.apache.thrift.TException {
-      // check for required fields
-      // check for sub-struct validity
-    }
-
-    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
-      try {
-        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
-      try {
-        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private static class nodePing_argsStandardSchemeFactory implements SchemeFactory {
-      public nodePing_argsStandardScheme getScheme() {
-        return new nodePing_argsStandardScheme();
-      }
-    }
-
-    private static class nodePing_argsStandardScheme extends StandardScheme<nodePing_args> {
-
-      public void read(org.apache.thrift.protocol.TProtocol iprot, nodePing_args struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TField schemeField;
-        iprot.readStructBegin();
-        while (true)
-        {
-          schemeField = iprot.readFieldBegin();
-          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
-            break;
+      public AsyncMethodCallback<List<TLZ_NodeId>> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
+        final org.apache.thrift.AsyncProcessFunction fcall = this;
+        return new AsyncMethodCallback<List<TLZ_NodeId>>() { 
+          public void onComplete(List<TLZ_NodeId> o) {
+            allocNodeIds_result result = new allocNodeIds_result();
+            result.success = o;
+            try {
+              fcall.sendResponse(fb,result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
+              return;
+            } catch (Exception e) {
+              LOGGER.error("Exception writing to internal frame buffer", e);
+            }
+            fb.close();
           }
-          switch (schemeField.id) {
-            default:
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          public void onError(Exception e) {
+            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
+            org.apache.thrift.TBase msg;
+            allocNodeIds_result result = new allocNodeIds_result();
+            {
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = (org.apache.thrift.TBase)new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
+            }
+            try {
+              fcall.sendResponse(fb,msg,msgType,seqid);
+              return;
+            } catch (Exception ex) {
+              LOGGER.error("Exception writing to internal frame buffer", ex);
+            }
+            fb.close();
           }
-          iprot.readFieldEnd();
-        }
-        iprot.readStructEnd();
-
-        // check for required fields of primitive type, which can't be checked in the validate method
-        struct.validate();
+        };
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, nodePing_args struct) throws org.apache.thrift.TException {
-        struct.validate();
-
-        oprot.writeStructBegin(STRUCT_DESC);
-        oprot.writeFieldStop();
-        oprot.writeStructEnd();
-      }
-
-    }
-
-    private static class nodePing_argsTupleSchemeFactory implements SchemeFactory {
-      public nodePing_argsTupleScheme getScheme() {
-        return new nodePing_argsTupleScheme();
-      }
-    }
-
-    private static class nodePing_argsTupleScheme extends TupleScheme<nodePing_args> {
-
-      @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, nodePing_args struct) throws org.apache.thrift.TException {
-        TTupleProtocol oprot = (TTupleProtocol) prot;
-      }
-
-      @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, nodePing_args struct) throws org.apache.thrift.TException {
-        TTupleProtocol iprot = (TTupleProtocol) prot;
-      }
-    }
-
-  }
-
-  public static class nodePing_result implements org.apache.thrift.TBase<nodePing_result, nodePing_result._Fields>, java.io.Serializable, Cloneable, Comparable<nodePing_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("nodePing_result");
-
-
-    private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
-    static {
-      schemes.put(StandardScheme.class, new nodePing_resultStandardSchemeFactory());
-      schemes.put(TupleScheme.class, new nodePing_resultTupleSchemeFactory());
-    }
-
-
-    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
-    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-;
-
-      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
-
-      static {
-        for (_Fields field : EnumSet.allOf(_Fields.class)) {
-          byName.put(field.getFieldName(), field);
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, or null if its not found.
-       */
-      public static _Fields findByThriftId(int fieldId) {
-        switch(fieldId) {
-          default:
-            return null;
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, throwing an exception
-       * if it is not found.
-       */
-      public static _Fields findByThriftIdOrThrow(int fieldId) {
-        _Fields fields = findByThriftId(fieldId);
-        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
-        return fields;
-      }
-
-      /**
-       * Find the _Fields constant that matches name, or null if its not found.
-       */
-      public static _Fields findByName(String name) {
-        return byName.get(name);
-      }
-
-      private final short _thriftId;
-      private final String _fieldName;
-
-      _Fields(short thriftId, String fieldName) {
-        _thriftId = thriftId;
-        _fieldName = fieldName;
-      }
-
-      public short getThriftFieldId() {
-        return _thriftId;
-      }
-
-      public String getFieldName() {
-        return _fieldName;
-      }
-    }
-    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
-    static {
-      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      metaDataMap = Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(nodePing_result.class, metaDataMap);
-    }
-
-    public nodePing_result() {
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public nodePing_result(nodePing_result other) {
-    }
-
-    public nodePing_result deepCopy() {
-      return new nodePing_result(this);
-    }
-
-    @Override
-    public void clear() {
-    }
-
-    public void setFieldValue(_Fields field, Object value) {
-      switch (field) {
-      }
-    }
-
-    public Object getFieldValue(_Fields field) {
-      switch (field) {
-      }
-      throw new IllegalStateException();
-    }
-
-    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
-    public boolean isSet(_Fields field) {
-      if (field == null) {
-        throw new IllegalArgumentException();
-      }
-
-      switch (field) {
-      }
-      throw new IllegalStateException();
-    }
-
-    @Override
-    public boolean equals(Object that) {
-      if (that == null)
+      protected boolean isOneway() {
         return false;
-      if (that instanceof nodePing_result)
-        return this.equals((nodePing_result)that);
-      return false;
-    }
-
-    public boolean equals(nodePing_result that) {
-      if (that == null)
-        return false;
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      return 0;
-    }
-
-    @Override
-    public int compareTo(nodePing_result other) {
-      if (!getClass().equals(other.getClass())) {
-        return getClass().getName().compareTo(other.getClass().getName());
       }
 
-      int lastComparison = 0;
-
-      return 0;
-    }
-
-    public _Fields fieldForId(int fieldId) {
-      return _Fields.findByThriftId(fieldId);
-    }
-
-    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
-      schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
-    }
-
-    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
-      schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
-      }
-
-    @Override
-    public String toString() {
-      StringBuilder sb = new StringBuilder("nodePing_result(");
-      boolean first = true;
-
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws org.apache.thrift.TException {
-      // check for required fields
-      // check for sub-struct validity
-    }
-
-    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
-      try {
-        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
-      try {
-        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private static class nodePing_resultStandardSchemeFactory implements SchemeFactory {
-      public nodePing_resultStandardScheme getScheme() {
-        return new nodePing_resultStandardScheme();
-      }
-    }
-
-    private static class nodePing_resultStandardScheme extends StandardScheme<nodePing_result> {
-
-      public void read(org.apache.thrift.protocol.TProtocol iprot, nodePing_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TField schemeField;
-        iprot.readStructBegin();
-        while (true)
-        {
-          schemeField = iprot.readFieldBegin();
-          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
-            break;
-          }
-          switch (schemeField.id) {
-            default:
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-          }
-          iprot.readFieldEnd();
-        }
-        iprot.readStructEnd();
-
-        // check for required fields of primitive type, which can't be checked in the validate method
-        struct.validate();
-      }
-
-      public void write(org.apache.thrift.protocol.TProtocol oprot, nodePing_result struct) throws org.apache.thrift.TException {
-        struct.validate();
-
-        oprot.writeStructBegin(STRUCT_DESC);
-        oprot.writeFieldStop();
-        oprot.writeStructEnd();
-      }
-
-    }
-
-    private static class nodePing_resultTupleSchemeFactory implements SchemeFactory {
-      public nodePing_resultTupleScheme getScheme() {
-        return new nodePing_resultTupleScheme();
-      }
-    }
-
-    private static class nodePing_resultTupleScheme extends TupleScheme<nodePing_result> {
-
-      @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, nodePing_result struct) throws org.apache.thrift.TException {
-        TTupleProtocol oprot = (TTupleProtocol) prot;
-      }
-
-      @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, nodePing_result struct) throws org.apache.thrift.TException {
-        TTupleProtocol iprot = (TTupleProtocol) prot;
+      public void start(I iface, allocNodeIds_args args, org.apache.thrift.async.AsyncMethodCallback<List<TLZ_NodeId>> resultHandler) throws TException {
+        iface.allocNodeIds(args.requestId, args.txnId, args.nodes,resultHandler);
       }
     }
 
@@ -3865,6 +3389,1014 @@ public class TLZ_NodeTable {
         if (incoming.get(0)) {
           struct.success = new TLZ_RDF_Term();
           struct.success.read(iprot);
+          struct.setSuccessIsSet(true);
+        }
+      }
+    }
+
+  }
+
+  public static class allocNodeIds_args implements org.apache.thrift.TBase<allocNodeIds_args, allocNodeIds_args._Fields>, java.io.Serializable, Cloneable, Comparable<allocNodeIds_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("allocNodeIds_args");
+
+    private static final org.apache.thrift.protocol.TField REQUEST_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("requestId", org.apache.thrift.protocol.TType.I64, (short)1);
+    private static final org.apache.thrift.protocol.TField TXN_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("txnId", org.apache.thrift.protocol.TType.I64, (short)9);
+    private static final org.apache.thrift.protocol.TField NODES_FIELD_DESC = new org.apache.thrift.protocol.TField("nodes", org.apache.thrift.protocol.TType.LIST, (short)3);
+
+    private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
+    static {
+      schemes.put(StandardScheme.class, new allocNodeIds_argsStandardSchemeFactory());
+      schemes.put(TupleScheme.class, new allocNodeIds_argsTupleSchemeFactory());
+    }
+
+    public long requestId; // required
+    public long txnId; // required
+    public List<TLZ_RDF_Term> nodes; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      REQUEST_ID((short)1, "requestId"),
+      TXN_ID((short)9, "txnId"),
+      NODES((short)3, "nodes");
+
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 1: // REQUEST_ID
+            return REQUEST_ID;
+          case 9: // TXN_ID
+            return TXN_ID;
+          case 3: // NODES
+            return NODES;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    private static final int __REQUESTID_ISSET_ID = 0;
+    private static final int __TXNID_ISSET_ID = 1;
+    private byte __isset_bitfield = 0;
+    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.REQUEST_ID, new org.apache.thrift.meta_data.FieldMetaData("requestId", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+      tmpMap.put(_Fields.TXN_ID, new org.apache.thrift.meta_data.FieldMetaData("txnId", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64          , "TxnId")));
+      tmpMap.put(_Fields.NODES, new org.apache.thrift.meta_data.FieldMetaData("nodes", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.ListMetaData(org.apache.thrift.protocol.TType.LIST, 
+              new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_RDF_Term.class))));
+      metaDataMap = Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(allocNodeIds_args.class, metaDataMap);
+    }
+
+    public allocNodeIds_args() {
+    }
+
+    public allocNodeIds_args(
+      long requestId,
+      long txnId,
+      List<TLZ_RDF_Term> nodes)
+    {
+      this();
+      this.requestId = requestId;
+      setRequestIdIsSet(true);
+      this.txnId = txnId;
+      setTxnIdIsSet(true);
+      this.nodes = nodes;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public allocNodeIds_args(allocNodeIds_args other) {
+      __isset_bitfield = other.__isset_bitfield;
+      this.requestId = other.requestId;
+      this.txnId = other.txnId;
+      if (other.isSetNodes()) {
+        List<TLZ_RDF_Term> __this__nodes = new ArrayList<TLZ_RDF_Term>(other.nodes.size());
+        for (TLZ_RDF_Term other_element : other.nodes) {
+          __this__nodes.add(new TLZ_RDF_Term(other_element));
+        }
+        this.nodes = __this__nodes;
+      }
+    }
+
+    public allocNodeIds_args deepCopy() {
+      return new allocNodeIds_args(this);
+    }
+
+    @Override
+    public void clear() {
+      setRequestIdIsSet(false);
+      this.requestId = 0;
+      setTxnIdIsSet(false);
+      this.txnId = 0;
+      this.nodes = null;
+    }
+
+    public long getRequestId() {
+      return this.requestId;
+    }
+
+    public allocNodeIds_args setRequestId(long requestId) {
+      this.requestId = requestId;
+      setRequestIdIsSet(true);
+      return this;
+    }
+
+    public void unsetRequestId() {
+      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __REQUESTID_ISSET_ID);
+    }
+
+    /** Returns true if field requestId is set (has been assigned a value) and false otherwise */
+    public boolean isSetRequestId() {
+      return EncodingUtils.testBit(__isset_bitfield, __REQUESTID_ISSET_ID);
+    }
+
+    public void setRequestIdIsSet(boolean value) {
+      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __REQUESTID_ISSET_ID, value);
+    }
+
+    public long getTxnId() {
+      return this.txnId;
+    }
+
+    public allocNodeIds_args setTxnId(long txnId) {
+      this.txnId = txnId;
+      setTxnIdIsSet(true);
+      return this;
+    }
+
+    public void unsetTxnId() {
+      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __TXNID_ISSET_ID);
+    }
+
+    /** Returns true if field txnId is set (has been assigned a value) and false otherwise */
+    public boolean isSetTxnId() {
+      return EncodingUtils.testBit(__isset_bitfield, __TXNID_ISSET_ID);
+    }
+
+    public void setTxnIdIsSet(boolean value) {
+      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __TXNID_ISSET_ID, value);
+    }
+
+    public int getNodesSize() {
+      return (this.nodes == null) ? 0 : this.nodes.size();
+    }
+
+    public java.util.Iterator<TLZ_RDF_Term> getNodesIterator() {
+      return (this.nodes == null) ? null : this.nodes.iterator();
+    }
+
+    public void addToNodes(TLZ_RDF_Term elem) {
+      if (this.nodes == null) {
+        this.nodes = new ArrayList<TLZ_RDF_Term>();
+      }
+      this.nodes.add(elem);
+    }
+
+    public List<TLZ_RDF_Term> getNodes() {
+      return this.nodes;
+    }
+
+    public allocNodeIds_args setNodes(List<TLZ_RDF_Term> nodes) {
+      this.nodes = nodes;
+      return this;
+    }
+
+    public void unsetNodes() {
+      this.nodes = null;
+    }
+
+    /** Returns true if field nodes is set (has been assigned a value) and false otherwise */
+    public boolean isSetNodes() {
+      return this.nodes != null;
+    }
+
+    public void setNodesIsSet(boolean value) {
+      if (!value) {
+        this.nodes = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
+      case REQUEST_ID:
+        if (value == null) {
+          unsetRequestId();
+        } else {
+          setRequestId((Long)value);
+        }
+        break;
+
+      case TXN_ID:
+        if (value == null) {
+          unsetTxnId();
+        } else {
+          setTxnId((Long)value);
+        }
+        break;
+
+      case NODES:
+        if (value == null) {
+          unsetNodes();
+        } else {
+          setNodes((List<TLZ_RDF_Term>)value);
+        }
+        break;
+
+      }
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
+      case REQUEST_ID:
+        return Long.valueOf(getRequestId());
+
+      case TXN_ID:
+        return Long.valueOf(getTxnId());
+
+      case NODES:
+        return getNodes();
+
+      }
+      throw new IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new IllegalArgumentException();
+      }
+
+      switch (field) {
+      case REQUEST_ID:
+        return isSetRequestId();
+      case TXN_ID:
+        return isSetTxnId();
+      case NODES:
+        return isSetNodes();
+      }
+      throw new IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof allocNodeIds_args)
+        return this.equals((allocNodeIds_args)that);
+      return false;
+    }
+
+    public boolean equals(allocNodeIds_args that) {
+      if (that == null)
+        return false;
+
+      boolean this_present_requestId = true;
+      boolean that_present_requestId = true;
+      if (this_present_requestId || that_present_requestId) {
+        if (!(this_present_requestId && that_present_requestId))
+          return false;
+        if (this.requestId != that.requestId)
+          return false;
+      }
+
+      boolean this_present_txnId = true;
+      boolean that_present_txnId = true;
+      if (this_present_txnId || that_present_txnId) {
+        if (!(this_present_txnId && that_present_txnId))
+          return false;
+        if (this.txnId != that.txnId)
+          return false;
+      }
+
+      boolean this_present_nodes = true && this.isSetNodes();
+      boolean that_present_nodes = true && that.isSetNodes();
+      if (this_present_nodes || that_present_nodes) {
+        if (!(this_present_nodes && that_present_nodes))
+          return false;
+        if (!this.nodes.equals(that.nodes))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return 0;
+    }
+
+    @Override
+    public int compareTo(allocNodeIds_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetRequestId()).compareTo(other.isSetRequestId());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetRequestId()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.requestId, other.requestId);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetTxnId()).compareTo(other.isSetTxnId());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetTxnId()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.txnId, other.txnId);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetNodes()).compareTo(other.isSetNodes());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetNodes()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.nodes, other.nodes);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("allocNodeIds_args(");
+      boolean first = true;
+
+      sb.append("requestId:");
+      sb.append(this.requestId);
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("txnId:");
+      sb.append(this.txnId);
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("nodes:");
+      if (this.nodes == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.nodes);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+      try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bitfield = 0;
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class allocNodeIds_argsStandardSchemeFactory implements SchemeFactory {
+      public allocNodeIds_argsStandardScheme getScheme() {
+        return new allocNodeIds_argsStandardScheme();
+      }
+    }
+
+    private static class allocNodeIds_argsStandardScheme extends StandardScheme<allocNodeIds_args> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, allocNodeIds_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 1: // REQUEST_ID
+              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+                struct.requestId = iprot.readI64();
+                struct.setRequestIdIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 9: // TXN_ID
+              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+                struct.txnId = iprot.readI64();
+                struct.setTxnIdIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 3: // NODES
+              if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
+                {
+                  org.apache.thrift.protocol.TList _list40 = iprot.readListBegin();
+                  struct.nodes = new ArrayList<TLZ_RDF_Term>(_list40.size);
+                  for (int _i41 = 0; _i41 < _list40.size; ++_i41)
+                  {
+                    TLZ_RDF_Term _elem42;
+                    _elem42 = new TLZ_RDF_Term();
+                    _elem42.read(iprot);
+                    struct.nodes.add(_elem42);
+                  }
+                  iprot.readListEnd();
+                }
+                struct.setNodesIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, allocNodeIds_args struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        oprot.writeFieldBegin(REQUEST_ID_FIELD_DESC);
+        oprot.writeI64(struct.requestId);
+        oprot.writeFieldEnd();
+        if (struct.nodes != null) {
+          oprot.writeFieldBegin(NODES_FIELD_DESC);
+          {
+            oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.nodes.size()));
+            for (TLZ_RDF_Term _iter43 : struct.nodes)
+            {
+              _iter43.write(oprot);
+            }
+            oprot.writeListEnd();
+          }
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldBegin(TXN_ID_FIELD_DESC);
+        oprot.writeI64(struct.txnId);
+        oprot.writeFieldEnd();
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class allocNodeIds_argsTupleSchemeFactory implements SchemeFactory {
+      public allocNodeIds_argsTupleScheme getScheme() {
+        return new allocNodeIds_argsTupleScheme();
+      }
+    }
+
+    private static class allocNodeIds_argsTupleScheme extends TupleScheme<allocNodeIds_args> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, allocNodeIds_args struct) throws org.apache.thrift.TException {
+        TTupleProtocol oprot = (TTupleProtocol) prot;
+        BitSet optionals = new BitSet();
+        if (struct.isSetRequestId()) {
+          optionals.set(0);
+        }
+        if (struct.isSetTxnId()) {
+          optionals.set(1);
+        }
+        if (struct.isSetNodes()) {
+          optionals.set(2);
+        }
+        oprot.writeBitSet(optionals, 3);
+        if (struct.isSetRequestId()) {
+          oprot.writeI64(struct.requestId);
+        }
+        if (struct.isSetTxnId()) {
+          oprot.writeI64(struct.txnId);
+        }
+        if (struct.isSetNodes()) {
+          {
+            oprot.writeI32(struct.nodes.size());
+            for (TLZ_RDF_Term _iter44 : struct.nodes)
+            {
+              _iter44.write(oprot);
+            }
+          }
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, allocNodeIds_args struct) throws org.apache.thrift.TException {
+        TTupleProtocol iprot = (TTupleProtocol) prot;
+        BitSet incoming = iprot.readBitSet(3);
+        if (incoming.get(0)) {
+          struct.requestId = iprot.readI64();
+          struct.setRequestIdIsSet(true);
+        }
+        if (incoming.get(1)) {
+          struct.txnId = iprot.readI64();
+          struct.setTxnIdIsSet(true);
+        }
+        if (incoming.get(2)) {
+          {
+            org.apache.thrift.protocol.TList _list45 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
+            struct.nodes = new ArrayList<TLZ_RDF_Term>(_list45.size);
+            for (int _i46 = 0; _i46 < _list45.size; ++_i46)
+            {
+              TLZ_RDF_Term _elem47;
+              _elem47 = new TLZ_RDF_Term();
+              _elem47.read(iprot);
+              struct.nodes.add(_elem47);
+            }
+          }
+          struct.setNodesIsSet(true);
+        }
+      }
+    }
+
+  }
+
+  public static class allocNodeIds_result implements org.apache.thrift.TBase<allocNodeIds_result, allocNodeIds_result._Fields>, java.io.Serializable, Cloneable, Comparable<allocNodeIds_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("allocNodeIds_result");
+
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.LIST, (short)0);
+
+    private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
+    static {
+      schemes.put(StandardScheme.class, new allocNodeIds_resultStandardSchemeFactory());
+      schemes.put(TupleScheme.class, new allocNodeIds_resultTupleSchemeFactory());
+    }
+
+    public List<TLZ_NodeId> success; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      SUCCESS((short)0, "success");
+
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 0: // SUCCESS
+            return SUCCESS;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.ListMetaData(org.apache.thrift.protocol.TType.LIST, 
+              new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_NodeId.class))));
+      metaDataMap = Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(allocNodeIds_result.class, metaDataMap);
+    }
+
+    public allocNodeIds_result() {
+    }
+
+    public allocNodeIds_result(
+      List<TLZ_NodeId> success)
+    {
+      this();
+      this.success = success;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public allocNodeIds_result(allocNodeIds_result other) {
+      if (other.isSetSuccess()) {
+        List<TLZ_NodeId> __this__success = new ArrayList<TLZ_NodeId>(other.success.size());
+        for (TLZ_NodeId other_element : other.success) {
+          __this__success.add(new TLZ_NodeId(other_element));
+        }
+        this.success = __this__success;
+      }
+    }
+
+    public allocNodeIds_result deepCopy() {
+      return new allocNodeIds_result(this);
+    }
+
+    @Override
+    public void clear() {
+      this.success = null;
+    }
+
+    public int getSuccessSize() {
+      return (this.success == null) ? 0 : this.success.size();
+    }
+
+    public java.util.Iterator<TLZ_NodeId> getSuccessIterator() {
+      return (this.success == null) ? null : this.success.iterator();
+    }
+
+    public void addToSuccess(TLZ_NodeId elem) {
+      if (this.success == null) {
+        this.success = new ArrayList<TLZ_NodeId>();
+      }
+      this.success.add(elem);
+    }
+
+    public List<TLZ_NodeId> getSuccess() {
+      return this.success;
+    }
+
+    public allocNodeIds_result setSuccess(List<TLZ_NodeId> success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    /** Returns true if field success is set (has been assigned a value) and false otherwise */
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      if (!value) {
+        this.success = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((List<TLZ_NodeId>)value);
+        }
+        break;
+
+      }
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
+      case SUCCESS:
+        return getSuccess();
+
+      }
+      throw new IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new IllegalArgumentException();
+      }
+
+      switch (field) {
+      case SUCCESS:
+        return isSetSuccess();
+      }
+      throw new IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof allocNodeIds_result)
+        return this.equals((allocNodeIds_result)that);
+      return false;
+    }
+
+    public boolean equals(allocNodeIds_result that) {
+      if (that == null)
+        return false;
+
+      boolean this_present_success = true && this.isSetSuccess();
+      boolean that_present_success = true && that.isSetSuccess();
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (!this.success.equals(that.success))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return 0;
+    }
+
+    @Override
+    public int compareTo(allocNodeIds_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetSuccess()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
+      }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("allocNodeIds_result(");
+      boolean first = true;
+
+      sb.append("success:");
+      if (this.success == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.success);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class allocNodeIds_resultStandardSchemeFactory implements SchemeFactory {
+      public allocNodeIds_resultStandardScheme getScheme() {
+        return new allocNodeIds_resultStandardScheme();
+      }
+    }
+
+    private static class allocNodeIds_resultStandardScheme extends StandardScheme<allocNodeIds_result> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, allocNodeIds_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 0: // SUCCESS
+              if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
+                {
+                  org.apache.thrift.protocol.TList _list48 = iprot.readListBegin();
+                  struct.success = new ArrayList<TLZ_NodeId>(_list48.size);
+                  for (int _i49 = 0; _i49 < _list48.size; ++_i49)
+                  {
+                    TLZ_NodeId _elem50;
+                    _elem50 = new TLZ_NodeId();
+                    _elem50.read(iprot);
+                    struct.success.add(_elem50);
+                  }
+                  iprot.readListEnd();
+                }
+                struct.setSuccessIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, allocNodeIds_result struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.success != null) {
+          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+          {
+            oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
+            for (TLZ_NodeId _iter51 : struct.success)
+            {
+              _iter51.write(oprot);
+            }
+            oprot.writeListEnd();
+          }
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class allocNodeIds_resultTupleSchemeFactory implements SchemeFactory {
+      public allocNodeIds_resultTupleScheme getScheme() {
+        return new allocNodeIds_resultTupleScheme();
+      }
+    }
+
+    private static class allocNodeIds_resultTupleScheme extends TupleScheme<allocNodeIds_result> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, allocNodeIds_result struct) throws org.apache.thrift.TException {
+        TTupleProtocol oprot = (TTupleProtocol) prot;
+        BitSet optionals = new BitSet();
+        if (struct.isSetSuccess()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetSuccess()) {
+          {
+            oprot.writeI32(struct.success.size());
+            for (TLZ_NodeId _iter52 : struct.success)
+            {
+              _iter52.write(oprot);
+            }
+          }
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, allocNodeIds_result struct) throws org.apache.thrift.TException {
+        TTupleProtocol iprot = (TTupleProtocol) prot;
+        BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          {
+            org.apache.thrift.protocol.TList _list53 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
+            struct.success = new ArrayList<TLZ_NodeId>(_list53.size);
+            for (int _i54 = 0; _i54 < _list53.size; ++_i54)
+            {
+              TLZ_NodeId _elem55;
+              _elem55 = new TLZ_NodeId();
+              _elem55.read(iprot);
+              struct.success.add(_elem55);
+            }
+          }
           struct.setSuccessIsSet(true);
         }
       }
