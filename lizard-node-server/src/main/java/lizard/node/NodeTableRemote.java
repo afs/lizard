@@ -23,7 +23,7 @@ import lizard.api.TxnClient ;
 import lizard.comms.ConnState ;
 import lizard.system.Component ;
 import lizard.system.ComponentTxn ;
-import lizard.system.NodeControl ;
+import lizard.system.RemoteControl ;
 
 import org.apache.jena.atlas.lib.NotImplemented ;
 import org.apache.jena.atlas.lib.Pair ;
@@ -35,7 +35,7 @@ import org.seaborne.tdb2.store.NodeId ;
 import org.seaborne.tdb2.store.nodetable.NodeTable ;
 
 /** NodeTable interface to a remote node table server */
-public class NodeTableRemote implements ComponentTxn, Component, NodeTable, NodeControl, TxnClient.Accessor {
+public class NodeTableRemote implements ComponentTxn, Component, NodeTable, RemoteControl, TxnClient.Accessor {
 
     public static NodeTableRemote create(String hostname, int port) {
         TClientNode remote = TClientNode.create(hostname, port) ;

@@ -18,7 +18,7 @@
 package lizard.system;
 
 /** Any software element that can be pinged */
-public interface NodeControl {
+public interface RemoteControl {
     public void ping() ;
     public void remoteStop() ;
 

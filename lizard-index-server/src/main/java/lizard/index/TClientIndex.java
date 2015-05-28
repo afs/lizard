@@ -31,7 +31,7 @@ import lizard.comms.ConnState ;
 import lizard.comms.Connection ;
 import lizard.comms.thrift.ThriftClient ;
 import lizard.system.ComponentTxn ;
-import lizard.system.NodeControl ;
+import lizard.system.RemoteControl ;
 
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.Tuple ;
@@ -40,7 +40,7 @@ import org.seaborne.tdb2.store.NodeId ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
-class TClientIndex extends TxnClient<TLZ_Index.Client> implements TClientIndexOps, Connection, ComponentTxn, NodeControl 
+class TClientIndex extends TxnClient<TLZ_Index.Client> implements TClientIndexOps, Connection, ComponentTxn, RemoteControl 
 {
     private static Logger log = LoggerFactory.getLogger(TClientIndex.class) ;
     @Override protected Logger getLog() { return log ; }

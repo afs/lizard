@@ -26,7 +26,7 @@ import lizard.comms.ConnState ;
 import lizard.system.Component ;
 import lizard.system.ComponentBase ;
 import lizard.system.ComponentTxn ;
-import lizard.system.NodeControl ;
+import lizard.system.RemoteControl ;
 
 import org.apache.jena.query.ReadWrite ;
 import org.seaborne.tdb2.store.NodeId ;
@@ -38,7 +38,7 @@ import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
 /** Client side of a remote index */
-public class TupleIndexRemote extends TupleIndexBase implements Component, ComponentTxn, NodeControl, TxnClient.Accessor
+public class TupleIndexRemote extends TupleIndexBase implements Component, ComponentTxn, RemoteControl, TxnClient.Accessor
 {
     // Relationship of TupleIndexRemote and TClientIndex
     public static TupleIndexRemote create(String hostname, int port, String indexStr, ColumnMap cmap) {

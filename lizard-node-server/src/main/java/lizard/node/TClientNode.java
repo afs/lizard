@@ -31,7 +31,7 @@ import lizard.comms.ConnState ;
 import lizard.comms.Connection ;
 import lizard.comms.thrift.ThriftClient ;
 import lizard.system.ComponentTxn ;
-import lizard.system.NodeControl ;
+import lizard.system.RemoteControl ;
 
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.graph.Node ;
@@ -39,7 +39,7 @@ import org.seaborne.tdb2.store.NodeId ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
  
-public class TClientNode extends TxnClient<TLZ_NodeTable.Client> implements ComponentTxn, Connection, NodeControl
+public class TClientNode extends TxnClient<TLZ_NodeTable.Client> implements ComponentTxn, Connection, RemoteControl
 {
     private static Logger log = LoggerFactory.getLogger(TClientNode.class) ;
     @Override protected Logger getLog() { return log ; }
