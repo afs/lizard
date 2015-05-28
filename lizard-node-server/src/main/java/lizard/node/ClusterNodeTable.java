@@ -43,6 +43,30 @@ public class ClusterNodeTable implements NodeTable {
         log.info(distributor.toString()) ;
     }
     
+    // Bulk operations.
+    
+//    public List<NodeId> allocateNodeIds(List<Node> nodes) {
+//        // Should break into shard units. 
+//        List<NodeTableRemote> tables = (List<NodeTableRemote>)distributor.allStore() ; // distributor.storeAt(node) ;
+//
+//        for ( NodeTableRemote nt : tables ) {
+//            NodeId nid1 = nt.
+//            if ( nid == null )
+//                nid = nid1 ;
+//            else {
+//                if ( ! Objects.equals(nid, nid1) )
+//                    FmtLog.warn(log, "Different NodeIds allocated for %s : %s != %s", node, nid, nid1) ;
+//            }
+//        }
+//        
+//        FmtLog.info(log, "getAllocateNodeId(%s) -> %s", node, nid) ;
+//        if ( log.isDebugEnabled() )
+//            tables.forEach(nt -> FmtLog.debug(log, "  store(%s) @ %s", node, nt)) ;
+//        return nid ;
+//        
+//    }
+    
+    
     @Override
     public NodeId getAllocateNodeId(Node node) {
         // XXX Could useful know whether it was find or store

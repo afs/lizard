@@ -60,9 +60,9 @@ public class TServerNode extends ThriftServer
                 args.inputProtocolFactory(new TCompactProtocol.Factory()) ;
                 args.outputProtocolFactory(new TCompactProtocol.Factory()) ;
                 TServer server = new TThreadPoolServer(args);
-                FmtLog.info(log, "Started index server: port = %d", getPort()) ;
+                FmtLog.info(log, "Started node server: port = %d", getPort()) ;
                 server.serve();
-                FmtLog.info(log, "Finished index server: port = %d", getPort()) ;
+                FmtLog.info(log, "Finished node server: port = %d", getPort()) ;
                 getTxnSystem().getTxnMgr().shutdown();
               } catch (Exception e) {
                 e.printStackTrace();

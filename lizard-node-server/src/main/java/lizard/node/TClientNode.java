@@ -19,6 +19,10 @@ package lizard.node;
 
 import static lizard.comms.thrift.ThriftLib.decodeFromTLZ ;
 import static lizard.comms.thrift.ThriftLib.encodeToTLZ ;
+
+import java.util.ArrayList ;
+import java.util.List ;
+
 import lizard.api.TxnClient ;
 import lizard.api.TLZ.TLZ_NodeId ;
 import lizard.api.TLZ.TLZ_NodeTable ;
@@ -27,16 +31,15 @@ import lizard.comms.ConnState ;
 import lizard.comms.Connection ;
 import lizard.comms.thrift.ThriftClient ;
 import lizard.system.ComponentTxn ;
-import lizard.system.Pingable ;
+import lizard.system.NodeControl ;
 
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.graph.Node ;
-import org.apache.jena.riot.out.NodeFmtLib ;
 import org.seaborne.tdb2.store.NodeId ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
  
-public class TClientNode extends TxnClient<TLZ_NodeTable.Client> implements ComponentTxn, Connection, Pingable
+public class TClientNode extends TxnClient<TLZ_NodeTable.Client> implements ComponentTxn, Connection, NodeControl
 {
     private static Logger log = LoggerFactory.getLogger(TClientNode.class) ;
     @Override protected Logger getLog() { return log ; }
@@ -64,10 +67,27 @@ public class TClientNode extends TxnClient<TLZ_NodeTable.Client> implements Comp
         connState = ConnState.OK ;
     }
     
+    public List<NodeId> allocateNodeIds(List<Node> nodes) {
+        long id = allocRequestId() ;
+        long txnId = getTxnId() ;
+        
+        List<TLZ_RDF_Term> lzn = new ArrayList<>(nodes.size()) ;
+        for ( Node node : nodes ) { 
+            lzn.add(encodeToTLZ(node)) ;
+        }
+        List<TLZ_NodeId> tlzNodeIds = call("allocNodeIds", ()-> rpc.allocNodeIds(id, txnId, lzn)) ;
+        List<NodeId> lznids = new ArrayList<>(nodes.size()) ;
+        for ( TLZ_NodeId tlzNodeId : tlzNodeIds ) {
+            long idval = tlzNodeId.getNodeId() ;
+            NodeId nid = NodeId.create(idval) ;
+            lznids.add(nid) ;
+        }
+        return lznids ; 
+    }
+    
     public NodeId getAllocateNodeId(Node node) {
         long id = allocRequestId() ;
         long txnId = getTxnId() ;
-        String x =  NodeFmtLib.str(node) ;
         TLZ_RDF_Term lzn = encodeToTLZ(node) ;
         TLZ_NodeId tlzNodeId = call("allocNodeId", ()-> rpc.allocNodeId(id, txnId, lzn)) ;
         long idval = tlzNodeId.getNodeId() ;
@@ -79,7 +99,6 @@ public class TClientNode extends TxnClient<TLZ_NodeTable.Client> implements Comp
         // XXX Can do away with little structs
         long id = allocRequestId() ; 
         long txnId = getTxnId() ;
-        String x =  NodeFmtLib.str(node) ;
         TLZ_RDF_Term lzn = encodeToTLZ(node) ;
         TLZ_NodeId tlzNodeId = call("allocNodeId", ()-> rpc.findByNode(id, txnId, lzn)) ;
         long idval = tlzNodeId.getNodeId() ;
@@ -95,11 +114,6 @@ public class TClientNode extends TxnClient<TLZ_NodeTable.Client> implements Comp
         TLZ_RDF_Term lzn = call("allocNodeId", ()-> rpc.findByNodeId(id, txnId, lznid)) ;
         Node n = decodeFromTLZ(lzn) ;
         return n ; 
-    }
-    
-    @Override
-    public void ping() {
-        exec("ping", ()-> rpc.nodePing()) ;
     }
     
     @Override
