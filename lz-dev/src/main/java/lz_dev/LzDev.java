@@ -18,36 +18,47 @@
 package lz_dev;
 
 import java.nio.file.Paths ;
+import java.util.ArrayList ;
+import java.util.List ;
 
 import lizard.cluster.Cluster ;
-import lizard.conf.ConfCluster ;
-import lizard.conf.NetHost ;
+import lizard.cluster.Platform ;
+import lizard.conf.* ;
+import lizard.conf.build.LzBuilderNodeServer ;
 import lizard.conf.build.LzDeploy ;
 import lizard.conf.parsers.LzConfParserRDF ;
 import lizard.index.TServerIndex ;
 import lizard.node.ClusterNodeTable ;
 import lizard.node.NodeTableRemote ;
+import lizard.node.TClientNode ;
 import lizard.node.TServerNode ;
 import lizard.query.LzDataset ;
 import lizard.system.LizardException ;
-import lizard.system.Pingable ;
+import lizard.system.RemoteControl ;
 import migrate.Q ;
 
 import org.apache.curator.test.TestingServer ;
 import org.apache.jena.atlas.lib.FileOps ;
 import org.apache.jena.atlas.lib.Lib ;
 import org.apache.jena.atlas.lib.StrUtils ;
+import org.apache.jena.atlas.lib.Timer ;
 import org.apache.jena.atlas.logging.LogCtl ;
 import org.apache.jena.atlas.logging.ProgressLogger ;
 import org.apache.jena.fuseki.cmd.FusekiCmd ;
 import org.apache.jena.fuseki.server.FusekiEnv ;
+import org.apache.jena.graph.Node ;
 import org.apache.jena.query.* ;
 import org.apache.jena.rdf.model.Model ;
 import org.apache.jena.riot.RDFDataMgr ;
 import org.apache.jena.riot.system.StreamRDF ;
 import org.apache.jena.riot.system.StreamRDFLib ;
+import org.apache.jena.sparql.sse.SSE ;
 import org.apache.jena.sparql.util.QueryExecUtils ;
+import org.seaborne.dboe.base.file.Location ;
 import org.seaborne.tdb2.lib.TDBTxn ;
+import org.seaborne.tdb2.setup.StoreParams ;
+import org.seaborne.tdb2.store.DatasetGraphTDB ;
+import org.seaborne.tdb2.store.NodeId ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
@@ -68,6 +79,8 @@ public class LzDev {
     static int counter = 0 ;
     
     public static void main(String[] args) {
+        mainBatching() ;
+        
         try { main$(args) ; }
         catch (Exception ex) { 
             System.out.flush() ;
@@ -77,6 +90,37 @@ public class LzDev {
         }
     }
 
+    public static void mainBatching() {
+        int port = 9090 ;
+        {
+            Platform platform = new Platform() ;
+            Location location = Location.mem() ;
+            StoreParams params = StoreParams.getDftStoreParams() ;
+            NetAddr here = NetAddr.create("localhost", port) ;
+            ConfNodeTable nTableDesc = new ConfNodeTable(1, 1) ;
+            ConfNodeTableElement x = new ConfNodeTableElement("Nodes", "node", nTableDesc, here) ;
+            TServerNode nodeServer = LzBuilderNodeServer.buildNodeServer(platform, location, params, x) ;
+            nodeServer.start(); 
+        }
+        
+        TClientNode client = TClientNode.create("localhost", port) ;
+        client.start() ;
+
+//        int BatchSize = 100 ;
+//        int Repeats = 10000 ;
+        
+        int BatchSize = 20 ;
+        int Repeats = 50000 ;
+        
+        for ( int i = 0 ; i < 5 ; i++ ) {
+            System.out.println() ;
+            time("Batched ",  BatchSize, Repeats,    ()->batched(client, BatchSize, Repeats)) ;
+            time("Batched ",  1, Repeats*BatchSize,  ()->batched(client, 1, Repeats*BatchSize)) ;
+            time("Single  ",  BatchSize, Repeats ,   ()->single(client, BatchSize, Repeats)) ;
+        }
+        System.exit(0) ;
+    }
+    
     public static void main$(String[] args) {
         FileOps.clearAll("DB");
 
@@ -94,6 +138,7 @@ public class LzDev {
         // Multiple query servers?
         log.info("DATASET") ;
         Dataset ds = LzDeploy.deployDataset(config, here) ;
+        DatasetGraphTDB dsg = (DatasetGraphTDB)(ds.asDatasetGraph()) ;
         load(ds,"/home/afs/Datasets/BSBM/bsbm-250k.nt.gz");
         //System.exit(0) ;
         
@@ -117,12 +162,50 @@ public class LzDev {
         Cluster.close();
         System.exit(0) ;
     }
+    
+    private static void single(TClientNode client, int batchSize, int repeats) {
+        client.begin(998, ReadWrite.WRITE) ;
+        for ( int i = 0 ; i < repeats*batchSize ; i++ ) {
+            Node n = SSE.parseNode("<http://example/n-"+i+">") ;
+            NodeId nodeId = client.getAllocateNodeId(n) ;
+        }
+        client.commit();
+        client.end();
+    }
+
+    private static void batched(TClientNode client, int batchSize, int repeats) {
+        // Multiple/batched.
+        client.begin(999, ReadWrite.WRITE) ;
+        for ( int i = 0 ; i < repeats ; i++ ) {
+            List<Node> nodes = new ArrayList<>() ;
+            for ( int j = 0 ; j < batchSize ; j++ ) {
+                Node n = SSE.parseNode("<http://example/n-"+i+"-"+j+">") ;
+                nodes.add(n) ;
+            }
+            List<NodeId> nodeIds = client.allocateNodeIds(nodes) ;
+        }
+        client.commit();
+        client.end();
+    }
+
+    private static void time(String label, int batchSize, int repeats ,Runnable r) {
+        label = label+"["+batchSize+","+repeats+"]" ;
+        time(label, r) ;
+    }
+
+    private static void time(String label, Runnable r) {
+        Timer timer = new Timer() ;
+        timer.startTimer();
+        r.run() ;
+        long x = timer.endTimer() ;
+        System.out.printf("%s: Time: %.3f s\n", label, x / 1000.0) ;
+    } 
 
     private static void ping(LzDataset lz) {
         lz.getComponents().stream().sequential().forEach(c -> {
             //System.out.println("Component: "+c.getClass().getTypeName()) ;
-            if ( c instanceof Pingable ) {
-                Pingable p = (Pingable)c ;
+            if ( c instanceof RemoteControl ) {
+                RemoteControl p = (RemoteControl)c ;
                 p.ping();
             }
         }) ;

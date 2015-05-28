@@ -21,7 +21,6 @@ import java.util.Iterator ;
 
 import org.seaborne.tdb2.store.NodeId ;
 import org.seaborne.tdb2.store.tupletable.TupleIndexBase ;
-
 import org.apache.jena.atlas.lib.Bytes ;
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.Tuple ;
@@ -30,7 +29,7 @@ import org.seaborne.dboe.base.record.Record ;
 import org.seaborne.dboe.sys.SystemBase ;
 
 /** Framework for general mapping of Tuples and base storage.
- * No recording.
+ *  No recording.
  */ 
 public class TupleIndexConverter extends TupleIndexBase {
 
@@ -52,7 +51,6 @@ public class TupleIndexConverter extends TupleIndexBase {
     
     protected TupleIndexConverter(int N, ColumnMap colMapping, String name) {
         super(N, colMapping, name) ;
-        
     }
 
     @Override
@@ -242,10 +240,6 @@ public class TupleIndexConverter extends TupleIndexBase {
                 
             return factory.create(b) ;
         }
-
-
-
     }
-
 }
 
