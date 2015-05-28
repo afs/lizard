@@ -11,7 +11,12 @@ struct TLZ_Ping {
 // ---- Transaction
 typedef i64 TxnId
 
-service TxnCtl {
+service NodeCtl {
+    void ping()
+    oneway void stop()
+}
+
+service TxnCtl extends NodeCtl {
     void txnBeginRead(1: TxnId txnId)
     void txnBeginWrite(1: TxnId txnId)
     void txnPrepare(1: TxnId txnId)
@@ -54,7 +59,6 @@ struct TLZ_Patch {
 
 // ---- Index
 service TLZ_Index extends TxnCtl {
-    void idxPing()    
     void idxAdd (1: i64 requestId, 9: TxnId txnId, 3: TLZ_ShardIndex shard, 4: TLZ_TupleNodeId tuple)
     void idxDelete(1: i64 requestId, 9: TxnId txnId, 3: TLZ_ShardIndex shard, 4: TLZ_TupleNodeId tuple)
     list<TLZ_TupleNodeId> idxFind(1: i64 requestId, 9: TxnId txnId, 3: TLZ_ShardIndex shard, 4: TLZ_TupleNodeId pattern)
@@ -188,10 +192,10 @@ struct TLZ_NodeId {
 }
 
 service TLZ_NodeTable extends TxnCtl {
-    void nodePing() 
     TLZ_NodeId allocNodeId(1: i64 requestId, 9: TxnId txnId, 3: TLZ_RDF_Term node)
     TLZ_NodeId findByNode(1: i64 requestId, 9: TxnId txnId, 3: TLZ_RDF_Term node)
     TLZ_RDF_Term   findByNodeId(1: i64 requestId, 9: TxnId txnId, 3: TLZ_NodeId nodeId)
+    list<TLZ_NodeId> allocNodeIds(1: i64 requestId, 9: TxnId txnId, 3: list<TLZ_RDF_Term> nodes)
 }
 
 // Local Variables:
