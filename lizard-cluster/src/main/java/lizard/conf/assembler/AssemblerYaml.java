@@ -17,9 +17,9 @@
 
 package lizard.conf.assembler;
 
+import lizard.build.LzDeploy ;
 import lizard.conf.ConfCluster ;
 import lizard.conf.NetHost ;
-import lizard.conf.build.LzDeploy ;
 import lizard.conf.parsers.LzConfParserYAML ;
 import lizard.query.LizardQuery ;
 import lizard.sys.Lizard ;

@@ -17,9 +17,9 @@
 
 package lizard.conf.assembler;
 
+import lizard.build.LzBuilderDataset ;
 import lizard.conf.ConfCluster ;
 import lizard.conf.ConfDataset ;
-import lizard.conf.build.LzBuilderDataset ;
 import lizard.conf.parsers.LzConfParserRDF ;
 import lizard.query.LizardQuery ;
 import lizard.query.LzDataset ;
