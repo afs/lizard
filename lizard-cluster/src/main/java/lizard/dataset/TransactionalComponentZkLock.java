@@ -15,7 +15,7 @@
  *  information regarding copyright ownership.
  */
 
-package lizard.conf.dataset;
+package lizard.dataset;
 
 import lizard.cluster.Cluster ;
 

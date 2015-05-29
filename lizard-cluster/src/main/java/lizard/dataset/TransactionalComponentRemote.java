@@ -15,16 +15,15 @@
  *  information regarding copyright ownership.
  */
 
-package lizard.conf.dataset;
+package lizard.dataset;
 
 import java.nio.ByteBuffer ;
 import java.util.concurrent.atomic.AtomicLong ;
 
 import lizard.api.TxnClient ;
-import lizard.conf.dataset.TransactionalComponentRemote.TxnRemoteState ;
+import lizard.dataset.TransactionalComponentRemote.TxnRemoteState ;
 
 import org.apache.jena.query.ReadWrite ;
-
 import org.seaborne.dboe.transaction.txn.ComponentId ;
 import org.seaborne.dboe.transaction.txn.TransactionalComponentLifecycle ;
 import org.seaborne.dboe.transaction.txn.TxnId ;
