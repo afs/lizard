@@ -37,19 +37,19 @@ import org.slf4j.Logger ;
 public class LzBuilderIndexServer {
     private static Logger logConf = Config.logConf ;    
     
-    public static void build(Platform platform, Location location, StoreParams params, ConfCluster confCluster, NetHost here) {
+    public static void build(Platform platform, Location baseLocation, StoreParams params, ConfCluster confCluster, NetHost here) {
         confCluster.eltsIndex.stream()
             .filter(x -> x.netAddr.sameHost(here))
             .forEach(x -> {
-                buildIndexServer(platform, location, params, x) ;
+                buildIndexServer(platform, baseLocation, params, x) ;
             }) ;
     }
 
-    public static TServerIndex buildIndexServer(Platform platform, Location location, StoreParams params, ConfIndexElement x) {
-        Location loc = location.getSubLocation(x.data) ;
+    public static TServerIndex buildIndexServer(Platform platform, Location baseLocation, StoreParams params, ConfIndexElement x) {
+        Location location = baseLocation.getSubLocation(x.data) ;
         int port = x.netAddr.port ;
         String data = x.data ; 
-        FmtLog.info(logConf, "buildIndexServer[%s]: %s %s", data, port, loc) ;
+        FmtLog.info(logConf, "buildIndexServer[%s]: %s %s", data, port, location) ;
         TransactionCoordinator coord = TDBBuilder.buildTransactionCoordinator(location) ;
         TransactionalSystem txnSystem = new TransactionalBase(x.toString(), coord) ;
         String primary = TDBBuilder.choosePrimaryForIndex(params, x.conf.indexOrder) ;

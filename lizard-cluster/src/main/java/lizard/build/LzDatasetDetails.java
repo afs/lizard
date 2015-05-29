@@ -64,18 +64,24 @@ public class LzDatasetDetails {
                     Config.logConf.error("Multiple NodeTableInline") ;
                 ntInline = (NodeTableInline)ntx ;
             }
-            if ( ntx instanceof NodeTableCache ) {
+            else if ( ntx instanceof NodeTableCache ) {
                 if ( ntCache != null )
                     Config.logConf.error("Multiple NodeTableCache") ;
                 ntCache = (NodeTableCache)ntx ;
             }
-            ntx = ntx.baseNodeTable() ;
+            ntx = ntx.wrapped() ;
         } 
         if ( ntx instanceof ClusterNodeTable ) {
             ntCluster = (ClusterNodeTable)ntx ;
             //ctnt.getDistributor() ;
             // Get replicas and shards.
         }
+        if ( ntInline == null )
+            Config.logConf.warn("No NodeTableInline") ;
+        if ( ntCache == null )
+            Config.logConf.warn("No NodeTableCache") ;
+        if ( ntCluster == null )
+            Config.logConf.warn("No ClusterNodeTable") ;
     }
     
     private void fillInIndexDetails() {

@@ -37,18 +37,18 @@ import org.slf4j.Logger ;
 public class LzBuilderNodeServer {
     private static Logger logConf = Config.logConf ;    
     
-    public static void build(Platform platform, Location location, StoreParams params, ConfCluster confCluster, NetHost here) {
+    public static void build(Platform platform, Location baseLocation, StoreParams params, ConfCluster confCluster, NetHost here) {
         confCluster.eltsNodeTable.stream()
             .filter(x -> x.netAddr.sameHost(here))
             .forEach(x -> {
-                buildNodeServer(platform, location, params, x) ;
+                buildNodeServer(platform, baseLocation, params, x) ;
             }) ;
     }
 
-    public static TServerNode buildNodeServer(Platform platform, Location location, StoreParams params, ConfNodeTableElement x) {
-        Location loc = location.getSubLocation(x.data) ;
+    public static TServerNode buildNodeServer(Platform platform, Location baseLocation, StoreParams params, ConfNodeTableElement x) {
+        Location location = baseLocation.getSubLocation(x.data) ;
         int port = x.netAddr.port ;
-        FmtLog.info(logConf, "buildNodeServer: %s %s", port, loc) ;
+        FmtLog.info(logConf, "buildNodeServer: %s %s", port, location) ;
         TransactionCoordinator coord = TDBBuilder.buildTransactionCoordinator(location) ;
         TDBBuilder builder = TDBBuilder.create(coord, location, params) ;
         NodeTable nt = builder.buildNodeTable(params.getNodeTableBaseName()) ;

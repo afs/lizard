@@ -254,7 +254,7 @@ public class LzConfParserRDF {
                 throw new LizardException(name+" : No data location") ;
     
             NetAddr addr = NetAddr.create(host, port) ;
-            DataServer ds = new DataServer(svr, name, host, addr) ;
+            DataServer ds = new DataServer(svr, name, data, addr) ;
             servers.put(svr, ds) ;
         }
         return servers ;
