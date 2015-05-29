@@ -24,6 +24,7 @@ import java.util.List ;
 
 import lizard.comms.CommsException ;
 import lizard.comms.ConnState ;
+
 import org.apache.jena.atlas.lib.BitsLong ;
 import org.apache.jena.atlas.lib.Bytes ;
 import org.apache.jena.atlas.lib.InternalErrorException ;
@@ -82,7 +83,7 @@ public class DistributorNodesBySegment implements DistributorNodes {
             List<NodeTableRemote> z = places.get(x) ;
             NodeTableRemote ntr = chooseOne(z) ;
             if ( ntr == null )
-                throw new CommsException("Can't allFind - a segement is completely unavailable") ;
+                throw new CommsException("Can't allFind - a segment is completely unavailable") ;
             placesToGo.add(ntr) ;
         }
         return placesToGo ;
@@ -99,12 +100,17 @@ public class DistributorNodesBySegment implements DistributorNodes {
     
     @Override
     public Collection<NodeTableRemote> allStore() {
-        Collection<NodeTableRemote> placesToGo = places.values() ;
+        Collection<NodeTableRemote> placesToGo = allRemotes() ;
         for ( NodeTableRemote ntr : placesToGo ) {
             if ( ntr.getStatus() != ConnState.OK )
                 throw new CommsException("Can't store - an index is unavailable") ;
         }
         return placesToGo ;
+    }
+
+    @Override
+    public Collection<NodeTableRemote> allRemotes() {
+        return places.values() ;
     }
 
     private List<NodeTableRemote> locateRead(Node node) {

@@ -40,4 +40,6 @@ public interface DistributorNodes {
      * Normally, R=1, W=N.
      */
     public Collection<NodeTableRemote> allStore() ;
+    
+    public Collection<NodeTableRemote> allRemotes() ;
 }

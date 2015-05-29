@@ -24,7 +24,6 @@ import java.util.Objects ;
 
 import org.apache.jena.atlas.iterator.Iter ;
 import org.apache.jena.atlas.lib.InternalErrorException ;
-import org.apache.jena.atlas.lib.NotImplemented ;
 import org.apache.jena.atlas.lib.Pair ;
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.graph.Node ;
@@ -38,26 +37,39 @@ public class ClusterNodeTable implements NodeTable {
 
     private static Logger log = LoggerFactory.getLogger(ClusterNodeTable.class) ;
     private final DistributorNodes distributor ;
+    private final NodeTableRemote remoteNodeTable ; // If only one.
     
     public ClusterNodeTable(DistributorNodes distributor) {
         this.distributor = distributor ;
         log.info(distributor.toString()) ;
+        // XXX Development.
+        remoteNodeTable = remoteNodeTable() ;
     }
     
     public DistributorNodes getDistributor() { return distributor ; }
     
     @Override
     public List<NodeId> bulkNodeToNodeId(List<Node> nodes, boolean withAllocation) {
-        //return NodeTable.bulkNodeToNodeId$(this, nodes, withAllocation) ; 
-        throw new NotImplemented() ;
+        // Parallel
+        if ( remoteNodeTable != null )
+            return remoteNodeTable.bulkNodeToNodeId(nodes, withAllocation) ;
+        return NodeTable.super.bulkNodeToNodeId(nodes, withAllocation) ;
     }
 
     @Override
     public List<Node> bulkNodeIdToNode(List<NodeId> nodeIds) {
-        //return NodeTable.bulkNodeIdToNode$(this, nodeIds) ;
-        throw new NotImplemented() ;
+        // Parallel
+        if ( remoteNodeTable != null )
+            return remoteNodeTable.bulkNodeIdToNode(nodeIds) ;
+        return NodeTable.super.bulkNodeIdToNode(nodeIds) ;
     }
 
+    private NodeTableRemote remoteNodeTable() {
+        if ( distributor.allRemotes().size() == 1 )
+            return distributor.allRemotes().stream().findFirst().get() ;
+        else
+            return null ;
+    }
     
     // Bulk operations.
     

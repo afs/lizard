@@ -19,6 +19,7 @@ package lizard.node;
 
 import java.util.ArrayList ;
 import java.util.Arrays ;
+import java.util.Collection ;
 import java.util.List ;
 
 import lizard.comms.CommsException ;
@@ -82,6 +83,11 @@ public class DistributorNodesReplicate implements DistributorNodes {
             if ( ntr.getStatus() != ConnState.OK )
                 throw new CommsException("Can't store - an index is unavailable") ;
         }
+        return places ;
+    }
+    
+    @Override
+    public Collection<NodeTableRemote> allRemotes() {
         return places ;
     }
 
