@@ -23,16 +23,14 @@ import java.util.List ;
 
 import lizard.comms.CommsException ;
 import lizard.comms.ConnState ;
-import org.apache.jena.atlas.lib.DS ;
 
 import org.apache.jena.graph.Node ;
 import org.seaborne.tdb2.store.NodeId ;
 
-/** An implementation of DistributorNodes that randomly places Node */
+/** An implementation of DistributorNodes that provides a replicaated, unsharded policy. */
 public class DistributorNodesReplicate implements DistributorNodes {
     // Cover set policy is W=N and R=1
-    
-    List<NodeTableRemote> places = DS.list() ;
+    private List<NodeTableRemote> places = new ArrayList<>() ;
     
     public DistributorNodesReplicate() { }
     

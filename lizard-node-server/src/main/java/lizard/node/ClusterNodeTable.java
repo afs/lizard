@@ -24,6 +24,7 @@ import java.util.Objects ;
 
 import org.apache.jena.atlas.iterator.Iter ;
 import org.apache.jena.atlas.lib.InternalErrorException ;
+import org.apache.jena.atlas.lib.NotImplemented ;
 import org.apache.jena.atlas.lib.Pair ;
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.graph.Node ;
@@ -42,6 +43,21 @@ public class ClusterNodeTable implements NodeTable {
         this.distributor = distributor ;
         log.info(distributor.toString()) ;
     }
+    
+    public DistributorNodes getDistributor() { return distributor ; }
+    
+    @Override
+    public List<NodeId> bulkNodeToNodeId(List<Node> nodes, boolean withAllocation) {
+        //return NodeTable.bulkNodeToNodeId$(this, nodes, withAllocation) ; 
+        throw new NotImplemented() ;
+    }
+
+    @Override
+    public List<Node> bulkNodeIdToNode(List<NodeId> nodeIds) {
+        //return NodeTable.bulkNodeIdToNode$(this, nodeIds) ;
+        throw new NotImplemented() ;
+    }
+
     
     // Bulk operations.
     

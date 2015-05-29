@@ -67,7 +67,9 @@ public class TClientNode extends TxnClient<TLZ_NodeTable.Client> implements Comp
         connState = ConnState.OK ;
     }
     
-    public List<NodeId> allocateNodeIds(List<Node> nodes) {
+    public List<NodeId> allocateNodeIds(List<Node> nodes, boolean withAllocation) {
+        if ( ! withAllocation )
+            log.warn("allocateNodeIds : withAllocation=false (ignored)") ;
         long id = allocRequestId() ;
         long txnId = getTxnId() ;
         
@@ -77,22 +79,32 @@ public class TClientNode extends TxnClient<TLZ_NodeTable.Client> implements Comp
         }
         List<TLZ_NodeId> tlzNodeIds = call("allocNodeIds", ()-> rpc.allocNodeIds(id, txnId, lzn)) ;
         List<NodeId> lznids = new ArrayList<>(nodes.size()) ;
-        for ( TLZ_NodeId tlzNodeId : tlzNodeIds ) {
-            long idval = tlzNodeId.getNodeId() ;
-            NodeId nid = NodeId.create(idval) ;
-            lznids.add(nid) ;
-        }
+        for ( TLZ_NodeId tlzNodeId : tlzNodeIds )
+            lznids.add(decodeFromTLZ(tlzNodeId)) ;
         return lznids ; 
     }
     
+    public List<Node> lookupNodeIds(List<NodeId> nodeIds) {
+        long id = allocRequestId() ;
+        long txnId = getTxnId() ;
+        
+        List<TLZ_NodeId> lzn = new ArrayList<>(nodeIds.size()) ;
+        for ( NodeId nid : nodeIds ) { 
+            lzn.add(encodeToTLZ(nid)) ;
+        }
+        List<TLZ_RDF_Term> tlzTerms = call("lookupNodeIds", ()-> rpc.lookupNodeIds(id, txnId, lzn)) ;
+        List<Node> lzns = new ArrayList<>(tlzTerms.size()) ;
+        for ( TLZ_RDF_Term tlzTerm : tlzTerms )
+            lzns.add(decodeFromTLZ(tlzTerm)) ;
+        return lzns ; 
+    }
+
     public NodeId getAllocateNodeId(Node node) {
         long id = allocRequestId() ;
         long txnId = getTxnId() ;
         TLZ_RDF_Term lzn = encodeToTLZ(node) ;
         TLZ_NodeId tlzNodeId = call("allocNodeId", ()-> rpc.allocNodeId(id, txnId, lzn)) ;
-        long idval = tlzNodeId.getNodeId() ;
-        NodeId nid = NodeId.create(idval) ;
-        return nid ; 
+        return decodeFromTLZ(tlzNodeId) ;
     }
 
     public NodeId getNodeIdForNode(Node node) {
@@ -101,16 +113,14 @@ public class TClientNode extends TxnClient<TLZ_NodeTable.Client> implements Comp
         long txnId = getTxnId() ;
         TLZ_RDF_Term lzn = encodeToTLZ(node) ;
         TLZ_NodeId tlzNodeId = call("allocNodeId", ()-> rpc.findByNode(id, txnId, lzn)) ;
-        long idval = tlzNodeId.getNodeId() ;
-        NodeId nid = NodeId.create(idval) ;
-        return nid ; 
+        return decodeFromTLZ(tlzNodeId) ;
     }
     
     public Node getNodeForNodeId(NodeId nid) {
         // XXX Can do away with little structs
         long id = allocRequestId() ; 
         long txnId = getTxnId() ;
-        TLZ_NodeId lznid = new TLZ_NodeId().setNodeId(nid.getId()) ; 
+        TLZ_NodeId lznid = encodeToTLZ(nid) ; 
         TLZ_RDF_Term lzn = call("allocNodeId", ()-> rpc.findByNodeId(id, txnId, lznid)) ;
         Node n = decodeFromTLZ(lzn) ;
         return n ; 

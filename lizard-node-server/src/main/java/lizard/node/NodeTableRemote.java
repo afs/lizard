@@ -18,6 +18,7 @@
 package lizard.node;
 
 import java.util.Iterator ;
+import java.util.List ;
 
 import lizard.api.TxnClient ;
 import lizard.comms.ConnState ;
@@ -85,6 +86,16 @@ public class NodeTableRemote implements ComponentTxn, Component, NodeTable, Remo
     public boolean containsNodeId(NodeId nodeId) {
         Node x = getNodeForNodeId(nodeId) ;
         return x == null ;
+    }
+
+    @Override
+    public List<NodeId> bulkNodeToNodeId(List<Node> nodes, boolean withAllocation) {
+        return client.allocateNodeIds(nodes, withAllocation) ;
+    }
+
+    @Override
+    public List<Node> bulkNodeIdToNode(List<NodeId> nodeIds) {
+        return client.lookupNodeIds(nodeIds) ;
     }
 
     @Override

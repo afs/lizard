@@ -107,7 +107,6 @@ public class DistributorNodesBySegment implements DistributorNodes {
         return placesToGo ;
     }
 
-
     private List<NodeTableRemote> locateRead(Node node) {
         // Any place we coudl have written it to.
         return locateWrite(node) ; 

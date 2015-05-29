@@ -29,7 +29,7 @@ import lizard.api.TxnHandler ;
 import lizard.api.TLZ.TLZ_NodeId ;
 import lizard.api.TLZ.TLZ_NodeTable ;
 import lizard.api.TLZ.TLZ_RDF_Term ;
-import lizard.comms.thrift.ThriftLib ;
+import static lizard.comms.thrift.ThriftLib.* ;
 
 
 import org.apache.jena.atlas.logging.FmtLog ;
@@ -62,10 +62,9 @@ import org.slf4j.LoggerFactory ;
     
     @Override
     public TLZ_NodeId allocNodeId(long id, long txnId, TLZ_RDF_Term nz) throws TException {
+        FmtLog.debug(log, "[%d] allocNodeId : txnId = %d", id, txnId) ;
         checkActive() ;
-        if ( txnId <= 0 )
-            FmtLog.info(log, "[%d] txnId = %d", id, txnId) ;
-        Node n = ThriftLib.decodeFromTLZ(nz) ;
+        Node n = decodeFromTLZ(nz) ;
         return txnAlwaysReturn(txnId, WRITE, ()-> {
             NodeId nid = nodeTable.getAllocateNodeId(n) ;
             TLZ_NodeId nidz = new TLZ_NodeId() ;
@@ -77,8 +76,9 @@ import org.slf4j.LoggerFactory ;
 
     @Override
     public TLZ_NodeId findByNode(long id, long txnId, TLZ_RDF_Term nz) throws TException {
+        FmtLog.debug(log, "[%d] findByNode : txnId = %d", id, txnId) ;
         checkActive() ;
-        Node n = ThriftLib.decodeFromTLZ(nz) ;
+        Node n = decodeFromTLZ(nz) ;
         return txnAlwaysReturn(txnId, READ, ()-> {
             NodeId nid = nodeTable.getNodeIdForNode(n) ;
             // XXX Remove little structs
@@ -91,6 +91,7 @@ import org.slf4j.LoggerFactory ;
 
     @Override
     public TLZ_RDF_Term findByNodeId(long id, long txnId, TLZ_NodeId nz) throws TException {
+        FmtLog.debug(log, "[%d] findByNodeId : txnId = %d", id, txnId) ;
         checkActive() ;
         NodeId nid = NodeId.create(nz.getNodeId()) ;
         return txnAlwaysReturn(txnId, READ, ()-> {
@@ -99,26 +100,43 @@ import org.slf4j.LoggerFactory ;
                 FmtLog.error(log, "NodeId not found: "+nid) ;
             String str = NodeFmtLib.str(n) ;
             FmtLog.info(log, "[%d:%d] NodeId get request : %s => %s", id, txnId, nid, n) ;
-            TLZ_RDF_Term nlz = ThriftLib.encodeToTLZ(n) ;
+            TLZ_RDF_Term nlz = encodeToTLZ(n) ;
             return nlz ;
         }) ;
     }
 
     @Override
     public List<TLZ_NodeId> allocNodeIds(long id, long txnId, List<TLZ_RDF_Term> nodes) throws TException {
+        FmtLog.debug(log, "[%d] allocNodeIds : txnId = %d", id, txnId) ;
         checkActive() ;
-        if ( txnId <= 0 )
-            FmtLog.info(log, "[%d] txnId = %d", id, txnId) ;
         return txnAlwaysReturn(txnId, WRITE, ()-> {
+            // Local bulk operations?
             List<TLZ_NodeId> nodeids = new ArrayList<>(nodes.size()) ;
             for ( TLZ_RDF_Term nz : nodes ) {
-                Node n = ThriftLib.decodeFromTLZ(nz) ;
+                Node n = decodeFromTLZ(nz) ;
                 NodeId nid = nodeTable.getAllocateNodeId(n) ;
                 TLZ_NodeId nidz = new TLZ_NodeId() ;
                 nodeids.add(nidz) ;
                 FmtLog.info(log, "[%d:%d] Batched node alloc : %s => %s", id, txnId, n, nid) ;
             }
             return nodeids ;
+        }) ;
+    }
+
+    @Override
+    public List<TLZ_RDF_Term> lookupNodeIds(long id, long txnId, List<TLZ_NodeId> nodeIds) throws TException {
+        FmtLog.debug(log, "[%d] lookupNodeIds : txnId = %d", id, txnId) ;
+        checkActive() ;
+        return txnAlwaysReturn(txnId, WRITE, ()-> {
+            List<TLZ_RDF_Term> nodes = new ArrayList<>(nodeIds.size()) ;
+            for ( TLZ_NodeId nz : nodeIds ) {
+                // Local bulk operations?
+                NodeId nid = decodeFromTLZ(nz) ;
+                Node n = nodeTable.getNodeForNodeId(nid) ;
+                nodes.add(encodeToTLZ(n)) ;
+                FmtLog.info(log, "[%d:%d] Batched node alloc : %s => %s", id, txnId, n, nid) ;
+            }
+            return nodes ;
         }) ;
     }
 }
