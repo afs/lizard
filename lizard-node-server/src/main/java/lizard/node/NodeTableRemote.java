@@ -36,7 +36,7 @@ import org.seaborne.tdb2.store.NodeId ;
 import org.seaborne.tdb2.store.nodetable.NodeTable ;
 
 /** NodeTable interface to a remote node table server */
-public class NodeTableRemote implements ComponentTxn, Component, NodeTable, RemoteControl, TxnClient.Accessor {
+public final class NodeTableRemote implements ComponentTxn, Component, NodeTable, RemoteControl, TxnClient.Accessor {
 
     public static NodeTableRemote create(String hostname, int port) {
         TClientNode remote = TClientNode.create(hostname, port) ;

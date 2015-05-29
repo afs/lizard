@@ -20,7 +20,8 @@ package lz_dev ;
 public class PROJECT_Lizard {
     // === Tasks
     // Direct interconnect for comparison purposes.
-    // Batchign
+    // Batching
+    //   Why is [1,??] so expensive? LzDev.mainBatching2
     // Parallelism.
     // BinaryDataFile and locking. (little cost?)
     

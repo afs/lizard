@@ -53,12 +53,15 @@ public class StreamRDFMonitor extends StreamRDFWrapper {
         super(other) ;
         this.monitor = monitor ;
     }
-    
-    @Override
-    public void start() {
-        //monitor.startMessage(); 
+
+    public void startMonitor() {
+        //monitor.startMessage();
         monitor.start();
-        super.start() ;
+    }
+    
+    public void finishMonitor() {
+        monitor.finish();
+        monitor.finishMessage();
     }
 
     @Override
@@ -73,12 +76,5 @@ public class StreamRDFMonitor extends StreamRDFWrapper {
         super.quad(quad);
     }
 
-    @Override
-    public void finish() { 
-        super.finish();
-        monitor.finish();
-        monitor.finishMessage(); 
-    }
-    
     private void tick() { monitor.tick() ; }
 }

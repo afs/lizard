@@ -20,7 +20,6 @@ package lz_dev;
 import java.util.* ;
 
 import lizard.build.LzDatasetDetails ;
-import lizard.node.NodeTableRemote ;
 
 import org.apache.jena.graph.Node ;
 import org.apache.jena.graph.Triple ;
@@ -33,15 +32,17 @@ import org.seaborne.tdb2.store.NodeId ;
 /**
  * @see BatchedStreamRDF BatchedStreamRDF, which batches by subject
  */
-public abstract class StreamRDFBatchSplit implements StreamRDF {
+public class StreamRDFBatchSplit implements StreamRDF {
     protected static NodeId placeholder = NodeId.create(-7) ;
     protected final List<Triple> triples ;
     protected final Map<Node, NodeId> mapping ;
     
     private final int batchSize ;
     private final LzDatasetDetails details ;
+    private final DatasetGraphTDB dsg ;
     
     public StreamRDFBatchSplit(DatasetGraphTDB dsg, int batchSize) {
+        this.dsg = dsg ;
         this.batchSize = batchSize ;
         this.triples = new ArrayList<>(batchSize) ;
         this.mapping = new HashMap<>(2*batchSize) ;
@@ -58,11 +59,8 @@ public abstract class StreamRDFBatchSplit implements StreamRDF {
         processNode(triple.getPredicate()) ;
         processNode(triple.getObject()) ;
         triples.add(triple) ;
-        if ( triples.size() >= batchSize ) {
+        if ( triples.size() >= batchSize )
             processBatch() ;
-            triples.clear();
-            mapping.clear();
-        }
     }
 
     protected void processBatch() {
@@ -71,11 +69,23 @@ public abstract class StreamRDFBatchSplit implements StreamRDF {
         List<Node> nodes = new ArrayList<>() ;
         // There is a change cache spills will mess the world up.
         // Keep private copy then mass fill the cache?
+
+        // Check cache.
+        for ( Node n : required ) {
+            if ( details.ntCache.getNodeIdForNode(n) == null ) {
+                nodes.add(n) ;
+            }
+        }
         
-        // By pass the cache.
-        Collection<NodeTableRemote> remotes = details.ntCluster.getDistributor().allStore() ;
+        // XXX Temp assume cache
+        List<NodeId> nodeIds = details.ntCluster.bulkNodeToNodeId(nodes, true) ;
         
-        
+        // Reform triples
+        for ( Triple triple : triples ) {
+            dsg.getTripleTable().add(triple); 
+        }
+        triples.clear();
+        mapping.clear();
     }
    
 
@@ -106,7 +116,10 @@ public abstract class StreamRDFBatchSplit implements StreamRDF {
     public void prefix(String prefix, String iri) {}
 
     @Override
-    public void finish() {}
+    public void finish() { 
+        if ( ! triples.isEmpty() )
+            processBatch() ;
+    }
 
 }
 
