@@ -19,6 +19,9 @@ package lz_dev;
 
 import java.util.* ;
 
+import lizard.build.LzDatasetDetails ;
+import lizard.node.NodeTableRemote ;
+
 import org.apache.jena.graph.Node ;
 import org.apache.jena.graph.Triple ;
 import org.apache.jena.riot.other.BatchedStreamRDF ;
@@ -26,48 +29,25 @@ import org.apache.jena.riot.system.StreamRDF ;
 import org.apache.jena.sparql.core.Quad ;
 import org.seaborne.tdb2.store.DatasetGraphTDB ;
 import org.seaborne.tdb2.store.NodeId ;
-import org.seaborne.tdb2.store.nodetable.NodeTable ;
-import org.seaborne.tdb2.store.tupletable.TupleIndex ;
 
 /**
- * 
- * 
  * @see BatchedStreamRDF BatchedStreamRDF, which batches by subject
  */
-public class StreamRDFBatchSplit implements StreamRDF {
-    private static NodeId placeholder = NodeId.NodeIdAny ;
-    private final List<Triple> triples ;
-    private final Map<Node, NodeId> mapping ;
+public abstract class StreamRDFBatchSplit implements StreamRDF {
+    protected static NodeId placeholder = NodeId.create(-7) ;
+    protected final List<Triple> triples ;
+    protected final Map<Node, NodeId> mapping ;
     
     private final int batchSize ;
+    private final LzDatasetDetails details ;
     
     public StreamRDFBatchSplit(DatasetGraphTDB dsg, int batchSize) {
-        NodeTable nt = dsg.getTripleTable().getNodeTupleTable().getNodeTable() ;
-        nt = nt.baseNodeTable() ;
-        TupleIndex[] indexes = dsg.getTripleTable().getNodeTupleTable().getTupleTable().getIndexes() ;
-        TupleIndex[] indexes2 = Arrays.copyOf(indexes, indexes.length) ;
-        
-        for ( int i = 0 ; i < indexes.length ; i++ ) {
-            indexes2[i] = indexes[i].baseTupleIndex() ;
-        }
-        
-        // ClusterNodeTable
-        // ClusterTupleIndex
-        
-        
         this.batchSize = batchSize ;
         this.triples = new ArrayList<>(batchSize) ;
         this.mapping = new HashMap<>(2*batchSize) ;
+        this.details = new LzDatasetDetails(dsg) ;
     }
         
-    private TupleIndex unwrap(TupleIndex tupleIndex) {
-        TupleIndex index2 = null ;
-        while( (index2 = tupleIndex.wrapped()) != null ) {
-            tupleIndex = index2 ;
-        }
-        return tupleIndex ;
-    }
-
     @Override
     public void start() {}
 
@@ -85,14 +65,34 @@ public class StreamRDFBatchSplit implements StreamRDF {
         }
     }
 
-    private void processBatch() {
-        //getNodeIds() ;
-        //translate triples ;
-        //updates ;
+    protected void processBatch() {
+        // Do this by filling the cache.
+        Set<Node> required = mapping.keySet() ;
+        List<Node> nodes = new ArrayList<>() ;
+        // There is a change cache spills will mess the world up.
+        // Keep private copy then mass fill the cache?
+        
+        // By pass the cache.
+        Collection<NodeTableRemote> remotes = details.ntCluster.getDistributor().allStore() ;
+        
+        
     }
    
 
     private void processNode(Node node) {
+        
+        if ( mapping.containsKey(node)) 
+            return ;
+        
+        //if ( details.ntCache.containsNode(node) )
+        
+        if ( NodeId.hasInlineDatatype(node) ) {
+            NodeId nodeId = NodeId.inline(node) ;
+            if ( nodeId != null )
+                return ;
+        }
+        // if in cache
+        //   return ;
         mapping.put(node, placeholder) ;
     }
     

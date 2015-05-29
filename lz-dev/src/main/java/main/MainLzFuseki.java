@@ -19,9 +19,9 @@ package main;
 
 import java.nio.file.Paths ;
 
+import lizard.build.LzDeploy ;
 import lizard.conf.ConfCluster ;
 import lizard.conf.NetHost ;
-import lizard.conf.build.LzDeploy ;
 import lizard.conf.parsers.LzConfParserRDF ;
 import migrate.Q ;
 

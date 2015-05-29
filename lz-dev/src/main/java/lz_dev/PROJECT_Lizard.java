@@ -22,6 +22,11 @@ public class PROJECT_Lizard {
     // Direct interconnect for comparison purposes.
     // Batchign
     // Parallelism.
+    // BinaryDataFile and locking. (little cost?)
+    
+    // Batch loader
+    //   Take apart a DSGTDB/Lz
+    // Own Node to NodeId caching?
     
     // Share Thrift encoding with RIOT
     // ThriftConvert is better that ThriftLib?

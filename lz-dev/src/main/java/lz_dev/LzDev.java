@@ -21,11 +21,11 @@ import java.nio.file.Paths ;
 import java.util.ArrayList ;
 import java.util.List ;
 
+import lizard.build.LzBuilderNodeServer ;
+import lizard.build.LzDeploy ;
 import lizard.cluster.Cluster ;
 import lizard.cluster.Platform ;
 import lizard.conf.* ;
-import lizard.conf.build.LzBuilderNodeServer ;
-import lizard.conf.build.LzDeploy ;
 import lizard.conf.parsers.LzConfParserRDF ;
 import lizard.index.TServerIndex ;
 import lizard.node.ClusterNodeTable ;
@@ -47,6 +47,7 @@ import org.apache.jena.atlas.logging.ProgressLogger ;
 import org.apache.jena.fuseki.cmd.FusekiCmd ;
 import org.apache.jena.fuseki.server.FusekiEnv ;
 import org.apache.jena.graph.Node ;
+import org.apache.jena.graph.NodeFactory ;
 import org.apache.jena.query.* ;
 import org.apache.jena.rdf.model.Model ;
 import org.apache.jena.riot.RDFDataMgr ;
@@ -94,7 +95,10 @@ public class LzDev {
         int port = 9090 ;
         {
             Platform platform = new Platform() ;
-            Location location = Location.mem() ;
+            Location location = Location.create("DB-N") ;
+            FileOps.ensureDir("N") ;
+            FileOps.clearAll("N");
+
             StoreParams params = StoreParams.getDftStoreParams() ;
             NetAddr here = NetAddr.create("localhost", port) ;
             ConfNodeTable nTableDesc = new ConfNodeTable(1, 1) ;
@@ -109,18 +113,65 @@ public class LzDev {
 //        int BatchSize = 100 ;
 //        int Repeats = 10000 ;
         
-        int BatchSize = 20 ;
-        int Repeats = 50000 ;
+        // Gains exists but drop up to batch size of 1000.
         
-        for ( int i = 0 ; i < 5 ; i++ ) {
-            System.out.println() ;
-            time("Batched ",  BatchSize, Repeats,    ()->batched(client, BatchSize, Repeats)) ;
-            time("Batched ",  1, Repeats*BatchSize,  ()->batched(client, 1, Repeats*BatchSize)) ;
-            time("Single  ",  BatchSize, Repeats ,   ()->single(client, BatchSize, Repeats)) ;
-        }
+        int BatchSize = 10 ;
+        int Repeats = 10000 ;
+        
+//        for ( int i = 0 ; i < 5 ; i++ ) {
+//                System.out.println("-----") ;
+//            time("Batched ",  BatchSize, Repeats,    ()->batched(client, BatchSize, Repeats)) ;
+//            time("Batched ",  1, Repeats*BatchSize,  ()->batched(client, 1, Repeats*BatchSize)) ;
+//            time("Single  ",  BatchSize, Repeats ,   ()->single(client, BatchSize, Repeats)) ;
+//        }
+        
+        // Heap attack.
+        System.out.println("---- Warm up") ;
+        doOneTimedRun(client, 10, 50000) ;
+        System.out.println("---- Live") ;
+        doOneTimedRun(client, 1000, 500) ;
+        doOneTimedRun(client, 10, 50000) ;
+        doOneTimedRun(client, 100, 5000) ;
+        doOneTimedRun(client, 1000, 500) ;
+        //doOneTimedRun(client, 1, 500000) ;
+        doOneTimedRun(client, 100, 5000) ;
+        //doOneTimedRun(client, 1, 500000) ;
+        
         System.exit(0) ;
     }
     
+    public static void doOneTimedRun(TClientNode client, int BatchSize, int Repeats) {
+        time("",  BatchSize, Repeats,    ()->batched(client, BatchSize, Repeats)) ;
+    }
+    
+    private static void batched(TClientNode client, int batchSize, int repeats) {
+        // Multiple/batched.
+        unique++ ;
+        client.begin(999, ReadWrite.WRITE) ;
+        List<Node> nodes = new ArrayList<>(batchSize) ;
+        for ( int i = 0 ; i < repeats ; i++ ) {
+            nodes.clear() ;
+            for ( int j = 0 ; j < batchSize ; j++ ) {
+                Node n = NodeFactory.createURI("http://example/n-"+unique+"-"+i+"-"+j) ;
+                nodes.add(n) ;
+            }
+            List<NodeId> nodeIds = client.allocateNodeIds(nodes, true) ;
+            //SList<Node> nodes2 = client.lookupNodeIds(nodeIds) ;
+        }
+        client.commit();
+        client.end();
+    }
+
+    private static void single(TClientNode client, int batchSize, int repeats) {
+        client.begin(998, ReadWrite.WRITE) ;
+        for ( int i = 0 ; i < repeats*batchSize ; i++ ) {
+            Node n = SSE.parseNode("<http://example/n-"+i+">") ;
+            NodeId nodeId = client.getAllocateNodeId(n) ;
+        }
+        client.commit();
+        client.end();
+    }
+
     public static void main$(String[] args) {
         FileOps.clearAll("DB");
 
@@ -163,42 +214,19 @@ public class LzDev {
         System.exit(0) ;
     }
     
-    private static void single(TClientNode client, int batchSize, int repeats) {
-        client.begin(998, ReadWrite.WRITE) ;
-        for ( int i = 0 ; i < repeats*batchSize ; i++ ) {
-            Node n = SSE.parseNode("<http://example/n-"+i+">") ;
-            NodeId nodeId = client.getAllocateNodeId(n) ;
-        }
-        client.commit();
-        client.end();
-    }
-
-    private static void batched(TClientNode client, int batchSize, int repeats) {
-        // Multiple/batched.
-        client.begin(999, ReadWrite.WRITE) ;
-        for ( int i = 0 ; i < repeats ; i++ ) {
-            List<Node> nodes = new ArrayList<>() ;
-            for ( int j = 0 ; j < batchSize ; j++ ) {
-                Node n = SSE.parseNode("<http://example/n-"+i+"-"+j+">") ;
-                nodes.add(n) ;
-            }
-            List<NodeId> nodeIds = client.allocateNodeIds(nodes) ;
-        }
-        client.commit();
-        client.end();
-    }
-
+    static int unique = 0 ;
     private static void time(String label, int batchSize, int repeats ,Runnable r) {
         label = label+"["+batchSize+","+repeats+"]" ;
         time(label, r) ;
     }
 
     private static void time(String label, Runnable r) {
+        System.out.printf("%s\n",label) ;
         Timer timer = new Timer() ;
         timer.startTimer();
         r.run() ;
         long x = timer.endTimer() ;
-        System.out.printf("%s: Time: %.3f s\n", label, x / 1000.0) ;
+        System.out.printf("%s Time: %.3f s\n", label, x / 1000.0) ;
     } 
 
     private static void ping(LzDataset lz) {

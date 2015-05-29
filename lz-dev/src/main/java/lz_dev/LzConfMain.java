@@ -19,9 +19,9 @@ package lz_dev;
 
 import java.io.InputStream ;
 
+import lizard.build.LzDeploy ;
 import lizard.conf.ConfCluster ;
 import lizard.conf.NetHost ;
-import lizard.conf.build.LzDeploy ;
 import lizard.conf.parsers.LzConfParserRDF ;
 import lizard.conf.parsers.LzConfParserYAML ;
 import lizard.conf.parsers.YAML ;
