@@ -17,6 +17,7 @@
 
 package lizard.comms.thrift;
 
+import lizard.api.TLZ.TLZ_NodeId ;
 import lizard.api.TLZ.TLZ_RDF_Literal ;
 import lizard.api.TLZ.TLZ_RDF_Term ;
 import lizard.system.LizardException ;
@@ -31,6 +32,7 @@ import org.apache.jena.sparql.util.NodeUtils ;
 import org.apache.thrift.TException ;
 import org.apache.thrift.protocol.* ;
 import org.apache.thrift.transport.TTransport ;
+import org.seaborne.tdb2.store.NodeId ;
 
 public class ThriftLib {
 
@@ -94,7 +96,6 @@ public class ThriftLib {
         throw new LizardException("Unsupported node type: "+node) ;
     }
     
-    
     /** Thrift wire format to Node */
     public static Node decodeFromTLZ(TLZ_RDF_Term tlz_node) {
         if ( tlz_node.isSetIri() )
@@ -111,4 +112,17 @@ public class ThriftLib {
         }
         throw new LizardException("Unrecognized RDF Term: "+tlz_node) ;
     }
+    
+    /** Thrift wire format to NodeId */
+    public static TLZ_NodeId encodeToTLZ(NodeId nid) {
+        return new TLZ_NodeId().setNodeId(nid.getId()) ; 
+    }
+    
+    /** Thrift wire format to NodeId */
+    public static NodeId decodeFromTLZ(TLZ_NodeId tlzNodeId) {
+        long idval = tlzNodeId.getNodeId() ;
+        NodeId nid = NodeId.create(idval) ;
+        return nid ; 
+    }
+
 }

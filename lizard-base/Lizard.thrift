@@ -192,10 +192,11 @@ struct TLZ_NodeId {
 }
 
 service TLZ_NodeTable extends TxnCtl {
-    TLZ_NodeId allocNodeId(1: i64 requestId, 9: TxnId txnId, 3: TLZ_RDF_Term node)
-    TLZ_NodeId findByNode(1: i64 requestId, 9: TxnId txnId, 3: TLZ_RDF_Term node)
-    TLZ_RDF_Term   findByNodeId(1: i64 requestId, 9: TxnId txnId, 3: TLZ_NodeId nodeId)
-    list<TLZ_NodeId> allocNodeIds(1: i64 requestId, 9: TxnId txnId, 3: list<TLZ_RDF_Term> nodes)
+    TLZ_NodeId          allocNodeId(1: i64 requestId, 9: TxnId txnId, 3: TLZ_RDF_Term node)
+    TLZ_NodeId          findByNode(1: i64 requestId, 9: TxnId txnId, 3: TLZ_RDF_Term node)
+    TLZ_RDF_Term        findByNodeId(1: i64 requestId, 9: TxnId txnId, 3: TLZ_NodeId nodeId)
+    list<TLZ_NodeId>    allocNodeIds(1: i64 requestId, 9: TxnId txnId, 3: list<TLZ_RDF_Term> nodes)
+    list<TLZ_RDF_Term>  lookupNodeIds(1: i64 requestId, 9: TxnId txnId, 3: list<TLZ_NodeId> nodeIds)
 }
 
 // Local Variables:
