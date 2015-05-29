@@ -27,12 +27,12 @@
     :name       "ServerIndex-s1" ;
     :hostname   "localhost" ;
     :port       4012 ; 
-    :data       "DB/Idx1" ; 
+    :data       "Idx1" ; # relative to the base location of installation.
     .
 
 <#index-s2>  a  :IndexServer ;
     :name       "ServerIndex-s2" ;
     :hostname   "localhost" ;
     :port       4014 ; 
-    :data       "DB/Idx2" ; 
+    :data       "Idx2" ; 
     .
