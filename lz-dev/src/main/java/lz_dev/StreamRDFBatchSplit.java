@@ -72,7 +72,7 @@ public class StreamRDFBatchSplit implements StreamRDF {
 
         // Check cache.
         for ( Node n : required ) {
-            if ( details.ntCache.getNodeIdForNode(n) == null ) {
+            if ( details.ntCache.getNodeIdForNodeCache(n) == null ) {
                 nodes.add(n) ;
             }
         }
