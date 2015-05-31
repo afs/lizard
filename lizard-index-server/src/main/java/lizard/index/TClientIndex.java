@@ -17,6 +17,7 @@
 
 package lizard.index;
 
+import java.util.ArrayList ;
 import java.util.Iterator ;
 import java.util.List ;
 import java.util.stream.Collectors ;
@@ -82,7 +83,7 @@ class TClientIndex extends TxnClient<TLZ_Index.Client> implements TClientIndexOp
         super.stop() ;
     }
     
-    /** Insert a tuple - return true if it was really added, false if it was a duplicate */
+    /** Insert a tuple */
     @Override
     public void add(Tuple<NodeId> tuple) {
         long id = allocRequestId() ;
@@ -91,7 +92,19 @@ class TClientIndex extends TxnClient<TLZ_Index.Client> implements TClientIndexOp
         exec("add", ()->rpc.idxAdd(id, txnId, shard, x)) ;
     }
 
-    /** Delete a tuple - return true if it was deleted, false if it didn't exist */
+    @Override
+    public void addAll(List<Tuple<NodeId>> tuples) {
+        long id = allocRequestId() ;
+        long txnId = getTxnId() ;
+        List<TLZ_TupleNodeId> x = new ArrayList<>() ;
+        for ( Tuple<NodeId> tuple : tuples ) {
+            TLZ_TupleNodeId tlz = TLZlib.build(tuple) ;
+            x.add(tlz) ;
+        }
+        exec("addAll", ()->rpc.idxAddAll(id, txnId, shard, x)) ;
+    }
+
+    /** Delete a tuple */
     @Override
     public void delete(Tuple<NodeId> tuple)  {
         long id = allocRequestId() ;
@@ -100,6 +113,18 @@ class TClientIndex extends TxnClient<TLZ_Index.Client> implements TClientIndexOp
         exec("delete", ()->rpc.idxDelete(id, txnId, shard, x)) ;
     }
     
+    @Override
+    public void deleteAll(List<Tuple<NodeId>> tuples) {
+        long id = allocRequestId() ;
+        long txnId = getTxnId() ;
+        List<TLZ_TupleNodeId> x = new ArrayList<>() ;
+        for ( Tuple<NodeId> tuple : tuples ) {
+            TLZ_TupleNodeId tlz = TLZlib.build(tuple) ;
+            x.add(tlz) ;
+        }
+        exec("deleteAll", ()->rpc.idxDeleteAll(id, txnId, shard, x)) ;
+    }
+
     @Override
     public Iterator<Tuple<NodeId>> find(Tuple<NodeId> pattern) {
         long id = allocRequestId() ;

@@ -4011,14 +4011,14 @@ public class TLZ_NodeTable {
             case 3: // NODES
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list40 = iprot.readListBegin();
-                  struct.nodes = new ArrayList<TLZ_RDF_Term>(_list40.size);
-                  for (int _i41 = 0; _i41 < _list40.size; ++_i41)
+                  org.apache.thrift.protocol.TList _list56 = iprot.readListBegin();
+                  struct.nodes = new ArrayList<TLZ_RDF_Term>(_list56.size);
+                  for (int _i57 = 0; _i57 < _list56.size; ++_i57)
                   {
-                    TLZ_RDF_Term _elem42;
-                    _elem42 = new TLZ_RDF_Term();
-                    _elem42.read(iprot);
-                    struct.nodes.add(_elem42);
+                    TLZ_RDF_Term _elem58;
+                    _elem58 = new TLZ_RDF_Term();
+                    _elem58.read(iprot);
+                    struct.nodes.add(_elem58);
                   }
                   iprot.readListEnd();
                 }
@@ -4049,9 +4049,9 @@ public class TLZ_NodeTable {
           oprot.writeFieldBegin(NODES_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.nodes.size()));
-            for (TLZ_RDF_Term _iter43 : struct.nodes)
+            for (TLZ_RDF_Term _iter59 : struct.nodes)
             {
-              _iter43.write(oprot);
+              _iter59.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -4097,9 +4097,9 @@ public class TLZ_NodeTable {
         if (struct.isSetNodes()) {
           {
             oprot.writeI32(struct.nodes.size());
-            for (TLZ_RDF_Term _iter44 : struct.nodes)
+            for (TLZ_RDF_Term _iter60 : struct.nodes)
             {
-              _iter44.write(oprot);
+              _iter60.write(oprot);
             }
           }
         }
@@ -4119,14 +4119,14 @@ public class TLZ_NodeTable {
         }
         if (incoming.get(2)) {
           {
-            org.apache.thrift.protocol.TList _list45 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
-            struct.nodes = new ArrayList<TLZ_RDF_Term>(_list45.size);
-            for (int _i46 = 0; _i46 < _list45.size; ++_i46)
+            org.apache.thrift.protocol.TList _list61 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
+            struct.nodes = new ArrayList<TLZ_RDF_Term>(_list61.size);
+            for (int _i62 = 0; _i62 < _list61.size; ++_i62)
             {
-              TLZ_RDF_Term _elem47;
-              _elem47 = new TLZ_RDF_Term();
-              _elem47.read(iprot);
-              struct.nodes.add(_elem47);
+              TLZ_RDF_Term _elem63;
+              _elem63 = new TLZ_RDF_Term();
+              _elem63.read(iprot);
+              struct.nodes.add(_elem63);
             }
           }
           struct.setNodesIsSet(true);
@@ -4445,14 +4445,14 @@ public class TLZ_NodeTable {
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list48 = iprot.readListBegin();
-                  struct.success = new ArrayList<TLZ_NodeId>(_list48.size);
-                  for (int _i49 = 0; _i49 < _list48.size; ++_i49)
+                  org.apache.thrift.protocol.TList _list64 = iprot.readListBegin();
+                  struct.success = new ArrayList<TLZ_NodeId>(_list64.size);
+                  for (int _i65 = 0; _i65 < _list64.size; ++_i65)
                   {
-                    TLZ_NodeId _elem50;
-                    _elem50 = new TLZ_NodeId();
-                    _elem50.read(iprot);
-                    struct.success.add(_elem50);
+                    TLZ_NodeId _elem66;
+                    _elem66 = new TLZ_NodeId();
+                    _elem66.read(iprot);
+                    struct.success.add(_elem66);
                   }
                   iprot.readListEnd();
                 }
@@ -4480,9 +4480,9 @@ public class TLZ_NodeTable {
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
-            for (TLZ_NodeId _iter51 : struct.success)
+            for (TLZ_NodeId _iter67 : struct.success)
             {
-              _iter51.write(oprot);
+              _iter67.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -4513,9 +4513,9 @@ public class TLZ_NodeTable {
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (TLZ_NodeId _iter52 : struct.success)
+            for (TLZ_NodeId _iter68 : struct.success)
             {
-              _iter52.write(oprot);
+              _iter68.write(oprot);
             }
           }
         }
@@ -4527,14 +4527,14 @@ public class TLZ_NodeTable {
         BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list53 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
-            struct.success = new ArrayList<TLZ_NodeId>(_list53.size);
-            for (int _i54 = 0; _i54 < _list53.size; ++_i54)
+            org.apache.thrift.protocol.TList _list69 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
+            struct.success = new ArrayList<TLZ_NodeId>(_list69.size);
+            for (int _i70 = 0; _i70 < _list69.size; ++_i70)
             {
-              TLZ_NodeId _elem55;
-              _elem55 = new TLZ_NodeId();
-              _elem55.read(iprot);
-              struct.success.add(_elem55);
+              TLZ_NodeId _elem71;
+              _elem71 = new TLZ_NodeId();
+              _elem71.read(iprot);
+              struct.success.add(_elem71);
             }
           }
           struct.setSuccessIsSet(true);
@@ -5019,14 +5019,14 @@ public class TLZ_NodeTable {
             case 3: // NODE_IDS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list56 = iprot.readListBegin();
-                  struct.nodeIds = new ArrayList<TLZ_NodeId>(_list56.size);
-                  for (int _i57 = 0; _i57 < _list56.size; ++_i57)
+                  org.apache.thrift.protocol.TList _list72 = iprot.readListBegin();
+                  struct.nodeIds = new ArrayList<TLZ_NodeId>(_list72.size);
+                  for (int _i73 = 0; _i73 < _list72.size; ++_i73)
                   {
-                    TLZ_NodeId _elem58;
-                    _elem58 = new TLZ_NodeId();
-                    _elem58.read(iprot);
-                    struct.nodeIds.add(_elem58);
+                    TLZ_NodeId _elem74;
+                    _elem74 = new TLZ_NodeId();
+                    _elem74.read(iprot);
+                    struct.nodeIds.add(_elem74);
                   }
                   iprot.readListEnd();
                 }
@@ -5057,9 +5057,9 @@ public class TLZ_NodeTable {
           oprot.writeFieldBegin(NODE_IDS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.nodeIds.size()));
-            for (TLZ_NodeId _iter59 : struct.nodeIds)
+            for (TLZ_NodeId _iter75 : struct.nodeIds)
             {
-              _iter59.write(oprot);
+              _iter75.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -5105,9 +5105,9 @@ public class TLZ_NodeTable {
         if (struct.isSetNodeIds()) {
           {
             oprot.writeI32(struct.nodeIds.size());
-            for (TLZ_NodeId _iter60 : struct.nodeIds)
+            for (TLZ_NodeId _iter76 : struct.nodeIds)
             {
-              _iter60.write(oprot);
+              _iter76.write(oprot);
             }
           }
         }
@@ -5127,14 +5127,14 @@ public class TLZ_NodeTable {
         }
         if (incoming.get(2)) {
           {
-            org.apache.thrift.protocol.TList _list61 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
-            struct.nodeIds = new ArrayList<TLZ_NodeId>(_list61.size);
-            for (int _i62 = 0; _i62 < _list61.size; ++_i62)
+            org.apache.thrift.protocol.TList _list77 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
+            struct.nodeIds = new ArrayList<TLZ_NodeId>(_list77.size);
+            for (int _i78 = 0; _i78 < _list77.size; ++_i78)
             {
-              TLZ_NodeId _elem63;
-              _elem63 = new TLZ_NodeId();
-              _elem63.read(iprot);
-              struct.nodeIds.add(_elem63);
+              TLZ_NodeId _elem79;
+              _elem79 = new TLZ_NodeId();
+              _elem79.read(iprot);
+              struct.nodeIds.add(_elem79);
             }
           }
           struct.setNodeIdsIsSet(true);
@@ -5453,14 +5453,14 @@ public class TLZ_NodeTable {
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list64 = iprot.readListBegin();
-                  struct.success = new ArrayList<TLZ_RDF_Term>(_list64.size);
-                  for (int _i65 = 0; _i65 < _list64.size; ++_i65)
+                  org.apache.thrift.protocol.TList _list80 = iprot.readListBegin();
+                  struct.success = new ArrayList<TLZ_RDF_Term>(_list80.size);
+                  for (int _i81 = 0; _i81 < _list80.size; ++_i81)
                   {
-                    TLZ_RDF_Term _elem66;
-                    _elem66 = new TLZ_RDF_Term();
-                    _elem66.read(iprot);
-                    struct.success.add(_elem66);
+                    TLZ_RDF_Term _elem82;
+                    _elem82 = new TLZ_RDF_Term();
+                    _elem82.read(iprot);
+                    struct.success.add(_elem82);
                   }
                   iprot.readListEnd();
                 }
@@ -5488,9 +5488,9 @@ public class TLZ_NodeTable {
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
-            for (TLZ_RDF_Term _iter67 : struct.success)
+            for (TLZ_RDF_Term _iter83 : struct.success)
             {
-              _iter67.write(oprot);
+              _iter83.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -5521,9 +5521,9 @@ public class TLZ_NodeTable {
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (TLZ_RDF_Term _iter68 : struct.success)
+            for (TLZ_RDF_Term _iter84 : struct.success)
             {
-              _iter68.write(oprot);
+              _iter84.write(oprot);
             }
           }
         }
@@ -5535,14 +5535,14 @@ public class TLZ_NodeTable {
         BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list69 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
-            struct.success = new ArrayList<TLZ_RDF_Term>(_list69.size);
-            for (int _i70 = 0; _i70 < _list69.size; ++_i70)
+            org.apache.thrift.protocol.TList _list85 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
+            struct.success = new ArrayList<TLZ_RDF_Term>(_list85.size);
+            for (int _i86 = 0; _i86 < _list85.size; ++_i86)
             {
-              TLZ_RDF_Term _elem71;
-              _elem71 = new TLZ_RDF_Term();
-              _elem71.read(iprot);
-              struct.success.add(_elem71);
+              TLZ_RDF_Term _elem87;
+              _elem87 = new TLZ_RDF_Term();
+              _elem87.read(iprot);
+              struct.success.add(_elem87);
             }
           }
           struct.setSuccessIsSet(true);

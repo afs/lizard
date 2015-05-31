@@ -77,12 +77,35 @@ import org.slf4j.LoggerFactory ;
     }
 
     @Override
+    public void idxAddAll(long id, long txnId, TLZ_ShardIndex shard, List<TLZ_TupleNodeId> tuples) throws TException {
+        FmtLog.debug(log, "[%d] idxAddBulk : txnId = %d", id, txnId) ;
+        txnAlways(txnId, WRITE, () -> {
+            for ( TLZ_TupleNodeId tuple : tuples ) {
+                Tuple<NodeId> tuple2 = TLZlib.build(tuple) ;
+                FmtLog.info(log, "[%d:%d] add %s %s", id, txnId, index.getName(), tuple2) ;
+                index.add(tuple2) ;
+            }
+        }) ;
+    }
+
+    @Override
     public void idxDelete(long id, long txnId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws TException {
         Tuple<NodeId> tuple2 = TLZlib.build(tuple) ;
         FmtLog.info(log, "[%d:%d] delete %s %s", id, txnId, index.getName(), tuple2) ;
         txnAlways(txnId, WRITE, () -> index.delete(tuple2) ) ;
     }
 
+    @Override
+    public void idxDeleteAll(long id, long txnId, TLZ_ShardIndex shard, List<TLZ_TupleNodeId> tuples) throws TException {
+        FmtLog.debug(log, "[%d] idxDeleteBulk : txnId = %d", id, txnId) ;
+        txnAlways(txnId, WRITE, () -> {
+            for ( TLZ_TupleNodeId tuple : tuples ) {
+                Tuple<NodeId> tuple2 = TLZlib.build(tuple) ;
+                FmtLog.info(log, "[%d:%d] delete %s %s", id, txnId, index.getName(), tuple2) ;
+                index.delete(tuple2) ;
+            }
+        }) ;
+    }
     @Override
     public List<TLZ_TupleNodeId> idxFind(long id, long txnId, TLZ_ShardIndex shard, TLZ_TupleNodeId tuple) throws TException {
         Tuple<NodeId> pattern = TLZlib.build(tuple) ;

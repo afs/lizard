@@ -18,11 +18,13 @@
 package lizard.index;
 
 import java.util.Iterator ;
+import java.util.List ;
 
 import lizard.comms.ConnState ;
 import lizard.comms.Connection ;
 import lizard.system.ComponentTxn ;
 import lizard.system.RemoteControl ;
+
 import org.apache.jena.atlas.lib.Tuple ;
 import org.seaborne.tdb2.store.NodeId ;
 
@@ -37,9 +39,15 @@ interface TClientIndexOps extends Connection, ComponentTxn, RemoteControl
     /** Insert a tuple */
     public void add(Tuple<NodeId> tuple) ;
 
+    /** Insert a tuple */
+    public void addAll(List<Tuple<NodeId>> tuples) ;
+
     /** Delete a tuple */
     public void delete(Tuple<NodeId> tuple) ;
     
+    /** Delete a tuple */
+    public void deleteAll(List<Tuple<NodeId>> tuples) ;
+
     @Override
     public void ping() ;
 

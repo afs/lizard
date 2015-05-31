@@ -60,10 +60,10 @@ struct TLZ_Patch {
 // ---- Index
 service TLZ_Index extends TxnCtl {
     void idxAdd (1: i64 requestId, 9: TxnId txnId, 3: TLZ_ShardIndex shard, 4: TLZ_TupleNodeId tuple)
+    void idxAddAll(1: i64 requestId, 9: TxnId txnId, 3: TLZ_ShardIndex shard, 4: list<TLZ_TupleNodeId> tuples)
     void idxDelete(1: i64 requestId, 9: TxnId txnId, 3: TLZ_ShardIndex shard, 4: TLZ_TupleNodeId tuple)
+    void idxDeleteAll(1: i64 requestId, 9: TxnId txnId, 3: TLZ_ShardIndex shard, 4: list<TLZ_TupleNodeId> tuples)
     list<TLZ_TupleNodeId> idxFind(1: i64 requestId, 9: TxnId txnId, 3: TLZ_ShardIndex shard, 4: TLZ_TupleNodeId pattern)
-
-
     // TLZ_SubjectPredicateList find(X)
     // patch
 }
@@ -77,7 +77,7 @@ service TLZ_Index extends TxnCtl {
 // 1: required string iri
 // }
 
-# A prefix name (abbrev for an IRI)
+// A prefix name (abbrev for an IRI)
 struct TLZ_RDF_PrefixName {
 1: required string prefix ;
 2: required string localName ;

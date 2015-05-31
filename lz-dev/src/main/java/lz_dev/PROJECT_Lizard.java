@@ -29,6 +29,9 @@ public class PROJECT_Lizard {
     //   Take apart a DSGTDB/Lz
     // Own Node to NodeId caching?
     
+    // THandlerTupleIndex can store TLZ forms.
+    // THandlerNodeTable can store TLZ forms.
+    
     // Share Thrift encoding with RIOT
     // ThriftConvert is better that ThriftLib?
     
