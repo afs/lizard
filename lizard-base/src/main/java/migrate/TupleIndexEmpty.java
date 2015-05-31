@@ -17,6 +17,7 @@
 
 package migrate;
 
+import java.util.Collection ;
 import java.util.Iterator ;
 
 import org.apache.jena.atlas.iterator.Iter ;
@@ -25,7 +26,7 @@ import org.apache.jena.atlas.lib.Tuple ;
 import org.seaborne.tdb2.store.NodeId ;
 import org.seaborne.tdb2.store.tupletable.TupleIndexBase ;
 
-/** An immutably empty tuple idnex - it is a sink (add provided but does nothing) */
+/** An immutably empty tuple index - it is a sink (add provided but does nothing) */
 public class TupleIndexEmpty extends TupleIndexBase {
 
     public TupleIndexEmpty(ColumnMap colMapping, String name) {
@@ -63,6 +64,12 @@ public class TupleIndexEmpty extends TupleIndexBase {
     @Override
     protected void performDelete(Tuple<NodeId> tuple) {
     }
+    
+    @Override
+    public void addAll(Collection<Tuple<NodeId>> tuples) {}
+
+    @Override
+    public void deleteAll(Collection<Tuple<NodeId>> tuples) {}
 
     @Override
     protected Iterator<Tuple<NodeId>> performFind(Tuple<NodeId> tuple) {

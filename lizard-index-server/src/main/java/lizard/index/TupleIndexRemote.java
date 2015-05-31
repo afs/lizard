@@ -17,6 +17,7 @@
 
 package lizard.index;
 
+import java.util.Collection ;
 import java.util.Iterator ;
 
 import lizard.api.TLZlib ;
@@ -121,8 +122,18 @@ public final class TupleIndexRemote extends TupleIndexBase implements Component,
     }
     
     @Override
+    public void addAll(Collection<Tuple<NodeId>> tuples) {
+        client.addAll(tuples);
+    }
+
+    @Override
     protected void performDelete(Tuple<NodeId> tuple) {
         client.delete(tuple) ;
+    }
+
+    @Override
+    public void deleteAll(Collection<Tuple<NodeId>> tuples) {
+        client.deleteAll(tuples);
     }
 
     @Override

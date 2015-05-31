@@ -17,6 +17,7 @@
 
 package lizard.index.tuple;
 
+import java.util.Collection ;
 import java.util.Iterator ;
 
 import org.seaborne.tdb2.store.NodeId ;
@@ -76,6 +77,12 @@ public class TupleIndexConverter extends TupleIndexBase {
 
     @Override
     public void close() {}
+
+    @Override
+    public void addAll(Collection<Tuple<NodeId>> tuples) {}
+
+    @Override
+    public void deleteAll(Collection<Tuple<NodeId>> tuples) {}
 
     @Override
     protected void performAdd(Tuple<NodeId> tuple) {

@@ -17,8 +17,8 @@
 
 package lizard.index;
 
+import java.util.Collection ;
 import java.util.Iterator ;
-import java.util.List ;
 
 import lizard.comms.ConnState ;
 import lizard.comms.Connection ;
@@ -40,13 +40,13 @@ interface TClientIndexOps extends Connection, ComponentTxn, RemoteControl
     public void add(Tuple<NodeId> tuple) ;
 
     /** Insert a tuple */
-    public void addAll(List<Tuple<NodeId>> tuples) ;
+    public void addAll(Collection<Tuple<NodeId>> tuples) ;
 
     /** Delete a tuple */
     public void delete(Tuple<NodeId> tuple) ;
     
     /** Delete a tuple */
-    public void deleteAll(List<Tuple<NodeId>> tuples) ;
+    public void deleteAll(Collection<Tuple<NodeId>> tuples) ;
 
     @Override
     public void ping() ;

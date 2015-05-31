@@ -18,6 +18,7 @@
 package lizard.index;
 
 import java.util.ArrayList ;
+import java.util.Collection ;
 import java.util.Iterator ;
 import java.util.List ;
 import java.util.stream.Collectors ;
@@ -93,7 +94,7 @@ class TClientIndex extends TxnClient<TLZ_Index.Client> implements TClientIndexOp
     }
 
     @Override
-    public void addAll(List<Tuple<NodeId>> tuples) {
+    public void addAll(Collection<Tuple<NodeId>> tuples) {
         long id = allocRequestId() ;
         long txnId = getTxnId() ;
         List<TLZ_TupleNodeId> x = new ArrayList<>() ;
@@ -114,7 +115,7 @@ class TClientIndex extends TxnClient<TLZ_Index.Client> implements TClientIndexOp
     }
     
     @Override
-    public void deleteAll(List<Tuple<NodeId>> tuples) {
+    public void deleteAll(Collection<Tuple<NodeId>> tuples) {
         long id = allocRequestId() ;
         long txnId = getTxnId() ;
         List<TLZ_TupleNodeId> x = new ArrayList<>() ;

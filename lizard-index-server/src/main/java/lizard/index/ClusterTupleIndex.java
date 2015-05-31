@@ -18,6 +18,7 @@
 package lizard.index;
 
 import java.util.ArrayList ;
+import java.util.Collection ;
 import java.util.Iterator ;
 import java.util.List ;
 
@@ -108,6 +109,17 @@ public class ClusterTupleIndex extends TupleIndexBase
     }
 
     @Override
+    public void addAll(Collection<Tuple<NodeId>> tuples) {
+        // XXX Sharding.
+        Collection<TupleIndexRemote> places = distributor.allStore() ;
+        // ----
+        for ( TupleIndexRemote idx : places ) {
+            FmtLog.debug(log, "  allAll @%s", idx.getLabel()) ;
+            idx.addAll(tuples) ;
+        }
+    }
+
+    @Override
     protected void performDelete(Tuple<NodeId> tuple) {
         FmtLog.debug(log, "Del - %s", tuple) ;
         List<TupleIndexRemote> places = distributor.storeAt(tuple) ;
@@ -115,6 +127,17 @@ public class ClusterTupleIndex extends TupleIndexBase
         for ( TupleIndexRemote idx : places ) {
             FmtLog.debug(log, "  Del @%s", idx.getLabel()) ;
             idx.delete(tuple) ;
+        }
+    }
+    
+    @Override
+    public void deleteAll(Collection<Tuple<NodeId>> tuples) {
+        // XXX Sharding.
+        Collection<TupleIndexRemote> places = distributor.allStore() ;
+        // ----
+        for ( TupleIndexRemote idx : places ) {
+            FmtLog.debug(log, "  deleteAll @%s", idx.getLabel()) ;
+            idx.deleteAll(tuples) ;
         }
     }
 
