@@ -18,9 +18,11 @@
 package lz_dev;
 
 import java.util.* ;
+import java.util.stream.Collectors ;
 
 import lizard.build.LzDatasetDetails ;
 
+import org.apache.jena.atlas.lib.Tuple ;
 import org.apache.jena.graph.Node ;
 import org.apache.jena.graph.Triple ;
 import org.apache.jena.riot.other.BatchedStreamRDF ;
@@ -28,6 +30,7 @@ import org.apache.jena.riot.system.StreamRDF ;
 import org.apache.jena.sparql.core.Quad ;
 import org.seaborne.tdb2.store.DatasetGraphTDB ;
 import org.seaborne.tdb2.store.NodeId ;
+import org.seaborne.tdb2.store.nodetable.NodeTable ;
 
 /**
  * @see BatchedStreamRDF BatchedStreamRDF, which batches by subject
@@ -35,6 +38,7 @@ import org.seaborne.tdb2.store.NodeId ;
 public class StreamRDFBatchSplit implements StreamRDF {
     protected static NodeId placeholder = NodeId.create(-7) ;
     protected final List<Triple> triples ;
+    protected final List<Tuple<NodeId>> tuples ;
     protected final Map<Node, NodeId> mapping ;
     
     private final int batchSize ;
@@ -45,6 +49,7 @@ public class StreamRDFBatchSplit implements StreamRDF {
         this.dsg = dsg ;
         this.batchSize = batchSize ;
         this.triples = new ArrayList<>(batchSize) ;
+        this.tuples = new ArrayList<>(triples.size()) ;
         this.mapping = new HashMap<>(2*batchSize) ;
         this.details = new LzDatasetDetails(dsg) ;
     }
@@ -78,17 +83,61 @@ public class StreamRDFBatchSplit implements StreamRDF {
         }
         
         // XXX Temp assume cache
-        List<NodeId> nodeIds = details.ntCluster.bulkNodeToNodeId(nodes, true) ;
+        /*List<NodeId> nodeIds = details.ntCluster.bulkNodeToNodeId(nodes, true) ; */
+        // Fill cache.
+        details.ntCluster.bulkNodeToNodeId(nodes, true) ;
         
-        // Reform triples
-        for ( Triple triple : triples ) {
-            dsg.getTripleTable().add(triple); 
+        // ---- Add triples as tuples
+        
+        //dsg.getTripleTable().addAll(triples) ;
+        
+        if ( true ) {
+            // Copy :-| though oddly cache friendly :-)
+            convert(triples, tuples, details.ntTop) ;
+            dsg.getTripleTable().getNodeTupleTable().getTupleTable().addAll(tuples);
+//            for ( Tuple<NodeId> tuple : tuples )
+//                dsg.getTripleTable().getNodeTupleTable().getTupleTable().add(tuple);
+        } else {
+            for ( Triple triple : triples ) {
+                dsg.getTripleTable().add(triple); 
+            }
         }
         triples.clear();
+        tuples.clear() ;
         mapping.clear();
+        
+        // Eventually, put triples on a work queue.
     }
    
-
+    // check for duplicate code
+    private static List<Tuple<NodeId>> convert(List<Triple> triples, NodeTable nodeTable) {
+        return triples.stream().map(t->
+                Tuple.createTuple
+                (nodeTable.getAllocateNodeId(t.getSubject()),
+                 nodeTable.getAllocateNodeId(t.getPredicate()),
+                 nodeTable.getAllocateNodeId(t.getObject())))
+         .collect(Collectors.toList()) ;
+    }
+    
+    private static void convert(List<Triple> triples, List<Tuple<NodeId>> tuples, NodeTable nodeTable) {
+        // Slightly faster.  But larger batches?
+        for ( Triple t : triples ) {
+            Tuple<NodeId> x = Tuple.createTuple
+                    (nodeTable.getAllocateNodeId(t.getSubject()),
+                     nodeTable.getAllocateNodeId(t.getPredicate()),
+                     nodeTable.getAllocateNodeId(t.getObject())) ;
+             tuples.add(x) ;
+        }
+        
+//        triples.stream().map(t->
+//                  Tuple.createTuple
+//                  (nodeTable.getAllocateNodeId(t.getSubject()),
+//                   nodeTable.getAllocateNodeId(t.getPredicate()),
+//                   nodeTable.getAllocateNodeId(t.getObject())))
+//                .collect(Collectors.toCollection(()->tuples)) ;
+    }
+    
+    
     private void processNode(Node node) {
         
         if ( mapping.containsKey(node)) 
