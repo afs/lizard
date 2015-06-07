@@ -77,14 +77,16 @@ public class StreamRDFBatchSplit implements StreamRDF {
 
         // Check cache.
         for ( Node n : required ) {
-            if ( details.ntCache.getNodeIdForNodeCache(n) == null ) {
+            if ( details.ntCache.getNodeIdForNodeCache(n) == null && ! nodes.contains(n) /* Not good?*/ ) {
                 nodes.add(n) ;
             }
         }
         
         // XXX Temp assume cache
         /*List<NodeId> nodeIds = details.ntCluster.bulkNodeToNodeId(nodes, true) ; */
-        // Fill cache.
+        // This fills the cache. 
+        // Slight risk of cache spill and an node table access at triple time.
+        // If the cache size > batch size, that is low risk.
         details.ntCluster.bulkNodeToNodeId(nodes, true) ;
         
         // ---- Add triples as tuples
@@ -92,7 +94,7 @@ public class StreamRDFBatchSplit implements StreamRDF {
         //dsg.getTripleTable().addAll(triples) ;
         
         if ( true ) {
-            // Copy :-| though oddly cache friendly :-)
+            // Copy :-|
             convert(triples, tuples, details.ntTop) ;
             dsg.getTripleTable().getNodeTupleTable().getTupleTable().addAll(tuples);
 //            for ( Tuple<NodeId> tuple : tuples )

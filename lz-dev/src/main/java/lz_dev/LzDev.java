@@ -79,7 +79,10 @@ public class LzDev {
 
         log.info("SERVERS") ;
 
+        String FILE = "/home/afs/Datasets/BSBM/bsbm-1m.nt.gz" ;
         //config.fileroot = Names.memName ;
+        
+        FILE = "/home/afs/Datasets/BSBM/bsbm-100m.nt.gz" ;
         config.fileroot = "DB" ;
         
         if ( ! config.fileroot.startsWith(Names.memName) ) {
@@ -105,7 +108,7 @@ public class LzDev {
         
         Dataset ds = LzDeploy.deployDataset(config, here) ;
         DatasetGraphTDB dsg = (DatasetGraphTDB)(ds.asDatasetGraph()) ;
-        load(ds,"/home/afs/Datasets/BSBM/bsbm-1m.nt.gz");
+        load(ds,FILE);
         //System.exit(0) ;
         
 //        ds.begin(ReadWrite.WRITE);

@@ -20,13 +20,17 @@ package lz_dev ;
 public class PROJECT_Lizard {
     // === Tasks
     // Direct interconnect for comparison purposes.
-    // Batching
-    //   Why is [1,??] so expensive? LzDev.mainBatching2
-    // Parallelism.
-    // BinaryDataFile and locking. (little cost?)
+    //   Batching => Parallelism.
+    //   Walk through the sequence and look for overlaps
+    // Blocking Queue + semaphore for the counter.
+    //   Update replics in parallel.
+    
+    // Thrift: share jena code, use -I, delete local duplicated if created. 
+    
+    // Large load rates.
     
     // Batch loader
-    //   Take apart a DSGTDB/Lz
+    //   Take a part a DSGTDB/Lz
     // Own Node to NodeId caching?
     
     // THandlerTupleIndex can store TLZ forms.
