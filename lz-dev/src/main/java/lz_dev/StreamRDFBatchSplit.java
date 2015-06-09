@@ -115,6 +115,9 @@ public class StreamRDFBatchSplit implements StreamRDF {
     private static void batchUpdateNodes(Set<Node> required, LzDatasetDetails details) {
         List<Node> nodes = new ArrayList<>() ;
         // Resolve NodeIds
+        
+        // ** Move this into cache - code. 
+        
         for ( Node n : required ) {
             // 
             if ( details.ntCache.getNodeIdForNodeCache(n) == null /* set input - no need :: && ! nodes.contains(n) /* Not good?*/ )
