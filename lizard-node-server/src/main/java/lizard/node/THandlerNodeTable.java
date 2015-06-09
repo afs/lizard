@@ -62,7 +62,7 @@ import org.slf4j.LoggerFactory ;
     
     @Override
     public TLZ_NodeId allocNodeId(long id, long txnId, TLZ_RDF_Term nz) throws TException {
-        FmtLog.debug(log, "[%d] allocNodeId : txnId = %d", id, txnId) ;
+        //FmtLog.debug(log, "[%d] allocNodeId : txnId = %d", id, txnId) ;
         checkActive() ;
         Node n = decodeFromTLZ(nz) ;
         return txnAlwaysReturn(txnId, WRITE, ()-> {
@@ -76,7 +76,7 @@ import org.slf4j.LoggerFactory ;
 
     @Override
     public TLZ_NodeId findByNode(long id, long txnId, TLZ_RDF_Term nz) throws TException {
-        FmtLog.debug(log, "[%d] findByNode : txnId = %d", id, txnId) ;
+        //FmtLog.debug(log, "[%d] findByNode : txnId = %d", id, txnId) ;
         checkActive() ;
         Node n = decodeFromTLZ(nz) ;
         return txnAlwaysReturn(txnId, READ, ()-> {
@@ -91,7 +91,7 @@ import org.slf4j.LoggerFactory ;
 
     @Override
     public TLZ_RDF_Term findByNodeId(long id, long txnId, TLZ_NodeId nz) throws TException {
-        FmtLog.debug(log, "[%d] findByNodeId : txnId = %d", id, txnId) ;
+        //FmtLog.debug(log, "[%d] findByNodeId : txnId = %d", id, txnId) ;
         checkActive() ;
         NodeId nid = NodeId.create(nz.getNodeId()) ;
         return txnAlwaysReturn(txnId, READ, ()-> {
@@ -117,7 +117,7 @@ import org.slf4j.LoggerFactory ;
                 NodeId nid = nodeTable.getAllocateNodeId(n) ;
                 TLZ_NodeId nidz = new TLZ_NodeId() ;
                 nodeids.add(nidz) ;
-                FmtLog.info(log, "[%d:%d] Batched node alloc : %s => %s", id, txnId, n, nid) ;
+                //FmtLog.info(log, "[%d:%d] Batched node alloc : %s => %s", id, txnId, n, nid) ;
             }
             return nodeids ;
         }) ;
@@ -134,7 +134,7 @@ import org.slf4j.LoggerFactory ;
                 NodeId nid = decodeFromTLZ(nz) ;
                 Node n = nodeTable.getNodeForNodeId(nid) ;
                 nodes.add(encodeToTLZ(n)) ;
-                FmtLog.info(log, "[%d:%d] Batched node alloc : %s => %s", id, txnId, n, nid) ;
+                //FmtLog.info(log, "[%d:%d] Batched node alloc : %s => %s", id, txnId, n, nid) ;
             }
             return nodes ;
         }) ;

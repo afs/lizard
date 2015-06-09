@@ -21,8 +21,8 @@ import java.util.* ;
 import java.util.stream.Collectors ;
 
 import lizard.build.LzDatasetDetails ;
-
 import org.apache.jena.atlas.lib.Tuple ;
+import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.graph.Node ;
 import org.apache.jena.graph.Triple ;
 import org.apache.jena.riot.other.BatchedStreamRDF ;
@@ -31,11 +31,14 @@ import org.apache.jena.sparql.core.Quad ;
 import org.seaborne.tdb2.store.DatasetGraphTDB ;
 import org.seaborne.tdb2.store.NodeId ;
 import org.seaborne.tdb2.store.nodetable.NodeTable ;
+import org.slf4j.Logger ;
+import org.slf4j.LoggerFactory ;
 
 /**
  * @see BatchedStreamRDF BatchedStreamRDF, which batches by subject
  */
 public class StreamRDFBatchSplit implements StreamRDF {
+    private static Logger log = LoggerFactory.getLogger(StreamRDFBatchSplit.class) ;
     protected static NodeId placeholder = NodeId.create(-7) ;
     protected final List<Triple> triples ;
     protected final List<Tuple<NodeId>> tuples ;
@@ -60,6 +63,7 @@ public class StreamRDFBatchSplit implements StreamRDF {
     @Override
     public void triple(Triple triple) {
         //Find nodes.
+        //log.info("Triple: "+triple) ;
         processNode(triple.getSubject()) ;
         processNode(triple.getPredicate()) ;
         processNode(triple.getObject()) ;
@@ -68,49 +72,76 @@ public class StreamRDFBatchSplit implements StreamRDF {
             processBatch() ;
     }
 
+    int batchNumber = 1 ;
+    
     protected void processBatch() {
+        //if ( batchNumber < 10 )
+        //FmtLog.info(log, ">>processBatch: [%d]->%d", batchNumber, triples.size()) ;
+        batchNumber++ ;
+        
         // Do this by filling the cache.
         Set<Node> required = mapping.keySet() ;
-        List<Node> nodes = new ArrayList<>() ;
         // There is a change cache spills will mess the world up.
         // Keep private copy then mass fill the cache?
 
-        // Check cache.
-        for ( Node n : required ) {
-            if ( details.ntCache.getNodeIdForNodeCache(n) == null && ! nodes.contains(n) /* Not good?*/ ) {
-                nodes.add(n) ;
-            }
-        }
+        boolean executeBatchNodesPhase = true ;
+        boolean executeIndexPhase = true ;
+        // Derived control.
+        boolean batchUpdateIndexes = true ;
         
-        // XXX Temp assume cache
-        /*List<NodeId> nodeIds = details.ntCluster.bulkNodeToNodeId(nodes, true) ; */
-        // This fills the cache. 
-        // Slight risk of cache spill and an node table access at triple time.
-        // If the cache size > batch size, that is low risk.
-        details.ntCluster.bulkNodeToNodeId(nodes, true) ;
+        if ( executeBatchNodesPhase )
+            // Check this is a cache node table.
+            batchUpdateNodes(required, details) ;
         
-        // ---- Add triples as tuples
-        
-        //dsg.getTripleTable().addAll(triples) ;
-        
-        if ( true ) {
-            // Copy :-|
-            convert(triples, tuples, details.ntTop) ;
-            dsg.getTripleTable().getNodeTupleTable().getTupleTable().addAll(tuples);
-//            for ( Tuple<NodeId> tuple : tuples )
-//                dsg.getTripleTable().getNodeTupleTable().getTupleTable().add(tuple);
-        } else {
-            for ( Triple triple : triples ) {
-                dsg.getTripleTable().add(triple); 
-            }
+        if ( executeIndexPhase ) {
+            if ( batchUpdateIndexes )
+                batchUpdateIndexes(dsg, details, triples, /*tuples*/null) ;
+            else
+                incrementalUpdateIndexes(triples, dsg) ;
         }
         triples.clear();
         tuples.clear() ;
+        //FmtLog.info(log, "<<processBatch") ;
         mapping.clear();
-        
-        // Eventually, put triples on a work queue.
     }
    
+    private static void incrementalUpdateIndexes(List<Triple> triples, DatasetGraphTDB dsg) {
+        for ( Triple triple : triples ) {
+            dsg.getTripleTable().add(triple); 
+        }
+    }
+
+    /** This files the cache so that the tuples adds are faster */ 
+    private static void batchUpdateNodes(Set<Node> required, LzDatasetDetails details) {
+        List<Node> nodes = new ArrayList<>() ;
+        // Resolve NodeIds
+        for ( Node n : required ) {
+            // 
+            if ( details.ntCache.getNodeIdForNodeCache(n) == null /* set input - no need :: && ! nodes.contains(n) /* Not good?*/ )
+                nodes.add(n) ;
+        }
+        //log.info("Batch nodes: "+nodes.size()) ;
+        details.ntTop.bulkNodeToNodeId(nodes, true) ;
+        // Check
+     // Resolve NodeIds
+        for ( Node n : required ) {
+            if ( details.ntCache.getNodeIdForNodeCache(n) == null  )
+                log.info("Not in cache: "+n) ;
+        }
+        
+        
+        
+        //details.ntCluster.bulkNodeToNodeId(nodes, true) ;
+    }
+
+    private static void batchUpdateIndexes(DatasetGraphTDB dsg, LzDatasetDetails details, List<Triple> batchTriples, List<Tuple<NodeId>> tuples) {
+        // Copy :-|
+        if ( tuples == null )
+            tuples = new ArrayList<>(batchTriples.size()) ;
+        convert(batchTriples, tuples, details.ntTop) ;
+        dsg.getTripleTable().getNodeTupleTable().getTupleTable().addAll(tuples);
+    }
+
     // check for duplicate code
     private static List<Tuple<NodeId>> convert(List<Triple> triples, NodeTable nodeTable) {
         return triples.stream().map(t->
