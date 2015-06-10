@@ -22,7 +22,6 @@ import java.util.stream.Collectors ;
 
 import lizard.build.LzDatasetDetails ;
 import org.apache.jena.atlas.lib.Tuple ;
-import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.graph.Node ;
 import org.apache.jena.graph.Triple ;
 import org.apache.jena.riot.other.BatchedStreamRDF ;
@@ -31,6 +30,7 @@ import org.apache.jena.sparql.core.Quad ;
 import org.seaborne.tdb2.store.DatasetGraphTDB ;
 import org.seaborne.tdb2.store.NodeId ;
 import org.seaborne.tdb2.store.nodetable.NodeTable ;
+import org.seaborne.tdb2.store.tupletable.TupleTable ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
@@ -103,6 +103,7 @@ public class StreamRDFBatchSplit implements StreamRDF {
         tuples.clear() ;
         //FmtLog.info(log, "<<processBatch") ;
         mapping.clear();
+        System.exit(0);
     }
    
     private static void incrementalUpdateIndexes(List<Triple> triples, DatasetGraphTDB dsg) {
@@ -123,10 +124,12 @@ public class StreamRDFBatchSplit implements StreamRDF {
             if ( details.ntCache.getNodeIdForNodeCache(n) == null /* set input - no need :: && ! nodes.contains(n) /* Not good?*/ )
                 nodes.add(n) ;
         }
-        //log.info("Batch nodes: "+nodes.size()) ;
+        log.info("Batch nodes: "+nodes.size()) ;
+        // This drops into the default method.
         details.ntTop.bulkNodeToNodeId(nodes, true) ;
+        
         // Check
-     // Resolve NodeIds
+        // Resolve NodeIds
         for ( Node n : required ) {
             if ( details.ntCache.getNodeIdForNodeCache(n) == null  )
                 log.info("Not in cache: "+n) ;
@@ -142,7 +145,10 @@ public class StreamRDFBatchSplit implements StreamRDF {
         if ( tuples == null )
             tuples = new ArrayList<>(batchTriples.size()) ;
         convert(batchTriples, tuples, details.ntTop) ;
-        dsg.getTripleTable().getNodeTupleTable().getTupleTable().addAll(tuples);
+        log.info("Batch triples: "+tuples.size()) ;
+        
+        TupleTable tupleTable = dsg.getTripleTable().getNodeTupleTable().getTupleTable() ;
+        tupleTable.addAll(tuples);
     }
 
     // check for duplicate code
