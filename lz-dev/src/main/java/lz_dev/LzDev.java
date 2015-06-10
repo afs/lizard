@@ -81,8 +81,9 @@ public class LzDev {
 
         String FILE = "/home/afs/Datasets/BSBM/bsbm-1m.nt.gz" ;
         config.fileroot = Names.memName ;
-        //FILE = "/home/afs/Datasets/BSBM/bsbm-100m.nt.gz" ;
-        //config.fileroot = "DB" ;
+        FILE = "/home/afs/Datasets/BSBM/bsbm-100m.nt.gz" ;
+        //FILE = "/home/afs/Datasets/BSBM/bsbm-5m.nt.gz" ;
+        config.fileroot = "DB" ;
         
         if ( ! config.fileroot.startsWith(Names.memName) ) {
             FileOps.ensureDir(config.fileroot); 
@@ -154,7 +155,7 @@ public class LzDev {
             ProgressLogger plog = new ProgressLogger(LoggerFactory.getLogger("LOAD"), "Triples", 50000, 10) ;
             
             StreamRDF s0 = StreamRDFLib.dataset(ds.asDatasetGraph()) ;
-            StreamRDF s1 = new StreamRDFBatchSplit(dsg, 5) ;
+            StreamRDF s1 = new StreamRDFBatchSplit(dsg, 100) ;
             StreamRDFMonitor s2 = new StreamRDFMonitor(s1, plog) ;
             
             StreamRDF s3 = s2 ;

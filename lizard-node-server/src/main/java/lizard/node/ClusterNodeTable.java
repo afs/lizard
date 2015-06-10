@@ -29,6 +29,7 @@ import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.graph.Node ;
 import org.seaborne.tdb2.store.NodeId ;
 import org.seaborne.tdb2.store.nodetable.NodeTable ;
+import org.seaborne.tdb2.store.nodetable.NodeTableOps ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
@@ -53,7 +54,7 @@ public class ClusterNodeTable implements NodeTable {
         // Parallel
         if ( remoteNodeTable != null )
             return remoteNodeTable.bulkNodeToNodeId(nodes, withAllocation) ;
-        return NodeTable.super.bulkNodeToNodeId(nodes, withAllocation) ;
+        return NodeTableOps.bulkNodeToNodeIdImpl(this, nodes, withAllocation) ;
     }
 
     @Override
@@ -61,7 +62,7 @@ public class ClusterNodeTable implements NodeTable {
         // Parallel
         if ( remoteNodeTable != null )
             return remoteNodeTable.bulkNodeIdToNode(nodeIds) ;
-        return NodeTable.super.bulkNodeIdToNode(nodeIds) ;
+        return NodeTableOps.bulkNodeIdToNodeImpl(this, nodeIds) ;
     }
 
     private NodeTableRemote remoteNodeTable() {
@@ -70,30 +71,6 @@ public class ClusterNodeTable implements NodeTable {
         else
             return null ;
     }
-    
-    // Bulk operations.
-    
-//    public List<NodeId> allocateNodeIds(List<Node> nodes) {
-//        // Should break into shard units. 
-//        List<NodeTableRemote> tables = (List<NodeTableRemote>)distributor.allStore() ; // distributor.storeAt(node) ;
-//
-//        for ( NodeTableRemote nt : tables ) {
-//            NodeId nid1 = nt.
-//            if ( nid == null )
-//                nid = nid1 ;
-//            else {
-//                if ( ! Objects.equals(nid, nid1) )
-//                    FmtLog.warn(log, "Different NodeIds allocated for %s : %s != %s", node, nid, nid1) ;
-//            }
-//        }
-//        
-//        FmtLog.info(log, "getAllocateNodeId(%s) -> %s", node, nid) ;
-//        if ( log.isDebugEnabled() )
-//            tables.forEach(nt -> FmtLog.debug(log, "  store(%s) @ %s", node, nt)) ;
-//        return nid ;
-//        
-//    }
-    
     
     @Override
     public NodeId getAllocateNodeId(Node node) {

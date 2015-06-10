@@ -107,7 +107,7 @@ import org.slf4j.LoggerFactory ;
 
     @Override
     public List<TLZ_NodeId> allocNodeIds(long id, long txnId, List<TLZ_RDF_Term> nodes) throws TException {
-        FmtLog.debug(log, "[%d] allocNodeIds : txnId = %d", id, txnId) ;
+        FmtLog.info(log, "[%d] allocNodeIds : txnId = %d", id, txnId) ;
         checkActive() ;
         return txnAlwaysReturn(txnId, WRITE, ()-> {
             // Local bulk operations?

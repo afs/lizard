@@ -58,7 +58,9 @@ public class StreamRDFBatchSplit implements StreamRDF {
     }
         
     @Override
-    public void start() {}
+    public void start() {
+        log.info("Batch size: "+batchSize);
+    }
 
     @Override
     public void triple(Triple triple) {
@@ -103,7 +105,8 @@ public class StreamRDFBatchSplit implements StreamRDF {
         tuples.clear() ;
         //FmtLog.info(log, "<<processBatch") ;
         mapping.clear();
-        System.exit(0);
+        if ( batchSize < 10 )
+            System.exit(0) ;
     }
    
     private static void incrementalUpdateIndexes(List<Triple> triples, DatasetGraphTDB dsg) {
@@ -124,7 +127,7 @@ public class StreamRDFBatchSplit implements StreamRDF {
             if ( details.ntCache.getNodeIdForNodeCache(n) == null /* set input - no need :: && ! nodes.contains(n) /* Not good?*/ )
                 nodes.add(n) ;
         }
-        log.info("Batch nodes: "+nodes.size()) ;
+        //log.info("Batch nodes: "+nodes.size()) ;
         // This drops into the default method.
         details.ntTop.bulkNodeToNodeId(nodes, true) ;
         
@@ -134,10 +137,10 @@ public class StreamRDFBatchSplit implements StreamRDF {
             if ( details.ntCache.getNodeIdForNodeCache(n) == null  )
                 log.info("Not in cache: "+n) ;
         }
-        
-        
-        
         //details.ntCluster.bulkNodeToNodeId(nodes, true) ;
+        
+        
+        
     }
 
     private static void batchUpdateIndexes(DatasetGraphTDB dsg, LzDatasetDetails details, List<Triple> batchTriples, List<Tuple<NodeId>> tuples) {
@@ -145,7 +148,7 @@ public class StreamRDFBatchSplit implements StreamRDF {
         if ( tuples == null )
             tuples = new ArrayList<>(batchTriples.size()) ;
         convert(batchTriples, tuples, details.ntTop) ;
-        log.info("Batch triples: "+tuples.size()) ;
+        //log.info("Batch triples: "+tuples.size()) ;
         
         TupleTable tupleTable = dsg.getTripleTable().getNodeTupleTable().getTupleTable() ;
         tupleTable.addAll(tuples);
