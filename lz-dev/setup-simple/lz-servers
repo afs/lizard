@@ -1,3 +1,0 @@
-#!/bin/bash
-
-../lz deploy --deploy deploy-jvm.ttl conf-* 
