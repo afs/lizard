@@ -39,6 +39,7 @@ import org.apache.curator.test.TestingServer ;
 import org.apache.jena.atlas.lib.FileOps ;
 import org.apache.jena.atlas.lib.Lib ;
 import org.apache.jena.atlas.lib.StrUtils ;
+import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.atlas.logging.LogCtl ;
 import org.apache.jena.atlas.logging.ProgressLogger ;
 import org.apache.jena.fuseki.cmd.FusekiCmd ;
@@ -47,10 +48,11 @@ import org.apache.jena.query.* ;
 import org.apache.jena.rdf.model.Model ;
 import org.apache.jena.riot.RDFDataMgr ;
 import org.apache.jena.riot.system.StreamRDF ;
-import org.apache.jena.riot.system.StreamRDFLib ;
 import org.apache.jena.sparql.util.QueryExecUtils ;
 import org.seaborne.dboe.sys.Names ;
 import org.seaborne.tdb2.lib.TDBTxn ;
+import org.seaborne.tdb2.loader.StreamRDFBatchSplit ;
+import org.seaborne.tdb2.loader.StreamRDFMonitor ;
 import org.seaborne.tdb2.store.DatasetGraphTDB ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
@@ -59,13 +61,13 @@ public class LzDev {
     static { LogCtl.setLog4j(); } 
     public static Logger log = LoggerFactory.getLogger("Main") ;
 
-    static String confDir           = "setup-disk" ;
-    //static String confDir           = "setup-simple" ;
+    static String confDir           = "setup1" ;
     static String confNode          = Q.filename(confDir, "conf-node.ttl") ;
     static String confIndex         = Q.filename(confDir, "conf-index.ttl") ;
     static String confDataset       = Q.filename(confDir, "conf-dataset.ttl") ;
     static Model configurationModel = Q.readAll(confNode, confIndex, confDataset) ;
-    static ConfCluster config       = LzConfParserRDF.parseConfFile(configurationModel) ; 
+    static ConfCluster config       = LzConfParserRDF.parseConfFile(configurationModel) ;
+    // then "config.fileroot = Names.memName" for in-meory testing.
     
     public static void main(String[] args) {
         try { main$(args) ; }
@@ -84,10 +86,9 @@ public class LzDev {
 
         String FILE = "/home/afs/Datasets/BSBM/bsbm-1m.nt.gz" ;
         config.fileroot = Names.memName ;
-        FILE = "/home/afs/Datasets/BSBM/bsbm-25m.nt.gz" ;
-        //FILE = "/home/afs/Datasets/BSBM/bsbm-5m.nt.gz" ;
-        //FILE = "D.ttl" ;
-        config.fileroot = "DB" ;
+        
+//        FILE = "/home/afs/Datasets/BSBM/bsbm-25m.nt.gz" ;
+//        config.fileroot = "DB" ;
         
         if ( ! config.fileroot.startsWith(Names.memName) ) {
             FileOps.ensureDir(config.fileroot); 
@@ -112,7 +113,6 @@ public class LzDev {
         Dataset ds = LzDeploy.deployDataset(config, here) ;
         DatasetGraphTDB dsg = (DatasetGraphTDB)(ds.asDatasetGraph()) ;
         load(ds,FILE);
-        System.exit(0) ;
         
 //        ds.begin(ReadWrite.WRITE);
 //        RDFDataMgr.read(ds, "D.ttl") ;
@@ -158,22 +158,24 @@ public class LzDev {
             LogCtl.set(TClientIndex.class, "WARN") ;
             LogCtl.set("lizard.index.THandlerTupleIndex", "WARN") ; 
             
+            //Loader.bulkLoad(ds, datafile) ;
+            bulkLoad(ds, datafile) ;
 
-            DatasetGraphTDB dsg = (DatasetGraphTDB)(ds.asDatasetGraph()) ;
-            ProgressLogger plog = new ProgressLogger(LoggerFactory.getLogger("LOAD"), "Triples", 50000, 10) ;
-            
-            StreamRDF s0 = StreamRDFLib.dataset(ds.asDatasetGraph()) ;
-            StreamRDF s1 = new StreamRDFBatchSplit(dsg, 100) ;
-            StreamRDFMonitor s2 = new StreamRDFMonitor(s1, plog) ;
-            
-            StreamRDF s3 = s2 ;
-            
-            s2.startMonitor();
-            
-            TDBTxn.executeWrite(ds, () -> {
-                RDFDataMgr.parse(s3, datafile) ;
-            }) ;
-            s2.finishMonitor();
+//            DatasetGraphTDB dsg = (DatasetGraphTDB)(ds.asDatasetGraph()) ;
+//            ProgressLogger plog = new ProgressLogger(LoggerFactory.getLogger("LOAD"), "Triples", 100000, 10) ;
+//            
+//            StreamRDF s0 = StreamRDFLib.dataset(ds.asDatasetGraph()) ;
+//            StreamRDF s1 = new StreamRDFBatchSplit(dsg, 100) ;
+//            StreamRDFMonitor s2 = new StreamRDFMonitor(s1, plog) ;
+//            
+//            StreamRDF s3 = s2 ;
+//            
+//            s2.startMonitor();
+//            
+//            TDBTxn.executeWrite(ds, () -> {
+//                RDFDataMgr.parse(s3, datafile) ;
+//            }) ;
+//            s2.finishMonitor();
             
             LogCtl.set(ClusterNodeTable.class, "INFO") ;
             LogCtl.set(TServerNode.class, "INFO") ;
@@ -182,14 +184,40 @@ public class LzDev {
         log.info("LOAD : finish") ;
     }
 
+    private static Logger LOG = LoggerFactory.getLogger("LzLoader") ;
+    
+    public static void bulkLoad(Dataset ds, String ... files) {
+        // c.f. TDB2 Loader.bulkLoad (which does not currently batch split).
+        DatasetGraphTDB dsg = (DatasetGraphTDB)ds.asDatasetGraph() ;
+        StreamRDF s1 = new StreamRDFBatchSplit(dsg, 100) ;
+        
+        ProgressLogger plog = new ProgressLogger(log, "Triples", 100000, 10) ;
+        StreamRDFMonitor sMonitor = new StreamRDFMonitor(s1, plog) ;
+        StreamRDF s3 = sMonitor ;
+
+        sMonitor.startMonitor(); 
+        TDBTxn.executeWrite(ds, () -> {
+            for ( String fn : files ) {
+                if ( files.length > 1 )
+                    FmtLog.info(LOG, "File: %s",fn);
+                RDFDataMgr.parse(s3, fn) ;
+            }
+        }) ;
+        sMonitor.finishMonitor();  
+    }
+    
     // -------- Query
     private static void performQuery(Dataset ds) {
         //            Quack.setVerbose(true) ;
         //            ARQ.setExecutionLogging(InfoLevel.NONE);
 
-        String qs = StrUtils.strjoinNL("PREFIX : <http://example/>"
+        String x = "<http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/instances/ProductType15>" ;
+        String qs1 = "SELECT * { VALUES ?s {"+x+"} ?s ?p ?o }" ;
+        
+        String qs2 = StrUtils.strjoinNL("PREFIX : <http://example/>"
                                       ,"SELECT (count(*) AS ?C)  "
                                       ,"{ ?s ?p ?o }" ) ;
+        String qs = qs1 ;
         Query q = QueryFactory.create(qs) ;
         performQuery(ds, q);
     }

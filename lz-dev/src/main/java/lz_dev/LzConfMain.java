@@ -53,7 +53,7 @@ public class LzConfMain {
         ConfCluster conf = null ;
         
         if ( true ) {
-            String dir = "setup-simple" ;
+            String dir = "setup1" ;
             Model model = Q.readAll
                 (dir+"/conf-dataset.ttl"
                 ,dir+"/conf-index.ttl"

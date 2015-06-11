@@ -20,7 +20,7 @@ package lz_dev;
 
 public class Setup {
     /** Location of the configuration files */
-    public static String confDir           = "setup-simple" ;
+    public static String confDir           = "setup1" ;
     
     /** Load data or not (can be verbose when run same-JVM) */
     public static boolean loadData         = true ;

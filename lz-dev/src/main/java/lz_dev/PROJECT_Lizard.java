@@ -25,6 +25,11 @@ public class PROJECT_Lizard {
     // Blocking Queue + semaphore for the counter.
     //   Update replics in parallel.
     
+    // TxnClient.
+    // TServer(Node|Index) -- what about locking operations?
+    // Even if single threaded client side, parallel oepration possible.
+    // For now, exhauts outstanding queue for sync operations.
+    
     // Thrift: share jena code, use -I, delete local duplicated if created. 
     
     // Large load rates.

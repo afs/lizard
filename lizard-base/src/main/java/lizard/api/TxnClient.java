@@ -33,7 +33,6 @@ import lizard.system.LizardException ;
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.atlas.logging.Log ;
 import org.apache.jena.query.ReadWrite ;
-import org.apache.thrift.TException ;
 import org.slf4j.Logger ;
 
 public abstract class TxnClient<X extends TxnCtl.Client> extends ComponentBase implements ComponentTxn {
@@ -83,16 +82,7 @@ public abstract class TxnClient<X extends TxnCtl.Client> extends ComponentBase i
 
     @Override
     public void prepare() {
-        while ( ! outstanding.isEmpty() ) {
-            try {
-                Future<Void> task = outstanding.take() ;
-                task.get() ;
-            }
-            catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            } 
-        }
-        
+       completeAsyncOperations() ;
         if ( LOG_TXN )
             FmtLog.info(getLog(), "[Txn:%s:%d] prepare", getLabel(), getTxnId());
         ThriftLib.exec(()-> rpc.txnPrepare(getTxnId())) ;
@@ -141,6 +131,7 @@ public abstract class TxnClient<X extends TxnCtl.Client> extends ComponentBase i
     }
     
     protected void exec(String label, ThriftRunnable action) {
+        completeAsyncOperations();
         try { ThriftLib.exec(action) ; } 
         catch (Exception ex) {
           FmtLog.error(getLog(), ex, label) ;
@@ -148,19 +139,40 @@ public abstract class TxnClient<X extends TxnCtl.Client> extends ComponentBase i
         }
     }
 
-    private boolean threadInitialized = false ; 
+    // ---- Async control
+    
+    private void completeAsyncOperations() {
+        reduceAsyncQueue(0) ;
+    }
+    
+    private void reduceAsyncQueue(int reduceSize) {
+        while ( outstanding.size() > reduceSize ) {
+            try { outstanding.take().get() ; }
+            catch (Exception ex) {
+                throw new LizardException("Exception taking from async queue", ex) ;
+            } 
+        }
+    }
+    
+    private static int OutstandingQueueMax = 2 ;
+    private static int BlockingQueueSize = OutstandingQueueMax+2 ;
     
     // This causes a single action to be outstanding at any one time.
-    // i.e. a write transaction is still single-writer at destination.
-    // XXX (reconsider)
+    // i.e. a write transaction is still single-writer at destination
+    // if sync and async are not mixed.
+    // XXX Consider server side lockign, reconsider "1 thread" policy    
     private ExecutorService executorService = Executors.newFixedThreadPool(1) ;
-    private BlockingQueue<Future<Void>> outstanding = new ArrayBlockingQueue<>(4) ;
+    private BlockingQueue<Future<Void>> outstanding = new ArrayBlockingQueue<>(BlockingQueueSize) ;
     
-    protected void execAync(String label, ThriftRunnable action) {
+    protected void execAsync(String label, ThriftRunnable action) {
         if ( false ) {
+            // Do now, synchronously.
+            // Development and debugging sue.
             exec(label, action);
             return ; 
         }
+        
+        reduceAsyncQueue(OutstandingQueueMax) ;
         
         // Block if queue too long.
         while ( outstanding.size() > 2 ) {

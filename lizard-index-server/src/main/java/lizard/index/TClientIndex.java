@@ -102,7 +102,7 @@ public class TClientIndex extends TxnClient<TLZ_Index.Client> implements TClient
             TLZ_TupleNodeId tlz = TLZlib.build(tuple) ;
             x.add(tlz) ;
         }
-        execAync("addAll", ()->rpc.idxAddAll(id, txnId, shard, x)) ;
+        execAsync("addAll", ()->rpc.idxAddAll(id, txnId, shard, x)) ;
     }
 
     /** Delete a tuple */
@@ -123,7 +123,7 @@ public class TClientIndex extends TxnClient<TLZ_Index.Client> implements TClient
             TLZ_TupleNodeId tlz = TLZlib.build(tuple) ;
             x.add(tlz) ;
         }
-        execAync("deleteAll", ()->rpc.idxDeleteAll(id, txnId, shard, x)) ;
+        execAsync("deleteAll", ()->rpc.idxDeleteAll(id, txnId, shard, x)) ;
     }
 
     @Override
