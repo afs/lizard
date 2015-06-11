@@ -48,7 +48,7 @@ public class LzBuilderNodeServer {
     public static TServerNode buildNodeServer(Platform platform, Location baseLocation, StoreParams params, ConfNodeTableElement x) {
         Location location = baseLocation.getSubLocation(x.data) ;
         int port = x.netAddr.port ;
-        FmtLog.info(logConf, "buildNodeServer: %s %s", port, location) ;
+        FmtLog.info(logConf, "buildNodeServer: port=%s %s", port, location) ;
         TransactionCoordinator coord = TDBBuilder.buildTransactionCoordinator(location) ;
         TDBBuilder builder = TDBBuilder.create(coord, location, params) ;
         NodeTable nt = builder.buildNodeTable(params.getNodeTableBaseName()) ;

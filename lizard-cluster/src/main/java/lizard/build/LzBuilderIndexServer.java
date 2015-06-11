@@ -49,7 +49,7 @@ public class LzBuilderIndexServer {
         Location location = baseLocation.getSubLocation(x.data) ;
         int port = x.netAddr.port ;
         String data = x.data ; 
-        FmtLog.info(logConf, "buildIndexServer[%s]: %s %s", data, port, location) ;
+        FmtLog.info(logConf, "buildIndexServer[%s]: port=%s %s", x.conf.indexOrder, port, location) ;
         TransactionCoordinator coord = TDBBuilder.buildTransactionCoordinator(location) ;
         TransactionalSystem txnSystem = new TransactionalBase(x.toString(), coord) ;
         String primary = TDBBuilder.choosePrimaryForIndex(params, x.conf.indexOrder) ;
