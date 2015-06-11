@@ -107,7 +107,7 @@ import org.slf4j.LoggerFactory ;
 
     @Override
     public List<TLZ_NodeId> allocNodeIds(long id, long txnId, List<TLZ_RDF_Term> nodes) throws TException {
-        FmtLog.info(log, "[%d] allocNodeIds : txnId = %d", id, txnId) ;
+        FmtLog.info(log, "[%d] allocNodeIds(%d) : txnId = %d", id, nodes.size(), txnId) ;
         checkActive() ;
         return txnAlwaysReturn(txnId, WRITE, ()-> {
             // Local bulk operations?
@@ -116,6 +116,7 @@ import org.slf4j.LoggerFactory ;
                 Node n = decodeFromTLZ(nz) ;
                 NodeId nid = nodeTable.getAllocateNodeId(n) ;
                 TLZ_NodeId nidz = new TLZ_NodeId() ;
+                nidz.setNodeId(nid.getId()) ;
                 nodeids.add(nidz) ;
                 //FmtLog.info(log, "[%d:%d] Batched node alloc : %s => %s", id, txnId, n, nid) ;
             }

@@ -42,7 +42,7 @@ import org.seaborne.tdb2.store.NodeId ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
-class TClientIndex extends TxnClient<TLZ_Index.Client> implements TClientIndexOps, Connection, ComponentTxn, RemoteControl 
+public class TClientIndex extends TxnClient<TLZ_Index.Client> implements TClientIndexOps, Connection, ComponentTxn, RemoteControl 
 {
     private static Logger log = LoggerFactory.getLogger(TClientIndex.class) ;
     @Override protected Logger getLog() { return log ; }
@@ -102,7 +102,7 @@ class TClientIndex extends TxnClient<TLZ_Index.Client> implements TClientIndexOp
             TLZ_TupleNodeId tlz = TLZlib.build(tuple) ;
             x.add(tlz) ;
         }
-        exec("addAll", ()->rpc.idxAddAll(id, txnId, shard, x)) ;
+        execAync("addAll", ()->rpc.idxAddAll(id, txnId, shard, x)) ;
     }
 
     /** Delete a tuple */
@@ -123,7 +123,7 @@ class TClientIndex extends TxnClient<TLZ_Index.Client> implements TClientIndexOp
             TLZ_TupleNodeId tlz = TLZlib.build(tuple) ;
             x.add(tlz) ;
         }
-        exec("deleteAll", ()->rpc.idxDeleteAll(id, txnId, shard, x)) ;
+        execAync("deleteAll", ()->rpc.idxDeleteAll(id, txnId, shard, x)) ;
     }
 
     @Override

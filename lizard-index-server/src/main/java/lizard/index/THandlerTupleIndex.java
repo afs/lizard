@@ -78,7 +78,7 @@ import org.slf4j.LoggerFactory ;
 
     @Override
     public void idxAddAll(long id, long txnId, TLZ_ShardIndex shard, List<TLZ_TupleNodeId> tuples) throws TException {
-        FmtLog.info(log, "[%d] idxAddAll : txnId = %d", id, txnId) ;
+        FmtLog.info(log, "[%d] idxAddAll(%d) : txnId = %d", id, tuples.size(), txnId) ;
         txnAlways(txnId, WRITE, () -> {
             for ( TLZ_TupleNodeId tuple : tuples ) {
                 Tuple<NodeId> tuple2 = TLZlib.build(tuple) ;

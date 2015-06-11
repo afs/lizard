@@ -18,6 +18,7 @@
 package lizard.api;
 
 import java.util.Objects ;
+import java.util.concurrent.* ;
 import java.util.concurrent.atomic.AtomicLong ;
 
 import lizard.api.TLZ.TxnCtl ;
@@ -32,6 +33,7 @@ import lizard.system.LizardException ;
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.atlas.logging.Log ;
 import org.apache.jena.query.ReadWrite ;
+import org.apache.thrift.TException ;
 import org.slf4j.Logger ;
 
 public abstract class TxnClient<X extends TxnCtl.Client> extends ComponentBase implements ComponentTxn {
@@ -39,13 +41,8 @@ public abstract class TxnClient<X extends TxnCtl.Client> extends ComponentBase i
 
     public interface Accessor { TxnClient<?> getWireClient() ; }
     
-    // request counter.
     private static AtomicLong requestCounter = new AtomicLong(0) ;
-    // Thread's transaction.
-    // XXX separate out beging per Client and system wide txnid.
-    
     private ThreadLocal<Long> currentTxnId = new ThreadLocal<>() ;
-    // Transaction interface.
     protected X rpc = null ;
     
     protected TxnClient() { }
@@ -86,6 +83,16 @@ public abstract class TxnClient<X extends TxnCtl.Client> extends ComponentBase i
 
     @Override
     public void prepare() {
+        while ( ! outstanding.isEmpty() ) {
+            try {
+                Future<Void> task = outstanding.take() ;
+                task.get() ;
+            }
+            catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            } 
+        }
+        
         if ( LOG_TXN )
             FmtLog.info(getLog(), "[Txn:%s:%d] prepare", getLabel(), getTxnId());
         ThriftLib.exec(()-> rpc.txnPrepare(getTxnId())) ;
@@ -139,6 +146,43 @@ public abstract class TxnClient<X extends TxnCtl.Client> extends ComponentBase i
           FmtLog.error(getLog(), ex, label) ;
           throw new LizardException(ex) ;
         }
+    }
+
+    private boolean threadInitialized = false ; 
+    
+    // This causes a single action to be outstanding at any one time.
+    // i.e. a write transaction is still single-writer at destination.
+    // XXX (reconsider)
+    private ExecutorService executorService = Executors.newFixedThreadPool(1) ;
+    private BlockingQueue<Future<Void>> outstanding = new ArrayBlockingQueue<>(4) ;
+    
+    protected void execAync(String label, ThriftRunnable action) {
+        if ( false ) {
+            exec(label, action);
+            return ; 
+        }
+        
+        // Block if queue too long.
+        while ( outstanding.size() > 2 ) {
+            try {
+                Future<Void> task = outstanding.take() ;
+                task.get() ;
+            }
+            catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            } 
+        }
+        
+        Future<Void> task = executorService.submit(()-> {
+            try {
+                action.run() ;
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null ;
+        }) ;
+        outstanding.add(task) ;
     }
 
     private void checkRunning() {

@@ -21,6 +21,7 @@ import java.util.* ;
 import java.util.stream.Collectors ;
 
 import lizard.build.LzDatasetDetails ;
+
 import org.apache.jena.atlas.lib.Tuple ;
 import org.apache.jena.graph.Node ;
 import org.apache.jena.graph.Triple ;
@@ -105,8 +106,8 @@ public class StreamRDFBatchSplit implements StreamRDF {
         tuples.clear() ;
         //FmtLog.info(log, "<<processBatch") ;
         mapping.clear();
-        if ( batchSize < 10 )
-            System.exit(0) ;
+//        if ( batchSize < 10 )
+//            System.exit(0) ;
     }
    
     private static void incrementalUpdateIndexes(List<Triple> triples, DatasetGraphTDB dsg) {
@@ -143,13 +144,14 @@ public class StreamRDFBatchSplit implements StreamRDF {
         
     }
 
-    private static void batchUpdateIndexes(DatasetGraphTDB dsg, LzDatasetDetails details, List<Triple> batchTriples, List<Tuple<NodeId>> tuples) {
-        // Copy :-|
+    private static void batchUpdateIndexes(DatasetGraphTDB dsg, LzDatasetDetails details, List<Triple> batchTriples, List<Tuple<NodeId>> workspace) {
+        List<Tuple<NodeId>> tuples = workspace ;
         if ( tuples == null )
             tuples = new ArrayList<>(batchTriples.size()) ;
+
         convert(batchTriples, tuples, details.ntTop) ;
         //log.info("Batch triples: "+tuples.size()) ;
-        
+
         TupleTable tupleTable = dsg.getTripleTable().getNodeTupleTable().getTupleTable() ;
         tupleTable.addAll(tuples);
     }
@@ -167,11 +169,11 @@ public class StreamRDFBatchSplit implements StreamRDF {
     private static void convert(List<Triple> triples, List<Tuple<NodeId>> tuples, NodeTable nodeTable) {
         // Slightly faster.  But larger batches?
         for ( Triple t : triples ) {
-            Tuple<NodeId> x = Tuple.createTuple
-                    (nodeTable.getAllocateNodeId(t.getSubject()),
-                     nodeTable.getAllocateNodeId(t.getPredicate()),
-                     nodeTable.getAllocateNodeId(t.getObject())) ;
-             tuples.add(x) ;
+            NodeId nid_s = nodeTable.getAllocateNodeId(t.getSubject()) ;
+            NodeId nid_p = nodeTable.getAllocateNodeId(t.getPredicate()) ;
+            NodeId nid_o = nodeTable.getAllocateNodeId(t.getObject()) ;
+            Tuple<NodeId> x = Tuple.createTuple(nid_s, nid_p, nid_o) ;
+            tuples.add(x) ;
         }
         
 //        triples.stream().map(t->

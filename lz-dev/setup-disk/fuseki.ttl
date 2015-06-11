@@ -40,14 +40,14 @@ lizard:Dataset rdfs:subClassOf  ja:RDFDataset .
 ## ------------ Indexes
 
 <#index1> rdf:type :IndexService ;
-    :name          "IndexPOS" ;
-    :indexOrder    "POS" ;
+    :name          "IndexSPO" ;
+    :indexOrder    "SPO" ;
     :servers       ( <#index-s1> ) ;
     .
 
 <#index2> rdf:type :IndexService ;
-    :name          "IndexPSO" ;
-    :indexOrder    "PSO" ;
+    :name          "IndexPOS" ;
+    :indexOrder    "POS" ;
     :servers       ( <#index-s2> ) ;
     .
 

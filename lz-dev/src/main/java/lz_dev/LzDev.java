@@ -24,8 +24,11 @@ import lizard.cluster.Cluster ;
 import lizard.conf.ConfCluster ;
 import lizard.conf.NetHost ;
 import lizard.conf.parsers.LzConfParserRDF ;
+import lizard.index.ClusterTupleIndex ;
+import lizard.index.TClientIndex ;
 import lizard.index.TServerIndex ;
 import lizard.node.ClusterNodeTable ;
+import lizard.node.TClientNode ;
 import lizard.node.TServerNode ;
 import lizard.query.LzDataset ;
 import lizard.system.LizardException ;
@@ -81,16 +84,16 @@ public class LzDev {
 
         String FILE = "/home/afs/Datasets/BSBM/bsbm-1m.nt.gz" ;
         config.fileroot = Names.memName ;
-        FILE = "/home/afs/Datasets/BSBM/bsbm-100m.nt.gz" ;
+        FILE = "/home/afs/Datasets/BSBM/bsbm-25m.nt.gz" ;
         //FILE = "/home/afs/Datasets/BSBM/bsbm-5m.nt.gz" ;
+        //FILE = "D.ttl" ;
         config.fileroot = "DB" ;
         
         if ( ! config.fileroot.startsWith(Names.memName) ) {
             FileOps.ensureDir(config.fileroot); 
             FileOps.clearAll(config.fileroot) ;
         }
-        
-        
+
         // The deployment "here".
         NetHost here = NetHost.create("localhost") ;
         
@@ -148,8 +151,13 @@ public class LzDev {
         if ( datafile != null ) {
             // Making loading quieter.
             LogCtl.set(ClusterNodeTable.class, "WARN") ;
-            LogCtl.set(TServerNode.class, "WARN") ;
-            LogCtl.set(TServerIndex.class, "WARN") ;
+            LogCtl.set(TClientNode.class, "WARN") ;
+            LogCtl.set("lizard.node.THandlerNodeTable", "WARN") ;
+            
+            LogCtl.set(ClusterTupleIndex.class, "WARN") ;
+            LogCtl.set(TClientIndex.class, "WARN") ;
+            LogCtl.set("lizard.index.THandlerTupleIndex", "WARN") ; 
+            
 
             DatasetGraphTDB dsg = (DatasetGraphTDB)(ds.asDatasetGraph()) ;
             ProgressLogger plog = new ProgressLogger(LoggerFactory.getLogger("LOAD"), "Triples", 50000, 10) ;
