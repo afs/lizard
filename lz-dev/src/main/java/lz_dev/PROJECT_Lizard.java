@@ -18,6 +18,13 @@
 package lz_dev ;
 
 public class PROJECT_Lizard {
+    // *** TxnClient is currently doing the synchonization
+    // Sort out ThriftRunnable / Runnable.
+    //   maybe a fixe class to cactch,convert Thrift to LizardExceptions 
+    
+    
+    // NodeTableCache and transactions.
+    
     // === Tasks
     // Direct interconnect for comparison purposes.
     //   Batching => Parallelism.
@@ -27,16 +34,13 @@ public class PROJECT_Lizard {
     
     // TxnClient.
     // TServer(Node|Index) -- what about locking operations?
+    
     // Even if single threaded client side, parallel oepration possible.
-    // For now, exhauts outstanding queue for sync operations.
+    //   For now, exhausts outstanding queue for sync operations.
     
     // Thrift: share jena code, use -I, delete local duplicated if created. 
     
-    // Large load rates.
-    
-    // Batch loader
-    //   Take a part a DSGTDB/Lz
-    // Own Node to NodeId caching?
+    // Create a batch loader
     
     // THandlerTupleIndex can store TLZ forms.
     // THandlerNodeTable can store TLZ forms.
