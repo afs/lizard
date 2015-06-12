@@ -51,10 +51,7 @@ public class ThriftLib {
     @FunctionalInterface
     public interface ThriftCallable<X> { X call() throws TException ; }
 
-    // XXX Locking is crude.
-    private static Object lock = new Object() ;
-
-    public static void exec(ThriftRunnable runnable) {
+    public static void exec(Object lock, ThriftRunnable runnable) {
         synchronized(lock) {
             try { runnable.run() ; } 
             catch (TException ex)   { throw new LizardException(ex) ; }
@@ -62,7 +59,7 @@ public class ThriftLib {
         }
     }
 
-    public static <X> X call(ThriftCallable<X> callable) {
+    public static <X> X call(Object lock, ThriftCallable<X> callable) {
         synchronized(lock) {
             try { return callable.call() ; } 
             catch (TException ex)   { throw new LizardException(ex) ; }
