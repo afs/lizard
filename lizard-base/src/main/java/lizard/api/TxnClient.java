@@ -18,7 +18,6 @@
 package lizard.api;
 
 import java.util.Objects ;
-import java.util.concurrent.* ;
 import java.util.concurrent.atomic.AtomicLong ;
 
 import lizard.api.TLZ.TxnCtl ;
@@ -43,6 +42,9 @@ public abstract class TxnClient<X extends TxnCtl.Client> extends ComponentBase i
     private static AtomicLong requestCounter = new AtomicLong(0) ;
     private ThreadLocal<Long> currentTxnId = new ThreadLocal<>() ;
     protected X rpc = null ;
+    // Synchronize thrift operations per client.
+    // XXX Do this at the server!
+    private final Object lock = new Object() ;
     
     protected TxnClient() { }
 
@@ -69,7 +71,7 @@ public abstract class TxnClient<X extends TxnCtl.Client> extends ComponentBase i
     public void begin(long txnId, ReadWrite mode) {
         if ( LOG_TXN )
             FmtLog.info(getLog(), "[Txn:%s:%d] begin/%s", getLabel(), txnId, mode.toString().toLowerCase());
-        ThriftLib.exec(()-> {
+        ThriftLib.exec(lock, ()-> {
             switch(Objects.requireNonNull(mode)) {
                 case READ :
                     rpc.txnBeginRead(txnId) ; break ;        
@@ -85,21 +87,21 @@ public abstract class TxnClient<X extends TxnCtl.Client> extends ComponentBase i
        completeAsyncOperations() ;
         if ( LOG_TXN )
             FmtLog.info(getLog(), "[Txn:%s:%d] prepare", getLabel(), getTxnId());
-        ThriftLib.exec(()-> rpc.txnPrepare(getTxnId())) ;
+        ThriftLib.exec(lock, ()-> rpc.txnPrepare(getTxnId())) ;
     }
 
     @Override
     public void commit() {
         if ( LOG_TXN )
             FmtLog.info(getLog(), "[Txn:%s:%d] commit", getLabel(), getTxnId());
-        ThriftLib.exec(()-> rpc.txnCommit(getTxnId())) ;
+        ThriftLib.exec(lock, ()-> rpc.txnCommit(getTxnId())) ;
     }
 
     @Override
     public void abort() {
         if ( LOG_TXN )
             FmtLog.info(getLog(), "[Txn:%s:%d] abort", getLabel(), getTxnId());
-        ThriftLib.exec(()-> rpc.txnAbort(getTxnId())) ;
+        ThriftLib.exec(lock, ()-> rpc.txnAbort(getTxnId())) ;
     }
 
     @Override
@@ -112,7 +114,7 @@ public abstract class TxnClient<X extends TxnCtl.Client> extends ComponentBase i
             } else { 
                 if ( LOG_TXN )
                     FmtLog.info(getLog(), "[Txn:%s:%d] end", getLabel(), getTxnId());
-                ThriftLib.exec(() -> rpc.txnEnd(getTxnId())) ;
+                ThriftLib.exec(lock, () -> rpc.txnEnd(getTxnId())) ;
             }
             currentTxnId.set(null) ;
         }
@@ -123,78 +125,36 @@ public abstract class TxnClient<X extends TxnCtl.Client> extends ComponentBase i
     
     protected <T> T call(String label, ThriftCallable<T> action) {
         checkRunning() ;
-        try { return ThriftLib.call(action) ; } 
+        completeAsyncOperations();
+        try { return ThriftLib.call(lock, action) ; } 
         catch (Exception ex) {
-          FmtLog.error(getLog(), ex, label) ;
-          throw new LizardException(ex) ;
+            FmtLog.error(getLog(), ex, label) ;
+            throw new LizardException(ex) ;
         }
     }
     
     protected void exec(String label, ThriftRunnable action) {
+        checkRunning() ;
         completeAsyncOperations();
-        try { ThriftLib.exec(action) ; } 
+        try { ThriftLib.exec(lock, action) ; } 
         catch (Exception ex) {
-          FmtLog.error(getLog(), ex, label) ;
-          throw new LizardException(ex) ;
-        }
-    }
-
-    // ---- Async control
-    
-    private void completeAsyncOperations() {
-        reduceAsyncQueue(0) ;
-    }
-    
-    private void reduceAsyncQueue(int reduceSize) {
-        while ( outstanding.size() > reduceSize ) {
-            try { outstanding.take().get() ; }
-            catch (Exception ex) {
-                throw new LizardException("Exception taking from async queue", ex) ;
-            } 
+            FmtLog.error(getLog(), ex, label) ;
+            throw new LizardException(ex) ;
         }
     }
     
-    private static int OutstandingQueueMax = 2 ;
-    private static int BlockingQueueSize = OutstandingQueueMax+2 ;
-    
-    // This causes a single action to be outstanding at any one time.
-    // i.e. a write transaction is still single-writer at destination
-    // if sync and async are not mixed.
-    // XXX Consider server side lockign, reconsider "1 thread" policy    
-    private ExecutorService executorService = Executors.newFixedThreadPool(1) ;
-    private BlockingQueue<Future<Void>> outstanding = new ArrayBlockingQueue<>(BlockingQueueSize) ;
+    private final Async async = new Async(1, 2) ;
     
     protected void execAsync(String label, ThriftRunnable action) {
-        if ( false ) {
-            // Do now, synchronously.
-            // Development and debugging sue.
-            exec(label, action);
-            return ; 
-        }
-        
-        reduceAsyncQueue(OutstandingQueueMax) ;
-        
-        // Block if queue too long.
-        while ( outstanding.size() > 2 ) {
-            try {
-                Future<Void> task = outstanding.take() ;
-                task.get() ;
-            }
-            catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            } 
-        }
-        
-        Future<Void> task = executorService.submit(()-> {
-            try {
-                action.run() ;
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null ;
-        }) ;
-        outstanding.add(task) ;
+        async.execAsync(lock, action);
+    }
+    
+    private void completeAsyncOperations() {
+        async.completeAsyncOperations();
+    }
+
+    private void reduceAsyncQueue(int reduceSize) {
+        async.reduceAsyncQueue(reduceSize);
     }
 
     private void checkRunning() {
