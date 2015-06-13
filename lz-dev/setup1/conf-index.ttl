@@ -22,6 +22,12 @@
     :servers       ( <#index-s2> ) ;
     .
 
+<#index3> rdf:type :IndexService ;
+    :name          "IndexPSO" ;
+    :indexOrder    "PSO" ;
+    :servers       ( <#index-s3> ) ;
+    .
+
 # 2 servers
 <#index-s1>  a  :IndexServer ;
     :name       "ServerIndex-s1" ;
@@ -36,3 +42,11 @@
     :port       4014 ; 
     :data       "Idx2" ; 
     .
+
+<#index-s3>  a  :IndexServer ;
+    :name       "ServerIndex-s3" ;
+    :hostname   "localhost" ;
+    :port       4016 ; 
+    :data       "Idx3" ; 
+    .
+
