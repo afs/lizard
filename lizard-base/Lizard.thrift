@@ -89,6 +89,15 @@ service TLZ_NodeTable extends TxnCtl {
     list<BinaryRDF.RDF_Term>  lookupNodeIds(1: i64 requestId, 9: TxnId txnId, 3: list<TLZ_NodeId> nodeIds)
 }
 
+service TLZ_ThriftObjectTable extends TxnCtl {
+    i64                  allocNodeId(1: i64 requestId, 9: TxnId txnId, 3: BinaryRDF.RDF_Term node)
+    i64                  findByTerm(1: i64 requestId, 9: TxnId txnId, 3: BinaryRDF.RDF_Term node)
+    BinaryRDF.RDF_Term   findById(1: i64 requestId, 9: TxnId txnId, 3: i64 id)
+//     list<i64>        allocNodeIds(1: i64 requestId, 9: TxnId txnId, 3: list<BinaryRDF.RDF_Term> nodes)
+//     list<BinaryRDF.RDF_Term>  lookupNodeIds(1: i64 requestId, 9: TxnId txnId, 3: list<TLZ_NodeId> nodeIds)
+}
+
+
 // Local Variables:
 // tab-width: 2
 // indent-tabs-mode: nil
