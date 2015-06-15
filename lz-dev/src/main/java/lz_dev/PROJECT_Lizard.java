@@ -20,8 +20,7 @@ package lz_dev ;
 public class PROJECT_Lizard {
     // *** TxnClient is currently doing the synchonization
     // Sort out ThriftRunnable / Runnable.
-    //   maybe a fixe class to cactch,convert Thrift to LizardExceptions 
-    
+    //   maybe a fixed class to catch+convert Thrift to LizardExceptions 
     
     // NodeTableCache and transactions.
     
@@ -35,15 +34,11 @@ public class PROJECT_Lizard {
     // TxnClient.
     // TServer(Node|Index) -- what about locking operations?
     
-    // Even if single threaded client side, parallel oepration possible.
-    //   For now, exhausts outstanding queue for sync operations.
-    
-    // Thrift: share jena code, use -I, delete local duplicated if created. 
-    
-    // Create a batch loader
-    
     // THandlerTupleIndex can store TLZ forms.
     // THandlerNodeTable can store TLZ forms.
+    //   Not a node table but an Index+ObjectFileStorage directly.
+    //   Don't decode/encode.
+    //     NodeTableNative : BiMap[T]
     
     // Share Thrift encoding with RIOT
     // ThriftConvert is better that ThriftLib?

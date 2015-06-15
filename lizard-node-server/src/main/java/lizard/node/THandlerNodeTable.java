@@ -20,21 +20,17 @@ package lizard.node;
 import static org.apache.jena.query.ReadWrite.READ ;
 import static org.apache.jena.query.ReadWrite.WRITE ;
 
-
 import java.util.ArrayList ;
 import java.util.List ;
-
 
 import lizard.api.TxnHandler ;
 import lizard.api.TLZ.TLZ_NodeId ;
 import lizard.api.TLZ.TLZ_NodeTable ;
-import lizard.api.TLZ.TLZ_RDF_Term ;
 import static lizard.comms.thrift.ThriftLib.* ;
-
-
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.graph.Node ;
 import org.apache.jena.riot.out.NodeFmtLib ;
+import org.apache.jena.riot.thrift.wire.RDF_Term ;
 import org.apache.thrift.TException ;
 import org.seaborne.dboe.transaction.txn.TransactionalSystem ;
 import org.seaborne.tdb2.store.NodeId ;
@@ -61,7 +57,7 @@ import org.slf4j.LoggerFactory ;
     }
     
     @Override
-    public TLZ_NodeId allocNodeId(long id, long txnId, TLZ_RDF_Term nz) throws TException {
+    public TLZ_NodeId allocNodeId(long id, long txnId, RDF_Term nz) throws TException {
         //FmtLog.debug(log, "[%d] allocNodeId : txnId = %d", id, txnId) ;
         checkActive() ;
         Node n = decodeFromTLZ(nz) ;
@@ -75,7 +71,7 @@ import org.slf4j.LoggerFactory ;
     }
 
     @Override
-    public TLZ_NodeId findByNode(long id, long txnId, TLZ_RDF_Term nz) throws TException {
+    public TLZ_NodeId findByNode(long id, long txnId, RDF_Term nz) throws TException {
         //FmtLog.debug(log, "[%d] findByNode : txnId = %d", id, txnId) ;
         checkActive() ;
         Node n = decodeFromTLZ(nz) ;
@@ -90,7 +86,7 @@ import org.slf4j.LoggerFactory ;
     }
 
     @Override
-    public TLZ_RDF_Term findByNodeId(long id, long txnId, TLZ_NodeId nz) throws TException {
+    public RDF_Term findByNodeId(long id, long txnId, TLZ_NodeId nz) throws TException {
         //FmtLog.debug(log, "[%d] findByNodeId : txnId = %d", id, txnId) ;
         checkActive() ;
         NodeId nid = NodeId.create(nz.getNodeId()) ;
@@ -100,19 +96,19 @@ import org.slf4j.LoggerFactory ;
                 FmtLog.error(log, "NodeId not found: "+nid) ;
             String str = NodeFmtLib.str(n) ;
             FmtLog.info(log, "[%d:%d] NodeId get request : %s => %s", id, txnId, nid, n) ;
-            TLZ_RDF_Term nlz = encodeToTLZ(n) ;
+            RDF_Term nlz = encodeToTLZ(n) ;
             return nlz ;
         }) ;
     }
 
     @Override
-    public List<TLZ_NodeId> allocNodeIds(long id, long txnId, List<TLZ_RDF_Term> nodes) throws TException {
+    public List<TLZ_NodeId> allocNodeIds(long id, long txnId, List<RDF_Term> nodes) throws TException {
         FmtLog.info(log, "[%d] allocNodeIds(%d) : txnId = %d", id, nodes.size(), txnId) ;
         checkActive() ;
         return txnAlwaysReturn(txnId, WRITE, ()-> {
             // Local bulk operations?
             List<TLZ_NodeId> nodeids = new ArrayList<>(nodes.size()) ;
-            for ( TLZ_RDF_Term nz : nodes ) {
+            for ( RDF_Term nz : nodes ) {
                 Node n = decodeFromTLZ(nz) ;
                 NodeId nid = nodeTable.getAllocateNodeId(n) ;
                 TLZ_NodeId nidz = new TLZ_NodeId() ;
@@ -125,11 +121,11 @@ import org.slf4j.LoggerFactory ;
     }
 
     @Override
-    public List<TLZ_RDF_Term> lookupNodeIds(long id, long txnId, List<TLZ_NodeId> nodeIds) throws TException {
+    public List<RDF_Term> lookupNodeIds(long id, long txnId, List<TLZ_NodeId> nodeIds) throws TException {
         FmtLog.debug(log, "[%d] lookupNodeIds : txnId = %d", id, txnId) ;
         checkActive() ;
         return txnAlwaysReturn(txnId, WRITE, ()-> {
-            List<TLZ_RDF_Term> nodes = new ArrayList<>(nodeIds.size()) ;
+            List<RDF_Term> nodes = new ArrayList<>(nodeIds.size()) ;
             for ( TLZ_NodeId nz : nodeIds ) {
                 // Local bulk operations?
                 NodeId nid = decodeFromTLZ(nz) ;

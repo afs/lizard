@@ -7,11 +7,14 @@ then
     exit 1
 fi
 
+# Directory for Jena RDF term encoding for "BinaryRDF.thrift"
+INC=$HOME/Jena/jena-arq/Grammar/
 
 PKG="src/main/java/lizard/api/TLZ"
 rm -f $PKG/*.java
 
-thrift -r -out src/main/java -gen java "$@"
+# No -r : do not generate code for included files.
+thrift -I $INC -out src/main/java -gen java "$@"
 
 for f in $PKG/*.java
 do

@@ -37,27 +37,27 @@ public class TLZ_NodeTable {
 
   public interface Iface extends TxnCtl.Iface {
 
-    public TLZ_NodeId allocNodeId(long requestId, long txnId, TLZ_RDF_Term node) throws org.apache.thrift.TException;
+    public TLZ_NodeId allocNodeId(long requestId, long txnId, org.apache.jena.riot.thrift.wire.RDF_Term node) throws org.apache.thrift.TException;
 
-    public TLZ_NodeId findByNode(long requestId, long txnId, TLZ_RDF_Term node) throws org.apache.thrift.TException;
+    public TLZ_NodeId findByNode(long requestId, long txnId, org.apache.jena.riot.thrift.wire.RDF_Term node) throws org.apache.thrift.TException;
 
-    public TLZ_RDF_Term findByNodeId(long requestId, long txnId, TLZ_NodeId nodeId) throws org.apache.thrift.TException;
+    public org.apache.jena.riot.thrift.wire.RDF_Term findByNodeId(long requestId, long txnId, TLZ_NodeId nodeId) throws org.apache.thrift.TException;
 
-    public List<TLZ_NodeId> allocNodeIds(long requestId, long txnId, List<TLZ_RDF_Term> nodes) throws org.apache.thrift.TException;
+    public List<TLZ_NodeId> allocNodeIds(long requestId, long txnId, List<org.apache.jena.riot.thrift.wire.RDF_Term> nodes) throws org.apache.thrift.TException;
 
-    public List<TLZ_RDF_Term> lookupNodeIds(long requestId, long txnId, List<TLZ_NodeId> nodeIds) throws org.apache.thrift.TException;
+    public List<org.apache.jena.riot.thrift.wire.RDF_Term> lookupNodeIds(long requestId, long txnId, List<TLZ_NodeId> nodeIds) throws org.apache.thrift.TException;
 
   }
 
   public interface AsyncIface extends TxnCtl .AsyncIface {
 
-    public void allocNodeId(long requestId, long txnId, TLZ_RDF_Term node, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
+    public void allocNodeId(long requestId, long txnId, org.apache.jena.riot.thrift.wire.RDF_Term node, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
-    public void findByNode(long requestId, long txnId, TLZ_RDF_Term node, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
+    public void findByNode(long requestId, long txnId, org.apache.jena.riot.thrift.wire.RDF_Term node, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
     public void findByNodeId(long requestId, long txnId, TLZ_NodeId nodeId, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
-    public void allocNodeIds(long requestId, long txnId, List<TLZ_RDF_Term> nodes, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
+    public void allocNodeIds(long requestId, long txnId, List<org.apache.jena.riot.thrift.wire.RDF_Term> nodes, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
     public void lookupNodeIds(long requestId, long txnId, List<TLZ_NodeId> nodeIds, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
@@ -83,13 +83,13 @@ public class TLZ_NodeTable {
       super(iprot, oprot);
     }
 
-    public TLZ_NodeId allocNodeId(long requestId, long txnId, TLZ_RDF_Term node) throws org.apache.thrift.TException
+    public TLZ_NodeId allocNodeId(long requestId, long txnId, org.apache.jena.riot.thrift.wire.RDF_Term node) throws org.apache.thrift.TException
     {
       send_allocNodeId(requestId, txnId, node);
       return recv_allocNodeId();
     }
 
-    public void send_allocNodeId(long requestId, long txnId, TLZ_RDF_Term node) throws org.apache.thrift.TException
+    public void send_allocNodeId(long requestId, long txnId, org.apache.jena.riot.thrift.wire.RDF_Term node) throws org.apache.thrift.TException
     {
       allocNodeId_args args = new allocNodeId_args();
       args.setRequestId(requestId);
@@ -108,13 +108,13 @@ public class TLZ_NodeTable {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "allocNodeId failed: unknown result");
     }
 
-    public TLZ_NodeId findByNode(long requestId, long txnId, TLZ_RDF_Term node) throws org.apache.thrift.TException
+    public TLZ_NodeId findByNode(long requestId, long txnId, org.apache.jena.riot.thrift.wire.RDF_Term node) throws org.apache.thrift.TException
     {
       send_findByNode(requestId, txnId, node);
       return recv_findByNode();
     }
 
-    public void send_findByNode(long requestId, long txnId, TLZ_RDF_Term node) throws org.apache.thrift.TException
+    public void send_findByNode(long requestId, long txnId, org.apache.jena.riot.thrift.wire.RDF_Term node) throws org.apache.thrift.TException
     {
       findByNode_args args = new findByNode_args();
       args.setRequestId(requestId);
@@ -133,7 +133,7 @@ public class TLZ_NodeTable {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "findByNode failed: unknown result");
     }
 
-    public TLZ_RDF_Term findByNodeId(long requestId, long txnId, TLZ_NodeId nodeId) throws org.apache.thrift.TException
+    public org.apache.jena.riot.thrift.wire.RDF_Term findByNodeId(long requestId, long txnId, TLZ_NodeId nodeId) throws org.apache.thrift.TException
     {
       send_findByNodeId(requestId, txnId, nodeId);
       return recv_findByNodeId();
@@ -148,7 +148,7 @@ public class TLZ_NodeTable {
       sendBase("findByNodeId", args);
     }
 
-    public TLZ_RDF_Term recv_findByNodeId() throws org.apache.thrift.TException
+    public org.apache.jena.riot.thrift.wire.RDF_Term recv_findByNodeId() throws org.apache.thrift.TException
     {
       findByNodeId_result result = new findByNodeId_result();
       receiveBase(result, "findByNodeId");
@@ -158,13 +158,13 @@ public class TLZ_NodeTable {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "findByNodeId failed: unknown result");
     }
 
-    public List<TLZ_NodeId> allocNodeIds(long requestId, long txnId, List<TLZ_RDF_Term> nodes) throws org.apache.thrift.TException
+    public List<TLZ_NodeId> allocNodeIds(long requestId, long txnId, List<org.apache.jena.riot.thrift.wire.RDF_Term> nodes) throws org.apache.thrift.TException
     {
       send_allocNodeIds(requestId, txnId, nodes);
       return recv_allocNodeIds();
     }
 
-    public void send_allocNodeIds(long requestId, long txnId, List<TLZ_RDF_Term> nodes) throws org.apache.thrift.TException
+    public void send_allocNodeIds(long requestId, long txnId, List<org.apache.jena.riot.thrift.wire.RDF_Term> nodes) throws org.apache.thrift.TException
     {
       allocNodeIds_args args = new allocNodeIds_args();
       args.setRequestId(requestId);
@@ -183,7 +183,7 @@ public class TLZ_NodeTable {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "allocNodeIds failed: unknown result");
     }
 
-    public List<TLZ_RDF_Term> lookupNodeIds(long requestId, long txnId, List<TLZ_NodeId> nodeIds) throws org.apache.thrift.TException
+    public List<org.apache.jena.riot.thrift.wire.RDF_Term> lookupNodeIds(long requestId, long txnId, List<TLZ_NodeId> nodeIds) throws org.apache.thrift.TException
     {
       send_lookupNodeIds(requestId, txnId, nodeIds);
       return recv_lookupNodeIds();
@@ -198,7 +198,7 @@ public class TLZ_NodeTable {
       sendBase("lookupNodeIds", args);
     }
 
-    public List<TLZ_RDF_Term> recv_lookupNodeIds() throws org.apache.thrift.TException
+    public List<org.apache.jena.riot.thrift.wire.RDF_Term> recv_lookupNodeIds() throws org.apache.thrift.TException
     {
       lookupNodeIds_result result = new lookupNodeIds_result();
       receiveBase(result, "lookupNodeIds");
@@ -226,7 +226,7 @@ public class TLZ_NodeTable {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void allocNodeId(long requestId, long txnId, TLZ_RDF_Term node, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
+    public void allocNodeId(long requestId, long txnId, org.apache.jena.riot.thrift.wire.RDF_Term node, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
       checkReady();
       allocNodeId_call method_call = new allocNodeId_call(requestId, txnId, node, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
@@ -236,8 +236,8 @@ public class TLZ_NodeTable {
     public static class allocNodeId_call extends org.apache.thrift.async.TAsyncMethodCall {
       private long requestId;
       private long txnId;
-      private TLZ_RDF_Term node;
-      public allocNodeId_call(long requestId, long txnId, TLZ_RDF_Term node, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private org.apache.jena.riot.thrift.wire.RDF_Term node;
+      public allocNodeId_call(long requestId, long txnId, org.apache.jena.riot.thrift.wire.RDF_Term node, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.requestId = requestId;
         this.txnId = txnId;
@@ -264,7 +264,7 @@ public class TLZ_NodeTable {
       }
     }
 
-    public void findByNode(long requestId, long txnId, TLZ_RDF_Term node, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
+    public void findByNode(long requestId, long txnId, org.apache.jena.riot.thrift.wire.RDF_Term node, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
       checkReady();
       findByNode_call method_call = new findByNode_call(requestId, txnId, node, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
@@ -274,8 +274,8 @@ public class TLZ_NodeTable {
     public static class findByNode_call extends org.apache.thrift.async.TAsyncMethodCall {
       private long requestId;
       private long txnId;
-      private TLZ_RDF_Term node;
-      public findByNode_call(long requestId, long txnId, TLZ_RDF_Term node, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private org.apache.jena.riot.thrift.wire.RDF_Term node;
+      public findByNode_call(long requestId, long txnId, org.apache.jena.riot.thrift.wire.RDF_Term node, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.requestId = requestId;
         this.txnId = txnId;
@@ -330,7 +330,7 @@ public class TLZ_NodeTable {
         prot.writeMessageEnd();
       }
 
-      public TLZ_RDF_Term getResult() throws org.apache.thrift.TException {
+      public org.apache.jena.riot.thrift.wire.RDF_Term getResult() throws org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
@@ -340,7 +340,7 @@ public class TLZ_NodeTable {
       }
     }
 
-    public void allocNodeIds(long requestId, long txnId, List<TLZ_RDF_Term> nodes, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
+    public void allocNodeIds(long requestId, long txnId, List<org.apache.jena.riot.thrift.wire.RDF_Term> nodes, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
       checkReady();
       allocNodeIds_call method_call = new allocNodeIds_call(requestId, txnId, nodes, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
@@ -350,8 +350,8 @@ public class TLZ_NodeTable {
     public static class allocNodeIds_call extends org.apache.thrift.async.TAsyncMethodCall {
       private long requestId;
       private long txnId;
-      private List<TLZ_RDF_Term> nodes;
-      public allocNodeIds_call(long requestId, long txnId, List<TLZ_RDF_Term> nodes, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private List<org.apache.jena.riot.thrift.wire.RDF_Term> nodes;
+      public allocNodeIds_call(long requestId, long txnId, List<org.apache.jena.riot.thrift.wire.RDF_Term> nodes, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.requestId = requestId;
         this.txnId = txnId;
@@ -406,7 +406,7 @@ public class TLZ_NodeTable {
         prot.writeMessageEnd();
       }
 
-      public List<TLZ_RDF_Term> getResult() throws org.apache.thrift.TException {
+      public List<org.apache.jena.riot.thrift.wire.RDF_Term> getResult() throws org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
@@ -660,7 +660,7 @@ public class TLZ_NodeTable {
       }
     }
 
-    public static class findByNodeId<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, findByNodeId_args, TLZ_RDF_Term> {
+    public static class findByNodeId<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, findByNodeId_args, org.apache.jena.riot.thrift.wire.RDF_Term> {
       public findByNodeId() {
         super("findByNodeId");
       }
@@ -669,10 +669,10 @@ public class TLZ_NodeTable {
         return new findByNodeId_args();
       }
 
-      public AsyncMethodCallback<TLZ_RDF_Term> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
+      public AsyncMethodCallback<org.apache.jena.riot.thrift.wire.RDF_Term> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new AsyncMethodCallback<TLZ_RDF_Term>() { 
-          public void onComplete(TLZ_RDF_Term o) {
+        return new AsyncMethodCallback<org.apache.jena.riot.thrift.wire.RDF_Term>() { 
+          public void onComplete(org.apache.jena.riot.thrift.wire.RDF_Term o) {
             findByNodeId_result result = new findByNodeId_result();
             result.success = o;
             try {
@@ -706,7 +706,7 @@ public class TLZ_NodeTable {
         return false;
       }
 
-      public void start(I iface, findByNodeId_args args, org.apache.thrift.async.AsyncMethodCallback<TLZ_RDF_Term> resultHandler) throws TException {
+      public void start(I iface, findByNodeId_args args, org.apache.thrift.async.AsyncMethodCallback<org.apache.jena.riot.thrift.wire.RDF_Term> resultHandler) throws TException {
         iface.findByNodeId(args.requestId, args.txnId, args.nodeId,resultHandler);
       }
     }
@@ -762,7 +762,7 @@ public class TLZ_NodeTable {
       }
     }
 
-    public static class lookupNodeIds<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, lookupNodeIds_args, List<TLZ_RDF_Term>> {
+    public static class lookupNodeIds<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, lookupNodeIds_args, List<org.apache.jena.riot.thrift.wire.RDF_Term>> {
       public lookupNodeIds() {
         super("lookupNodeIds");
       }
@@ -771,10 +771,10 @@ public class TLZ_NodeTable {
         return new lookupNodeIds_args();
       }
 
-      public AsyncMethodCallback<List<TLZ_RDF_Term>> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
+      public AsyncMethodCallback<List<org.apache.jena.riot.thrift.wire.RDF_Term>> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new AsyncMethodCallback<List<TLZ_RDF_Term>>() { 
-          public void onComplete(List<TLZ_RDF_Term> o) {
+        return new AsyncMethodCallback<List<org.apache.jena.riot.thrift.wire.RDF_Term>>() { 
+          public void onComplete(List<org.apache.jena.riot.thrift.wire.RDF_Term> o) {
             lookupNodeIds_result result = new lookupNodeIds_result();
             result.success = o;
             try {
@@ -808,7 +808,7 @@ public class TLZ_NodeTable {
         return false;
       }
 
-      public void start(I iface, lookupNodeIds_args args, org.apache.thrift.async.AsyncMethodCallback<List<TLZ_RDF_Term>> resultHandler) throws TException {
+      public void start(I iface, lookupNodeIds_args args, org.apache.thrift.async.AsyncMethodCallback<List<org.apache.jena.riot.thrift.wire.RDF_Term>> resultHandler) throws TException {
         iface.lookupNodeIds(args.requestId, args.txnId, args.nodeIds,resultHandler);
       }
     }
@@ -830,7 +830,7 @@ public class TLZ_NodeTable {
 
     public long requestId; // required
     public long txnId; // required
-    public TLZ_RDF_Term node; // required
+    public org.apache.jena.riot.thrift.wire.RDF_Term node; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -908,7 +908,7 @@ public class TLZ_NodeTable {
       tmpMap.put(_Fields.TXN_ID, new org.apache.thrift.meta_data.FieldMetaData("txnId", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64          , "TxnId")));
       tmpMap.put(_Fields.NODE, new org.apache.thrift.meta_data.FieldMetaData("node", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_RDF_Term.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.apache.jena.riot.thrift.wire.RDF_Term.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(allocNodeId_args.class, metaDataMap);
     }
@@ -919,7 +919,7 @@ public class TLZ_NodeTable {
     public allocNodeId_args(
       long requestId,
       long txnId,
-      TLZ_RDF_Term node)
+      org.apache.jena.riot.thrift.wire.RDF_Term node)
     {
       this();
       this.requestId = requestId;
@@ -937,7 +937,7 @@ public class TLZ_NodeTable {
       this.requestId = other.requestId;
       this.txnId = other.txnId;
       if (other.isSetNode()) {
-        this.node = new TLZ_RDF_Term(other.node);
+        this.node = new org.apache.jena.riot.thrift.wire.RDF_Term(other.node);
       }
     }
 
@@ -1000,11 +1000,11 @@ public class TLZ_NodeTable {
       __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __TXNID_ISSET_ID, value);
     }
 
-    public TLZ_RDF_Term getNode() {
+    public org.apache.jena.riot.thrift.wire.RDF_Term getNode() {
       return this.node;
     }
 
-    public allocNodeId_args setNode(TLZ_RDF_Term node) {
+    public allocNodeId_args setNode(org.apache.jena.riot.thrift.wire.RDF_Term node) {
       this.node = node;
       return this;
     }
@@ -1046,7 +1046,7 @@ public class TLZ_NodeTable {
         if (value == null) {
           unsetNode();
         } else {
-          setNode((TLZ_RDF_Term)value);
+          setNode((org.apache.jena.riot.thrift.wire.RDF_Term)value);
         }
         break;
 
@@ -1269,7 +1269,7 @@ public class TLZ_NodeTable {
               break;
             case 3: // NODE
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.node = new TLZ_RDF_Term();
+                struct.node = new org.apache.jena.riot.thrift.wire.RDF_Term();
                 struct.node.read(iprot);
                 struct.setNodeIsSet(true);
               } else { 
@@ -1354,7 +1354,7 @@ public class TLZ_NodeTable {
           struct.setTxnIdIsSet(true);
         }
         if (incoming.get(2)) {
-          struct.node = new TLZ_RDF_Term();
+          struct.node = new org.apache.jena.riot.thrift.wire.RDF_Term();
           struct.node.read(iprot);
           struct.setNodeIsSet(true);
         }
@@ -1737,7 +1737,7 @@ public class TLZ_NodeTable {
 
     public long requestId; // required
     public long txnId; // required
-    public TLZ_RDF_Term node; // required
+    public org.apache.jena.riot.thrift.wire.RDF_Term node; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -1815,7 +1815,7 @@ public class TLZ_NodeTable {
       tmpMap.put(_Fields.TXN_ID, new org.apache.thrift.meta_data.FieldMetaData("txnId", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64          , "TxnId")));
       tmpMap.put(_Fields.NODE, new org.apache.thrift.meta_data.FieldMetaData("node", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_RDF_Term.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.apache.jena.riot.thrift.wire.RDF_Term.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(findByNode_args.class, metaDataMap);
     }
@@ -1826,7 +1826,7 @@ public class TLZ_NodeTable {
     public findByNode_args(
       long requestId,
       long txnId,
-      TLZ_RDF_Term node)
+      org.apache.jena.riot.thrift.wire.RDF_Term node)
     {
       this();
       this.requestId = requestId;
@@ -1844,7 +1844,7 @@ public class TLZ_NodeTable {
       this.requestId = other.requestId;
       this.txnId = other.txnId;
       if (other.isSetNode()) {
-        this.node = new TLZ_RDF_Term(other.node);
+        this.node = new org.apache.jena.riot.thrift.wire.RDF_Term(other.node);
       }
     }
 
@@ -1907,11 +1907,11 @@ public class TLZ_NodeTable {
       __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __TXNID_ISSET_ID, value);
     }
 
-    public TLZ_RDF_Term getNode() {
+    public org.apache.jena.riot.thrift.wire.RDF_Term getNode() {
       return this.node;
     }
 
-    public findByNode_args setNode(TLZ_RDF_Term node) {
+    public findByNode_args setNode(org.apache.jena.riot.thrift.wire.RDF_Term node) {
       this.node = node;
       return this;
     }
@@ -1953,7 +1953,7 @@ public class TLZ_NodeTable {
         if (value == null) {
           unsetNode();
         } else {
-          setNode((TLZ_RDF_Term)value);
+          setNode((org.apache.jena.riot.thrift.wire.RDF_Term)value);
         }
         break;
 
@@ -2176,7 +2176,7 @@ public class TLZ_NodeTable {
               break;
             case 3: // NODE
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.node = new TLZ_RDF_Term();
+                struct.node = new org.apache.jena.riot.thrift.wire.RDF_Term();
                 struct.node.read(iprot);
                 struct.setNodeIsSet(true);
               } else { 
@@ -2261,7 +2261,7 @@ public class TLZ_NodeTable {
           struct.setTxnIdIsSet(true);
         }
         if (incoming.get(2)) {
-          struct.node = new TLZ_RDF_Term();
+          struct.node = new org.apache.jena.riot.thrift.wire.RDF_Term();
           struct.node.read(iprot);
           struct.setNodeIsSet(true);
         }
@@ -3191,7 +3191,7 @@ public class TLZ_NodeTable {
       schemes.put(TupleScheme.class, new findByNodeId_resultTupleSchemeFactory());
     }
 
-    public TLZ_RDF_Term success; // required
+    public org.apache.jena.riot.thrift.wire.RDF_Term success; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -3256,7 +3256,7 @@ public class TLZ_NodeTable {
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_RDF_Term.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.apache.jena.riot.thrift.wire.RDF_Term.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(findByNodeId_result.class, metaDataMap);
     }
@@ -3265,7 +3265,7 @@ public class TLZ_NodeTable {
     }
 
     public findByNodeId_result(
-      TLZ_RDF_Term success)
+      org.apache.jena.riot.thrift.wire.RDF_Term success)
     {
       this();
       this.success = success;
@@ -3276,7 +3276,7 @@ public class TLZ_NodeTable {
      */
     public findByNodeId_result(findByNodeId_result other) {
       if (other.isSetSuccess()) {
-        this.success = new TLZ_RDF_Term(other.success);
+        this.success = new org.apache.jena.riot.thrift.wire.RDF_Term(other.success);
       }
     }
 
@@ -3289,11 +3289,11 @@ public class TLZ_NodeTable {
       this.success = null;
     }
 
-    public TLZ_RDF_Term getSuccess() {
+    public org.apache.jena.riot.thrift.wire.RDF_Term getSuccess() {
       return this.success;
     }
 
-    public findByNodeId_result setSuccess(TLZ_RDF_Term success) {
+    public findByNodeId_result setSuccess(org.apache.jena.riot.thrift.wire.RDF_Term success) {
       this.success = success;
       return this;
     }
@@ -3319,7 +3319,7 @@ public class TLZ_NodeTable {
         if (value == null) {
           unsetSuccess();
         } else {
-          setSuccess((TLZ_RDF_Term)value);
+          setSuccess((org.apache.jena.riot.thrift.wire.RDF_Term)value);
         }
         break;
 
@@ -3468,7 +3468,7 @@ public class TLZ_NodeTable {
           switch (schemeField.id) {
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.success = new TLZ_RDF_Term();
+                struct.success = new org.apache.jena.riot.thrift.wire.RDF_Term();
                 struct.success.read(iprot);
                 struct.setSuccessIsSet(true);
               } else { 
@@ -3527,7 +3527,7 @@ public class TLZ_NodeTable {
         TTupleProtocol iprot = (TTupleProtocol) prot;
         BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
-          struct.success = new TLZ_RDF_Term();
+          struct.success = new org.apache.jena.riot.thrift.wire.RDF_Term();
           struct.success.read(iprot);
           struct.setSuccessIsSet(true);
         }
@@ -3551,7 +3551,7 @@ public class TLZ_NodeTable {
 
     public long requestId; // required
     public long txnId; // required
-    public List<TLZ_RDF_Term> nodes; // required
+    public List<org.apache.jena.riot.thrift.wire.RDF_Term> nodes; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -3630,7 +3630,7 @@ public class TLZ_NodeTable {
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64          , "TxnId")));
       tmpMap.put(_Fields.NODES, new org.apache.thrift.meta_data.FieldMetaData("nodes", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.ListMetaData(org.apache.thrift.protocol.TType.LIST, 
-              new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_RDF_Term.class))));
+              new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.apache.jena.riot.thrift.wire.RDF_Term.class))));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(allocNodeIds_args.class, metaDataMap);
     }
@@ -3641,7 +3641,7 @@ public class TLZ_NodeTable {
     public allocNodeIds_args(
       long requestId,
       long txnId,
-      List<TLZ_RDF_Term> nodes)
+      List<org.apache.jena.riot.thrift.wire.RDF_Term> nodes)
     {
       this();
       this.requestId = requestId;
@@ -3659,9 +3659,9 @@ public class TLZ_NodeTable {
       this.requestId = other.requestId;
       this.txnId = other.txnId;
       if (other.isSetNodes()) {
-        List<TLZ_RDF_Term> __this__nodes = new ArrayList<TLZ_RDF_Term>(other.nodes.size());
-        for (TLZ_RDF_Term other_element : other.nodes) {
-          __this__nodes.add(new TLZ_RDF_Term(other_element));
+        List<org.apache.jena.riot.thrift.wire.RDF_Term> __this__nodes = new ArrayList<org.apache.jena.riot.thrift.wire.RDF_Term>(other.nodes.size());
+        for (org.apache.jena.riot.thrift.wire.RDF_Term other_element : other.nodes) {
+          __this__nodes.add(new org.apache.jena.riot.thrift.wire.RDF_Term(other_element));
         }
         this.nodes = __this__nodes;
       }
@@ -3730,22 +3730,22 @@ public class TLZ_NodeTable {
       return (this.nodes == null) ? 0 : this.nodes.size();
     }
 
-    public java.util.Iterator<TLZ_RDF_Term> getNodesIterator() {
+    public java.util.Iterator<org.apache.jena.riot.thrift.wire.RDF_Term> getNodesIterator() {
       return (this.nodes == null) ? null : this.nodes.iterator();
     }
 
-    public void addToNodes(TLZ_RDF_Term elem) {
+    public void addToNodes(org.apache.jena.riot.thrift.wire.RDF_Term elem) {
       if (this.nodes == null) {
-        this.nodes = new ArrayList<TLZ_RDF_Term>();
+        this.nodes = new ArrayList<org.apache.jena.riot.thrift.wire.RDF_Term>();
       }
       this.nodes.add(elem);
     }
 
-    public List<TLZ_RDF_Term> getNodes() {
+    public List<org.apache.jena.riot.thrift.wire.RDF_Term> getNodes() {
       return this.nodes;
     }
 
-    public allocNodeIds_args setNodes(List<TLZ_RDF_Term> nodes) {
+    public allocNodeIds_args setNodes(List<org.apache.jena.riot.thrift.wire.RDF_Term> nodes) {
       this.nodes = nodes;
       return this;
     }
@@ -3787,7 +3787,7 @@ public class TLZ_NodeTable {
         if (value == null) {
           unsetNodes();
         } else {
-          setNodes((List<TLZ_RDF_Term>)value);
+          setNodes((List<org.apache.jena.riot.thrift.wire.RDF_Term>)value);
         }
         break;
 
@@ -4011,14 +4011,14 @@ public class TLZ_NodeTable {
             case 3: // NODES
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list56 = iprot.readListBegin();
-                  struct.nodes = new ArrayList<TLZ_RDF_Term>(_list56.size);
-                  for (int _i57 = 0; _i57 < _list56.size; ++_i57)
+                  org.apache.thrift.protocol.TList _list40 = iprot.readListBegin();
+                  struct.nodes = new ArrayList<org.apache.jena.riot.thrift.wire.RDF_Term>(_list40.size);
+                  for (int _i41 = 0; _i41 < _list40.size; ++_i41)
                   {
-                    TLZ_RDF_Term _elem58;
-                    _elem58 = new TLZ_RDF_Term();
-                    _elem58.read(iprot);
-                    struct.nodes.add(_elem58);
+                    org.apache.jena.riot.thrift.wire.RDF_Term _elem42;
+                    _elem42 = new org.apache.jena.riot.thrift.wire.RDF_Term();
+                    _elem42.read(iprot);
+                    struct.nodes.add(_elem42);
                   }
                   iprot.readListEnd();
                 }
@@ -4049,9 +4049,9 @@ public class TLZ_NodeTable {
           oprot.writeFieldBegin(NODES_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.nodes.size()));
-            for (TLZ_RDF_Term _iter59 : struct.nodes)
+            for (org.apache.jena.riot.thrift.wire.RDF_Term _iter43 : struct.nodes)
             {
-              _iter59.write(oprot);
+              _iter43.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -4097,9 +4097,9 @@ public class TLZ_NodeTable {
         if (struct.isSetNodes()) {
           {
             oprot.writeI32(struct.nodes.size());
-            for (TLZ_RDF_Term _iter60 : struct.nodes)
+            for (org.apache.jena.riot.thrift.wire.RDF_Term _iter44 : struct.nodes)
             {
-              _iter60.write(oprot);
+              _iter44.write(oprot);
             }
           }
         }
@@ -4119,14 +4119,14 @@ public class TLZ_NodeTable {
         }
         if (incoming.get(2)) {
           {
-            org.apache.thrift.protocol.TList _list61 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
-            struct.nodes = new ArrayList<TLZ_RDF_Term>(_list61.size);
-            for (int _i62 = 0; _i62 < _list61.size; ++_i62)
+            org.apache.thrift.protocol.TList _list45 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
+            struct.nodes = new ArrayList<org.apache.jena.riot.thrift.wire.RDF_Term>(_list45.size);
+            for (int _i46 = 0; _i46 < _list45.size; ++_i46)
             {
-              TLZ_RDF_Term _elem63;
-              _elem63 = new TLZ_RDF_Term();
-              _elem63.read(iprot);
-              struct.nodes.add(_elem63);
+              org.apache.jena.riot.thrift.wire.RDF_Term _elem47;
+              _elem47 = new org.apache.jena.riot.thrift.wire.RDF_Term();
+              _elem47.read(iprot);
+              struct.nodes.add(_elem47);
             }
           }
           struct.setNodesIsSet(true);
@@ -4445,14 +4445,14 @@ public class TLZ_NodeTable {
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list64 = iprot.readListBegin();
-                  struct.success = new ArrayList<TLZ_NodeId>(_list64.size);
-                  for (int _i65 = 0; _i65 < _list64.size; ++_i65)
+                  org.apache.thrift.protocol.TList _list48 = iprot.readListBegin();
+                  struct.success = new ArrayList<TLZ_NodeId>(_list48.size);
+                  for (int _i49 = 0; _i49 < _list48.size; ++_i49)
                   {
-                    TLZ_NodeId _elem66;
-                    _elem66 = new TLZ_NodeId();
-                    _elem66.read(iprot);
-                    struct.success.add(_elem66);
+                    TLZ_NodeId _elem50;
+                    _elem50 = new TLZ_NodeId();
+                    _elem50.read(iprot);
+                    struct.success.add(_elem50);
                   }
                   iprot.readListEnd();
                 }
@@ -4480,9 +4480,9 @@ public class TLZ_NodeTable {
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
-            for (TLZ_NodeId _iter67 : struct.success)
+            for (TLZ_NodeId _iter51 : struct.success)
             {
-              _iter67.write(oprot);
+              _iter51.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -4513,9 +4513,9 @@ public class TLZ_NodeTable {
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (TLZ_NodeId _iter68 : struct.success)
+            for (TLZ_NodeId _iter52 : struct.success)
             {
-              _iter68.write(oprot);
+              _iter52.write(oprot);
             }
           }
         }
@@ -4527,14 +4527,14 @@ public class TLZ_NodeTable {
         BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list69 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
-            struct.success = new ArrayList<TLZ_NodeId>(_list69.size);
-            for (int _i70 = 0; _i70 < _list69.size; ++_i70)
+            org.apache.thrift.protocol.TList _list53 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
+            struct.success = new ArrayList<TLZ_NodeId>(_list53.size);
+            for (int _i54 = 0; _i54 < _list53.size; ++_i54)
             {
-              TLZ_NodeId _elem71;
-              _elem71 = new TLZ_NodeId();
-              _elem71.read(iprot);
-              struct.success.add(_elem71);
+              TLZ_NodeId _elem55;
+              _elem55 = new TLZ_NodeId();
+              _elem55.read(iprot);
+              struct.success.add(_elem55);
             }
           }
           struct.setSuccessIsSet(true);
@@ -5019,14 +5019,14 @@ public class TLZ_NodeTable {
             case 3: // NODE_IDS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list72 = iprot.readListBegin();
-                  struct.nodeIds = new ArrayList<TLZ_NodeId>(_list72.size);
-                  for (int _i73 = 0; _i73 < _list72.size; ++_i73)
+                  org.apache.thrift.protocol.TList _list56 = iprot.readListBegin();
+                  struct.nodeIds = new ArrayList<TLZ_NodeId>(_list56.size);
+                  for (int _i57 = 0; _i57 < _list56.size; ++_i57)
                   {
-                    TLZ_NodeId _elem74;
-                    _elem74 = new TLZ_NodeId();
-                    _elem74.read(iprot);
-                    struct.nodeIds.add(_elem74);
+                    TLZ_NodeId _elem58;
+                    _elem58 = new TLZ_NodeId();
+                    _elem58.read(iprot);
+                    struct.nodeIds.add(_elem58);
                   }
                   iprot.readListEnd();
                 }
@@ -5057,9 +5057,9 @@ public class TLZ_NodeTable {
           oprot.writeFieldBegin(NODE_IDS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.nodeIds.size()));
-            for (TLZ_NodeId _iter75 : struct.nodeIds)
+            for (TLZ_NodeId _iter59 : struct.nodeIds)
             {
-              _iter75.write(oprot);
+              _iter59.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -5105,9 +5105,9 @@ public class TLZ_NodeTable {
         if (struct.isSetNodeIds()) {
           {
             oprot.writeI32(struct.nodeIds.size());
-            for (TLZ_NodeId _iter76 : struct.nodeIds)
+            for (TLZ_NodeId _iter60 : struct.nodeIds)
             {
-              _iter76.write(oprot);
+              _iter60.write(oprot);
             }
           }
         }
@@ -5127,14 +5127,14 @@ public class TLZ_NodeTable {
         }
         if (incoming.get(2)) {
           {
-            org.apache.thrift.protocol.TList _list77 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
-            struct.nodeIds = new ArrayList<TLZ_NodeId>(_list77.size);
-            for (int _i78 = 0; _i78 < _list77.size; ++_i78)
+            org.apache.thrift.protocol.TList _list61 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
+            struct.nodeIds = new ArrayList<TLZ_NodeId>(_list61.size);
+            for (int _i62 = 0; _i62 < _list61.size; ++_i62)
             {
-              TLZ_NodeId _elem79;
-              _elem79 = new TLZ_NodeId();
-              _elem79.read(iprot);
-              struct.nodeIds.add(_elem79);
+              TLZ_NodeId _elem63;
+              _elem63 = new TLZ_NodeId();
+              _elem63.read(iprot);
+              struct.nodeIds.add(_elem63);
             }
           }
           struct.setNodeIdsIsSet(true);
@@ -5155,7 +5155,7 @@ public class TLZ_NodeTable {
       schemes.put(TupleScheme.class, new lookupNodeIds_resultTupleSchemeFactory());
     }
 
-    public List<TLZ_RDF_Term> success; // required
+    public List<org.apache.jena.riot.thrift.wire.RDF_Term> success; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -5221,7 +5221,7 @@ public class TLZ_NodeTable {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.ListMetaData(org.apache.thrift.protocol.TType.LIST, 
-              new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TLZ_RDF_Term.class))));
+              new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.apache.jena.riot.thrift.wire.RDF_Term.class))));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(lookupNodeIds_result.class, metaDataMap);
     }
@@ -5230,7 +5230,7 @@ public class TLZ_NodeTable {
     }
 
     public lookupNodeIds_result(
-      List<TLZ_RDF_Term> success)
+      List<org.apache.jena.riot.thrift.wire.RDF_Term> success)
     {
       this();
       this.success = success;
@@ -5241,9 +5241,9 @@ public class TLZ_NodeTable {
      */
     public lookupNodeIds_result(lookupNodeIds_result other) {
       if (other.isSetSuccess()) {
-        List<TLZ_RDF_Term> __this__success = new ArrayList<TLZ_RDF_Term>(other.success.size());
-        for (TLZ_RDF_Term other_element : other.success) {
-          __this__success.add(new TLZ_RDF_Term(other_element));
+        List<org.apache.jena.riot.thrift.wire.RDF_Term> __this__success = new ArrayList<org.apache.jena.riot.thrift.wire.RDF_Term>(other.success.size());
+        for (org.apache.jena.riot.thrift.wire.RDF_Term other_element : other.success) {
+          __this__success.add(new org.apache.jena.riot.thrift.wire.RDF_Term(other_element));
         }
         this.success = __this__success;
       }
@@ -5262,22 +5262,22 @@ public class TLZ_NodeTable {
       return (this.success == null) ? 0 : this.success.size();
     }
 
-    public java.util.Iterator<TLZ_RDF_Term> getSuccessIterator() {
+    public java.util.Iterator<org.apache.jena.riot.thrift.wire.RDF_Term> getSuccessIterator() {
       return (this.success == null) ? null : this.success.iterator();
     }
 
-    public void addToSuccess(TLZ_RDF_Term elem) {
+    public void addToSuccess(org.apache.jena.riot.thrift.wire.RDF_Term elem) {
       if (this.success == null) {
-        this.success = new ArrayList<TLZ_RDF_Term>();
+        this.success = new ArrayList<org.apache.jena.riot.thrift.wire.RDF_Term>();
       }
       this.success.add(elem);
     }
 
-    public List<TLZ_RDF_Term> getSuccess() {
+    public List<org.apache.jena.riot.thrift.wire.RDF_Term> getSuccess() {
       return this.success;
     }
 
-    public lookupNodeIds_result setSuccess(List<TLZ_RDF_Term> success) {
+    public lookupNodeIds_result setSuccess(List<org.apache.jena.riot.thrift.wire.RDF_Term> success) {
       this.success = success;
       return this;
     }
@@ -5303,7 +5303,7 @@ public class TLZ_NodeTable {
         if (value == null) {
           unsetSuccess();
         } else {
-          setSuccess((List<TLZ_RDF_Term>)value);
+          setSuccess((List<org.apache.jena.riot.thrift.wire.RDF_Term>)value);
         }
         break;
 
@@ -5453,14 +5453,14 @@ public class TLZ_NodeTable {
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list80 = iprot.readListBegin();
-                  struct.success = new ArrayList<TLZ_RDF_Term>(_list80.size);
-                  for (int _i81 = 0; _i81 < _list80.size; ++_i81)
+                  org.apache.thrift.protocol.TList _list64 = iprot.readListBegin();
+                  struct.success = new ArrayList<org.apache.jena.riot.thrift.wire.RDF_Term>(_list64.size);
+                  for (int _i65 = 0; _i65 < _list64.size; ++_i65)
                   {
-                    TLZ_RDF_Term _elem82;
-                    _elem82 = new TLZ_RDF_Term();
-                    _elem82.read(iprot);
-                    struct.success.add(_elem82);
+                    org.apache.jena.riot.thrift.wire.RDF_Term _elem66;
+                    _elem66 = new org.apache.jena.riot.thrift.wire.RDF_Term();
+                    _elem66.read(iprot);
+                    struct.success.add(_elem66);
                   }
                   iprot.readListEnd();
                 }
@@ -5488,9 +5488,9 @@ public class TLZ_NodeTable {
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
-            for (TLZ_RDF_Term _iter83 : struct.success)
+            for (org.apache.jena.riot.thrift.wire.RDF_Term _iter67 : struct.success)
             {
-              _iter83.write(oprot);
+              _iter67.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -5521,9 +5521,9 @@ public class TLZ_NodeTable {
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (TLZ_RDF_Term _iter84 : struct.success)
+            for (org.apache.jena.riot.thrift.wire.RDF_Term _iter68 : struct.success)
             {
-              _iter84.write(oprot);
+              _iter68.write(oprot);
             }
           }
         }
@@ -5535,14 +5535,14 @@ public class TLZ_NodeTable {
         BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list85 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
-            struct.success = new ArrayList<TLZ_RDF_Term>(_list85.size);
-            for (int _i86 = 0; _i86 < _list85.size; ++_i86)
+            org.apache.thrift.protocol.TList _list69 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
+            struct.success = new ArrayList<org.apache.jena.riot.thrift.wire.RDF_Term>(_list69.size);
+            for (int _i70 = 0; _i70 < _list69.size; ++_i70)
             {
-              TLZ_RDF_Term _elem87;
-              _elem87 = new TLZ_RDF_Term();
-              _elem87.read(iprot);
-              struct.success.add(_elem87);
+              org.apache.jena.riot.thrift.wire.RDF_Term _elem71;
+              _elem71 = new org.apache.jena.riot.thrift.wire.RDF_Term();
+              _elem71.read(iprot);
+              struct.success.add(_elem71);
             }
           }
           struct.setSuccessIsSet(true);
