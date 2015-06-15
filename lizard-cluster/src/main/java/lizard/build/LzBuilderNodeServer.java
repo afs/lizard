@@ -22,16 +22,21 @@ import lizard.conf.ConfCluster ;
 import lizard.conf.ConfNodeTableElement ;
 import lizard.conf.Config ;
 import lizard.conf.NetHost ;
+import lizard.node.THandlerNodeTable2 ;
 import lizard.node.TServerNode ;
 
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.seaborne.dboe.base.file.Location ;
+import org.seaborne.dboe.base.record.RecordFactory ;
+import org.seaborne.dboe.index.Index ;
+import org.seaborne.dboe.trans.data.TransBinaryDataFile ;
 import org.seaborne.dboe.transaction.txn.TransactionCoordinator ;
 import org.seaborne.dboe.transaction.txn.TransactionalBase ;
 import org.seaborne.dboe.transaction.txn.TransactionalSystem ;
-import org.seaborne.tdb2.setup.TDBBuilder ;
 import org.seaborne.tdb2.setup.StoreParams ;
+import org.seaborne.tdb2.setup.TDBBuilder ;
 import org.seaborne.tdb2.store.nodetable.NodeTable ;
+import org.seaborne.tdb2.sys.SystemTDB ;
 import org.slf4j.Logger ;
 
 public class LzBuilderNodeServer {
@@ -53,6 +58,18 @@ public class LzBuilderNodeServer {
         TDBBuilder builder = TDBBuilder.create(coord, location, params) ;
         NodeTable nt = builder.buildNodeTable(params.getNodeTableBaseName()) ;
         TransactionalSystem txnSystem = new TransactionalBase(x.toString(), coord) ;
+        
+        if ( false ) {
+            String name = params.getNodeTableBaseName() ; 
+            RecordFactory recordFactory = new RecordFactory(SystemTDB.LenNodeHash, SystemTDB.SizeOfNodeId) ;
+            Index index = builder.buildRangeIndex(recordFactory, params.getNodeTableBaseName()) ;
+            String dataname = name+"-data" ; 
+            TransBinaryDataFile transBinFile = builder.buildBinaryDataFile(dataname) ;
+            THandlerNodeTable2 serverNode = new THandlerNodeTable2(txnSystem, dataname, null, null) ;
+            
+        }
+        
+        
         TServerNode serverNode = TServerNode.create(txnSystem, port, nt) ;
         platform.add(serverNode) ;
         return serverNode ;

@@ -33,7 +33,7 @@ import org.seaborne.dboe.transaction.txn.TransactionalSystem ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
-//XXX Needs efficiency attention.
+public
 /* package */ class THandlerNodeTable2 extends TxnHandler implements TLZ_ThriftObjectTable.Iface {
     private static Logger log = LoggerFactory.getLogger(THandlerNodeTable2.class) ;
     @Override
