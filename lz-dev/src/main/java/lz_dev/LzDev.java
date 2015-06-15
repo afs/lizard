@@ -84,11 +84,11 @@ public class LzDev {
 
         log.info("SERVERS") ;
 
-        String FILE = "/home/afs/Datasets/BSBM/bsbm-5m.nt.gz" ;
+        String FILE = "/home/afs/Datasets/BSBM/bsbm-1m.nt.gz" ;
         config.fileroot = Names.memName ;
         
-//        FILE = "/home/afs/Datasets/BSBM/bsbm-25m.nt.gz" ;
-//        config.fileroot = "DB" ;
+        FILE = "/home/afs/Datasets/BSBM/bsbm-5m.nt.gz" ;
+        config.fileroot = "DB" ;
         
         if ( ! config.fileroot.startsWith(Names.memName) ) {
             FileOps.ensureDir(config.fileroot); 
