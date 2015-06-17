@@ -24,28 +24,22 @@ public class PROJECT_Lizard {
     
     // NodeTableCache and transactions.
     
+    // Reduce overheads - wire to node table non-conversion.
+    
     // === Tasks
-    // Direct interconnect for comparison purposes.
-    //   Batching => Parallelism.
-    //   Walk through the sequence and look for overlaps
-    // Blocking Queue + semaphore for the counter.
     //   Update replics in parallel.
     
     // TxnClient.
     // TServer(Node|Index) -- what about locking operations?
     
-    // THandlerTupleIndex can store TLZ forms.
     // THandlerNodeTable can store TLZ forms.
     //   Not a node table but an Index+ObjectFileStorage directly.
     //   Don't decode/encode.
     //     NodeTableNative : BiMap[T]
     
-    // Share Thrift encoding with RIOT
-    // ThriftConvert is better that ThriftLib?
-    
     // Scaling:
     // A - Fix locks on ThriftLib.
-    // B - Batching updates (and flow reversal)
+    // B - Batching updates (and flow reversal) : switch between R and W modes.
     // C - Block allocate txn ids but still need the lock.
     
     // Node caching
@@ -53,11 +47,7 @@ public class PROJECT_Lizard {
     //  2 - move to 10 byte NodeIds
     // Special Ids for rdf: rdfs: (xsd:) URIs?
     
-    // Parallel operation.
-    
-    // batching : switch between R and W modes.
-    // Very large scans. Batching in replies?
-    //   add - find/flush - end|commit/flush
+    // Very large scans. Batching in replies
 
     // ---- Configuration
     // Robust parsing of YAML/RDF configurations.
