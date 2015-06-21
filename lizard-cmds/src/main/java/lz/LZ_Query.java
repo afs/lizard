@@ -26,10 +26,10 @@ import java.util.ArrayList ;
 import java.util.Arrays ;
 import java.util.List ;
 
+import jena.cmd.ArgDecl ;
+import jena.cmd.CmdException ;
+import jena.cmd.CmdGeneral ;
 import lizard.system.LzLib ;
-import arq.cmd.ArgDecl ;
-import arq.cmd.CmdException ;
-import arq.cmdline.CmdGeneral ;
 import arq.cmdline.ModQueryIn ;
 
 import org.apache.jena.atlas.logging.LogCtl ;

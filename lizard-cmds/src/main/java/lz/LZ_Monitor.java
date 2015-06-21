@@ -17,9 +17,10 @@
 
 package lz;
 
-import arq.cmd.CmdException ;
-import arq.cmdline.CmdGeneral ;
+import jena.cmd.CmdException ;
+import jena.cmd.CmdGeneral ;
 import lizard.cluster.Cluster ;
+
 import org.apache.jena.atlas.lib.Lib ;
 import org.apache.jena.atlas.logging.LogCtl ;
 import org.slf4j.Logger ;

@@ -19,7 +19,11 @@ package lz ;
 
 import java.util.Iterator ;
 
+import jena.cmd.ArgDecl ;
+import jena.cmd.CmdException ;
 import lizard.index.Shard ;
+import arq.cmdline.CmdARQ ;
+
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.Tuple ;
 import org.apache.jena.atlas.logging.LogCtl ;
@@ -32,11 +36,9 @@ import org.seaborne.tdb2.store.NodeId ;
 import org.seaborne.tdb2.store.tupletable.TupleIndex ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
+
 import quack.IndexLib ;
 import quack.IndexRef ;
-import arq.cmd.ArgDecl ;
-import arq.cmd.CmdException ;
-import arq.cmdline.CmdARQ ;
 
 /** Shard a TDB index. */
 public class LZ_ShardIndex extends CmdARQ {
