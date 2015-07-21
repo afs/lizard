@@ -18,7 +18,7 @@
 package lizard.conf;
 
 public class ConfIndexElement extends ConfElement<ConfIndex> {
-    public ConfIndexElement(String name, String data, ConfIndex index, NetAddr netAddr) {
-        super(name, data, index, netAddr) ;
+    public ConfIndexElement(String name, String data, ConfIndex index, VNodeAddr addr) {
+        super(name, data, index, addr) ;
     }
 }

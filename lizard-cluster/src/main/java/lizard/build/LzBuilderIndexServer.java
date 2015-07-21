@@ -39,7 +39,7 @@ public class LzBuilderIndexServer {
     
     public static void build(Platform platform, Location baseLocation, StoreParams params, ConfCluster confCluster, NetHost here) {
         confCluster.eltsIndex.stream()
-            .filter(x -> x.netAddr.sameHost(here))
+            .filter(x -> x.addr.sameHost(here))
             .forEach(x -> {
                 buildIndexServer(platform, baseLocation, params, x) ;
             }) ;
@@ -47,7 +47,7 @@ public class LzBuilderIndexServer {
 
     public static TServerIndex buildIndexServer(Platform platform, Location baseLocation, StoreParams params, ConfIndexElement x) {
         Location location = baseLocation.getSubLocation(x.data) ;
-        int port = x.netAddr.port ;
+        int port = x.addr.getPort() ;
         String data = x.data ; 
         FmtLog.info(logConf, "buildIndexServer[%s]: port=%s %s", x.conf.indexOrder, port, location) ;
         TransactionCoordinator coord = TDBBuilder.buildTransactionCoordinator(location) ;

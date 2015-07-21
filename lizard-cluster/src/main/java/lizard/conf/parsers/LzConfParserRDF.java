@@ -42,7 +42,7 @@ public class LzConfParserRDF {
     public static ConfCluster parseConfFile(Model model) {
         
         ConfCluster confCluster = new ConfCluster(new ConfDataset(null));
-        
+        parsePlacements(model, confCluster) ;
         // File root
         // @@
         
@@ -57,9 +57,43 @@ public class LzConfParserRDF {
         
         // Dataset : checking.
         LzDatasetDesc ldd = dataset(model, confCluster) ;
+        
+        // Check network address agains placements.
+        
         return confCluster ;
     }
     
+    public static void parsePlacements(Model model, ConfCluster confCluster) {
+        Map<String, VNode> placements = placements(model) ;
+        confCluster.placements.putAll(placements);
+    }
+    
+    private static Map<String, VNode> placements(Model model) {
+        String qs = StrUtils.strjoinNL(prefixes,
+                                       "SELECT * {",
+                                       " ?vNode :vname ?vname ." ,
+                                       "    OPTIONAL { ?vNode  :hostname ?hostname }",
+                                       "    OPTIONAL { ?vNode  :port ?port }",
+                                       "}") ;
+        Map<String, VNode> placements = new HashMap<>() ;
+        for ( QuerySolution row : Q.queryToList(model, qs) ) {
+            String vname = Q.getStringOrNull(row, "vname") ;
+            if ( vname == null )
+                throw new LizardException("No vname") ;
+            String host = Q.getStringOrNull(row, "hostname") ;
+            if ( host == null )
+                throw new LizardException(vname+" : No host") ;
+            String p = Q.getStringOrNull(row, "port") ;
+            if ( p == null )
+                throw new LizardException(vname+" : No port") ;
+            int port = Integer.parseInt(p) ;
+            NetAddr addr = NetAddr.create(host, port) ;
+            VNode vNode = new VNode(vname, addr) ;
+            placements.put(vname, vNode) ;
+        }
+        return placements ;
+    }
+
     private static void nodeServers(Model model, ConfCluster confCluster) {
         Map<Resource, DataServer> servers = dataServers(model, ":NodeServer") ;
         Map<Resource, ConfNodeTable> indexes = findNodeServices(model, confCluster, servers) ;
@@ -253,7 +287,7 @@ public class LzConfParserRDF {
             if ( data == null )
                 throw new LizardException(name+" : No data location") ;
     
-            NetAddr addr = NetAddr.create(host, port) ;
+            VNodeAddr addr = VNodeAddr.create(host, port) ;
             DataServer ds = new DataServer(svr, name, data, addr) ;
             servers.put(svr, ds) ;
         }
@@ -283,9 +317,9 @@ public class LzConfParserRDF {
         public final Resource resource ;
         public final String name ;
         public final String data ;
-        public final NetAddr addr ;
+        public final VNodeAddr addr ;
 
-        public DataServer(Resource r, String name, String data, NetAddr addr) {
+        public DataServer(Resource r, String name, String data, VNodeAddr addr) {
             this.resource = r ;
             this.name = name ;
             this.data = data ;

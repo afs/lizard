@@ -22,9 +22,7 @@ import java.util.List ;
 
 import lizard.build.LzBuilderNodeServer ;
 import lizard.cluster.Platform ;
-import lizard.conf.ConfNodeTable ;
-import lizard.conf.ConfNodeTableElement ;
-import lizard.conf.NetAddr ;
+import lizard.conf.* ;
 import lizard.node.NodeTableRemote ;
 import lizard.node.TClientNode ;
 import lizard.node.TServerNode ;
@@ -119,7 +117,8 @@ public class PerfNodeTableBatches {
 
         NetAddr here = NetAddr.create("localhost", port) ;
         ConfNodeTable nTableDesc = new ConfNodeTable(1, 1) ;
-        ConfNodeTableElement x = new ConfNodeTableElement("Nodes", "node", nTableDesc, here) ;
+        VNode vNode = new VNode("local", here) ;
+        ConfNodeTableElement x = new ConfNodeTableElement("Nodes", "node", nTableDesc, VNodeAddr.create("local", port)) ;
         TServerNode nodeServer = LzBuilderNodeServer.buildNodeServer(platform, location, params, x) ;
         nodeServer.start() ;
     }

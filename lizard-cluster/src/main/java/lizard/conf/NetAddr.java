@@ -17,51 +17,17 @@
 
 package lizard.conf;
 
-import java.util.Objects ;
 
-public class NetAddr {
-
-    public static NetAddr create(String hostname, int port) {
-        return new NetAddr(hostname, port) ;
+public class NetAddr extends Endpoint {
+    public static NetAddr create(String dnsName, int port) {
+        return new NetAddr(dnsName, port) ;
     }
-    public final String hostname ;
-    public final int port ;
+    
+    public static NetAddr createHere(int port) {
+        return new NetAddr("localhost", port) ;
+    }
+
     public NetAddr(String hostname, int port) {
-        Objects.requireNonNull(hostname, "Hostname is null") ;
-        this.hostname = hostname ;
-        this.port = port ;
+        super(hostname, port) ;
     }
-    @Override
-    public int hashCode() {
-        final int prime = 31 ;
-        int result = 1 ;
-        result = prime * result + ((hostname == null) ? 0 : hostname.hashCode()) ;
-        result = prime * result + port ;
-        return result ;
-    }
-    @Override
-    public boolean equals(Object obj) {
-        if ( this == obj )
-            return true ;
-        if ( obj == null )
-            return false ;
-        if ( getClass() != obj.getClass() )
-            return false ;
-        NetAddr other = (NetAddr)obj ;
-        if ( hostname == null ) {
-            if ( other.hostname != null )
-                return false ;
-        } else if ( !hostname.equals(other.hostname) )
-            return false ;
-        if ( port != other.port )
-            return false ;
-        return true ;
-    }
-    public boolean sameHost(NetHost here) {
-        return sameHost(here.hostname) ;
-    }
-
-    public boolean sameHost(String here) {
-        return Objects.equals(hostname, here) ;
-    }    
 }

@@ -35,15 +35,18 @@ public class LzConfigDefault {
         ConfDataset confDatabase = new ConfDataset(confNT, posIdx, psoIdx) ;
         
         // Shards
-        ConfIndexElement posIdx1 = new ConfIndexElement(posIdx.indexOrder+"-1", "POS-1", posIdx, NetAddr.create("localhost", 2010)) ;
-        ConfIndexElement psoIdx1 = new ConfIndexElement(psoIdx.indexOrder+"-1", "PSO-1", psoIdx, NetAddr.create("localhost", 2012)) ;
-        ConfNodeTableElement nt1 = new ConfNodeTableElement("Nodes-1", "N1", confNT, NetAddr.create("localhost", 2014)) ;
+        ConfIndexElement posIdx1 = new ConfIndexElement(posIdx.indexOrder+"-1", "POS-1", posIdx, VNodeAddr.create("local", 2010)) ;
+        ConfIndexElement psoIdx1 = new ConfIndexElement(psoIdx.indexOrder+"-1", "PSO-1", psoIdx, VNodeAddr.create("local", 2012)) ;
+        ConfNodeTableElement nt1 = new ConfNodeTableElement("Nodes-1", "N1", confNT, VNodeAddr.create("local", 2014)) ;
     
         // The zookeeper server.
         ConfZookeeper confZookeeper = ConfZookeeper.create(zkPort, null) ;
     
         // Cluster
         ConfCluster confCluster = new ConfCluster(confDatabase) ;
+        VNode vNode = new VNode("local", NetAddr.create("localhost", zkPort)) ;
+        confCluster.placements.put("local", vNode) ;
+        
         confCluster.zkServer.add(confZookeeper) ;
         confCluster.addIndexElements(posIdx1, psoIdx1) ;
         confCluster.addNodeElements(nt1) ;

@@ -25,7 +25,7 @@ public class NetHost {
         return new NetHost(hostname) ;
     }
 
-    public NetHost(String hostname) {
+    private NetHost(String hostname) {
         this.hostname = hostname ;
     }
 

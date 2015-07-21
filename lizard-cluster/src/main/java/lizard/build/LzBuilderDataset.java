@@ -151,7 +151,8 @@ public class LzBuilderDataset {
                 .filter(x -> ci.indexOrder.equals(x.conf.indexOrder))
                 .sequential()
                 .forEach(x -> {
-                    TupleIndexRemote idx = TupleIndexRemote.create(x.netAddr.hostname, x.netAddr.port, idxOrder, cmap) ;
+                    NetAddr netAddr = x.addr.placement(confCluster.placements, x.addr.getPort()) ; 
+                    TupleIndexRemote idx = TupleIndexRemote.create(netAddr.getName(), netAddr.getPort(), idxOrder, cmap) ;
                     indexes.add(idx) ;
                     startables.add(idx) ;
                 }) ;
@@ -168,7 +169,8 @@ public class LzBuilderDataset {
         confCluster.eltsNodeTable.stream()
             .sequential()
             .forEach(x -> {
-                NodeTableRemote ntr = NodeTableRemote.create(x.netAddr.hostname, x.netAddr.port) ;
+                NetAddr netAddr = x.addr.placement(confCluster.placements, x.addr.getPort()) ; 
+                NodeTableRemote ntr = NodeTableRemote.create(netAddr.getName(), netAddr.getPort()) ;
                 nodeTableParts.add(ntr) ;
                 startables.add(ntr) ;
             });

@@ -25,6 +25,7 @@ import lizard.conf.* ;
 
 import org.apache.jena.atlas.io.IO ;
 import org.apache.jena.atlas.lib.ColumnMap ;
+import org.apache.jena.atlas.lib.NotImplemented ;
 import org.seaborne.dboe.sys.Names ;
 import org.yaml.snakeyaml.Yaml ;
 
@@ -34,6 +35,7 @@ public class LzConfParserYAML {
     public static final String objSparql    = "sparql" ;
     public static final String objCluster   = "cluster" ;
     public static final String objNodeTable = "nodetable" ;
+    public static final String objVNode     = "vnodes" ;
 
     public static final String fIndexes     = ".indexes" ;
     public static final String fServers     = ".servers" ;
@@ -88,7 +90,6 @@ public class LzConfParserYAML {
         return conf ;
     }
     
-    @SuppressWarnings("unchecked")
     public static void parseConfIndex(ConfCluster confCluster, Object index, Object root) {
         String indexorder = (String)YAML.get(index, fName) ;
         
@@ -99,7 +100,8 @@ public class LzConfParserYAML {
             primary = Names.primaryIndexQuads ;
         else
             throw new LzConfigurationException("Bad index name: "+indexorder) ; 
-        
+        @SuppressWarnings("unchecked")
+
         List<Object> servers = (List<Object>)YAML.get(index, fServers) ;
         int N = servers.size() ;
         ConfIndex confIndex = new ConfIndex(new ColumnMap(primary, indexorder), indexorder, 1, N) ;
@@ -108,7 +110,7 @@ public class LzConfParserYAML {
             Object server = servers.get(i) ;
             // @@ YAML.indirect
             server = YAML.get(root, (String)server);
-            NetAddr addr = shard(server) ;
+            VNodeAddr addr = shard(server) ;
             String data = (String)YAML.get(server, fData);
             ConfIndexElement idx = new ConfIndexElement(confIndex.indexOrder+"-"+(i+1), data, confIndex, addr) ;
             confCluster.eltsIndex.add(idx) ;
@@ -117,8 +119,8 @@ public class LzConfParserYAML {
         confCluster.dataset.indexes.add(confIndex) ;
     }
 
-    @SuppressWarnings("unchecked")
     public static void parseNodeTable(ConfCluster confCluster, Object nodetable, Object root) {
+        @SuppressWarnings("unchecked")
         List<Object> servers = (List<Object>)YAML.get(nodetable, fServers) ;
         int N = servers.size() ;
         ConfNodeTable confNT = new ConfNodeTable(1, N) ;
@@ -126,7 +128,7 @@ public class LzConfParserYAML {
         for ( int i = 0 ; i < N ; i++ ) {
             Object server = servers.get(i) ;
             server = YAML.get(root, (String)server);
-            NetAddr addr = shard(server) ;
+            VNodeAddr addr = shard(server) ;
             String data = (String)YAML.get(server, fData);
             ConfNodeTableElement elt = new ConfNodeTableElement("Nodes-"+(i+1), data, confNT, addr) ;
             confCluster.eltsNodeTable.add(elt) ;
@@ -134,9 +136,13 @@ public class LzConfParserYAML {
         confCluster.dataset.nodeTable = confNT ;
     }
 
-    public static NetAddr shard(Object shard) {
+    public static VNodeAddr shard(Object shard) {
         String host = (String)YAML.get(shard, fHostname) ;
         int port = (Integer)YAML.get(shard, fPort) ;
-        return NetAddr.create(host, port) ;  
+        return VNodeAddr.create(host, port) ;  
+    }
+    
+    public static void parsePlacement(ConfCluster confCluster, String file) {
+        throw new NotImplemented() ;
     }
 }

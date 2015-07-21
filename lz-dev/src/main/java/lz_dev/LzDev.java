@@ -65,7 +65,8 @@ public class LzDev {
     static String confNode          = Q.filename(confDir, "conf-node.ttl") ;
     static String confIndex         = Q.filename(confDir, "conf-index.ttl") ;
     static String confDataset       = Q.filename(confDir, "conf-dataset.ttl") ;
-    static Model configurationModel = Q.readAll(confNode, confIndex, confDataset) ;
+    static String confLayout        = Q.filename(confDir, "conf-layout.ttl") ;
+    static Model configurationModel = Q.readAll(confNode, confIndex, confDataset, confLayout) ;
     static ConfCluster config       = LzConfParserRDF.parseConfFile(configurationModel) ;
     // then "config.fileroot = Names.memName" for in-meory testing.
     
@@ -84,11 +85,11 @@ public class LzDev {
 
         log.info("SERVERS") ;
 
-        String FILE = "/home/afs/Datasets/BSBM/bsbm-1m.nt.gz" ;
+        String FILE = "/home/afs/Datasets/BSBM/bsbm-250k.nt.gz" ;
         config.fileroot = Names.memName ;
         
-        FILE = "/home/afs/Datasets/BSBM/bsbm-5m.nt.gz" ;
-        config.fileroot = "DB" ;
+//        FILE = "/home/afs/Datasets/BSBM/bsbm-5m.nt.gz" ;
+//        config.fileroot = "DB" ;
         
         if ( ! config.fileroot.startsWith(Names.memName) ) {
             FileOps.ensureDir(config.fileroot); 
@@ -96,7 +97,7 @@ public class LzDev {
         }
 
         // The deployment "here".
-        NetHost here = NetHost.create("localhost") ;
+        NetHost here = NetHost.create("vnode1") ;
         
         try { 
             LzDeploy.deployServers(config, here);

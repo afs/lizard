@@ -44,7 +44,7 @@ public class LzBuilderNodeServer {
     
     public static void build(Platform platform, Location baseLocation, StoreParams params, ConfCluster confCluster, NetHost here) {
         confCluster.eltsNodeTable.stream()
-            .filter(x -> x.netAddr.sameHost(here))
+            .filter(x -> x.addr.sameHost(here))
             .forEach(x -> {
                 buildNodeServer(platform, baseLocation, params, x) ;
             }) ;
@@ -52,7 +52,7 @@ public class LzBuilderNodeServer {
 
     public static TServerNode buildNodeServer(Platform platform, Location baseLocation, StoreParams params, ConfNodeTableElement x) {
         Location location = baseLocation.getSubLocation(x.data) ;
-        int port = x.netAddr.port ;
+        int port = x.addr.getPort() ;
         FmtLog.info(logConf, "buildNodeServer: port=%s %s", port, location) ;
         TransactionCoordinator coord = TDBBuilder.buildTransactionCoordinator(location) ;
         TDBBuilder builder = TDBBuilder.create(coord, location, params) ;

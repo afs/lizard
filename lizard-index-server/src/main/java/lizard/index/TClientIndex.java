@@ -66,6 +66,8 @@ public class TClientIndex extends TxnClient<TLZ_Index.Client> implements TClient
     
     @Override
     public void start() {
+        FmtLog.info(log, "Start (%s:%d)", client.getRemoteHost(), client.getRemotePort()) ;
+        
         if ( client.isRunning() ) {
             FmtLog.debug(log, "Already started (%s:%d)", client.getRemoteHost(), client.getRemotePort()) ;
             return ;

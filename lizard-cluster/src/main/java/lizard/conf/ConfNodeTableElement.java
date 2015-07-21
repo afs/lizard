@@ -18,7 +18,7 @@
 package lizard.conf;
 
 public class ConfNodeTableElement extends ConfElement<ConfNodeTable> {
-    public ConfNodeTableElement(String name, String data, ConfNodeTable nodetable, NetAddr netAddr) {
-        super(name, data, nodetable, netAddr) ;
+    public ConfNodeTableElement(String name, String data, ConfNodeTable nodetable, VNodeAddr addr) {
+        super(name, data, nodetable, addr) ;
     }
 }

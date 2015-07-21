@@ -18,17 +18,16 @@
 package lizard.conf;
 
 import java.io.StringWriter ;
-import java.util.ArrayList ;
-import java.util.Collections ;
-import java.util.List ;
+import java.util.* ;
 
 import lizard.conf.parsers.LzConfParserYAML ;
 
 import org.apache.jena.atlas.io.IndentedWriter ;
 
-/** Static description configuration */
+/** Static description configuration. */
 public class ConfCluster {
     public final List<ConfZookeeper> zkServer = new ArrayList<>() ;
+    public final VNodeLayout placements = new VNodeLayout() ;
     public final ConfDataset   dataset ;
     public final List<ConfNodeTableElement> eltsNodeTable = new ArrayList<>() ;
     public final List<ConfIndexElement> eltsIndex = new ArrayList<>() ;
@@ -54,9 +53,16 @@ public class ConfCluster {
         out.flush() ;
         return sw.toString() ; 
     }
-
+    
     public void print(IndentedWriter out) {
-        // YAML.printfield
+        out.print(LzConfParserYAML.objVNode) ;
+        out.println(": [") ;
+        placements.forEach((s,vn) -> { 
+            out.printf("  { vname: \"%s\" , :hostname \"%s\" , :port \"%d\" } ,\n", 
+                       vn.vname, vn.getAdminEndpoint().getName(), vn.getAdminEndpoint().getPort()) ;
+            }) ;
+        out.println("]") ;
+        
         out.print(LzConfParserYAML.objCluster) ;
         out.println(":") ;
        
