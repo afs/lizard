@@ -15,7 +15,7 @@
 
 <#node-server>  a :NodeServer ;
     :name       "ServerNode" ;
-	:hostname   "vnode1" ;
+	:hostname   "localhost" ;
 	:port       4011 ; 
     :data       "N" ;
     .

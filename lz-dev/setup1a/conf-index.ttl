@@ -28,24 +28,24 @@
     :servers       ( <#index-s3> ) ;
     .
 
-# index servers
+# 2 servers
 <#index-s1>  a  :IndexServer ;
     :name       "ServerIndex-s1" ;
-    :hostname   "vnode1" ;
+    :hostname   "localhost" ;
     :port       4012 ; 
     :data       "Idx1" ; # relative to the base location of installation.
     .
 
 <#index-s2>  a  :IndexServer ;
     :name       "ServerIndex-s2" ;
-    :hostname   "vnode1" ;
+    :hostname   "localhost" ;
     :port       4014 ; 
     :data       "Idx2" ; 
     .
 
 <#index-s3>  a  :IndexServer ;
     :name       "ServerIndex-s3" ;
-    :hostname   "vnode1" ;
+    :hostname   "localhost" ;
     :port       4016 ; 
     :data       "Idx3" ; 
     .
