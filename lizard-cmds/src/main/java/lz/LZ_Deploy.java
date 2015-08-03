@@ -20,9 +20,16 @@ package lz;
 import jena.cmd.ArgDecl ;
 import jena.cmd.CmdException ;
 import jena.cmd.CmdGeneral ;
+import lizard.build.LzDeploy ;
+import lizard.conf.ConfCluster ;
+import lizard.conf.NetHost ;
+import lizard.conf.parsers.LzConfParserRDF ;
+import lizard.system.LizardException ;
+import migrate.Q ;
 
 import org.apache.jena.atlas.lib.Lib ;
 import org.apache.jena.atlas.logging.LogCtl ;
+import org.apache.jena.rdf.model.Model ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
@@ -31,11 +38,11 @@ import org.slf4j.LoggerFactory ;
  */
 public class LZ_Deploy extends CmdGeneral {
     static { LogCtl.setCmdLogging(); }
-    
     public static Logger log        = LoggerFactory.getLogger("Lizard") ;  
     public static Logger logConf    = LoggerFactory.getLogger("Conf") ;
-    protected ArgDecl argDeploy     = new ArgDecl(ArgDecl.HasValue, "deploy", "server") ;
-    //private Deployment deployment = null ;
+    protected ArgDecl argServer     = new ArgDecl(ArgDecl.HasValue, "server") ;
+    String[] confFiles              = null ;
+    String thisVNode                = null ;
     
     public static void main(String ...args) {
         new LZ_Deploy(args).mainRun() ;
@@ -43,7 +50,7 @@ public class LZ_Deploy extends CmdGeneral {
     
     protected LZ_Deploy(String[] argv) {
         super(argv) ;
-        super.add(argDeploy, argDeploy.getKeyName(), "Deployment description");
+        super.add(argServer, argServer.getKeyName(), "VNode name for this node");
     }
     
     @Override
@@ -53,25 +60,35 @@ public class LZ_Deploy extends CmdGeneral {
 
     @Override
     protected void processModulesAndArgs() {
-        if ( ! super.contains(argDeploy) )
+        if ( ! super.contains(argServer) )
             throw new CmdException("Required: --deploy") ;
         
-        if ( super.getValues(argDeploy).size() > 1 )
+        if ( super.getValues(argServer).size() > 1 )
             throw new CmdException("Required: exactly one --deploy") ;
 
-        String deploymentFile = super.getValue(argDeploy) ;
-        String [] a = super.getPositional().toArray(new String[0]) ;
+        thisVNode = super.getValue(argServer) ;
         
-        throw new CmdException("NEEDS FIXING (new design)") ;
-       
-//        Configuration config = Configuration.fromFile(a) ;
-//        deployment = Deployment.parse(config, deploymentFile) ; 
+        confFiles = super.getPositional().toArray(new String[0]) ;
+        if ( confFiles.length == 0 )
+            throw new CmdException("Required: at least one configuration file") ;
     }
 
     @Override
     protected void exec() {
         try {
-            //Deploy.deploy(deployment) ;
+            
+            Model configurationModel = Q.readAll(confFiles) ;
+            ConfCluster config = LzConfParserRDF.parseConfFile(configurationModel) ;
+            logConf.info("Configuration parsed") ;
+            logConf.info("Deploy for "+thisVNode) ;
+            NetHost here = NetHost.create(thisVNode) ;
+            try { 
+                LzDeploy.deployServers(config, here);
+            } catch ( LizardException ex) {
+                System.err.println(ex.getMessage());
+                System.exit(0) ;
+            }
+            logConf.info("Run") ;
             while (true) {
                 Lib.sleep(10000) ;
             }

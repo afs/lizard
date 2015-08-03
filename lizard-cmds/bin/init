@@ -58,6 +58,11 @@ do
     accLZCP "$C"
 done
 
+# And a built-in zookeeper (for now).
+accLZCP "$REPO/org/apache/curator/curator-test/2.7.1/curator-test-2.7.1.jar"
+accLZCP "$REPO/org/javassist/javassist/3.18.1-GA/javassist-3.18.1-GA.jar"
+accLZCP "$REPO/org/apache/commons/commons-math/2.2/commons-math-2.2.jar"
+
 # Prepend any development directories here
 DEVDIRS="jena-core jena-tdb jena-arq"
 JENA_DEV="$HOME/Jena"
