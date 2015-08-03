@@ -45,18 +45,24 @@ public class AssemblerYaml extends DatasetAssembler {
     static Dataset make(Resource root) {
         // YAML configuration
         Lizard.init(); 
-        Property property = root.getModel().createProperty("urn:lizard:", "configuration") ;
+        Property pConfiguration = root.getModel().createProperty("urn:lizard:", "configuration") ;
+        Property pLayout = root.getModel().createProperty("urn:lizard:", "configuration") ;
         
-        if ( ! root.hasProperty(property) )
-            throw new AssemblerException(root, "Missing the Lizard config file via "+property) ;  
+        if ( ! root.hasProperty(pConfiguration) )
+            throw new AssemblerException(root, "Missing the Lizard config file via "+pConfiguration) ;  
+        if ( ! root.hasProperty(pLayout) )
+            throw new AssemblerException(root, "Missing the Lizard config file via "+pLayout) ;  
         
-        String confFile  = root.getProperty(property).getString() ;
+        String confFile  = root.getProperty(pConfiguration).getString() ;
+        String layoutFile  = root.getProperty(pLayout).getString() ;
         
         if ( ! FileOps.exists(confFile) )
             throw new AssemblerException(root, "No such file: "+confFile) ;
+        if ( ! FileOps.exists(layoutFile) )
+            throw new AssemblerException(root, "No such file: "+confFile) ;
         
-        ConfCluster conf = LzConfParserYAML.parseConfFile(confFile) ;
-        NetHost here = NetHost.create("localhost") ;
+        ConfCluster conf = LzConfParserYAML.parseConfFile(confFile,layoutFile) ;
+        NetHost here = NetHost.create("here") ;
         Dataset ds = LzDeploy.deployDataset(conf, here);
         return ds ;
     }

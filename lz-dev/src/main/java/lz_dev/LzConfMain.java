@@ -58,6 +58,7 @@ public class LzConfMain {
                 (dir+"/conf-dataset.ttl"
                 ,dir+"/conf-index.ttl"
                 ,dir+"/conf-node.ttl"
+                ,dir+"/conf-layout.ttl"
                     ) ;
 
             conf =  LzConfParserRDF.parseConfFile(model) ;
@@ -65,7 +66,7 @@ public class LzConfMain {
             System.out.println(conf) ;
         }
         if ( true ) {
-            conf = LzConfParserYAML.parseConfFile("config-dev.yaml") ;
+            conf = LzConfParserYAML.parseConfFile("config-dev.yaml", "config-layout.yaml") ;
             System.out.println("== YAML") ;
             System.out.println(conf) ;
             
@@ -83,7 +84,7 @@ public class LzConfMain {
 //        System.exit(0) ;
         
         // The deployment "here".
-        NetHost here = NetHost.create("localhost") ;
+        NetHost here = NetHost.create("vnode1") ;
         LzDeploy.deployServers(conf, here);
         Dataset ds = LzDeploy.deployDataset(conf, here) ;
         

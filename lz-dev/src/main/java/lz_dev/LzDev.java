@@ -67,8 +67,8 @@ public class LzDev {
     static String confDataset       = Q.filename(confDir, "conf-dataset.ttl") ;
     static String confLayout        = Q.filename(confDir, "conf-layout.ttl") ;
     static Model configurationModel = Q.readAll(confNode, confIndex, confDataset, confLayout) ;
-    static ConfCluster config       = LzConfParserRDF.parseConfFile(configurationModel) ;
-    // then "config.fileroot = Names.memName" for in-meory testing.
+    static ConfCluster config  ;
+    // then "config.fileroot = Names.memName" for in-memory testing.
     
     public static void main(String[] args) {
         try { main$(args) ; }
@@ -81,6 +81,9 @@ public class LzDev {
     }
 
     public static void main$(String[] args) {
+        
+        config = LzConfParserRDF.parseConfFile(configurationModel) ;
+        
         FileOps.clearAll("DB");
 
         log.info("SERVERS") ;

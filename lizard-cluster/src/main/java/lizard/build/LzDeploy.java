@@ -17,11 +17,14 @@
 
 package lizard.build;
 
+import java.util.Optional ;
+
 import lizard.cluster.Cluster ;
 import lizard.cluster.Platform ;
 import lizard.conf.ConfCluster ;
 import lizard.conf.NetHost ;
 import lizard.query.LzDataset ;
+import lizard.system.LizardException ;
 
 import org.apache.jena.query.Dataset ;
 import org.seaborne.dboe.base.file.Location ;
@@ -31,6 +34,10 @@ public class LzDeploy {
     
     /** Deploy the server-side of a configuration here */
     public static void deployServers(ConfCluster confCluster, NetHost here) {
+        Optional<String> search = confCluster.placements.keySet().stream().filter(name->name.equals(here.hostname)).findFirst() ;
+        if ( ! search.isPresent() )
+            throw new LizardException("VHost 'here' ("+here+") is not in the placements: "+confCluster.placements) ;
+        
         String zkConnect = LzBuildZk.zookeeper(confCluster, here) ;
         Cluster.createSystem(zkConnect);
         Location baseLocation = null ;

@@ -3,14 +3,14 @@
 # one server each for POS, PSO and nodetable. 
 
 cluster:
-  zookeeper:    [ "localhost:2281" ]
+  zookeeper:    [ "vnode1:2281" ]
   fileroot:    "--mem--"
 
 ## sparql:
 ##   servers: [ qs-1 ]
 ## 
 ## qs-1:
-##   hostname: localhost
+##   hostname: vnode1
 ##   port: 3030
 
 dataset:
@@ -29,13 +29,13 @@ index-pso:
 #Index shards
 pos-1:  
   name:        "Server-POS"
-  hostname:    localhost
+  hostname:    vnode1
   port:        4012
   data:        "data/POS-1"
 
 pso-1:
   name:        "Server-PSO"
-  hostname:    localhost
+  hostname:    vnode1
   port:        4014
   data:        "data/PSO-1"
 
@@ -46,6 +46,6 @@ nodetable:
 
 node-1:
   name:        "ServerNode"
-  hostname:    localhost
+  hostname:    vnode1
   port:        4011
   data:        "data/N1"

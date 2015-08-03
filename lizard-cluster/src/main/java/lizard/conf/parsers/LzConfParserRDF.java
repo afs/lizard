@@ -40,7 +40,6 @@ public class LzConfParserRDF {
     
     /** Read RDF format */
     public static ConfCluster parseConfFile(Model model) {
-        
         ConfCluster confCluster = new ConfCluster(new ConfDataset(null));
         parsePlacements(model, confCluster) ;
         // File root

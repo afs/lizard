@@ -36,20 +36,22 @@ public class LzConfParserYAML {
     public static final String objCluster   = "cluster" ;
     public static final String objNodeTable = "nodetable" ;
     public static final String objVNode     = "vnodes" ;
-
+    
     public static final String fIndexes     = ".indexes" ;
     public static final String fServers     = ".servers" ;
     public static final String fNodes       = ".nodes" ;
     public static final String fZookeeper   = ".zookeeper" ;
     public static final String fFileroot    = ".fileroot" ;
     public static final String fName        = ".name" ;
+    public static final String fVName       = ".vname" ;
     public static final String fHostname    = ".hostname" ;
     public static final String fPort        = ".port" ;
     public static final String fData        = ".data" ;
     
     @SuppressWarnings("unchecked")
-    public static ConfCluster parseConfFile(String filename) {
-        InputStream inYaml = IO.openFile(filename) ;
+    public static ConfCluster parseConfFile(String clusterConfFilename, String layoutFilename) {
+        VNodeLayout vnodeLayout = parseLayout(layoutFilename) ;
+        InputStream inYaml = IO.openFile(clusterConfFilename) ;
         Object root = new Yaml().load(inYaml) ;
         // structure --
         //   cluster:
@@ -66,6 +68,7 @@ public class LzConfParserYAML {
             System.err.println("Configuration: sparql mentioned, not implemented") ;
         
         ConfCluster conf = new ConfCluster(new ConfDataset(null));
+        conf.placements.putAll(vnodeLayout);
         
         String fileroot = (String)YAML.get(root, objCluster, fFileroot) ;
         conf.fileroot = fileroot ;
@@ -90,6 +93,23 @@ public class LzConfParserYAML {
         return conf ;
     }
     
+    /** Parse the layout file */
+    @SuppressWarnings("unchecked")
+    private static VNodeLayout parseLayout(String layoutFilename) {
+        InputStream inYaml = IO.openFile(layoutFilename) ;
+        Object root = new Yaml().load(inYaml) ;
+        VNodeLayout vnodeLayout = new VNodeLayout() ;
+        List<Object> vnodes = (List<Object>)YAML.get(root, objVNode) ;
+        vnodes.forEach(vnode->{
+            String vname = (String)YAML.get(vnode, fVName) ;
+            String hostname = (String)YAML.get(vnode, fHostname) ;
+            int port = (Integer)YAML.get(vnode, fPort) ;
+            VNode vn = new VNode(vname, NetAddr.create(hostname, port)) ;
+            vnodeLayout.put(vname, vn) ;
+        }) ;
+        return vnodeLayout ;
+    }
+
     public static void parseConfIndex(ConfCluster confCluster, Object index, Object root) {
         String indexorder = (String)YAML.get(index, fName) ;
         
