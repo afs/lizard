@@ -1,0 +1,5 @@
+# Placement: mapping from virtual name to real address.
+
+vnodes: [
+  { vname: "vnode1" , hostname: "localhost" , port: 1100 }
+]
