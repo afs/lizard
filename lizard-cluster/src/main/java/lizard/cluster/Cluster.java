@@ -17,6 +17,8 @@
 
 package lizard.cluster ;
 
+import static java.lang.String.format ;
+
 import java.util.HashSet ;
 import java.util.List ;
 import java.util.Set ;
@@ -24,6 +26,7 @@ import java.util.concurrent.TimeUnit ;
 import java.util.concurrent.atomic.AtomicBoolean ;
 
 import lizard.system.LizardException ;
+
 import org.apache.curator.RetryPolicy ;
 import org.apache.curator.framework.CuratorFramework ;
 import org.apache.curator.framework.CuratorFrameworkFactory ;
@@ -39,7 +42,6 @@ import org.seaborne.dboe.transaction.txn.TxnIdGenerator ;
 import org.seaborne.dboe.transaction.txn.TxnIdSimple ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
-
 /** Cluster management.
  * One instance of this class per JVM.
  */
@@ -49,7 +51,10 @@ public class Cluster {
         if ( instance != null )
             return ;
 
-        try { instance = new Cluster$(connectString) ; } 
+        try {
+            instance = new Cluster$(connectString) ;
+            log.info(format("Zookeeper %s", connectString)) ;
+        } 
         catch (Exception e) {
             log.error("Failed: "+connectString, e) ;
         }

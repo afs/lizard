@@ -18,6 +18,7 @@
 package lizard.build;
 
 import lizard.conf.* ;
+import lizard.system.LizardException ;
 
 import org.apache.curator.test.TestingServer ;
 import org.apache.jena.atlas.logging.FmtLog ;
@@ -30,27 +31,13 @@ public class LzBuildZk {
     private static Logger logConf = Config.logConf ;
     
     static TestingServer zkTestServer;
+    static String zkConnectString ;
     
-    public static String zookeeper(ConfCluster confCluster, NetHost here) {
-        if ( confCluster.zkServer.size() == 0 )
-            throw new LzConfigurationException("No zookeeper details in cluster configuration") ;
-        if ( confCluster.zkServer.size() > 1 )
-            throw new LzConfigurationException("Multiple zookeeper details in cluster configuration") ;
-        ConfZookeeper confZookeeper = confCluster.zkServer.get(0) ;
-        zookeeper(confZookeeper);
-        return "localhost:"+confZookeeper.port  ;
-    }
-
-    public static void zookeeper(ConfZookeeper confZookeeper) {
-        if ( confZookeeper.isEphemeral() ) {
-            FmtLog.info(logConf, "Zookeeper (ephemeral): %d", confZookeeper.port) ;
-            zookeeperSimple(confZookeeper.port) ;
-            return ;
-        }
-
-        FmtLog.info(logConf, "Zookeeper %s : %d", confZookeeper.zkConfDir, confZookeeper.port) ;
+    /** Run a full Zookeepr here */
+    public static void zookeeper(ConfZookeeper confZookeeper, String zkConfDir) {
+        FmtLog.info(logConf, "Start Zookeeper %s : %d", zkConfDir, confZookeeper.port) ;
         ServerConfig config = new ServerConfig();
-        config.parse(new String[] {Integer.toString(confZookeeper.port), confZookeeper.zkConfDir}) ;
+        config.parse(new String[] {Integer.toString(confZookeeper.port), zkConfDir}) ;
         ZooKeeperServerMain zk = new ZooKeeperServerMain();
         L.async(()-> {
             try { zk.runFromConfig(config) ; }
@@ -58,12 +45,11 @@ public class LzBuildZk {
         }) ;
     }
     
+    /** Run an empemeral zookeeper */
     public static void zookeeperSimple(int port) {
+        FmtLog.info(logConf, "Start Zookeeper (ephemeral): %d", port) ;
         try { zkTestServer = new TestingServer(port) ; }
-        catch (Exception e) { e.printStackTrace(); }
+        catch (Exception e) { throw new LizardException(e) ; }
     }
-
-
-
 }
 

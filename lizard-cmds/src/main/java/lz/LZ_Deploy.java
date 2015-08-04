@@ -22,7 +22,6 @@ import jena.cmd.CmdException ;
 import jena.cmd.CmdGeneral ;
 import lizard.build.LzDeploy ;
 import lizard.conf.ConfCluster ;
-import lizard.conf.NetHost ;
 import lizard.conf.parsers.LzConfParserRDF ;
 import lizard.system.LizardException ;
 import migrate.Q ;
@@ -41,8 +40,10 @@ public class LZ_Deploy extends CmdGeneral {
     public static Logger log        = LoggerFactory.getLogger("Lizard") ;  
     public static Logger logConf    = LoggerFactory.getLogger("Conf") ;
     protected ArgDecl argServer     = new ArgDecl(ArgDecl.HasValue, "server") ;
+    protected ArgDecl argZkPort     = new ArgDecl(ArgDecl.HasValue, "zookeeper", "zk") ;
     String[] confFiles              = null ;
     String thisVNode                = null ;
+    int zkPort                      = -1 ; 
     
     public static void main(String ...args) {
         new LZ_Deploy(args).mainRun() ;
@@ -55,18 +56,25 @@ public class LZ_Deploy extends CmdGeneral {
     
     @Override
     protected String getSummary() {
-        return "deploy: --deploy=deploymentFile configFiles ..." ;
+        return "deploy: --server=vnodeToDeploy configFiles ..." ;
     }
 
     @Override
     protected void processModulesAndArgs() {
         if ( ! super.contains(argServer) )
-            throw new CmdException("Required: --deploy") ;
+            throw new CmdException("Required: --server") ;
+//        if ( ! super.contains(argZkPort) )
+//            throw new CmdException("Required: --zk") ;
         
         if ( super.getValues(argServer).size() > 1 )
-            throw new CmdException("Required: exactly one --deploy") ;
-
+            throw new CmdException("Required: exactly one --server") ;
         thisVNode = super.getValue(argServer) ;
+        
+        if ( super.contains(argZkPort) ) {
+            if ( super.getValues(argZkPort).size() > 1 )
+                throw new CmdException("Required: at most one --zk") ;
+            zkPort = Integer.parseInt(super.getValue(argZkPort)) ;
+        }
         
         confFiles = super.getPositional().toArray(new String[0]) ;
         if ( confFiles.length == 0 )
@@ -76,14 +84,12 @@ public class LZ_Deploy extends CmdGeneral {
     @Override
     protected void exec() {
         try {
-            
             Model configurationModel = Q.readAll(confFiles) ;
             ConfCluster config = LzConfParserRDF.parseConfFile(configurationModel) ;
             logConf.info("Configuration parsed") ;
             logConf.info("Deploy for "+thisVNode) ;
-            NetHost here = NetHost.create(thisVNode) ;
             try { 
-                LzDeploy.deployServers(config, here);
+                LzDeploy.deployServers(config, thisVNode);
             } catch ( LizardException ex) {
                 System.err.println(ex.getMessage());
                 System.exit(0) ;

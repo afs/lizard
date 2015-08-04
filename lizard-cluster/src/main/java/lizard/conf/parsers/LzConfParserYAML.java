@@ -36,39 +36,30 @@ public class LzConfParserYAML {
     public static final String objCluster   = "cluster" ;
     public static final String objNodeTable = "nodetable" ;
     public static final String objVNode     = "vnodes" ;
+    public static final String objZookeeper = "zookeeper" ;
     
     public static final String fIndexes     = ".indexes" ;
     public static final String fServers     = ".servers" ;
     public static final String fNodes       = ".nodes" ;
-    public static final String fZookeeper   = ".zookeeper" ;
     public static final String fFileroot    = ".fileroot" ;
     public static final String fName        = ".name" ;
     public static final String fVName       = ".vname" ;
     public static final String fHostname    = ".hostname" ;
     public static final String fPort        = ".port" ;
+    public static final String fZkPort      = ".zkPort" ;
     public static final String fData        = ".data" ;
     
     @SuppressWarnings("unchecked")
     public static ConfCluster parseConfFile(String clusterConfFilename, String layoutFilename) {
-        VNodeLayout vnodeLayout = parseLayout(layoutFilename) ;
+        ConfCluster conf = new ConfCluster(new ConfDataset(null));
+        parseLayout(conf, layoutFilename) ;
+        
         InputStream inYaml = IO.openFile(clusterConfFilename) ;
         Object root = new Yaml().load(inYaml) ;
-        // structure --
-        //   cluster:
-        //   sparql:
-        //   dataset:
-        
-        List<String> zkServers = (List<String>)YAML.get(root, objCluster, fZookeeper) ;
-        if ( zkServers != null ) {
-            // @@
-        }
         
         Object sparql = YAML.get(root, objSparql) ;
         if ( sparql != null )
             System.err.println("Configuration: sparql mentioned, not implemented") ;
-        
-        ConfCluster conf = new ConfCluster(new ConfDataset(null));
-        conf.placements.putAll(vnodeLayout);
         
         String fileroot = (String)YAML.get(root, objCluster, fFileroot) ;
         conf.fileroot = fileroot ;
@@ -85,20 +76,25 @@ public class LzConfParserYAML {
         }
         Object x = YAML.get(root, nodes) ;
         parseNodeTable(conf, x, root);
-        
-        // The zookeeper server.
-        // @@
-        ConfZookeeper confZookeeper = ConfZookeeper.create(2188, null) ;
-        conf.zkServer.add(confZookeeper) ;
         return conf ;
     }
     
-    /** Parse the layout file */
+    /** Parse the layout file 
+     * @param conf */
     @SuppressWarnings("unchecked")
-    private static VNodeLayout parseLayout(String layoutFilename) {
+    private static void parseLayout(ConfCluster conf, String layoutFilename) {
         InputStream inYaml = IO.openFile(layoutFilename) ;
         Object root = new Yaml().load(inYaml) ;
-        VNodeLayout vnodeLayout = new VNodeLayout() ;
+        List<Object> zkServers = (List<Object>)YAML.get(root, objVNode) ;
+        zkServers.forEach(zk->{
+            String vname = (String)YAML.get(zk, fVName) ;
+            String hostname = (String)YAML.get(zk, fHostname) ;
+            int port = (Integer)YAML.get(zk, fPort) ;
+            ConfZookeeper confZk = ConfZookeeper.create(hostname, port) ;
+            conf.zkServer.add(confZk) ;
+        });
+        
+        VNodeLayout vnodeLayout = conf.placements ;
         List<Object> vnodes = (List<Object>)YAML.get(root, objVNode) ;
         vnodes.forEach(vnode->{
             String vname = (String)YAML.get(vnode, fVName) ;
@@ -107,7 +103,6 @@ public class LzConfParserYAML {
             VNode vn = new VNode(vname, NetAddr.create(hostname, port)) ;
             vnodeLayout.put(vname, vn) ;
         }) ;
-        return vnodeLayout ;
     }
 
     public static void parseConfIndex(ConfCluster confCluster, Object index, Object root) {

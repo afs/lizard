@@ -21,7 +21,6 @@ import java.nio.file.Paths ;
 
 import lizard.build.LzDeploy ;
 import lizard.conf.ConfCluster ;
-import lizard.conf.NetHost ;
 import lizard.conf.parsers.LzConfParserRDF ;
 import migrate.Q ;
 
@@ -46,8 +45,7 @@ public class MainLzFuseki {
         
         Model configurationModel = Q.readAll(confFile) ;
         ConfCluster conf =  LzConfParserRDF.parseConfFile(configurationModel) ;
-        NetHost here = NetHost.create("localhost") ;
-        LzDeploy.deployServers(conf, here) ;
+        LzDeploy.deployServers(conf, "vnode1") ;
         
         System.setProperty("FUSEKI_HOME", "/home/afs/Jena/jena-fuseki2/jena-fuseki-core/") ;
         FusekiEnv.FUSEKI_BASE = Paths.get("setup-simple/run").toAbsolutePath() ;

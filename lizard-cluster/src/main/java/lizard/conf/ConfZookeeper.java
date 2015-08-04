@@ -19,30 +19,25 @@ package lizard.conf;
 
 import org.apache.jena.atlas.io.IndentedWriter ;
 
-
+/** Sever reference */
 public class ConfZookeeper {
+    public final String hostname ;  
     public final int port ;
-    public final String zkConfDir ;
     
-    public static ConfZookeeper create(int port, String zkConfDir) {
-        return new ConfZookeeper(port, zkConfDir) ; 
+    public static ConfZookeeper create(String hostname, int port) {
+        return new ConfZookeeper(hostname, port) ; 
     }
     
-    public ConfZookeeper createEphemeral(int port) {
-        return new ConfZookeeper(port, null) ; 
-    }
-
-    private ConfZookeeper(int port, String zkConfDir) {
-        super() ;
+    private ConfZookeeper(String hostname, int port) {
+        this.hostname = hostname ;
         this.port = port ;
-        this.zkConfDir = zkConfDir ;
     }
     
-    public boolean isEphemeral() {
-        return zkConfDir == null ;
+    public void print(IndentedWriter out) {
+        out.print("zookeeper://"+connectString()) ;
     }
 
-    public void print(IndentedWriter out) {
-        out.print("zookeeper:"+port) ;
+    public String connectString() {
+        return hostname+":"+port ;
     }
 }

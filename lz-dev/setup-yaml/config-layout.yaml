@@ -1,5 +1,10 @@
 # Placement: mapping from virtual name to real address.
 
+zookeeper: [
+   { hostname: "localhost" , port: 2186 }
+]
+   
+
 vnodes: [
   { vname: "vnode1" , hostname: "localhost" , port: 1100 }
 ]

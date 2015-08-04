@@ -19,23 +19,21 @@ package lz_dev;
 
 import java.io.InputStream ;
 
+import lizard.build.LzBuildZk ;
 import lizard.build.LzDeploy ;
 import lizard.conf.ConfCluster ;
-import lizard.conf.NetHost ;
 import lizard.conf.parsers.LzConfParserRDF ;
 import lizard.conf.parsers.LzConfParserYAML ;
 import lizard.conf.parsers.YAML ;
 import lizard.system.LizardException ;
 import migrate.Q ;
-
-import org.apache.jena.query.Dataset ;
-import org.apache.jena.query.ReadWrite ;
-import org.apache.jena.rdf.model.Model ;
-
 import conf2.LzConfigDefault ;
 
 import org.apache.jena.atlas.io.IO ;
 import org.apache.jena.atlas.logging.LogCtl ;
+import org.apache.jena.query.Dataset ;
+import org.apache.jena.query.ReadWrite ;
+import org.apache.jena.rdf.model.Model ;
 import org.apache.jena.riot.RDFDataMgr ;
 import org.yaml.snakeyaml.Yaml ;
 
@@ -69,7 +67,6 @@ public class LzConfMain {
             conf = LzConfParserYAML.parseConfFile("config-dev.yaml", "config-layout.yaml") ;
             System.out.println("== YAML") ;
             System.out.println(conf) ;
-            
         }
 
         if ( false )
@@ -83,16 +80,15 @@ public class LzConfMain {
         System.out.println("==") ;
 //        System.exit(0) ;
         
+        LzBuildZk.zookeeperSimple(2186);
         // The deployment "here".
-        NetHost here = NetHost.create("vnode1") ;
+        String here = "vnode1" ;
         LzDeploy.deployServers(conf, here);
         Dataset ds = LzDeploy.deployDataset(conf, here) ;
         
         // Specialized assembler.
         // Fire off fuseki.
 
-        
-        
         if ( false ) {
             
         } else {

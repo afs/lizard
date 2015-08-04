@@ -34,10 +34,11 @@ public class lz {
         String subcmd = $args[0] ; 
         
         switch ( subcmd ) {
-            case "deploy": { new LZ_Deploy(args).mainRun() ; break ; }
-            case "query":  { new LZ_Query(args).mainRun();   break ; }
-            case "monitor":  { new LZ_Monitor(args).mainRun();   break ; }
-                
+            case "deploy":      { new LZ_Deploy(args).mainRun() ; break ; }
+            case "query":       { new LZ_Query(args).mainRun();   break ; }
+            case "monitor":     { new LZ_Monitor(args).mainRun();   break ; }
+            case "zk": case "zookeeper":
+                                { new LZ_Zookeeper(args).mainRun();   break ; }
             default:
                 CmdError("lz: no such subcommand: "+subcmd) ;
                 break ;

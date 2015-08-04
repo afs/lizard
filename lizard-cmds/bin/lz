@@ -54,6 +54,7 @@ case $SUB in
     monitor) CMD="LZ_Monitor" ;;
     shard)   CMD="LZ_ShardIndex" ;;
     split)   CMD="LZ_SplitDB" ;;
+    zk|zookeeper)   CMD="LZ_Zookeeper" ;;
     *)
 	echo "Unknown subcommand: $SUB"
 	usage
@@ -67,5 +68,3 @@ then
 fi
 
 java -cp "$CP" $JVM_ARGS $LOGGING lz.$CMD "$@"
-
-

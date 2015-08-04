@@ -19,7 +19,6 @@ package lizard.conf.assembler;
 
 import lizard.build.LzDeploy ;
 import lizard.conf.ConfCluster ;
-import lizard.conf.NetHost ;
 import lizard.conf.parsers.LzConfParserYAML ;
 import lizard.query.LizardQuery ;
 import lizard.sys.Lizard ;
@@ -62,7 +61,7 @@ public class AssemblerYaml extends DatasetAssembler {
             throw new AssemblerException(root, "No such file: "+confFile) ;
         
         ConfCluster conf = LzConfParserYAML.parseConfFile(confFile,layoutFile) ;
-        NetHost here = NetHost.create("here") ;
+        String here = "here" ;
         Dataset ds = LzDeploy.deployDataset(conf, here);
         return ds ;
     }

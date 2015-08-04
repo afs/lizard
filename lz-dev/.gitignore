@@ -7,6 +7,7 @@ lz-dev.classpath
 # Databases
 DB*
 zkConf/
+fu-conf.ttl
 
 # During initial development, allow small data test files.
 ## D.ttl

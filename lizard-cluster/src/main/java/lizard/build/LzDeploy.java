@@ -17,29 +17,29 @@
 
 package lizard.build;
 
-import java.util.Optional ;
-
 import lizard.cluster.Cluster ;
 import lizard.cluster.Platform ;
-import lizard.conf.ConfCluster ;
-import lizard.conf.NetHost ;
+import lizard.conf.* ;
 import lizard.query.LzDataset ;
 import lizard.system.LizardException ;
 
 import org.apache.jena.query.Dataset ;
 import org.seaborne.dboe.base.file.Location ;
 import org.seaborne.tdb2.setup.StoreParams ;
+import org.slf4j.Logger ;
 
 public class LzDeploy {
     
+    static Logger log = Config.logConf ;
+    
     /** Deploy the server-side of a configuration here */
-    public static void deployServers(ConfCluster confCluster, NetHost here) {
-        Optional<String> search = confCluster.placements.keySet().stream().filter(name->name.equals(here.hostname)).findFirst() ;
-        if ( ! search.isPresent() )
-            throw new LizardException("VHost 'here' ("+here+") is not in the placements: "+confCluster.placements) ;
-        
-        String zkConnect = LzBuildZk.zookeeper(confCluster, here) ;
-        Cluster.createSystem(zkConnect);
+    public static void deployServers(ConfCluster confCluster, String here) {
+        if ( confCluster.zkServer.isEmpty() )
+            throw new LizardException("No zookeeper server described") ;
+
+        ConfZookeeper confZK = confCluster.zkServer.get(0) ;
+        // Connect
+        Cluster.createSystem(confZK.connectString());
         Location baseLocation = null ;
         
         if ( confCluster.fileroot == null )
@@ -50,15 +50,16 @@ public class LzDeploy {
         Platform platform = new Platform() ;
         StoreParams params = StoreParams.getDftStoreParams() ; 
         
+        // NetHost for the local vNode.
+        NetHost hereHost = NetHost.create(here) ;
         // Each server has it's own journal - it'll be part of the distributed transaction.
-        LzBuilderNodeServer.build(platform, baseLocation, params, confCluster, here);
-        LzBuilderIndexServer.build(platform, baseLocation, params, confCluster, here);
+        LzBuilderNodeServer.build(platform, baseLocation, params, confCluster, hereHost);
+        LzBuilderIndexServer.build(platform, baseLocation, params, confCluster, hereHost);
         
         platform.start(); 
-
     }
     
-    public static Dataset deployDataset(ConfCluster confCluster, NetHost here) {
+    public static Dataset deployDataset(ConfCluster confCluster, String here) {
         Location baseLocation = null ;
         if ( confCluster.fileroot == null )
             baseLocation = Location.mem() ;
@@ -70,5 +71,10 @@ public class LzDeploy {
             return null ;
         return LzBuilderDataset.dataset(lzdsg) ;
     }
+    
+    public static VNode findVNode(ConfCluster confCluster, String vnodeName) {
+        return confCluster.placements.get(vnodeName) ;
+    }
+    
 }
 

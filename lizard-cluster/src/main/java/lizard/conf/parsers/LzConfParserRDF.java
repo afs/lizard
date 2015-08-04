@@ -41,15 +41,9 @@ public class LzConfParserRDF {
     /** Read RDF format */
     public static ConfCluster parseConfFile(Model model) {
         ConfCluster confCluster = new ConfCluster(new ConfDataset(null));
+        parseZookeeper(model, confCluster) ;
         parsePlacements(model, confCluster) ;
-        // File root
-        // @@
         
-        // Zookeeper
-        // @@Fake
-        ConfZookeeper confZookeeper = ConfZookeeper.create(2188, null) ;
-        confCluster.zkServer.add(confZookeeper) ;
-
         // Index and nodetable.
         indexServers(model, confCluster) ;
         nodeServers(model, confCluster) ;
@@ -57,11 +51,31 @@ public class LzConfParserRDF {
         // Dataset : checking.
         LzDatasetDesc ldd = dataset(model, confCluster) ;
         
-        // Check network address agains placements.
-        
+        // ?? Check network address against placements.
         return confCluster ;
     }
     
+    private static void parseZookeeper(Model model, ConfCluster confCluster) {
+        String qs = StrUtils.strjoinNL(prefixes,
+                                       "SELECT * {",
+                                       ":zookeeper :server ?X"  ,
+                                       "    OPTIONAL { ?X  :hostname ?hostname }",
+                                       "    OPTIONAL { ?X  :port ?port }",
+                                       "}") ;
+        Map<String, VNode> placements = new HashMap<>() ;
+        for ( QuerySolution row : Q.queryToList(model, qs) ) {
+            String host = Q.getStringOrNull(row, "hostname") ;
+            if ( host == null )
+                throw new LizardException("No zookeeper host") ;
+            String p = Q.getStringOrNull(row, "port") ;
+            if ( p == null )
+                throw new LizardException("No zookeeper port") ;
+            int port = Integer.parseInt(p) ;
+            ConfZookeeper confZK = ConfZookeeper.create(host, port) ;
+            confCluster.zkServer.add(confZK) ;
+        }
+    }
+
     public static void parsePlacements(Model model, ConfCluster confCluster) {
         Map<String, VNode> placements = placements(model) ;
         confCluster.placements.putAll(placements);
@@ -86,6 +100,7 @@ public class LzConfParserRDF {
             if ( p == null )
                 throw new LizardException(vname+" : No port") ;
             int port = Integer.parseInt(p) ;
+            
             NetAddr addr = NetAddr.create(host, port) ;
             VNode vNode = new VNode(vname, addr) ;
             placements.put(vname, vNode) ;

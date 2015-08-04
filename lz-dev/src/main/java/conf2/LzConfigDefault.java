@@ -26,6 +26,7 @@ public class LzConfigDefault {
 
     // Setup for development : one of each, all one JVM; one local zookeeper.
     public static ConfCluster setup_mem_local() {
+        int port   = 2180 ;
         int zkPort = 2188 ;
     
         // Dataset
@@ -40,13 +41,12 @@ public class LzConfigDefault {
         ConfNodeTableElement nt1 = new ConfNodeTableElement("Nodes-1", "N1", confNT, VNodeAddr.create("local", 2014)) ;
     
         // The zookeeper server.
-        ConfZookeeper confZookeeper = ConfZookeeper.create(zkPort, null) ;
+        ConfZookeeper confZookeeper = ConfZookeeper.create("localhost", 2186) ;
     
         // Cluster
         ConfCluster confCluster = new ConfCluster(confDatabase) ;
-        VNode vNode = new VNode("local", NetAddr.create("localhost", zkPort)) ;
+        VNode vNode = new VNode("local", NetAddr.create("localhost", port)) ;
         confCluster.placements.put("local", vNode) ;
-        
         confCluster.zkServer.add(confZookeeper) ;
         confCluster.addIndexElements(posIdx1, psoIdx1) ;
         confCluster.addNodeElements(nt1) ;

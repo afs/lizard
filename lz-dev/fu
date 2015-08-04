@@ -3,7 +3,7 @@
 
 LIZARD_HOME="${LIZARD_HOME:-$HOME/Lizard}"
 LZ_CMDS="$LIZARD_HOME/lizard-cmds"
-VER_FU=2.0.1-SNAPSHOT
+VER_FU=2.3.1-SNAPSHOT
 
 # either this or that
 #source "$LZ_CMDS/bin/init"
@@ -43,4 +43,8 @@ export FUSEKI_BASE=$PWD/run
 ## echo "$X"
 ## exit
 
-exec java -cp "$CP" $JVM_ARGS $FUSEKI_LOG org.apache.jena.fuseki.cmd.FusekiCmd "$@"
+## Make a Fuseki config file.
+cat setup1/fuseki-server.ttl setup1/conf-*ttl > fu-conf.ttl
+
+exec java -cp "$CP" $JVM_ARGS $FUSEKI_LOG org.apache.jena.fuseki.cmd.FusekiCmd \
+     "--conf=fu-conf.ttl"

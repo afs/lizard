@@ -75,7 +75,7 @@ public class ConfCluster {
         }
         
         out.incIndent();
-        out.print(LzConfParserYAML.fZookeeper.substring(1));
+        out.print(LzConfParserYAML.objZookeeper);
         out.print(": ") ;
         out.print("[ ") ;
         zkServer.stream().forEach(zk -> { zk.print(out); out.print(", "); }) ;

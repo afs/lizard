@@ -7,6 +7,12 @@ prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
 prefix tdb:     <http://jena.hpl.hp.com/2008/tdb#> 
 prefix ja:      <http://jena.hpl.hp.com/2005/11/Assembler#> 
 
+# Zookeeper
+
+:zookeeper
+    :server [ :hostname "localhost" ; :port 2186 ] ;
+    .
+
 # Placement: mapping from virtual name to real address.
 
 [ :vname "vnode1" ; :hostname "localhost" ; :port 1100 ] .
