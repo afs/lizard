@@ -57,14 +57,17 @@
       <artifactId>lizard-query-server</artifactId>
       <version>0.0.0-SNAPSHOT</version>
     </dependency>
-     <dependency>
-       <groupId>org.yaml</groupId>
-       <artifactId>snakeyaml</artifactId>
+    <dependency>
+      <groupId>org.apache.jena</groupId>
+      <artifactId>jena-fuseki-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.yaml</groupId>
+      <artifactId>snakeyaml</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.curator</groupId>
       <artifactId>curator-test</artifactId>
     </dependency>    
   </dependencies>
-
 </project>

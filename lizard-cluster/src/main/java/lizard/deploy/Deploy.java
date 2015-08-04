@@ -15,12 +15,13 @@
  *  information regarding copyright ownership.
  */
  
-package lz_dev;
+package lizard.deploy;
 
 import java.nio.file.Paths ;
 
 import lizard.build.LzBuildZk ;
 import lizard.build.LzDeploy ;
+import lizard.conf.ConfCluster ;
 import lizard.index.ClusterTupleIndex ;
 import lizard.index.TClientIndex ;
 import lizard.index.TServerIndex ;
@@ -56,33 +57,32 @@ import org.seaborne.tdb2.store.DatasetGraphTDB ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
-public class DevActions {
+public class Deploy {
 
-    static Logger LOG = LoggerFactory.getLogger("LzLoader") ;
+    static Logger log = LoggerFactory.getLogger("Deploy") ;
 
-    static Dataset deployHere(String string) {
-        // --- The deployment "here".
-        LzDev.log.info("SERVERS") ;
-        LzBuildZk.zookeeperSimple(2186);
+    public static void deployZookeer(int port) {
+        LzBuildZk.zookeeperSimple(port);
+    }
     
-        String here = "vnode1" ;
+    public static void deployServers(ConfCluster config, String here) {
+        // --- The deployment "here".
+        log.info("SERVERS") ;
         try { 
-            LzDeploy.deployServers(LzDev.config, here);
+            LzDeploy.deployServers(config, here);
         } catch ( LizardException ex) {
             System.err.println(ex.getMessage());
             System.exit(0) ;
         }
-    
-        // Multiple query servers?
-        LzDev.log.info("DATASET") ;
-        
-        //config.print(IndentedWriter.stdout);
-        
-        Dataset ds = LzDeploy.deployDataset(LzDev.config, here) ;
-        return ds ;
     }
 
-    static void runFuseki(DatasetGraph dsg, int port) {
+    public static Dataset deployDataset(ConfCluster config, String here) {
+        log.info("DATASET") ;
+        Dataset ds = LzDeploy.deployDataset(config, here) ;
+        return ds ;
+    }
+    
+    public static void runFuseki(DatasetGraph dsg, int port) {
         // -- Run fuseki
         //FusekiServer.
         ServerInitialConfig fuConf = new ServerInitialConfig() ;
@@ -119,8 +119,8 @@ public class DevActions {
         }) ;
     }
 
-    static void load(Dataset ds, String datafile) {        
-            LzDev.log.info("LOAD : "+datafile) ;
+    public static void load(Dataset ds, String datafile) {        
+            log.info("LOAD : "+datafile) ;
             if ( datafile != null ) {
                 // Making loading quieter.
                 LogCtl.set(ClusterNodeTable.class, "WARN") ;
@@ -154,7 +154,7 @@ public class DevActions {
                 LogCtl.set(TServerNode.class, "INFO") ;
                 LogCtl.set(TServerIndex.class, "INFO") ;
             }
-            LzDev.log.info("LOAD : finish") ;
+            log.info("LOAD : finish") ;
         }
 
     public static void bulkLoad(Dataset ds, String ... files) {
@@ -162,7 +162,7 @@ public class DevActions {
         DatasetGraphTDB dsg = (DatasetGraphTDB)ds.asDatasetGraph() ;
         StreamRDF s1 = new StreamRDFBatchSplit(dsg, 100) ;
         
-        ProgressLogger plog = new ProgressLogger(LzDev.log, "Triples", 100000, 10) ;
+        ProgressLogger plog = new ProgressLogger(log, "Triples", 100000, 10) ;
         StreamRDFMonitor sMonitor = new StreamRDFMonitor(s1, plog) ;
         StreamRDF s3 = sMonitor ;
     
@@ -170,7 +170,7 @@ public class DevActions {
         TDBTxn.executeWrite(ds, () -> {
             for ( String fn : files ) {
                 if ( files.length > 1 )
-                    FmtLog.info(LOG, "File: %s",fn);
+                    FmtLog.info(log, "File: %s",fn);
                 RDFDataMgr.parse(s3, fn) ;
             }
         }) ;
@@ -178,7 +178,7 @@ public class DevActions {
     }
 
     // -------- Query
-    static void performQuery(Dataset ds) {
+    public static void performQuery(Dataset ds) {
         //            Quack.setVerbose(true) ;
         //            ARQ.setExecutionLogging(InfoLevel.NONE);
     
@@ -204,13 +204,11 @@ public class DevActions {
         }
     }
 
-    static void doOne(String label, Dataset ds, Query query) {
-        ds.begin(ReadWrite.READ);
+    public static void doOne(String label, Dataset ds, Query query) {
         try (QueryExecution qExec = QueryExecutionFactory.create(query, ds) ) {
-            LzDev.log.info("---- {}", label) ;
+            log.info("---- {}", label) ;
             QueryExecUtils.executeQuery(query, qExec);
         }
-        ds.end() ;
     }
 
     public static void mainFuseki(String[] args) {

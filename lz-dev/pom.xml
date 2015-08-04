@@ -51,11 +51,6 @@ information regarding copyright ownership.
     </dependency>
     
     <dependency>
-      <groupId>org.apache.jena</groupId>
-      <artifactId>jena-fuseki-core</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>org.apache.curator</groupId>
       <artifactId>curator-recipes</artifactId>
     </dependency>

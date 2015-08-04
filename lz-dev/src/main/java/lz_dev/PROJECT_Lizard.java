@@ -18,6 +18,14 @@
 package lz_dev ;
 
 public class PROJECT_Lizard {
+    // Multiple deployment.
+    //   Log write txn everywhere.
+    //   Do all vnodes get updated?
+    // Check cluster add notifications.
+    
+    
+    
+    
     // *** TxnClient is currently doing the synchonization
     // Sort out ThriftRunnable / Runnable.
     //   maybe a fixed class to catch+convert Thrift to LizardExceptions 

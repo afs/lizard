@@ -19,11 +19,13 @@ package lz_dev;
 
 import lizard.conf.ConfCluster ;
 import lizard.conf.parsers.LzConfParserRDF ;
+import lizard.deploy.Deploy ;
 import migrate.Q ;
 
 import org.apache.jena.atlas.lib.FileOps ;
 import org.apache.jena.atlas.logging.LogCtl ;
 import org.apache.jena.query.Dataset ;
+import org.apache.jena.query.ReadWrite ;
 import org.apache.jena.rdf.model.Model ;
 import org.seaborne.dboe.sys.Names ;
 import org.slf4j.Logger ;
@@ -33,7 +35,8 @@ public class LzDev {
     static { LogCtl.setLog4j(); } 
     public static Logger log = LoggerFactory.getLogger("Main") ;
 
-    static String confDir           = "setup1" ;
+    //static String confDir           = "setup1" ;
+    static String confDir           = "setup2" ;
     static String confNode          = Q.filename(confDir, "conf-node.ttl") ;
     static String confIndex         = Q.filename(confDir, "conf-index.ttl") ;
     static String confDataset       = Q.filename(confDir, "conf-dataset.ttl") ;
@@ -43,40 +46,47 @@ public class LzDev {
     // then "config.fileroot = Names.memName" for in-memory testing.
     
     public static void main(String[] args) {
-        try { main$(args) ; }
+        try { 
+            config = LzConfParserRDF.parseConfFile(configurationModel) ;
+            
+            String FILE = "/home/afs/Datasets/BSBM/bsbm-250k.nt.gz" ;
+            config.fileroot = Names.memName ;
+            
+//            FILE = "/home/afs/Datasets/BSBM/bsbm-5m.nt.gz" ;
+//            FileOps.clearAll("DB");
+//            config.fileroot = "DB" ;
+            
+            if ( ! config.fileroot.startsWith(Names.memName) ) {
+                FileOps.ensureDir(config.fileroot); 
+                FileOps.clearAll(config.fileroot) ;
+            }
+            
+            String here = "vnode1" ; 
+            
+            Deploy.deployZookeer(2186);
+            Deploy.deployServers(config, "vnode1") ;
+            Deploy.deployServers(config, "vnode2") ;
+            
+            Dataset ds = Deploy.deployDataset(config, here) ;
+            
+            if ( false ) {
+                Deploy.runFuseki(ds.asDatasetGraph(), 3030);
+                System.exit(0) ;
+            }
+            
+            // Alternatively ....
+            Deploy.load(ds,FILE);
+            ds.begin(ReadWrite.READ);
+            Deploy.performQuery(ds);
+            ds.end() ;
+
+        
+        }
         catch (Exception ex) { 
             System.out.flush() ;
             System.err.println(ex.getMessage()) ;
             ex.printStackTrace(System.err);
             System.exit(0) ;
         }
-    }
-
-    public static void main$(String[] args) {
-        
-        config = LzConfParserRDF.parseConfFile(configurationModel) ;
-        
-        FileOps.clearAll("DB");
-
-
-        String FILE = "/home/afs/Datasets/BSBM/bsbm-250k.nt.gz" ;
-        config.fileroot = Names.memName ;
-        
-//        FILE = "/home/afs/Datasets/BSBM/bsbm-5m.nt.gz" ;
-//        config.fileroot = "DB" ;
-        
-        if ( ! config.fileroot.startsWith(Names.memName) ) {
-            FileOps.ensureDir(config.fileroot); 
-            FileOps.clearAll(config.fileroot) ;
-        }
-
-        Dataset ds = DevActions.deployHere("vnode1") ;
-        
-        DevActions.runFuseki(ds.asDatasetGraph(), 3030);
-        System.exit(0) ;
-        
-        // Alternatively ....
-        DevActions.load(ds,FILE);
-        DevActions.performQuery(ds);
     }
 }
