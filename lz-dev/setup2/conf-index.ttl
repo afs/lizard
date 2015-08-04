@@ -1,0 +1,71 @@
+@base     <urn:lizard:> .
+@prefix : <urn:lizard:> .
+
+@prefix fuseki:  <http://jena.apache.org/fuseki#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix tdb:     <http://jena.hpl.hp.com/2008/tdb#> .
+@prefix ja:      <http://jena.hpl.hp.com/2005/11/Assembler#> .
+
+# Replicated.
+
+<#index1> rdf:type :IndexService ;
+    :name          "IndexSPO" ;
+    :indexOrder    "SPO" ;
+    :servers       ( <#index-s11> <#index-s12> ) ;
+    .
+
+<#index2> rdf:type :IndexService ;
+    :name          "IndexPOS" ;
+    :indexOrder    "POS" ;
+    :servers       ( <#index-s21>  <#index-s22> ) ;
+    .
+
+<#index3> rdf:type :IndexService ;
+    :name          "IndexPSO" ;
+    :indexOrder    "PSO" ;
+    :servers       ( <#index-s31> <#index-s32> ) ;
+    .
+
+# index servers 1
+<#index-s11>  a  :IndexServer ;
+    :name       "ServerIndex-s11" ;
+    :hostname   "vnode1" ;
+    :port       4012 ; 
+    :data       "Idx11" ;
+    .
+
+<#index-s21>  a  :IndexServer ;
+    :name       "ServerIndex-s21" ;
+    :hostname   "vnode1" ;
+    :port       4013 ; 
+    :data       "Idx21" ; 
+    .
+
+<#index-s31>  a  :IndexServer ;
+    :name       "ServerIndex-s31" ;
+    :hostname   "vnode1" ;
+    :port       4014 ; 
+    :data       "Idx31" ; 
+    .
+# index servers 2
+<#index-s12>  a  :IndexServer ;
+    :name       "ServerIndex-s12" ;
+    :hostname   "vnode2" ;
+    :port       4015 ; 
+    :data       "Idx12" ;
+    .
+
+<#index-s22>  a  :IndexServer ;
+    :name       "ServerIndex-s22" ;
+    :hostname   "vnode2" ;
+    :port       4016 ; 
+    :data       "Idx22" ; 
+    .
+
+<#index-s32>  a  :IndexServer ;
+    :name       "ServerIndex-s32" ;
+    :hostname   "vnode2" ;
+    :port       4017 ; 
+    :data       "Idx32" ; 
+    .

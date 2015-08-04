@@ -1,0 +1,4 @@
+#!/bin/bash
+
+../fu --conf fuseki.ttl
+
