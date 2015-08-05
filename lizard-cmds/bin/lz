@@ -34,7 +34,7 @@ fi
 
 usage() {
     echo "Usage: $(basename $0) subcmd" 2>&1
-    echo "   Subcommands: 'deploy', 'query', 'servers', 'monitor', 'shard', 'split'" 2>&1
+    echo "   Subcommands: 'deploy', 'query', 'servers', 'monitor', 'shard', 'split', 'zk'" 2>&1
 }
 
 if [[ $# = 0 ]]

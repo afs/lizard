@@ -21,7 +21,9 @@ import jena.cmd.ArgDecl ;
 import jena.cmd.CmdException ;
 import jena.cmd.CmdGeneral ;
 import lizard.build.LzBuildZk ;
+import lizard.cluster.Cluster ;
 
+import org.apache.jena.atlas.lib.FileOps ;
 import org.apache.jena.atlas.lib.Lib ;
 import org.apache.jena.atlas.logging.LogCtl ;
 import org.slf4j.Logger ;
@@ -64,11 +66,15 @@ public class LZ_Zookeeper extends CmdGeneral {
 
     @Override
     protected void exec() {
-        LogCtl.set("org.apache.zookeeper", "info") ;
-        //LogCtl.set("org.apache.curator", "info") ;
-        
          try {
-             LzBuildZk.zookeeperSimple(port); 
+             String dataDirectory = System.getProperty("java.io.tmpdir")+"/zk" ;
+             FileOps.ensureDir(dataDirectory); 
+             FileOps.clearAll(dataDirectory); 
+             LzBuildZk.zookeeper(port, dataDirectory);
+             // Give ZK time to start.
+             Lib.sleep(100) ;
+             Cluster.createSystem("localhost:"+port);
+             Cluster.monitor() ;
              for ( ;; )
                  Lib.sleep(10000) ;
         } catch (Exception ex) {}
