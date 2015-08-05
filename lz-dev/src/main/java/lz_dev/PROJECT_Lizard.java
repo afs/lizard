@@ -19,12 +19,10 @@ package lz_dev ;
 
 public class PROJECT_Lizard {
     // Multiple deployment.
-    //   Log write txn everywhere.
-    //   Do all vnodes get updated?
-    // Check cluster add notifications.
+    // Debug killing a server.
+    //   Does not recover.
     
-    
-    
+    // Pref "local" indexes?
     
     // *** TxnClient is currently doing the synchonization
     // Sort out ThriftRunnable / Runnable.

@@ -79,7 +79,7 @@ public class LzDev {
             ds.begin(ReadWrite.READ);
             Deploy.performQuery(ds);
             ds.end() ;
-
+            System.exit(0) ;
         
         }
         catch (Exception ex) { 
