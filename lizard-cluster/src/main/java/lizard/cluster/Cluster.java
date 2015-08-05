@@ -19,9 +19,9 @@ package lizard.cluster ;
 
 import static java.lang.String.format ;
 
-import java.util.HashSet ;
+import java.util.HashMap ;
 import java.util.List ;
-import java.util.Set ;
+import java.util.Map ;
 import java.util.concurrent.TimeUnit ;
 import java.util.concurrent.atomic.AtomicBoolean ;
 
@@ -54,6 +54,7 @@ public class Cluster {
         try {
             instance = new Cluster$(connectString) ;
             log.info(format("Zookeeper %s", connectString)) ;
+            Runtime.getRuntime().addShutdownHook(new Thread(()->Cluster.close() )) ; 
         } 
         catch (Exception e) {
             log.error("Failed: "+connectString, e) ;
@@ -105,6 +106,7 @@ public class Cluster {
     public static synchronized void close() {
         if ( instance != null ) {
             instance.close() ;
+            //instance = null ;
         }
     }
     
@@ -152,7 +154,7 @@ public class Cluster {
     static class Cluster$ {
 
         private CuratorFramework client = null ;
-        private Set<String> registrations = new HashSet<>() ;
+        private Map<String, String> registrations = new HashMap<>() ;
         private AtomicBoolean active = new AtomicBoolean(false) ;
         private DistributedAtomicLong globalCounter ;
         private InterProcessLock globalWriteLock ;
@@ -211,29 +213,50 @@ public class Cluster {
          * Returns the actual ephemeral sequentional znode name.
          */  
         public String addMember(String baseName, byte[] data) {
-            if ( baseName.startsWith("/") )
-                throw new IllegalArgumentException("Base name starts with '/': " +baseName) ;
-            String k = ClusterCtl.members+"/"+baseName ;
-            if ( ! k.endsWith("-") )
-                k = k + "-" ;
+            String key = fixupName(baseName) ;
+
             if ( data == null )
                 data = zeroBytes ;
 
             try {
-                String x = client.create().withMode(CreateMode.EPHEMERAL_SEQUENTIAL).forPath(k, data) ;
+                String x = client.create().withMode(CreateMode.EPHEMERAL_SEQUENTIAL).forPath(key, data) ;
                 log.info("Registered as: "+x) ;
-                registrations.add(x) ;
+                registrations.put(baseName, x) ;
                 return x ; 
             } catch (Exception e) {
-                log.error("Failed: addMember("+k+")") ;
+                log.error("Failed: addMember("+key+")") ;
                 return null ; 
             }
+        }
+        
+        public void removeMember(String baseName) {
+            // Need the Zk allocated number.
+            String key = registrations.get(baseName) ;
+            if ( key == null ) {
+                log.warn("Not registered: "+baseName) ;
+                return ;
+            }
+            try {
+                client.delete().forPath(key) ;
+                registrations.remove(key) ;
+                log.info("Delete "+key) ;
+            } catch (Exception e) {
+                log.error("Failed: delete("+key+")", e) ;
+            }
+        }
+
+        private static String fixupName(String name) {
+            if ( name.startsWith("/") )
+                throw new IllegalArgumentException("Base name starts with '/': " +name) ;
+            String k = ClusterCtl.members+"/"+name ;
+            if ( ! k.endsWith("-") )
+                k = k + "-" ;
+            return k ;
         }
 
         public List<String> members() {
             try {
                 return client.getChildren().forPath(ClusterCtl.members) ;
-                // Filter for key3?
             } catch (Exception e) {
                 log.error("Failed: members("+ClusterCtl.members+")") ;
                 return null ;
@@ -259,7 +282,7 @@ public class Cluster {
         public void close() {
             log.info("Close") ;
             active.set(false) ;
-            registrations.forEach(x -> removeMember(x)) ;
+            registrations.values().stream().forEach(x -> removeMember(x)) ;
             client.close() ;
             client = null ;
             log.info("Closed") ;
@@ -283,16 +306,6 @@ public class Cluster {
                 log.info(x) ;
             } catch (Exception e) {
                 log.error("Failed: create("+key+")") ;
-            }
-        }
-
-        private void removeMember(String key) {
-            try {
-                client.delete().forPath(key) ;
-                registrations.remove(key) ;
-                log.info("Delete "+key) ;
-            } catch (Exception e) {
-                log.error("Failed: delete("+key+")") ;
             }
         }
     }

@@ -40,6 +40,8 @@ public class LzDeploy {
         ConfZookeeper confZK = confCluster.zkServer.get(0) ;
         // Connect
         Cluster.createSystem(confZK.connectString());
+        String clusterString = here ;
+        Cluster.addMember(clusterString) ;
         Location baseLocation = null ;
         
         if ( confCluster.fileroot == null )

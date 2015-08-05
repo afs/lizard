@@ -34,10 +34,10 @@ public class LzBuildZk {
     static String zkConnectString ;
     
     /** Run a full Zookeepr here */
-    public static void zookeeper(ConfZookeeper confZookeeper, String zkConfDir) {
-        FmtLog.info(logConf, "Start Zookeeper %s : %d", zkConfDir, confZookeeper.port) ;
+    public static void zookeeper(int port, String zkConfDir) {
+        FmtLog.info(logConf, "Start Zookeeper %s : %d", zkConfDir, port) ;
         ServerConfig config = new ServerConfig();
-        config.parse(new String[] {Integer.toString(confZookeeper.port), zkConfDir}) ;
+        config.parse(new String[] {Integer.toString(port), zkConfDir}) ;
         ZooKeeperServerMain zk = new ZooKeeperServerMain();
         L.async(()-> {
             try { zk.runFromConfig(config) ; }
