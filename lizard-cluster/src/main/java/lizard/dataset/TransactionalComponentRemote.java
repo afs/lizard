@@ -22,17 +22,21 @@ import java.util.concurrent.atomic.AtomicLong ;
 
 import lizard.api.TxnClient ;
 import lizard.dataset.TransactionalComponentRemote.TxnRemoteState ;
+import lizard.system.LzLog ;
 
 import org.apache.jena.query.ReadWrite ;
 import org.seaborne.dboe.transaction.txn.ComponentId ;
+import org.seaborne.dboe.transaction.txn.TransactionException ;
 import org.seaborne.dboe.transaction.txn.TransactionalComponentLifecycle ;
 import org.seaborne.dboe.transaction.txn.TxnId ;
+import org.slf4j.Logger ;
 
 /** Transactional management for a TxnClient - that is, 
  *  the client side of cluster point-to-point connection.
  */ 
 public class TransactionalComponentRemote<X extends TxnClient<?>> extends TransactionalComponentLifecycle<TxnRemoteState> {
     // Local state is the Txn id.
+    private static Logger log = LzLog.logSystem ;
     
     static class TxnRemoteState{
         TxnId txnId ;
@@ -68,20 +72,33 @@ public class TransactionalComponentRemote<X extends TxnClient<?>> extends Transa
     protected TxnRemoteState _begin(ReadWrite readWrite, TxnId txnId) {
         // The protocol uses a 64 bit number.
         long x = txnId.runtime() ;
-        worker.begin(x, readWrite) ;
+        try {
+            worker.begin(x, readWrite) ;
+        } catch (Exception ex) {
+            throw new TransactionException("Failed to begin transaction - try again later") ; 
+        }
         return new TxnRemoteState(txnId, x) ;
     }
 
     @Override
     protected ByteBuffer _commitPrepare(TxnId txnId, TxnRemoteState state) {
         // Local details.
-        worker.prepare(); 
+        try {
+            worker.prepare();
+        } catch (Exception ex) {
+            log.error("Exception during prepare phase.  Attempt abort.") ; 
+            super.abort(getTransaction()); 
+        }
         return null ;   // Long to bytes. 
     }
 
     @Override
     protected void _commit(TxnId txnId, TxnRemoteState state) {
-        worker.commit(); 
+        try {
+            worker.commit();
+        } catch (Exception ex) {
+            log.error("recovery needed") ; 
+        }
     }
 
     @Override
