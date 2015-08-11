@@ -22,11 +22,8 @@ import java.nio.file.Paths ;
 import lizard.build.LzBuildZk ;
 import lizard.build.LzDeploy ;
 import lizard.conf.ConfCluster ;
-import lizard.index.ClusterTupleIndex ;
-import lizard.index.TClientIndex ;
 import lizard.index.TServerIndex ;
 import lizard.node.ClusterNodeTable ;
-import lizard.node.TClientNode ;
 import lizard.node.TServerNode ;
 import lizard.query.LzDataset ;
 import lizard.system.LizardException ;
@@ -123,13 +120,13 @@ public class Deploy {
             log.info("LOAD : "+datafile) ;
             if ( datafile != null ) {
                 // Making loading quieter.
-                LogCtl.set(ClusterNodeTable.class, "WARN") ;
-                LogCtl.set(TClientNode.class, "WARN") ;
-                LogCtl.set("lizard.node.THandlerNodeTable", "WARN") ;
+//                LogCtl.set(ClusterNodeTable.class, "WARN") ;
+//                LogCtl.set(TClientNode.class, "WARN") ;
+//                LogCtl.set("lizard.node.THandlerNodeTable", "WARN") ;
                 
-                LogCtl.set(ClusterTupleIndex.class, "WARN") ;
-                LogCtl.set(TClientIndex.class, "WARN") ;
-                LogCtl.set("lizard.index.THandlerTupleIndex", "WARN") ; 
+//                LogCtl.set(ClusterTupleIndex.class, "WARN") ;
+//                LogCtl.set(TClientIndex.class, "WARN") ;
+//                LogCtl.set("lizard.index.THandlerTupleIndex", "WARN") ; 
                 
                 //Loader.bulkLoad(ds, datafile) ;
                 bulkLoad(ds, datafile) ;

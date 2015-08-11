@@ -21,6 +21,10 @@ public class PROJECT_Lizard {
     // Multiple deployment.
     // Debug killing a server.
     //   Does not recover.
+    // Info begine-end transaction
+    //   Second bad operation blocks?
+    //   Read quorum vs write quorum
+    //   Much better handling of failure cases of distributed transactions. 
     
     // Pref "local" indexes?
     

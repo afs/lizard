@@ -35,7 +35,7 @@ public class LzMain {
         
         List<String> args = new ArrayList<>() ;
         args.add("deploy") ;
-        args.add("--server=vnode2") ;
+        args.add("--server=vnode1") ;
         args.add("--fuseki=3030") ;
         
         try ( DirectoryStream<Path> directory = Files.newDirectoryStream(Paths.get("setup2"), "conf*ttl") ) {

@@ -20,11 +20,13 @@ package lizard.index;
 import java.util.Collection ;
 import java.util.List ;
 
+import lizard.system.Distributor ;
+
 import org.apache.jena.atlas.lib.Tuple ;
 import org.seaborne.tdb2.store.NodeId ;
 
 /** Policy for the placement of triples (and for finding them). */
-public interface DistributorTupleIndex {
+public interface DistributorTupleIndex extends Distributor {
     /** Places where a triple is stored.
      * Each place must be updated.
      * @param tuple
@@ -45,4 +47,7 @@ public interface DistributorTupleIndex {
     
     /** A set of places that covers the entire space, all places, for storage */  
     public Collection<TupleIndexRemote> allStore() ;
+    
+    /** All the elements managed by this distributor */ 
+    public Collection<TupleIndexRemote> allRemotes() ;
 }

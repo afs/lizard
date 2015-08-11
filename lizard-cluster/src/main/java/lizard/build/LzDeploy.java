@@ -61,7 +61,7 @@ public class LzDeploy {
         platform.start(); 
     }
     
-    public static Dataset deployDataset(ConfCluster confCluster, String here) {
+    public static LzDataset deployLzDataset(ConfCluster confCluster, String here) {
         Location baseLocation = null ;
         if ( confCluster.fileroot == null )
             baseLocation = Location.mem() ;
@@ -69,11 +69,16 @@ public class LzDeploy {
             baseLocation = Location.create(confCluster.fileroot) ; 
         Location locationQueryServer = baseLocation.getSubLocation("query") ;
         LzDataset lzdsg = LzBuilderDataset.build(confCluster, locationQueryServer) ;
+        return lzdsg ;
+    }
+    
+    public static Dataset deployDataset(ConfCluster confCluster, String here) {
+        LzDataset lzdsg = deployLzDataset(confCluster, here) ;
         if ( lzdsg == null )
             return null ;
         return LzBuilderDataset.dataset(lzdsg) ;
     }
-    
+
     public static VNode findVNode(ConfCluster confCluster, String vnodeName) {
         return confCluster.placements.get(vnodeName) ;
     }

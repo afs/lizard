@@ -28,15 +28,16 @@ import lizard.system.RemoteControl ;
 
 import org.apache.jena.atlas.lib.NotImplemented ;
 import org.apache.jena.atlas.lib.Pair ;
-import org.slf4j.Logger ;
-import org.slf4j.LoggerFactory ;
 import org.apache.jena.graph.Node ;
 import org.apache.jena.query.ReadWrite ;
+import org.seaborne.dboe.transaction.txn.TransactionalComponent ;
 import org.seaborne.tdb2.store.NodeId ;
 import org.seaborne.tdb2.store.nodetable.NodeTable ;
+import org.slf4j.Logger ;
+import org.slf4j.LoggerFactory ;
 
 /** NodeTable interface to a remote node table server */
-public final class NodeTableRemote implements ComponentTxn, Component, NodeTable, RemoteControl, TxnClient.Accessor {
+public final class NodeTableRemote implements ComponentTxn, Component, NodeTable, RemoteControl, TxnClient.WireClient {
 
     public static NodeTableRemote create(String hostname, int port) {
         TClientNode remote = TClientNode.create(hostname, port) ;
@@ -47,11 +48,17 @@ public final class NodeTableRemote implements ComponentTxn, Component, NodeTable
     private static Logger log = LoggerFactory.getLogger(NodeTableRemote.class) ;
     
     private final TClientNode client ;
-    private String label ;
+    private TransactionalComponent transactionComponent ;
+    private final String label ;
     
     private NodeTableRemote(TClientNode conn) { 
         this.client = conn ;
         this.label = conn.getLabel() ;
+    }
+    
+    // Wiring up after originally created.
+    public void setTransactionalComponent(TransactionalComponent transactionComponent) {
+        this.transactionComponent = transactionComponent ;
     }
     
     @Override

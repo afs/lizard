@@ -19,13 +19,14 @@ package lizard.index;
 
 import java.util.ArrayList ;
 import java.util.Arrays ;
+import java.util.Collection ;
 import java.util.List ;
 
 import lizard.comms.CommsException ;
 import lizard.comms.ConnState ;
+
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.Tuple ;
-
 import org.seaborne.tdb2.store.NodeId ;
 
 /** Policy for the placement of triples based on eventual consistent replication.
@@ -93,6 +94,11 @@ public class DistributorTuplesReplicate implements DistributorTupleIndex {
         return remotes ;
     }
     
+    @Override
+    public Collection<TupleIndexRemote> allRemotes() {
+        return remotes ;
+    }
+
     private List<TupleIndexRemote> locateRead(Tuple<NodeId> tuple) {
         NodeId n = mapper.fetchSlot(0, tuple) ;
         if ( NodeId.isAny(n) )

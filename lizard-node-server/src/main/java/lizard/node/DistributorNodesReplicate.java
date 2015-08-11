@@ -17,10 +17,7 @@
 
 package lizard.node;
 
-import java.util.ArrayList ;
-import java.util.Arrays ;
-import java.util.Collection ;
-import java.util.List ;
+import java.util.* ;
 
 import lizard.comms.CommsException ;
 import lizard.comms.ConnState ;
@@ -28,7 +25,7 @@ import lizard.comms.ConnState ;
 import org.apache.jena.graph.Node ;
 import org.seaborne.tdb2.store.NodeId ;
 
-/** An implementation of DistributorNodes that provides a replicaated, unsharded policy. */
+/** An implementation of DistributorNodes that provides a replicated, unsharded policy. */
 public class DistributorNodesReplicate implements DistributorNodes {
     // Cover set policy is W=N and R=1
     private List<NodeTableRemote> places = new ArrayList<>() ;
@@ -62,7 +59,7 @@ public class DistributorNodesReplicate implements DistributorNodes {
 
     @Override
     public List<NodeTableRemote> allFind() {
-        return places ;
+        return chooseActive(places) ;//Collections.singletonList(places.get(0)) ;
     }
     
     private List<NodeTableRemote> chooseActive(List<NodeTableRemote> z) {

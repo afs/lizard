@@ -24,6 +24,7 @@ import java.util.List ;
 
 import lizard.comms.CommsException ;
 import lizard.comms.ConnState ;
+
 import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.Tuple ;
 import org.apache.jena.atlas.logging.Log ;
@@ -94,6 +95,11 @@ public class DistributorTuplesBySubject implements DistributorTupleIndex {
                 throw new CommsException("Can't store - an index is unavailable") ;
         }
         return placesToGo ;
+    }
+    
+    @Override
+    public Collection<TupleIndexRemote> allRemotes() {
+        return places.values() ;
     }
     
     private List<TupleIndexRemote> locateRead(Tuple<NodeId> tuple) {

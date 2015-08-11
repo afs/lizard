@@ -89,7 +89,7 @@ public class ClusterNodeTable implements NodeTable {
             }
         }
         
-        FmtLog.info(log, "getAllocateNodeId(%s) -> %s", node, nid) ;
+        FmtLog.debug(log, "getAllocateNodeId(%s) -> %s", node, nid) ;
         if ( log.isDebugEnabled() )
             tables.forEach(nt -> FmtLog.debug(log, "  store(%s) @ %s", node, nt)) ;
         return nid ;
@@ -101,11 +101,11 @@ public class ClusterNodeTable implements NodeTable {
         for ( NodeTableRemote nt : tables ) {
             NodeId nid = nt.getNodeIdForNode(node) ;
             if ( nid != null ) {
-                FmtLog.info(log, "getNodeIdForNode(%s) -> %s", node, nid) ;
+                FmtLog.debug(log, "getNodeIdForNode(%s) -> %s", node, nid) ;
                 return nid ;
             }
         }
-        FmtLog.info(log, "getAllocateNodeId(%s) -> no found", node) ;
+        FmtLog.debug(log, "getAllocateNodeId(%s) -> no found", node) ;
         return NodeId.NodeDoesNotExist ;
     }
 

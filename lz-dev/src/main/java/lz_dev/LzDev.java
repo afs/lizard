@@ -23,6 +23,7 @@ import lizard.deploy.Deploy ;
 import migrate.Q ;
 
 import org.apache.jena.atlas.lib.FileOps ;
+import org.apache.jena.atlas.lib.Lib ;
 import org.apache.jena.atlas.logging.LogCtl ;
 import org.apache.jena.query.Dataset ;
 import org.apache.jena.query.ReadWrite ;
@@ -64,10 +65,13 @@ public class LzDev {
             String here = "vnode1" ; 
             
             Deploy.deployZookeer(2186);
+            Lib.sleep(100) ;
             Deploy.deployServers(config, "vnode1") ;
             Deploy.deployServers(config, "vnode2") ;
             
             Dataset ds = Deploy.deployDataset(config, here) ;
+            //LzDataset lzds = LzDeploy.deployLzDataset(config, here);
+            //Dataset ds = LzBuilderDataset.dataset(lzds) ;
             
             if ( false ) {
                 Deploy.runFuseki(ds.asDatasetGraph(), 3030);

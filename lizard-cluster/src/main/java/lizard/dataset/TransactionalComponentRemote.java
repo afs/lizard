@@ -56,6 +56,10 @@ public class TransactionalComponentRemote<X extends TxnClient<?>> extends Transa
         this.worker = worker ;
     }
     
+    public TxnClient<?> getWireClient() {
+        return worker ;
+    }
+    
     @Override
     public void startRecovery() {}
 

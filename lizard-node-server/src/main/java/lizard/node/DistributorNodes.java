@@ -20,10 +20,12 @@ package lizard.node;
 import java.util.Collection ;
 import java.util.List ;
 
+import lizard.system.Distributor ;
+
 import org.apache.jena.graph.Node ;
 import org.seaborne.tdb2.store.NodeId ;
 
-public interface DistributorNodes {
+public interface DistributorNodes extends Distributor {
     /** W quorum of {@link NodeTableRemote} for storing a node */  
     public List<NodeTableRemote> storeAt(Node node) ;
     /** R quorum of {@link NodeTableRemote} for finding the node for a nodeid */  
@@ -41,5 +43,6 @@ public interface DistributorNodes {
      */
     public Collection<NodeTableRemote> allStore() ;
     
+    /** All the elements managed by this distributor */ 
     public Collection<NodeTableRemote> allRemotes() ;
 }
