@@ -37,7 +37,7 @@ import org.slf4j.Logger ;
 public abstract class TxnClient<X extends TxnCtl.Client> extends ComponentBase implements ComponentTxn {
     private final static boolean LOG_TXN = true ; 
 
-    public interface Accessor { TxnClient<?> getWireClient() ; }
+    public interface WireClient { TxnClient<?> getWireClient() ; }
     
     private static AtomicLong requestCounter = new AtomicLong(0) ;
     private ThreadLocal<Long> currentTxnId = new ThreadLocal<>() ;
