@@ -29,7 +29,7 @@ import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.Tuple ;
 import org.seaborne.tdb2.store.NodeId ;
 
-/** Policy for the placement of triples based on eventual consistent replication.
+/** Policy for the placement of triples with multiple copies.
  *  For simplicity, for N replicas, R=1 W=N
  *  This policy does not shard.
  */ 
@@ -37,9 +37,11 @@ import org.seaborne.tdb2.store.NodeId ;
 public class DistributorTuplesReplicate implements DistributorTupleIndex {
     private final List<TupleIndexRemote> remotes = new ArrayList<>() ;
     private final ColumnMap mapper ;
+    private final String localVNode ;
     
     /** Create a DistributorTuplesBySubject is N replicas */
-    public DistributorTuplesReplicate(ColumnMap mapper) {
+    public DistributorTuplesReplicate(String localVNode, ColumnMap mapper) {
+        this.localVNode = localVNode ;
         this.mapper = mapper ;
     }
 
@@ -63,31 +65,41 @@ public class DistributorTuplesReplicate implements DistributorTupleIndex {
 
     @Override
     public List<TupleIndexRemote> allFind() {
-        return chooseOne(remotes) ;
+        return choose(remotes) ;
     }
 
-    private static List<TupleIndexRemote> chooseOne(List<TupleIndexRemote> z) {
-        List<TupleIndexRemote> x = new ArrayList<>() ;
-        for ( TupleIndexRemote tir : z ) {
-            if ( tir.getStatus() == ConnState.OK )
-                return Arrays.asList(tir) ;
-        }
-        if ( x.isEmpty() )
-            throw new CommsException("No index replicas available") ;
-        return x ;  
+    private List<TupleIndexRemote> choose(List<TupleIndexRemote> z) {
+        return Arrays.asList(chooseOne(z)) ;
     }
     
-    private static List<TupleIndexRemote> chooseActive(List<TupleIndexRemote> z) {
-        List<TupleIndexRemote> x = new ArrayList<>() ;
+    /** Choose one remote, preferring a local vnode */ 
+    private TupleIndexRemote chooseOne(List<TupleIndexRemote> z) {
+        TupleIndexRemote maybe = null ;
         for ( TupleIndexRemote tir : z ) {
-            // For each key, find one place
-            if ( tir.getStatus() == ConnState.OK )
-                x.add(tir) ; 
+            if ( tir.getStatus() == ConnState.OK ) {
+                if ( localVNode == null )
+                    return tir ;
+                if ( tir.getRemoteVNode().equals(localVNode) )
+                    return tir ;
+                maybe = tir ;
+            }
         }
-        if ( x.isEmpty() )
+        if ( maybe == null )
             throw new CommsException("No index replicas available") ;
-        return x ;    
+        return maybe ;  
     }
+    
+    /** Choose all active remotes */ 
+//    private static List<TupleIndexRemote> chooseActive(List<TupleIndexRemote> z) {
+//        List<TupleIndexRemote> x = new ArrayList<>() ;
+//        for ( TupleIndexRemote tir : z ) {
+//            if ( tir.getStatus() == ConnState.OK )
+//                x.add(tir) ; 
+//        }
+//        if ( x.isEmpty() )
+//            throw new CommsException("No index replicas available") ;
+//        return x ;    
+//    }
     
     @Override
     public List<TupleIndexRemote> allStore() {
@@ -104,7 +116,7 @@ public class DistributorTuplesReplicate implements DistributorTupleIndex {
         if ( NodeId.isAny(n) )
             return allFind() ;
         // Concrete subject 
-        return chooseOne(remotes) ;
+        return choose(remotes) ;
     }
 
     private List<TupleIndexRemote> locateWrite(Tuple<NodeId> tuple) {

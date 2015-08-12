@@ -18,17 +18,21 @@
 package lizard.conf;
 
 import java.io.StringWriter ;
-import java.util.* ;
+import java.util.ArrayList ;
+import java.util.Collections ;
+import java.util.List ;
 
 import lizard.conf.parsers.LzConfParserYAML ;
 
 import org.apache.jena.atlas.io.IndentedWriter ;
+import org.apache.jena.ext.com.google.common.collect.ArrayListMultimap ;
+import org.apache.jena.ext.com.google.common.collect.Multimap ;
 
 /** Static description configuration. */
 public class ConfCluster {
     public final List<ConfZookeeper> zkServer = new ArrayList<>() ;
     public final VNodeLayout placements = new VNodeLayout() ;
-    public final ConfDataset   dataset ;
+    public final ConfDataset dataset ;
     public final List<ConfNodeTableElement> eltsNodeTable = new ArrayList<>() ;
     public final List<ConfIndexElement> eltsIndex = new ArrayList<>() ;
     public String fileroot = null ;
@@ -43,6 +47,14 @@ public class ConfCluster {
 
     public void addNodeElements(ConfNodeTableElement...ntElts) {
         Collections.addAll(eltsNodeTable, ntElts) ;
+    }
+    
+    /** The vnode -> Port listing */
+    public Multimap<String, Integer> serverPlacements() {
+        Multimap<String, Integer> mapping = ArrayListMultimap.create() ;
+        eltsIndex.stream().sequential().map(elt -> elt.addr).forEach(addr -> mapping.put(addr.getName(), addr.getPort())) ;
+        eltsNodeTable.stream().sequential().map(elt -> elt.addr).forEach(addr -> mapping.put(addr.getName(), addr.getPort())) ;
+        return mapping ;
     }
     
     @Override

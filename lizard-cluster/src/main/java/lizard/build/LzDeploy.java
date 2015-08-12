@@ -32,15 +32,19 @@ public class LzDeploy {
     
     static Logger log = Config.logConf ;
     
-    /** Deploy the server-side of a configuration here */
-    public static void deployServers(ConfCluster confCluster, String here) {
+    public static void deployZookeeper(ConfCluster confCluster) {
         if ( confCluster.zkServer.isEmpty() )
             throw new LizardException("No zookeeper server described") ;
 
         ConfZookeeper confZK = confCluster.zkServer.get(0) ;
         // Connect
         Cluster.createSystem(confZK.connectString());
-        String clusterString = here ;
+    }
+
+    /** Deploy the server-side of a configuration here */
+    public static void deployServers(ConfCluster confCluster, String vnode) {
+        deployZookeeper(confCluster) ;
+        String clusterString = vnode ;
         Cluster.addMember(clusterString) ;
         Location baseLocation = null ;
         
@@ -53,27 +57,26 @@ public class LzDeploy {
         StoreParams params = StoreParams.getDftStoreParams() ; 
         
         // NetHost for the local vNode.
-        NetHost hereHost = NetHost.create(here) ;
+        NetHost hereHost = NetHost.create(vnode) ;
         // Each server has it's own journal - it'll be part of the distributed transaction.
         LzBuilderNodeServer.build(platform, baseLocation, params, confCluster, hereHost);
         LzBuilderIndexServer.build(platform, baseLocation, params, confCluster, hereHost);
-        
         platform.start(); 
     }
     
-    public static LzDataset deployLzDataset(ConfCluster confCluster, String here) {
+    public static LzDataset deployLzDataset(ConfCluster confCluster, String vnode) {
         Location baseLocation = null ;
         if ( confCluster.fileroot == null )
             baseLocation = Location.mem() ;
         else
             baseLocation = Location.create(confCluster.fileroot) ; 
         Location locationQueryServer = baseLocation.getSubLocation("query") ;
-        LzDataset lzdsg = LzBuilderDataset.build(confCluster, locationQueryServer) ;
+        LzDataset lzdsg = LzBuilderDataset.build(confCluster, locationQueryServer, vnode) ;
         return lzdsg ;
     }
     
-    public static Dataset deployDataset(ConfCluster confCluster, String here) {
-        LzDataset lzdsg = deployLzDataset(confCluster, here) ;
+    public static Dataset deployDataset(ConfCluster confCluster, String vnode) {
+        LzDataset lzdsg = deployLzDataset(confCluster, vnode) ;
         if ( lzdsg == null )
             return null ;
         return LzBuilderDataset.dataset(lzdsg) ;

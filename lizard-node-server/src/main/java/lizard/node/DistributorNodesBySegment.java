@@ -45,8 +45,10 @@ public class DistributorNodesBySegment implements DistributorNodes {
     
     ListMultimap<Long, NodeTableRemote> places = ArrayListMultimap.create() ;
     private final int size ;
+    private final String localVNode ;
     
-    public DistributorNodesBySegment(int N) {
+    public DistributorNodesBySegment(String localVNode, int N) {
+        this.localVNode = localVNode ;
         this.size = N ;
     }
     
@@ -89,13 +91,20 @@ public class DistributorNodesBySegment implements DistributorNodes {
         return placesToGo ;
     }
     
+    /** Choose one remote, preferring a local vnode */ 
     private NodeTableRemote chooseOne(List<NodeTableRemote> z) {
+        NodeTableRemote maybe = null ;
         for ( NodeTableRemote ntr : z ) {
             // For each key, find one place
-            if ( ntr.getStatus() == ConnState.OK )
-                return ntr ;
+            if ( ntr.getStatus() == ConnState.OK ) {
+                if ( localVNode == null )
+                    return ntr ;
+                if ( ntr.getRemoteVNode().equals(localVNode) )
+                    return ntr ;
+                maybe = ntr ;
+            }
         }
-        return null ;    
+        return maybe ;    
     }
     
     @Override

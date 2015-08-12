@@ -67,7 +67,7 @@ import org.slf4j.Logger ;
 public class LzBuilderDataset {
     private static Logger logConf = Config.logConf ;
     
-    public static LzDataset build(ConfCluster confCluster, Location location) {
+    public static LzDataset build(ConfCluster confCluster, Location location, String datasetVNode) {
         ConfDataset confDataset = confCluster.dataset ;
         if ( confDataset == null )
             return null ;
@@ -82,17 +82,16 @@ public class LzBuilderDataset {
         ClusterTupleIndex[] indexes = new ClusterTupleIndex[N] ;
         int i = 0 ;
         for ( ConfIndex ci : confDataset.indexes ) {
-            indexes[i] = buildClientIndex(confCluster, ci, startables) ;
+            indexes[i] = buildClientIndex(confCluster, ci, startables, datasetVNode) ;
             i++ ;
         }
-        
         ConfNodeTable cn = confDataset.nodeTable ;
+        ClusterNodeTable cnt = buildClientNodeTable(confCluster, cn, startables, datasetVNode) ;
+        NodeTable nt = stackNodeTable(cnt) ;
         
         // ==== Wire up.
         
         // ---- NodeTable
-        ClusterNodeTable cnt = buildClientNodeTable(confCluster, cn, startables) ;
-        NodeTable nt = stackNodeTable(cnt) ;
         {
             DistributorNodes distNodes = cnt.getDistributor() ;
             // Move into buildClientNodeTable?
@@ -246,23 +245,23 @@ public class LzBuilderDataset {
         return dsg ;
     }
         
-    public static ClusterTupleIndex buildClientIndex(ConfCluster confCluster, ConfIndex ci, List<Component> startables) {
+    public static ClusterTupleIndex buildClientIndex(ConfCluster confCluster, ConfIndex ci, List<Component> startables, String hereVNode) {
             String idxOrder = ci.indexOrder ;
             int N = idxOrder.length() ;
             if ( N != 3 && N != 4 )
                 FmtLog.warn(logConf, "Strange index size: %d (from '%s')", N, idxOrder) ;
             ColumnMap cmap = new ColumnMap("SPO", idxOrder) ;
-            DistributorTuplesReplicate dist = new DistributorTuplesReplicate(cmap) ;  
+            DistributorTuplesReplicate dist = new DistributorTuplesReplicate(hereVNode, cmap) ;  
             List<TupleIndexRemote> indexes = new ArrayList<>() ;
             // Scan shards for index.
-            
-            // XXX QUORUM
-            
             confCluster.eltsIndex.stream().sequential()
                 .filter(x -> ci.indexOrder.equals(x.conf.indexOrder))
                 .forEach(x -> {
+                    // Is it "here"?
+                    if ( x.addr.sameHost(hereVNode) )
+                        logConf.info("HERE: Index: "+x.addr.getPort()) ;
                     NetAddr netAddr = x.addr.placement(confCluster.placements, x.addr.getPort()) ; 
-                    TupleIndexRemote idx = TupleIndexRemote.create(netAddr.getName(), netAddr.getPort(), idxOrder, cmap) ;
+                    TupleIndexRemote idx = TupleIndexRemote.create(hereVNode, netAddr.getName(), netAddr.getPort(), idxOrder, cmap) ;
                     indexes.add(idx) ;
                     startables.add(idx) ;
                 }) ;
@@ -275,19 +274,17 @@ public class LzBuilderDataset {
     /** Build a Cluster node table, from the configuration.
      * No acaches, no inlining. See {@link #stackNodeTable}
      */
-    public static ClusterNodeTable buildClientNodeTable(ConfCluster confCluster, ConfNodeTable cn, List<Component> startables) {
-        DistributorNodesReplicate dist = new DistributorNodesReplicate() ;
+    public static ClusterNodeTable buildClientNodeTable(ConfCluster confCluster, ConfNodeTable cn, List<Component> startables, String hereVNode) {
+        DistributorNodesReplicate dist = new DistributorNodesReplicate(hereVNode) ;
         List<NodeTableRemote> nodeTableParts = new ArrayList<>() ;
-
-        // XXX QUORUM via dist.
-        
         confCluster.eltsNodeTable.stream().sequential()
             .forEach(x -> {
-                NetAddr netAddr = x.addr.placement(confCluster.placements, x.addr.getPort()) ; 
-                NodeTableRemote ntr = NodeTableRemote.create(netAddr.getName(), netAddr.getPort()) ;
+                if ( x.addr.sameHost(hereVNode) )
+                    logConf.info("HERE: Node: "+x.addr.getPort()) ;
+                NetAddr netAddr = x.addr.placement(confCluster.placements, x.addr.getPort()) ;
+                NodeTableRemote ntr = NodeTableRemote.create(hereVNode, netAddr.getName(), netAddr.getPort()) ;
                 nodeTableParts.add(ntr) ;
-                startables.add(ntr) ; // COMPONENTS
-                new TransactionalComponentRemote<>(null, ntr.getWireClient()) ;
+                startables.add(ntr) ;
             });
         dist.add(nodeTableParts) ;
         ClusterNodeTable cnt = new ClusterNodeTable(dist) ;
@@ -300,41 +297,7 @@ public class LzBuilderDataset {
         return nodeTable ;
     }
     
-//    private static DatasetGraph xdatasetGraph(LzDataset lz) {
-//        // Not persistent across restarts
-//        ComponentId cidZk = ComponentId.allocLocal() ;
-//        TransactionalComponentZkLock zkLock = new TransactionalComponentZkLock(cidZk) ;
-//        TransactionCoordinator transCoord = lz.getTxnMgr() ;
-//        transCoord.add(zkLock) ;
-//
-//        lz.getComponents().forEach(c->{
-//            if ( c instanceof TxnClient.WireClient ) {
-//                TxnClient<?> wire = ((TxnClient.WireClient)c).getWireClient() ;
-//                ComponentId cid = ComponentId.allocLocal() ;
-//                // XXX TransactionalComponentRemote
-//                TransactionalComponent x = new TransactionalComponentRemote<>(cid, wire) ;
-//                transCoord.add(x) ;
-//            } else {
-//                logConf.warn("Not a TxnClient.WireClient: "+c) ;
-//            }
-//                
-//        });
-//        
-//        // Use Zookeeper for transaction ids.
-//        transCoord.setTxnIdGenerator(Cluster.getTxnIdGenerator());
-//        Transactional transactional = new TransactionalBase(transCoord) ;
-//        DatasetGraphTDB dsgtdb = lz.getDataset() ;
-//        lz.start();
-//        return dsgtdb ;
-//    }
-//
-//    public static Dataset dataset(LzDataset lz) {
-//        DatasetGraph dsg = datasetGraph(lz) ;
-//        return DatasetFactory.create(dsg) ;
-//    }
-    
     public static Dataset dataset(LzDataset lz) {
         return DatasetFactory.create(lz.getDataset()) ;
     }
-
 }

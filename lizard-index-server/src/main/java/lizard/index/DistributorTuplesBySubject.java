@@ -38,9 +38,11 @@ public class DistributorTuplesBySubject implements DistributorTupleIndex {
     private ListMultimap<Long, TupleIndexRemote> places = ArrayListMultimap.create() ;
     private final ColumnMap mapper ;
     private final int size ;
+    private final String localVNode ;
     
     /** Create a DistributorTuplesBySubject of N replicas */
-    public DistributorTuplesBySubject(ColumnMap mapper, int N) {
+    public DistributorTuplesBySubject(String localVNode, ColumnMap mapper, int N) {
+        this.localVNode = localVNode ;
         this.mapper = mapper ;
         this.size = N ;
     }
@@ -78,13 +80,21 @@ public class DistributorTuplesBySubject implements DistributorTupleIndex {
         return placesToGo ;
     }
 
+    /** Choose one remote, preferring a local vnode */ 
     private TupleIndexRemote chooseOne(List<TupleIndexRemote> z) {
-        for ( TupleIndexRemote idx : z ) {
-            // For each key, find one place
-            if ( idx.getStatus() == ConnState.OK )
-                return idx ;
+        TupleIndexRemote maybe = null ;
+        for ( TupleIndexRemote tir : z ) {
+            if ( tir.getStatus() == ConnState.OK ) {
+                if ( localVNode == null )
+                    return tir ;
+                if ( tir.getRemoteVNode().equals(localVNode) )
+                    return tir ;
+                maybe = tir ;
+            }
         }
-        return null ;    
+        if ( maybe == null )
+            throw new CommsException("No index replicas available") ;
+        return maybe ;  
     }
     
     @Override

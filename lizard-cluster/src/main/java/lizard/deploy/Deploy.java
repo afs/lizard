@@ -62,11 +62,12 @@ public class Deploy {
         LzBuildZk.zookeeperSimple(port);
     }
     
-    public static void deployServers(ConfCluster config, String here) {
+    public static void deployServers(ConfCluster config, String vnode) {
         // --- The deployment "here".
-        log.info("SERVERS") ;
+        LzDeploy.deployZookeeper(config) ;
+        log.info("SERVERS: "+vnode) ;
         try { 
-            LzDeploy.deployServers(config, here);
+            LzDeploy.deployServers(config, vnode);
         } catch ( LizardException ex) {
             System.err.println(ex.getMessage());
             System.exit(0) ;

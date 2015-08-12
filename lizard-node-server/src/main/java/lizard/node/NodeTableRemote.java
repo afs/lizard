@@ -39,9 +39,9 @@ import org.slf4j.LoggerFactory ;
 /** NodeTable interface to a remote node table server */
 public final class NodeTableRemote implements ComponentTxn, Component, NodeTable, RemoteControl, TxnClient.WireClient {
 
-    public static NodeTableRemote create(String hostname, int port) {
+    public static NodeTableRemote create(String remoteVNode, String hostname, int port) {
         TClientNode remote = TClientNode.create(hostname, port) ;
-        NodeTableRemote nt = new NodeTableRemote(remote) ;
+        NodeTableRemote nt = new NodeTableRemote(remoteVNode, remote) ;
         return nt ;
     }
     
@@ -50,8 +50,10 @@ public final class NodeTableRemote implements ComponentTxn, Component, NodeTable
     private final TClientNode client ;
     private TransactionalComponent transactionComponent ;
     private final String label ;
+    private final String remoteVNode ;
     
-    private NodeTableRemote(TClientNode conn) { 
+    private NodeTableRemote(String remoteVNode, TClientNode conn) {
+        this.remoteVNode = remoteVNode ;
         this.client = conn ;
         this.label = conn.getLabel() ;
     }
@@ -66,8 +68,11 @@ public final class NodeTableRemote implements ComponentTxn, Component, NodeTable
         return client ;
     }
     
-    public ConnState getStatus() { return client.getConnectionStatus() ; }
+    public ConnState getStatus()    { return client.getConnectionStatus() ; }
     
+    public String getRemoteVNode() {
+        return remoteVNode;
+    }    
     @Override
     public NodeId getAllocateNodeId(Node node) {
         return client.getAllocateNodeId(node) ;

@@ -42,10 +42,11 @@ import org.slf4j.LoggerFactory ;
 public final class TupleIndexRemote extends TupleIndexBase implements Component, ComponentTxn, RemoteControl, TxnClient.WireClient
 {
     // Relationship of TupleIndexRemote and TClientIndex
-    public static TupleIndexRemote create(String hostname, int port, String indexStr, ColumnMap cmap) {
+    public static TupleIndexRemote create(String remoteVNode, String hostname, int port, String indexStr, ColumnMap cmap) {
+        // localVNode indicates where the "remote" end is deployed.  
         TClientIndex client = TClientIndex.create(hostname, port, indexStr, cmap) ;
         String name = "Idx"+indexStr+"["+port+"]" ;
-        TupleIndexRemote index = new TupleIndexRemote(client, indexStr, cmap, name) ;
+        TupleIndexRemote index = new TupleIndexRemote(remoteVNode, client, indexStr, cmap, name) ;
         return index ;
     }
     
@@ -55,9 +56,11 @@ public final class TupleIndexRemote extends TupleIndexBase implements Component,
     private final TLZ_IndexName indexName ;
     private final Component component = new ComponentBase() ;
     private final TClientIndex client ;
+    private final String remoteVNode ;
 
-    public TupleIndexRemote(TClientIndex client, String indexStr, ColumnMap colMapping, String name) {
+    public TupleIndexRemote(String remoteVNode, TClientIndex client, String indexStr, ColumnMap colMapping, String name) {
         super(indexStr.length(), colMapping, name) ;
+        this.remoteVNode = remoteVNode ;
         this.client = client ;
         RemoteAccessData access = new RemoteAccessData(client) ;
         this.indexName = TLZlib.indexToEnum(indexStr) ;
@@ -76,6 +79,10 @@ public final class TupleIndexRemote extends TupleIndexBase implements Component,
     
     public ConnState getStatus() { return client.getConnectionStatus() ; }
     
+    public String getRemoteVNode() {
+        return remoteVNode;
+    }
+
     @Override
     public Iterator<Tuple<NodeId>> all() {
         return performFind(anyTuple) ;

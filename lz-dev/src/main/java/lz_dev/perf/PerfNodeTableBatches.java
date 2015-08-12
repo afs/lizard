@@ -85,7 +85,7 @@ public class PerfNodeTableBatches {
 
         TClientNode client = TClientNode.create("localhost", port1) ;
         client.start() ;
-        NodeTableRemote ntr = NodeTableRemote.create("localhost", port2) ;
+        NodeTableRemote ntr = NodeTableRemote.create(null, "localhost", port2) ;
         ntr.start() ;
 
         // 5-15s a run (SSD, 2014 desktop machine).

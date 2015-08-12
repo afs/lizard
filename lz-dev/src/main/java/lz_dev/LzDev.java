@@ -25,6 +25,7 @@ import migrate.Q ;
 import org.apache.jena.atlas.lib.FileOps ;
 import org.apache.jena.atlas.lib.Lib ;
 import org.apache.jena.atlas.logging.LogCtl ;
+import org.apache.jena.ext.com.google.common.collect.Multimap ;
 import org.apache.jena.query.Dataset ;
 import org.apache.jena.query.ReadWrite ;
 import org.apache.jena.rdf.model.Model ;
@@ -49,6 +50,7 @@ public class LzDev {
     public static void main(String[] args) {
         try { 
             config = LzConfParserRDF.parseConfFile(configurationModel) ;
+            Multimap<String, Integer> vnodeToServers = config.serverPlacements() ;
             
             String FILE = "/home/afs/Datasets/BSBM/bsbm-250k.nt.gz" ;
             config.fileroot = Names.memName ;
@@ -66,6 +68,7 @@ public class LzDev {
             
             Deploy.deployZookeer(2186);
             Lib.sleep(100) ;
+            
             Deploy.deployServers(config, "vnode1") ;
             Deploy.deployServers(config, "vnode2") ;
             

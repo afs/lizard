@@ -62,7 +62,8 @@ public class LizardAssembler extends DatasetAssembler {
         else
             baseLocation = Location.create(confCluster.fileroot) ; 
         Location locationQueryServer = baseLocation.getSubLocation("query") ;
-        LzDataset lz = LzBuilderDataset.build(confCluster, locationQueryServer) ;
+        log.warn("No 'same vnode' support for datasets yet");
+        LzDataset lz = LzBuilderDataset.build(confCluster, locationQueryServer, "$NOWHERE$") ;
         Dataset ds = LzBuilderDataset.dataset(lz) ;
         AssemblerUtils.setContext(root, ds.getContext());
         return ds ;

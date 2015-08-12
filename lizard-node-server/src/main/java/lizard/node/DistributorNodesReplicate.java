@@ -17,7 +17,10 @@
 
 package lizard.node;
 
-import java.util.* ;
+import java.util.ArrayList ;
+import java.util.Arrays ;
+import java.util.Collection ;
+import java.util.List ;
 
 import lizard.comms.CommsException ;
 import lizard.comms.ConnState ;
@@ -29,8 +32,11 @@ import org.seaborne.tdb2.store.NodeId ;
 public class DistributorNodesReplicate implements DistributorNodes {
     // Cover set policy is W=N and R=1
     private List<NodeTableRemote> places = new ArrayList<>() ;
+    private final String localVNode ;   // The preferred vnode
     
-    public DistributorNodesReplicate() { }
+    public DistributorNodesReplicate(String localVNode) {
+        this.localVNode = localVNode ;
+    }
     
     public void add(NodeTableRemote... nodeTables) {
         
@@ -59,19 +65,29 @@ public class DistributorNodesReplicate implements DistributorNodes {
 
     @Override
     public List<NodeTableRemote> allFind() {
-        return chooseActive(places) ;//Collections.singletonList(places.get(0)) ;
+        return choose(places) ;
+    }
+
+    private List<NodeTableRemote> choose(List<NodeTableRemote> z) {
+        return Arrays.asList(chooseOne(z)) ;
     }
     
-    private List<NodeTableRemote> chooseActive(List<NodeTableRemote> z) {
-        List<NodeTableRemote> x = new ArrayList<>() ;
+    /** Choose one remote, preferring a local vnode */ 
+    private NodeTableRemote chooseOne(List<NodeTableRemote> z) {
+        NodeTableRemote maybe = null ;
         for ( NodeTableRemote ntr : z ) {
             // For each key, find one place
-            if ( ntr.getStatus() == ConnState.OK )
-                x.add(ntr) ; 
+            if ( ntr.getStatus() == ConnState.OK ) {
+                if ( localVNode == null )
+                    return ntr ;
+                if ( ntr.getRemoteVNode().equals(localVNode) )
+                    return ntr ;
+                maybe = ntr ;
+            }
         }
-        if ( x.isEmpty() )
+        if ( maybe == null )
             throw new CommsException("No node replicas available") ;
-        return x ;    
+        return maybe ;    
     }
     
     @Override
@@ -89,17 +105,17 @@ public class DistributorNodesReplicate implements DistributorNodes {
     }
 
     private List<NodeTableRemote> locateRead(Node node) {
-        return chooseActive(places) ;
+        return choose(places) ;
     }
     
     private List<NodeTableRemote> locateRead(NodeId nodeId) {
-        return chooseActive(places) ;
+        return choose(places) ;
     }
 
     private List<NodeTableRemote> locateWrite(Node node) {
         if ( ! node.isConcrete() )
             throw new CommsException("Can't store node: "+node ) ;
-        List<NodeTableRemote> possibilities =  places ;
+        List<NodeTableRemote> possibilities = places ;
         // Check all available
         for ( NodeTableRemote ntr : possibilities ) {
             if ( ntr.getStatus() != ConnState.OK )
