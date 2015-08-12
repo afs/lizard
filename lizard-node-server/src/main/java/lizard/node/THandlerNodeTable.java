@@ -17,6 +17,8 @@
 
 package lizard.node;
 
+import static lizard.comms.thrift.ThriftLib.decodeFromTLZ ;
+import static lizard.comms.thrift.ThriftLib.encodeToTLZ ;
 import static org.apache.jena.query.ReadWrite.READ ;
 import static org.apache.jena.query.ReadWrite.WRITE ;
 
@@ -26,7 +28,8 @@ import java.util.List ;
 import lizard.api.TxnHandler ;
 import lizard.api.TLZ.TLZ_NodeId ;
 import lizard.api.TLZ.TLZ_NodeTable ;
-import static lizard.comms.thrift.ThriftLib.* ;
+import lizard.system.LzLog ;
+
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.graph.Node ;
 import org.apache.jena.riot.out.NodeFmtLib ;
@@ -41,8 +44,12 @@ import org.slf4j.LoggerFactory ;
 //XXX Needs efficiency attention.
 /* package */ class THandlerNodeTable extends TxnHandler implements TLZ_NodeTable.Iface {
     private static Logger log = LoggerFactory.getLogger(THandlerNodeTable.class) ;
+    private static Logger logtxn = LoggerFactory.getLogger(LzLog.logTxnBase+".NodeTableTxn") ;
+    
     @Override
     protected Logger log() { return log ; }
+    @Override
+    protected Logger logtxn() { return logtxn ; }
     
     private final String label ;
     private final NodeTable nodeTable ;

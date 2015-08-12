@@ -24,5 +24,8 @@ import org.slf4j.LoggerFactory ;
 public class LzLog {
     public static final Logger logConf      = LoggerFactory.getLogger("lizard.lz-config") ;
     public static final Logger logSystem    = LoggerFactory.getLogger("lizard.lz-system") ;
+    /* Base name for transaction logging */
+    public static final String logTxnBase   = "lizard.lz-txn" ;
+
 }
 

@@ -77,7 +77,7 @@ public abstract class TxnHandler extends NodeHandler implements TxnCtl.Iface {
     // synchronized?  This is RPC and per connection so client end is responsible. 
     private void txnBegin(long txnId, ReadWrite mode) {
         if ( LOG_TXN )
-            FmtLog.info(log(), "[Txn:%s:%d] begin[%s]", getLabel(), txnId, mode) ;
+            FmtLog.info(logtxn(), "[Txn:%s:%d] begin[%s]", getLabel(), txnId, mode) ;
         transactional.begin(mode) ;
         TransactionCoordinatorState txnState = transactional.detach() ;
         if ( transactions.containsKey(txnId) )
@@ -88,14 +88,14 @@ public abstract class TxnHandler extends NodeHandler implements TxnCtl.Iface {
     @Override
     public void txnPrepare(long txnId) {
         if ( LOG_TXN )
-            FmtLog.info(log(), "[Txn:%s:%d] prepare", getLabel(), txnId) ;
+            FmtLog.info(logtxn(), "[Txn:%s:%d] prepare", getLabel(), txnId) ;
         internal_txnAction(txnId, () -> transactional.commitPrepare() ) ;
     }
 
     @Override
     public void txnCommit(long txnId) {
         if ( LOG_TXN )
-            FmtLog.info(log(), "[Txn:%s:%d] commit", getLabel(), txnId) ;
+            FmtLog.info(logtxn(), "[Txn:%s:%d] commit", getLabel(), txnId) ;
         internal_txnAction(txnId, () -> { transactional.commitExec() ; }) ;
         
     }
@@ -103,14 +103,14 @@ public abstract class TxnHandler extends NodeHandler implements TxnCtl.Iface {
     @Override
     public void txnAbort(long txnId) {
         if ( LOG_TXN )
-            FmtLog.info(log(), "[Txn:%s:%d] abort", getLabel(), txnId) ; 
+            FmtLog.info(logtxn(), "[Txn:%s:%d] abort", getLabel(), txnId) ; 
         internal_txnAction(txnId, () -> transactional.abort()) ;
     }
 
     @Override
     public void txnEnd(long txnId) {
         if ( LOG_TXN )
-            FmtLog.info(log(), "[Txn:%s:%d] end", getLabel(), txnId) ;
+            FmtLog.info(logtxn(), "[Txn:%s:%d] end", getLabel(), txnId) ;
         if ( txnId > 0 )
             internal_txnAction(txnId, () -> transactional.end()) ;
         setCurrentWriter(NO_WRITER) ;
@@ -153,7 +153,7 @@ public abstract class TxnHandler extends NodeHandler implements TxnCtl.Iface {
     }
 
     private void autoCommit(long txnId, Runnable action, ReadWrite mode) {
-        FmtLog.warn(log(), "[Txn:%s:%d] autocommit(%s)", getLabel(), txnId, mode) ;
+        FmtLog.warn(logtxn(), "[Txn:%s:%d] autocommit(%s)", getLabel(), txnId, mode) ;
         switch(mode) {
             case READ : Txn.executeRead(transactional, action); break ;
             case WRITE : Txn.executeWrite(transactional, action); break ;
@@ -161,7 +161,7 @@ public abstract class TxnHandler extends NodeHandler implements TxnCtl.Iface {
     }
 
     private <X> X autoCommitReturn(long txnId, Supplier<X> action, ReadWrite mode) {
-        FmtLog.warn(log(), "[Txn:%s:%d] autocommit(%s)", getLabel(), txnId, mode) ;
+        FmtLog.warn(logtxn(), "[Txn:%s:%d] autocommit(%s)", getLabel(), txnId, mode) ;
         switch(mode) {
             case READ : return Txn.executeReadReturn(transactional, action) ;
             case WRITE : return Txn.executeWriteReturn(transactional, action) ;

@@ -37,6 +37,7 @@ public abstract class NodeHandler implements NodeCtl.Iface {
     }
     
     protected abstract Logger log() ;
+    protected abstract Logger logtxn() ;
     protected abstract String getLabel() ;
     protected void checkActive() throws TException {
         if ( ! active )

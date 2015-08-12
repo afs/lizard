@@ -29,6 +29,7 @@ import lizard.api.TxnHandler ;
 import lizard.api.TLZ.TLZ_Index ;
 import lizard.api.TLZ.TLZ_ShardIndex ;
 import lizard.api.TLZ.TLZ_TupleNodeId ;
+import lizard.system.LzLog ;
 
 import org.apache.jena.atlas.lib.Tuple ;
 import org.apache.jena.atlas.logging.FmtLog ;
@@ -44,8 +45,12 @@ import org.slf4j.LoggerFactory ;
 /* package */ class THandlerTupleIndex extends TxnHandler implements TLZ_Index.Iface {
     
     private static Logger log = LoggerFactory.getLogger(THandlerTupleIndex.class) ;
+    private static Logger logtxn = LoggerFactory.getLogger(LzLog.logTxnBase+".IndexTxn") ;
+    
     @Override
     protected Logger log() { return log ; }
+    @Override
+    protected Logger logtxn() { return logtxn ; }
     
     private final String label ;
     @Override
