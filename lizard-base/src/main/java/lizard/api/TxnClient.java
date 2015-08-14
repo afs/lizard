@@ -107,7 +107,7 @@ public abstract class TxnClient<X extends TxnCtl.Client> extends ComponentBase i
     @Override
     public void end() {
         Long z = getTxnId() ;
-        if ( z != null ) {
+        /*if ( z != null )*/ {
             if ( z < 0 ) {
                 if ( LOG_TXN )
                     FmtLog.info(getLog(), "[Txn:%s:%d] end (no call)", getLabel(), getTxnId());
