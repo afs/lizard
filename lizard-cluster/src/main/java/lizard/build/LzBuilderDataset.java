@@ -20,6 +20,33 @@ package lizard.build;
 import java.util.* ;
 import java.util.function.Supplier ;
 
+import org.apache.jena.atlas.lib.ColumnMap ;
+import org.apache.jena.atlas.lib.StrUtils ;
+import org.apache.jena.atlas.logging.FmtLog ;
+import org.apache.jena.query.ARQ ;
+import org.apache.jena.query.Dataset ;
+import org.apache.jena.query.DatasetFactory ;
+import org.apache.jena.query.ReadWrite ;
+import org.apache.jena.shared.PrefixMapping ;
+import org.apache.jena.shared.impl.PrefixMappingImpl ;
+import org.apache.jena.sparql.core.DatasetPrefixStorage ;
+import org.apache.jena.sparql.engine.main.QC ;
+import org.apache.jena.sparql.engine.optimizer.reorder.ReorderLib ;
+import org.seaborne.dboe.base.file.Location ;
+import org.seaborne.dboe.sys.Names ;
+import org.seaborne.dboe.transaction.txn.* ;
+import org.seaborne.tdb2.setup.StoreParams ;
+import org.seaborne.tdb2.store.DatasetGraphTDB ;
+import org.seaborne.tdb2.store.QuadTable ;
+import org.seaborne.tdb2.store.TripleTable ;
+import org.seaborne.tdb2.store.nodetable.NodeTable ;
+import org.seaborne.tdb2.store.nodetable.NodeTableCache ;
+import org.seaborne.tdb2.store.nodetable.NodeTableInline ;
+import org.seaborne.tdb2.store.tupletable.TupleIndex ;
+import org.seaborne.tdb2.sys.DatasetControl ;
+import org.seaborne.tdb2.sys.DatasetControlNone ;
+import org.slf4j.Logger ;
+
 import lizard.api.TxnClient ;
 import lizard.cluster.Cluster ;
 import lizard.conf.* ;
@@ -37,32 +64,6 @@ import lizard.query.QuackLizard ;
 import lizard.system.Component ;
 import lizard.system.LizardException ;
 import migrate.TupleIndexEmpty ;
-
-import org.apache.jena.atlas.lib.ColumnMap ;
-import org.apache.jena.atlas.lib.StrUtils ;
-import org.apache.jena.atlas.logging.FmtLog ;
-import org.apache.jena.query.ARQ ;
-import org.apache.jena.query.Dataset ;
-import org.apache.jena.query.DatasetFactory ;
-import org.apache.jena.query.ReadWrite ;
-import org.apache.jena.sparql.engine.main.QC ;
-import org.apache.jena.sparql.engine.optimizer.reorder.ReorderLib ;
-import org.seaborne.dboe.base.file.Location ;
-import org.seaborne.dboe.sys.Names ;
-import org.seaborne.dboe.transaction.txn.* ;
-import org.seaborne.tdb2.setup.StoreParams ;
-import org.seaborne.tdb2.setup.TDBBuilder ;
-import org.seaborne.tdb2.store.DatasetGraphTDB ;
-import org.seaborne.tdb2.store.DatasetPrefixesTDB ;
-import org.seaborne.tdb2.store.QuadTable ;
-import org.seaborne.tdb2.store.TripleTable ;
-import org.seaborne.tdb2.store.nodetable.NodeTable ;
-import org.seaborne.tdb2.store.nodetable.NodeTableCache ;
-import org.seaborne.tdb2.store.nodetable.NodeTableInline ;
-import org.seaborne.tdb2.store.tupletable.TupleIndex ;
-import org.seaborne.tdb2.sys.DatasetControl ;
-import org.seaborne.tdb2.sys.DatasetControlNone ;
-import org.slf4j.Logger ;
 
 public class LzBuilderDataset {
     private static Logger logConf = Config.logConf ;
@@ -133,11 +134,16 @@ public class LzBuilderDataset {
             quorumChoosers.add(qChooseIdx) ;
         }
         // ---- Indexes
+        // ---- Prefixes
+        
+        //// Add quorum chooser if not null prefix table.
+        DatasetPrefixStorage prefixes = buildPrefixTable(Location.mem(), txnCoord, confCluster, startables, datasetVNode) ;
+        // ---- Prefixes
         
         QuorumGenerator qGenerator = new QuorumChooserN(quorumChoosers) ;
         txnCoord.setQuorumGenerator(qGenerator) ;
         
-        DatasetGraphTDB dsg = createDataset(txnCoord, Location.mem(), indexes, nt) ;
+        DatasetGraphTDB dsg = createDataset(txnCoord, Location.mem(), indexes, nt, prefixes) ;
         // Delayed start object.
         LzDataset lz = new LzDataset(txnCoord, dsg, startables) ;
         
@@ -204,7 +210,8 @@ public class LzBuilderDataset {
     
     // 1: Restructure TDBBuilder to make index, make node tables then build upwards. 
     // 2: Subclass TDBBuilder here 
-    private static DatasetGraphTDB createDataset(TransactionCoordinator txnCoord, Location location, TupleIndex[] tripleIndexes, NodeTable nodeTable) {
+    private static DatasetGraphTDB createDataset(TransactionCoordinator txnCoord, Location location, 
+                                                 TupleIndex[] tripleIndexes, NodeTable nodeTable, DatasetPrefixStorage prefixes) {
         DatasetControl policy = new DatasetControlNone() ;
         StoreParams params = StoreParams.getDftStoreParams() ;
         // Special triple table
@@ -232,12 +239,8 @@ public class LzBuilderDataset {
             FmtLog.debug(logConf, "Quad table: %s :: %s", indexes[0], StrUtils.strjoin(",", indexes)) ; 
         }
         
-        // Local only.
-        TDBBuilder builder = TDBBuilder.create(txnCoord, location, params) ;
         TransactionalSystem txnSys = new TransactionalBase(txnCoord) ;
-        NodeTable nodeTablePrefixes = builder.buildNodeTable(params.getPrefixTableBaseName()) ;
-        DatasetPrefixesTDB prefixes = builder.buildPrefixTable(nodeTablePrefixes) ;
-        DatasetGraphTDB dsg = new DatasetGraphTDB(txnSys, tableTriples, tableQuads, prefixes, ReorderLib.fixed(), builder.getLocation(), builder.getParams()) ;
+        DatasetGraphTDB dsg = new DatasetGraphTDB(txnSys, tableTriples, tableQuads, prefixes, ReorderLib.fixed(),location, params) ;
         // Development.
         dsg.getContext().set(ARQ.optFilterPlacementBGP, false);
         // Query engine.
@@ -272,7 +275,7 @@ public class LzBuilderDataset {
         }
         
     /** Build a Cluster node table, from the configuration.
-     * No acaches, no inlining. See {@link #stackNodeTable}
+     * No caches, no inlining. See {@link #stackNodeTable}
      */
     public static ClusterNodeTable buildClientNodeTable(ConfCluster confCluster, ConfNodeTable cn, List<Component> startables, String hereVNode) {
         DistributorNodesReplicate dist = new DistributorNodesReplicate(hereVNode) ;
@@ -299,5 +302,62 @@ public class LzBuilderDataset {
     
     public static Dataset dataset(LzDataset lz) {
         return DatasetFactory.create(lz.getDataset()) ;
+    }
+    
+    /** Build a Cluster node table, from the configuration.
+     * No caches, no inlining. See {@link #stackNodeTable}
+     */
+    public static DatasetPrefixStorage buildPrefixTable(Location location, TransactionCoordinator txnCoord, ConfCluster confCluster, List<Component> startables, String hereVNode) {
+//        StoreParams params = StoreParams.getDftStoreParams() ;
+//        TDBBuilder builder = TDBBuilder.create(txnCoord, location, params) ;
+//        NodeTable nodeTablePrefixes = builder.buildNodeTable(params.getPrefixTableBaseName()) ;
+//        DatasetPrefixesTDB prefixes = builder.buildPrefixTable(nodeTablePrefixes) ;
+//        return prefixes ;
+        DatasetPrefixStorage nullPrefixes =  new DatasetPrefixStorage() {
+            @Override
+            public void close() {}
+
+            @Override
+            public void sync() {}
+
+            @Override
+            public Set<String> graphNames() {
+                return Collections.emptySet() ;
+            }
+
+            @Override
+            public String readPrefix(String graphName, String prefix) {
+                return null;
+            }
+
+            @Override
+            public String readByURI(String graphName, String uriStr) {
+                return null;
+            }
+
+            @Override
+            public Map<String, String> readPrefixMap(String graphName) {
+                return null;
+            }
+
+            @Override
+            public void insertPrefix(String graphName, String prefix, String uri) {}
+
+            @Override
+            public void loadPrefixMapping(String graphName, PrefixMapping pmap) {}
+
+            @Override
+            public void removeFromPrefixMap(String graphName, String prefix) {}
+
+            @Override
+            public PrefixMapping getPrefixMapping() {
+                return new PrefixMappingImpl() ;
+            }
+
+            @Override
+            public PrefixMapping getPrefixMapping(String graphName) {
+                return new PrefixMappingImpl() ;
+            }} ;
+            return nullPrefixes ;
     }
 }
