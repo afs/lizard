@@ -48,10 +48,11 @@ public class LzDeploy {
         Cluster.addMember(clusterString) ;
         Location baseLocation = null ;
         
-        if ( confCluster.fileroot == null )
+        VNode here = confCluster.placements.get(vnode) ;
+        if ( here.localFileRoot == null )
             baseLocation = Location.mem() ;
         else
-            baseLocation = Location.create(confCluster.fileroot) ; 
+            baseLocation = Location.create(here.localFileRoot) ; 
 
         Platform platform = new Platform() ;
         StoreParams params = StoreParams.getDftStoreParams() ; 
@@ -66,10 +67,12 @@ public class LzDeploy {
     
     public static LzDataset deployLzDataset(ConfCluster confCluster, String vnode) {
         Location baseLocation = null ;
-        if ( confCluster.fileroot == null )
-            baseLocation = Location.mem() ;
-        else
-            baseLocation = Location.create(confCluster.fileroot) ; 
+//        if ( confCluster.fileroot == null )
+//            baseLocation = Location.mem() ;
+//        else
+//            baseLocation = Location.create(confCluster.fileroot) ;
+        // XXX Currently no local state.
+        baseLocation = Location.mem() ;
         Location locationQueryServer = baseLocation.getSubLocation("query") ;
         LzDataset lzdsg = LzBuilderDataset.build(confCluster, locationQueryServer, vnode) ;
         return lzdsg ;

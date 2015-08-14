@@ -135,7 +135,7 @@ public class DeployDev {
                                       ,"{ ?s ?p ?o }" ) ;
         String qs3 = "SELECT * { ?s ?p ?o }" ;
         
-        String qs = qs3 ;
+        String qs = qs1 ;
         Query q = QueryFactory.create(qs) ;
         performQuery(ds, q);
     }

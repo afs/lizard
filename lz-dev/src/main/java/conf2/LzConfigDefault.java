@@ -45,7 +45,7 @@ public class LzConfigDefault {
     
         // Cluster
         ConfCluster confCluster = new ConfCluster(confDatabase) ;
-        VNode vNode = new VNode("local", NetAddr.create("localhost", port)) ;
+        VNode vNode = new VNode("local", NetAddr.create("localhost", port), null) ;
         confCluster.placements.put("local", vNode) ;
         confCluster.zkServer.add(confZookeeper) ;
         confCluster.addIndexElements(posIdx1, psoIdx1) ;

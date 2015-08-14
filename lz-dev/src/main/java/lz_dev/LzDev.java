@@ -17,11 +17,6 @@
 
 package lz_dev;
 
-import lizard.conf.ConfCluster ;
-import lizard.conf.parsers.LzConfParserRDF ;
-import lizard.deploy.Deploy ;
-import migrate.Q ;
-
 import org.apache.jena.atlas.lib.FileOps ;
 import org.apache.jena.atlas.lib.Lib ;
 import org.apache.jena.atlas.logging.LogCtl ;
@@ -32,6 +27,12 @@ import org.apache.jena.rdf.model.Model ;
 import org.seaborne.dboe.sys.Names ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
+
+import lizard.conf.ConfCluster ;
+import lizard.conf.VNode ;
+import lizard.conf.parsers.LzConfParserRDF ;
+import lizard.deploy.Deploy ;
+import migrate.Q ;
 
 public class LzDev {
     static { LogCtl.setLog4j(); } 
@@ -54,26 +55,22 @@ public class LzDev {
             
             String FILE = "/home/afs/Datasets/BSBM/bsbm-250k.nt.gz" ;
             //FILE="D.ttl" ;
-            config.fileroot = Names.memName ;
             
 //            FILE = "/home/afs/Datasets/BSBM/bsbm-5m.nt.gz" ;
 //            FileOps.clearAll("DB");
 //            config.fileroot = "DB" ;
+
+            setup(config, "vnode1") ;
+            setup(config, "vnode2") ;
             
-            if ( ! config.fileroot.startsWith(Names.memName) ) {
-                FileOps.ensureDir(config.fileroot); 
-                FileOps.clearAll(config.fileroot) ;
-            }
-            
-            String here = "vnode1" ; 
-            
+            String hereDataset = "vnode1" ;
             Deploy.deployZookeer(2186);
             Lib.sleep(100) ;
             
             Deploy.deployServers(config, "vnode1") ;
             Deploy.deployServers(config, "vnode2") ;
             
-            Dataset ds = Deploy.deployDataset(config, here) ;
+            Dataset ds = Deploy.deployDataset(config, hereDataset) ;
             //LzDataset lzds = LzDeploy.deployLzDataset(config, here);
             //Dataset ds = LzBuilderDataset.dataset(lzds) ;
             
@@ -95,6 +92,14 @@ public class LzDev {
             System.err.println(ex.getMessage()) ;
             ex.printStackTrace(System.err);
             System.exit(0) ;
+        }
+    }
+    private static void setup(ConfCluster config, String vnodeName) {
+        VNode vnode = config.vnode(vnodeName) ;
+        String r = vnode.localFileRoot ;
+        if ( r != null && !r.startsWith(Names.memName) ) {
+            FileOps.ensureDir(r); 
+            FileOps.clearAll(r) ;
         }
     }
 }

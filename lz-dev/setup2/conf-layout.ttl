@@ -15,5 +15,5 @@ prefix ja:      <http://jena.hpl.hp.com/2005/11/Assembler#>
 
 # Placement: mapping from virtual name to real address.
 
-[ :vname "vnode1" ; :hostname "localhost" ; :port 1100 ] .
-[ :vname "vnode2" ; :hostname "localhost" ; :port 1101 ] .
+[ :vname "vnode1" ; :hostname "localhost" ; :port 1100 ; :fileroot "DB1" ] .
+[ :vname "vnode2" ; :hostname "localhost" ; :port 1101 ; :fileroot "DB2" ] .

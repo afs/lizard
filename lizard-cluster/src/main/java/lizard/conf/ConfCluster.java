@@ -35,7 +35,6 @@ public class ConfCluster {
     public final ConfDataset dataset ;
     public final List<ConfNodeTableElement> eltsNodeTable = new ArrayList<>() ;
     public final List<ConfIndexElement> eltsIndex = new ArrayList<>() ;
-    public String fileroot = null ;
     
     public ConfCluster(ConfDataset dataset) {
         this.dataset = dataset ;
@@ -57,6 +56,10 @@ public class ConfCluster {
         return mapping ;
     }
     
+    public VNode vnode(String vnodeName) {
+        return placements.get(vnodeName) ;
+    }
+    
     @Override
     public String toString() {
         StringWriter sw = new StringWriter() ;
@@ -69,23 +72,19 @@ public class ConfCluster {
     public void print(IndentedWriter out) {
         out.print(LzConfParserYAML.objVNode) ;
         out.println(": [") ;
-        placements.forEach((s,vn) -> { 
-            out.printf("  { vname: \"%s\" , :hostname \"%s\" , :port \"%d\" } ,\n", 
-                       vn.vname, vn.getAdminEndpoint().getName(), vn.getAdminEndpoint().getPort()) ;
+        placements.forEach((s,vn) -> {
+            if ( vn.localFileRoot == null )
+                out.printf("  { vname: \"%s\" , :hostname \"%s\" , :port \"%d\" } ,\n", 
+                           vn.vname, vn.getAdminEndpoint().getName(), vn.getAdminEndpoint().getPort()) ;
+            else
+                out.printf("  { vname: \"%s\" , :hostname \"%s\" , :port \"%d\", :fileroot \"%s\" } ,\n", 
+                           vn.vname, vn.getAdminEndpoint().getName(), vn.getAdminEndpoint().getPort(), vn.localFileRoot) ;
             }) ;
         out.println("]") ;
         
         out.print(LzConfParserYAML.objCluster) ;
         out.println(":") ;
        
-        if ( fileroot != null ) {
-            out.incIndent();
-            out.print(LzConfParserYAML.fFileroot) ;
-            out.print(":") ;
-            out.println(fileroot) ;
-            out.decIndent();
-        }
-        
         out.incIndent();
         out.print(LzConfParserYAML.objZookeeper);
         out.print(": ") ;

@@ -61,9 +61,6 @@ public class LzConfParserYAML {
         if ( sparql != null )
             System.err.println("Configuration: sparql mentioned, not implemented") ;
         
-        String fileroot = (String)YAML.get(root, objCluster, fFileroot) ;
-        conf.fileroot = fileroot ;
-        
         Object dataset = YAML.get(root, objDataset) ;
         List<Object> indexes = (List<Object>)YAML.get(dataset, fIndexes) ;  // array.
         String nodes = (String)YAML.get(dataset, fNodes) ;      // name = "nodetable"
@@ -100,8 +97,12 @@ public class LzConfParserYAML {
             String vname = (String)YAML.get(vnode, fVName) ;
             String hostname = (String)YAML.get(vnode, fHostname) ;
             int port = (Integer)YAML.get(vnode, fPort) ;
-            VNode vn = new VNode(vname, NetAddr.create(hostname, port)) ;
+            String fileroot = (String)YAML.get(vnode, fFileroot) ;
+            VNode vn = new VNode(vname, NetAddr.create(hostname, port), fileroot) ;
             vnodeLayout.put(vname, vn) ;
+            
+            
+            
         }) ;
     }
 

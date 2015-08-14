@@ -87,6 +87,7 @@ public class LzConfParserRDF {
                                        " ?vNode :vname ?vname ." ,
                                        "    OPTIONAL { ?vNode  :hostname ?hostname }",
                                        "    OPTIONAL { ?vNode  :port ?port }",
+                                       "    OPTIONAL { ?vNode  :fileroot ?fileroot }",
                                        "}") ;
         Map<String, VNode> placements = new HashMap<>() ;
         for ( QuerySolution row : Q.queryToList(model, qs) ) {
@@ -100,9 +101,9 @@ public class LzConfParserRDF {
             if ( p == null )
                 throw new LizardException(vname+" : No port") ;
             int port = Integer.parseInt(p) ;
-            
+            String locStr = Q.getStringOrNull(row, "fileroot") ;
             NetAddr addr = NetAddr.create(host, port) ;
-            VNode vNode = new VNode(vname, addr) ;
+            VNode vNode = new VNode(vname, addr, locStr) ;
             placements.put(vname, vNode) ;
         }
         return placements ;

@@ -117,7 +117,7 @@ public class PerfNodeTableBatches {
 
         NetAddr here = NetAddr.create("localhost", port) ;
         ConfNodeTable nTableDesc = new ConfNodeTable(1, 1) ;
-        VNode vNode = new VNode("local", here) ;
+        VNode vNode = new VNode("local", here, null) ;
         ConfNodeTableElement x = new ConfNodeTableElement("Nodes", "node", nTableDesc, VNodeAddr.create("local", port)) ;
         TServerNode nodeServer = LzBuilderNodeServer.buildNodeServer(platform, location, params, x) ;
         nodeServer.start() ;

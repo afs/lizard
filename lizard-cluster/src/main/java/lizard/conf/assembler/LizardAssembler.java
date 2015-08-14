@@ -57,10 +57,14 @@ public class LizardAssembler extends DatasetAssembler {
         ConfCluster confCluster = LzConfParserRDF.parseConfFile(root.getModel()) ; 
         ConfDataset confDataset = confCluster.dataset ;
         Location baseLocation = null ;
-        if ( confCluster.fileroot == null )
-            baseLocation = Location.mem() ;
-        else
-            baseLocation = Location.create(confCluster.fileroot) ; 
+//        if ( confCluster.fileroot == null )
+//                baseLocation = Location.mem() ;
+//        else
+//            baseLocation = Location.create(confCluster.fileroot) ;
+        
+        // XXX $$TEMP$$
+        baseLocation = Location.mem() ;
+        
         Location locationQueryServer = baseLocation.getSubLocation("query") ;
         log.warn("No 'same vnode' support for datasets yet");
         LzDataset lz = LzBuilderDataset.build(confCluster, locationQueryServer, "$NOWHERE$") ;

@@ -30,10 +30,12 @@ public class VNode {
     
     public final String vname ;
     private final NetAddr endpoint ;
+    public final String localFileRoot ;
     
-    public VNode(String vname, NetAddr endpoint) {
+    public VNode(String vname, NetAddr endpoint, String loc) {
         this.vname = vname ;
         this.endpoint = endpoint ;
+        this.localFileRoot = loc ;
     }
     
     public String getDNSname() {
