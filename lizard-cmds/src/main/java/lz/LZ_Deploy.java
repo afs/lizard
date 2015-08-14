@@ -17,6 +17,13 @@
 
 package lz;
 
+import org.apache.jena.atlas.lib.Lib ;
+import org.apache.jena.atlas.logging.LogCtl ;
+import org.apache.jena.query.Dataset ;
+import org.apache.jena.rdf.model.Model ;
+import org.slf4j.Logger ;
+import org.slf4j.LoggerFactory ;
+
 import jena.cmd.ArgDecl ;
 import jena.cmd.CmdException ;
 import jena.cmd.CmdGeneral ;
@@ -26,13 +33,6 @@ import lizard.conf.parsers.LzConfParserRDF ;
 import lizard.deploy.Deploy ;
 import lizard.system.LizardException ;
 import migrate.Q ;
-
-import org.apache.jena.atlas.lib.Lib ;
-import org.apache.jena.atlas.logging.LogCtl ;
-import org.apache.jena.query.Dataset ;
-import org.apache.jena.rdf.model.Model ;
-import org.slf4j.Logger ;
-import org.slf4j.LoggerFactory ;
 
 /** Take a general configuration file and deployment file
  *  for this machine, build servers and run here.

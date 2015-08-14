@@ -53,6 +53,7 @@ public class LzDev {
             Multimap<String, Integer> vnodeToServers = config.serverPlacements() ;
             
             String FILE = "/home/afs/Datasets/BSBM/bsbm-250k.nt.gz" ;
+            //FILE="D.ttl" ;
             config.fileroot = Names.memName ;
             
 //            FILE = "/home/afs/Datasets/BSBM/bsbm-5m.nt.gz" ;
@@ -77,14 +78,14 @@ public class LzDev {
             //Dataset ds = LzBuilderDataset.dataset(lzds) ;
             
             if ( false ) {
-                Deploy.runFuseki(ds.asDatasetGraph(), 3030);
+                DeployDev.runFuseki(ds.asDatasetGraph(), 3030);
                 System.exit(0) ;
             }
             
             // Alternatively ....
-            Deploy.load(ds,FILE);
+            DeployDev.load(ds,FILE);
             ds.begin(ReadWrite.READ);
-            Deploy.performQuery(ds);
+            DeployDev.performQuery(ds);
             ds.end() ;
             System.exit(0) ;
         
