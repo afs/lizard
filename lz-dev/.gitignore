@@ -3,6 +3,7 @@
 ##!setup-simple
 # Fuseki run area
 run/
+run-*/
 lz-dev.classpath
 # Databases
 DB*
