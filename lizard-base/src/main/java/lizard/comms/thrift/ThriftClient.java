@@ -53,6 +53,12 @@ public class ThriftClient extends ComponentBase implements Component {
             return ;
         }
         FmtLog.debug(log, "Start: %s", getLabel()) ;
+        startProtocol() ;
+        super.start() ;
+    }
+
+    public void startProtocol() {
+        FmtLog.debug(log, "Start thrift: %s", getLabel()) ;
         @SuppressWarnings("resource")
         TTransport transport = new TSocket("localhost", port) ;
         try {
@@ -64,7 +70,7 @@ public class ThriftClient extends ComponentBase implements Component {
             throw new LizardException(e) ;
         }
     }
-
+    
     public void close() {
         protocol.getTransport().close() ;
     }

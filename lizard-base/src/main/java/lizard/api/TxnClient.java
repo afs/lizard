@@ -66,11 +66,25 @@ public abstract class TxnClient<X extends TxnCtl.Client> extends ComponentBase i
     }
 
     protected abstract Logger getLog() ;
+    protected abstract void resetConnection() ;
     
     @Override
     public void begin(long txnId, ReadWrite mode) {
         if ( LOG_TXN )
             FmtLog.info(getLog(), "[Txn:%s:%d] begin/%s", getLabel(), txnId, mode.toString().toLowerCase());
+        
+        try { rpcBegin(txnId, mode) ; }
+        catch (LizardException ex) {
+            // Attempt to restart.
+            rpc = null ;
+            resetConnection() ;
+            rpcBegin(txnId, mode) ;
+        }
+
+        currentTxnId.set(txnId) ;
+    }
+
+    private void rpcBegin(long txnId, ReadWrite mode) {
         ThriftLib.exec(lock, ()-> {
             switch(Objects.requireNonNull(mode)) {
                 case READ :
@@ -79,9 +93,8 @@ public abstract class TxnClient<X extends TxnCtl.Client> extends ComponentBase i
                     rpc.txnBeginWrite(txnId) ; break ;
             }
         }) ;
-        currentTxnId.set(txnId) ;
     }
-
+        
     @Override
     public void prepare() {
        completeAsyncOperations() ;
