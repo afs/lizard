@@ -100,11 +100,12 @@ public class Deploy {
         
         FusekiServerListener.initialSetup = fuConf ;
         System.setProperty("FUSEKI_HOME", "/home/afs/Jena/jena-fuseki2/jena-fuseki-core/") ;
-        FusekiEnv.FUSEKI_BASE = Paths.get("run").toAbsolutePath() ;
+        FusekiEnv.FUSEKI_BASE = Paths.get("run-"+port).toAbsolutePath() ;
         FileOps.ensureDir(FusekiEnv.FUSEKI_BASE.toString()) ;
     
+        log.info("FUSEKI: port="+port) ;
         JettyServerConfig   jettyServerConfig = new JettyServerConfig() ;
-        jettyServerConfig.port = 3030 ;
+        jettyServerConfig.port = port ;
         jettyServerConfig.contextPath = "/" ;
         jettyServerConfig.jettyConfigFile = null ;
         jettyServerConfig.pages = Fuseki.PagesStatic ;
