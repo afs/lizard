@@ -101,7 +101,7 @@ public class LZ_Deploy extends CmdGeneral {
             logConf.info("Run") ;
             if ( fusekiPort > 0 ) {
                 Dataset ds = Deploy.deployDataset(config, thisVNode) ;
-                Deploy.runFuseki(ds.asDatasetGraph(), 3030);
+                Deploy.runFuseki(ds.asDatasetGraph(), fusekiPort);
                 System.exit(0) ;
             }
             while (true) {
