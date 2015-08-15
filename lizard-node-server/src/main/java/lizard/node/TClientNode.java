@@ -66,6 +66,14 @@ public class TClientNode extends TxnClient<TLZ_NodeTable.Client> implements Comp
         connState = ConnState.OK ;
     }
     
+    
+    @Override
+    protected void resetConnection() {
+        try { client.close() ; } catch (Exception ex) { }  
+        client.startProtocol(); 
+        super.setRPC(new TLZ_NodeTable.Client(client.protocol())) ;
+    }
+    
     public List<NodeId> allocateNodeIds(List<Node> nodes, boolean withAllocation) {
         if ( ! withAllocation )
             log.warn("allocateNodeIds : withAllocation=false (ignored)") ;

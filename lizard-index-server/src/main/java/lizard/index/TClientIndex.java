@@ -81,6 +81,13 @@ public class TClientIndex extends TxnClient<TLZ_Index.Client> implements TClient
     }
     
     @Override
+    protected void resetConnection() {
+        try { client.close() ; } catch (Exception ex) { }  
+        client.startProtocol(); 
+        super.setRPC(new TLZ_Index.Client(client.protocol())) ;
+    }
+
+    @Override
     public void stop() {
         close() ;
         super.stop() ;
