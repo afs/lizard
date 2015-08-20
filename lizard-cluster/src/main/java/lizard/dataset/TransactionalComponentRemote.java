@@ -85,6 +85,11 @@ public class TransactionalComponentRemote<X extends TxnClient<?>> extends Transa
     }
 
     @Override
+    protected boolean _promote(TxnId txnId, TxnRemoteState state) {
+        throw new TransactionException("Promote not implemented") ; 
+    }
+
+    @Override
     protected ByteBuffer _commitPrepare(TxnId txnId, TxnRemoteState state) {
         // Local details.
         try {
