@@ -29,6 +29,12 @@
   <url>https://afs.github.io/lizard/</url>
   <version>0.0.0-SNAPSHOT</version>
 
+ <parent>
+    <groupId>org.seaborne.mantis</groupId>
+    <artifactId>mantis</artifactId>
+    <version>0.0.0-SNAPSHOT</version>
+  </parent> 
+
   <!--
   <parent>
   </parent>

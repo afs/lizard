@@ -28,6 +28,9 @@ public class PROJECT_Lizard {
     
     // Pref "local" indexes?
     
+    // TCP connections:
+    //   TCP_QUICKACK (needs reset on every use) and TCP_NODELAY
+    
     // *** TxnClient is currently doing the synchonization
     // Sort out ThriftRunnable / Runnable.
     //   maybe a fixed class to catch+convert Thrift to LizardExceptions 
