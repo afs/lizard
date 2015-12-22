@@ -301,7 +301,7 @@ public class LzBuilderDataset {
     }
     
     public static Dataset dataset(LzDataset lz) {
-        return DatasetFactory.create(lz.getDataset()) ;
+        return DatasetFactory.wrap(lz.getDataset()) ;
     }
     
     /** Build a Cluster node table, from the configuration.

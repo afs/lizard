@@ -109,7 +109,7 @@ public class LZ_Query extends CmdGeneral {
 //            lzdsg.start() ;
 //            // "start" in getDataset?
             DatasetGraph dsg = null ; // lzdsg.getDataset() ;
-            Dataset ds = DatasetFactory.create(dsg) ;
+            Dataset ds = DatasetFactory.wrap(dsg) ;
 
             Query query = modQuery.getQuery() ;
             if ( super.isVerbose() )
