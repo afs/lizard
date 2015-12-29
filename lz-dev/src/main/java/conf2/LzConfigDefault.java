@@ -18,8 +18,7 @@
 package conf2;
 
 import lizard.conf.* ;
-
-import org.apache.jena.atlas.lib.ColumnMap ;
+import org.seaborne.tdb2.migrate.ColumnMap ;
 
 /** An assortment of ConfCluster configurations */ 
 public class LzConfigDefault {

@@ -34,10 +34,10 @@ import lizard.comms.Connection ;
 import lizard.comms.thrift.ThriftClient ;
 import lizard.system.ComponentTxn ;
 import lizard.system.RemoteControl ;
-
-import org.apache.jena.atlas.lib.ColumnMap ;
-import org.apache.jena.atlas.lib.Tuple ;
+import org.apache.jena.atlas.lib.tuple.Tuple ;
+import org.apache.jena.atlas.lib.tuple.TupleFactory ;
 import org.apache.jena.atlas.logging.FmtLog ;
+import org.seaborne.tdb2.migrate.ColumnMap ;
 import org.seaborne.tdb2.store.NodeId ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
@@ -146,8 +146,8 @@ public class TClientIndex extends TxnClient<TLZ_Index.Client> implements TClient
         return rows.iterator() ;
     }
 
-    private static Tuple<NodeId> tupleAny4 = Tuple.createTuple(NodeId.NodeIdAny, NodeId.NodeIdAny, NodeId.NodeIdAny, NodeId.NodeIdAny) ; 
-    private static Tuple<NodeId> tupleAny3 = Tuple.createTuple(NodeId.NodeIdAny, NodeId.NodeIdAny, NodeId.NodeIdAny) ; 
+    private static Tuple<NodeId> tupleAny4 = TupleFactory.tuple(NodeId.NodeIdAny, NodeId.NodeIdAny, NodeId.NodeIdAny, NodeId.NodeIdAny) ; 
+    private static Tuple<NodeId> tupleAny3 = TupleFactory.tuple(NodeId.NodeIdAny, NodeId.NodeIdAny, NodeId.NodeIdAny) ; 
     
     /** return an iterator of everything */
     @Override

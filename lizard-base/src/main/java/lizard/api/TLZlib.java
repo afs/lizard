@@ -20,13 +20,14 @@ package lizard.api;
 import lizard.api.TLZ.TLZ_IndexName ;
 import lizard.api.TLZ.TLZ_TupleNodeId ;
 import org.apache.jena.atlas.lib.InternalErrorException ;
-import org.apache.jena.atlas.lib.Tuple ;
+import org.apache.jena.atlas.lib.tuple.Tuple ;
+import org.apache.jena.atlas.lib.tuple.TupleFactory ;
 import org.seaborne.tdb2.store.NodeId ;
 
 public class TLZlib {
     public static TLZ_TupleNodeId build(Tuple<NodeId> tuple) {
         TLZ_TupleNodeId tlzTuple = new TLZ_TupleNodeId() ;
-        if ( tuple.size() == 4 ) {
+        if ( tuple.len() == 4 ) {
             tlzTuple
             .setG(get(tuple, 0))
             .setS(get(tuple, 1))
@@ -54,10 +55,10 @@ public class TLZlib {
         NodeId o = NodeId.create(tnid.getO()) ;
         if (tnid.isSetG()) {
             NodeId g = NodeId.create(tnid.getG()) ;
-            return Tuple.createTuple(g, s, p, o) ;
+            return TupleFactory.tuple(g, s, p, o) ;
         }
         else
-            return Tuple.createTuple(s, p, o) ; 
+            return TupleFactory.tuple(s, p, o) ; 
     }
     
     public static String indexEnumToName(TLZ_IndexName idxEnum) {

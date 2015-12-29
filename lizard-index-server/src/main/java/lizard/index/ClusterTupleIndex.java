@@ -23,11 +23,11 @@ import java.util.Iterator ;
 import java.util.List ;
 
 import lizard.comms.CommsException ;
-
 import org.apache.jena.atlas.iterator.Iter ;
-import org.apache.jena.atlas.lib.ColumnMap ;
-import org.apache.jena.atlas.lib.Tuple ;
+import org.apache.jena.atlas.lib.tuple.Tuple ;
+import org.apache.jena.atlas.lib.tuple.TupleFactory ;
 import org.apache.jena.atlas.logging.FmtLog ;
+import org.seaborne.tdb2.migrate.ColumnMap ;
 import org.seaborne.tdb2.store.NodeId ;
 import org.seaborne.tdb2.store.tupletable.TupleIndex ;
 import org.seaborne.tdb2.store.tupletable.TupleIndexBase ;
@@ -55,7 +55,7 @@ public class ClusterTupleIndex extends TupleIndexBase
         NodeId[] x = new NodeId[N] ;
         for ( int i = 0 ; i < N ; i++ )
             x[i] = NodeId.NodeIdAny ;
-        anyTuple = Tuple.create(x) ;
+        anyTuple = TupleFactory.create(x) ;
         this.distributor = distributor ;
     }
     

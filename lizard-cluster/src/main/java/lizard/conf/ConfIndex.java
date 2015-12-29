@@ -18,7 +18,7 @@
 package lizard.conf;
 
 import org.apache.jena.atlas.io.IndentedWriter ;
-import org.apache.jena.atlas.lib.ColumnMap ;
+import org.seaborne.tdb2.migrate.ColumnMap ;
 
 public class ConfIndex { 
     public final String indexOrder ;

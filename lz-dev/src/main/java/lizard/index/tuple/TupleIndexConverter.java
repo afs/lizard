@@ -20,14 +20,15 @@ package lizard.index.tuple;
 import java.util.Collection ;
 import java.util.Iterator ;
 
+import org.apache.jena.atlas.lib.Bytes ;
+import org.apache.jena.atlas.lib.tuple.Tuple ;
+import org.apache.jena.atlas.lib.tuple.TupleFactory ;
+import org.seaborne.dboe.base.record.Record ;
+import org.seaborne.dboe.base.record.RecordFactory ;
+import org.seaborne.dboe.sys.SystemBase ;
+import org.seaborne.tdb2.migrate.ColumnMap ;
 import org.seaborne.tdb2.store.NodeId ;
 import org.seaborne.tdb2.store.tupletable.TupleIndexBase ;
-import org.apache.jena.atlas.lib.Bytes ;
-import org.apache.jena.atlas.lib.ColumnMap ;
-import org.apache.jena.atlas.lib.Tuple ;
-import org.seaborne.dboe.base.record.RecordFactory ;
-import org.seaborne.dboe.base.record.Record ;
-import org.seaborne.dboe.sys.SystemBase ;
 
 /** Framework for general mapping of Tuples and base storage.
  *  No recording.
@@ -231,14 +232,14 @@ public class TupleIndexConverter extends TupleIndexBase {
                     j = cMap.fetchSlotIdx(i) ;
                 nodeIds[j] = id ;
             }
-            return Tuple.create(nodeIds) ;
+            return TupleFactory.create(nodeIds) ;
         }
 
 
         public static Record record(RecordFactory factory, Tuple<NodeId> tuple, ColumnMap cMap) 
         {
-            byte[] b = new byte[tuple.size()*NodeId.SIZE] ;
-            for ( int i = 0 ; i < tuple.size() ; i++ )
+            byte[] b = new byte[tuple.len()*NodeId.SIZE] ;
+            for ( int i = 0 ; i < tuple.len() ; i++ )
             {
                 int j = cMap.mapSlotIdx(i) ;
                 // i'th Nodeid goes to j'th bytes slot.

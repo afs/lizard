@@ -24,9 +24,8 @@ import java.util.List ;
 
 import lizard.comms.CommsException ;
 import lizard.comms.ConnState ;
-
-import org.apache.jena.atlas.lib.ColumnMap ;
-import org.apache.jena.atlas.lib.Tuple ;
+import org.apache.jena.atlas.lib.tuple.Tuple ;
+import org.seaborne.tdb2.migrate.ColumnMap ;
 import org.seaborne.tdb2.store.NodeId ;
 
 /** Policy for the placement of triples with multiple copies.

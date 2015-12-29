@@ -30,8 +30,7 @@ import lizard.api.TLZ.TLZ_Index ;
 import lizard.api.TLZ.TLZ_ShardIndex ;
 import lizard.api.TLZ.TLZ_TupleNodeId ;
 import lizard.system.LzLog ;
-
-import org.apache.jena.atlas.lib.Tuple ;
+import org.apache.jena.atlas.lib.tuple.Tuple ;
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.thrift.TException ;
 import org.seaborne.dboe.trans.bplustree.BPlusTree ;

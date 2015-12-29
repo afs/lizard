@@ -24,8 +24,8 @@ import lizard.comms.ConnState ;
 import lizard.comms.Connection ;
 import lizard.system.ComponentTxn ;
 import lizard.system.RemoteControl ;
-
-import org.apache.jena.atlas.lib.Tuple ;
+import org.apache.jena.atlas.lib.tuple.Tuple ;
+import org.apache.jena.atlas.lib.tuple.TupleFactory ;
 import org.seaborne.tdb2.store.NodeId ;
 
 interface TClientIndexOps extends Connection, ComponentTxn, RemoteControl 
@@ -53,8 +53,8 @@ interface TClientIndexOps extends Connection, ComponentTxn, RemoteControl
 
     public Iterator<Tuple<NodeId>> find(Tuple<NodeId> pattern) ;
 
-    static Tuple<NodeId> tupleAny4 = Tuple.createTuple(NodeId.NodeIdAny, NodeId.NodeIdAny, NodeId.NodeIdAny, NodeId.NodeIdAny) ; 
-    static Tuple<NodeId> tupleAny3 = Tuple.createTuple(NodeId.NodeIdAny, NodeId.NodeIdAny, NodeId.NodeIdAny) ; 
+    static Tuple<NodeId> tupleAny4 = TupleFactory.tuple(NodeId.NodeIdAny, NodeId.NodeIdAny, NodeId.NodeIdAny, NodeId.NodeIdAny) ; 
+    static Tuple<NodeId> tupleAny3 = TupleFactory.tuple(NodeId.NodeIdAny, NodeId.NodeIdAny, NodeId.NodeIdAny) ; 
     
     /** return an iterator of everything */
     default public Iterator<Tuple<NodeId>> all() { return find(tupleAny3) ; }  

@@ -23,14 +23,13 @@ import java.util.Iterator ;
 import java.util.List ;
 
 import org.apache.jena.atlas.iterator.IteratorSlotted ;
-import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.InternalErrorException ;
-import org.apache.jena.atlas.lib.Tuple ;
+import org.apache.jena.atlas.lib.tuple.Tuple ;
 import org.apache.jena.atlas.logging.LogCtl ;
+import org.seaborne.tdb2.migrate.ColumnMap ;
+import org.seaborne.tdb2.store.NodeId ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
-
-import org.seaborne.tdb2.store.NodeId ;
 
 /** Perform an N-way merge of the incoming iterators assuming
  * that they arrive in an appropriately sorted order.
@@ -195,21 +194,21 @@ public class MergeIterator extends IteratorSlotted<Tuple<NodeId>> {
     /** Compare two tuples assumed to be in natural order 
      * (slot 1 is considered more significat than slot 2 etc) */  
     private static int compare(Tuple<NodeId> t1, Tuple<NodeId> t2) {
-        if ( t1.size() != t2.size())
-            throw new IllegalArgumentException("Tuples not the same length ("+t1.size()+" and "+t2.size()+")") ;
+        if ( t1.len() != t2.len())
+            throw new IllegalArgumentException("Tuples not the same length ("+t1.len()+" and "+t2.len()+")") ;
         return compare$(t1, t2, null) ;
     }
 
     /** Compare two tuples, using the columna mapping as provided. */  
     private static int compare(Tuple<NodeId> t1, Tuple<NodeId> t2, ColumnMap cmap) {
-        if ( t1.size() != t2.size())
-            throw new IllegalArgumentException("Tuples not the same length ("+t1.size()+" and "+t2.size()+")") ;
+        if ( t1.len() != t2.len())
+            throw new IllegalArgumentException("Tuples not the same length ("+t1.len()+" and "+t2.len()+")") ;
         return compare$(t1, t2, cmap) ;
     }
 
     /** cmap may be null for "none" */
     private static int compare$(Tuple<NodeId> t1, Tuple<NodeId> t2, ColumnMap cmap) {
-        int N = Math.min(t1.size(), t2.size()) ;
+        int N = Math.min(t1.len(), t2.len()) ;
         for ( int i = 0 ; i < N ; i++ ) {
             int x = ( cmap == null ) 
                 ? compare(t1.get(i), t2.get(i)) 
@@ -217,7 +216,7 @@ public class MergeIterator extends IteratorSlotted<Tuple<NodeId>> {
             if ( x != 0 )
                 return x ;
         }
-        return Integer.compare(t1.size(),  t2.size()) ;
+        return Integer.compare(t1.len(),  t2.len()) ;
     }
 
     // ---- compare 

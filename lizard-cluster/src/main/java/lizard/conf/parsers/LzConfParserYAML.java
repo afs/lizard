@@ -22,11 +22,10 @@ import java.util.List ;
 import java.util.Objects ;
 
 import lizard.conf.* ;
-
 import org.apache.jena.atlas.io.IO ;
-import org.apache.jena.atlas.lib.ColumnMap ;
 import org.apache.jena.atlas.lib.NotImplemented ;
 import org.seaborne.dboe.sys.Names ;
+import org.seaborne.tdb2.migrate.ColumnMap ;
 import org.yaml.snakeyaml.Yaml ;
 
 /** Parser for thr YAML-based format */ 

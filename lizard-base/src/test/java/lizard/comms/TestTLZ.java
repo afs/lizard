@@ -22,7 +22,8 @@ import lizard.api.TLZ.TLZ_IndexName ;
 import lizard.api.TLZ.TLZ_TupleNodeId ;
 import lizard.comms.thrift.ThriftLib ;
 import lizard.test.LzBaseTest ;
-import org.apache.jena.atlas.lib.Tuple ;
+import org.apache.jena.atlas.lib.tuple.Tuple ;
+import org.apache.jena.atlas.lib.tuple.TupleFactory ;
 import org.apache.thrift.protocol.TProtocol ;
 import org.apache.thrift.transport.TMemoryBuffer ;
 import org.apache.thrift.transport.TTransport ;
@@ -42,7 +43,7 @@ public class TestTLZ extends LzBaseTest {
     
     // TLZLib
     @Test public void data_01() {
-        Tuple<NodeId> tuple = Tuple.createTuple(nid1, nid2, nid3) ;
+        Tuple<NodeId> tuple = TupleFactory.tuple(nid1, nid2, nid3) ;
         TLZ_TupleNodeId tlz = TLZlib.build(tuple) ;
         Tuple<NodeId> tuple2 = TLZlib.build(tlz) ;
         assertEquals(tuple, tuple2) ;
@@ -63,7 +64,7 @@ public class TestTLZ extends LzBaseTest {
     @Test public void encode_01() throws Exception { 
         TProtocol proto = protocol() ;
         
-        Tuple<NodeId> tuple = Tuple.createTuple(nid1, nid2, nid3) ;
+        Tuple<NodeId> tuple = TupleFactory.tuple(nid1, nid2, nid3) ;
         
         TLZ_TupleNodeId tlz = TLZlib.build(tuple) ;
         tlz.write(proto);

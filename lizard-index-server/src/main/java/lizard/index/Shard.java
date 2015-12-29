@@ -17,12 +17,12 @@
 
 package lizard.index;
 
-import org.apache.jena.atlas.lib.ColumnMap ;
-import org.apache.jena.atlas.lib.Tuple ;
-
 import com.google.common.hash.HashCode ;
 import com.google.common.hash.HashFunction ;
 import com.google.common.hash.Hashing ;
+
+import org.apache.jena.atlas.lib.tuple.Tuple ;
+import org.seaborne.tdb2.migrate.ColumnMap ;
 import org.seaborne.tdb2.store.NodeId ;
 
 public class Shard {

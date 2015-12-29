@@ -28,13 +28,13 @@ import lizard.system.Component ;
 import lizard.system.ComponentBase ;
 import lizard.system.ComponentTxn ;
 import lizard.system.RemoteControl ;
-
+import org.apache.jena.atlas.lib.NotImplemented ;
+import org.apache.jena.atlas.lib.tuple.Tuple ;
+import org.apache.jena.atlas.lib.tuple.TupleFactory ;
 import org.apache.jena.query.ReadWrite ;
+import org.seaborne.tdb2.migrate.ColumnMap ;
 import org.seaborne.tdb2.store.NodeId ;
 import org.seaborne.tdb2.store.tupletable.TupleIndexBase ;
-import org.apache.jena.atlas.lib.ColumnMap ;
-import org.apache.jena.atlas.lib.NotImplemented ;
-import org.apache.jena.atlas.lib.Tuple ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
@@ -68,7 +68,7 @@ public final class TupleIndexRemote extends TupleIndexBase implements Component,
         NodeId[] x = new NodeId[indexStr.length()] ;
         for ( int i = 0 ; i < x.length; i++ )
             x[i] = NodeId.NodeIdAny ;
-        anyTuple = Tuple.create(x) ;
+        anyTuple = TupleFactory.create(x) ;
         component.setLabel(super.getName()) ;
     }
     
