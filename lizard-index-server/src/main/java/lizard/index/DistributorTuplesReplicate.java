@@ -25,7 +25,7 @@ import java.util.List ;
 import lizard.comms.CommsException ;
 import lizard.comms.ConnState ;
 import org.apache.jena.atlas.lib.tuple.Tuple ;
-import org.seaborne.tdb2.migrate.ColumnMap ;
+import org.apache.jena.atlas.lib.tuple.TupleMap ;
 import org.seaborne.tdb2.store.NodeId ;
 
 /** Policy for the placement of triples with multiple copies.
@@ -35,11 +35,11 @@ import org.seaborne.tdb2.store.NodeId ;
 
 public class DistributorTuplesReplicate implements DistributorTupleIndex {
     private final List<TupleIndexRemote> remotes = new ArrayList<>() ;
-    private final ColumnMap mapper ;
+    private final TupleMap mapper ;
     private final String localVNode ;
     
     /** Create a DistributorTuplesBySubject is N replicas */
-    public DistributorTuplesReplicate(String localVNode, ColumnMap mapper) {
+    public DistributorTuplesReplicate(String localVNode, TupleMap mapper) {
         this.localVNode = localVNode ;
         this.mapper = mapper ;
     }
@@ -111,7 +111,7 @@ public class DistributorTuplesReplicate implements DistributorTupleIndex {
     }
 
     private List<TupleIndexRemote> locateRead(Tuple<NodeId> tuple) {
-        NodeId n = mapper.fetchSlot(0, tuple) ;
+        NodeId n = mapper.mapSlot(0, tuple) ;
         if ( NodeId.isAny(n) )
             return allFind() ;
         // Concrete subject 
@@ -125,7 +125,7 @@ public class DistributorTuplesReplicate implements DistributorTupleIndex {
             if ( ! NodeId.isConcrete(n) )
                 throw new CommsException("Can't store a tuple containing "+n ) ;
         }
-        NodeId n = mapper.fetchSlot(0, tuple) ;
+        NodeId n = mapper.mapSlot(0, tuple) ;
         // Check all available
         for ( TupleIndexRemote idx : remotes ) {
             if ( idx.getStatus() != ConnState.OK )

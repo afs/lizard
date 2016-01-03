@@ -22,15 +22,15 @@ import java.util.Iterator ;
 
 import org.apache.jena.atlas.iterator.Iter ;
 import org.apache.jena.atlas.lib.tuple.Tuple ;
-import org.seaborne.tdb2.migrate.ColumnMap ;
+import org.apache.jena.atlas.lib.tuple.TupleMap ;
 import org.seaborne.tdb2.store.NodeId ;
 import org.seaborne.tdb2.store.tupletable.TupleIndexBase ;
 
 /** An immutably empty tuple index - it is a sink (add provided but does nothing) */
 public class TupleIndexEmpty extends TupleIndexBase {
 
-    public TupleIndexEmpty(ColumnMap colMapping, String name) {
-        super(colMapping.length(), colMapping, name) ;
+    public TupleIndexEmpty(TupleMap mapping, String name) {
+        super(mapping.length(), mapping, name) ;
     }
 
     @Override

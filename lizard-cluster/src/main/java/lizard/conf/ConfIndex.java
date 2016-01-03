@@ -18,20 +18,20 @@
 package lizard.conf;
 
 import org.apache.jena.atlas.io.IndentedWriter ;
-import org.seaborne.tdb2.migrate.ColumnMap ;
+import org.apache.jena.atlas.lib.tuple.TupleMap ;
 
 public class ConfIndex { 
     public final String indexOrder ;
-    public final ColumnMap cmap ;
+    public final TupleMap tmap ;
     public final int readQuorum ;
     public final int writeQuorum ;
     
-    public ConfIndex(ColumnMap cmap, String indexOrder, int readQuorum, int writeQuorum) {
+    public ConfIndex(TupleMap tmap, String indexOrder, int readQuorum, int writeQuorum) {
         super() ;
         this.indexOrder = indexOrder ;
         this.readQuorum = readQuorum ;
         this.writeQuorum = writeQuorum ;
-        this.cmap = cmap ;
+        this.tmap = tmap ;
     }
 
     public void print(IndentedWriter out) {

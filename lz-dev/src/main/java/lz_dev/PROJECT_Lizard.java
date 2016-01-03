@@ -18,6 +18,8 @@
 package lz_dev ;
 
 public class PROJECT_Lizard {
+    // Untested since ColumnMap -> TupleMap.
+    
     // Multiple deployment.
     // Debug killing a server.
     //   Does not recover.

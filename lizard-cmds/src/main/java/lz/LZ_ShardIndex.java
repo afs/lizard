@@ -24,13 +24,13 @@ import jena.cmd.ArgDecl ;
 import jena.cmd.CmdException ;
 import lizard.index.Shard ;
 import org.apache.jena.atlas.lib.tuple.Tuple ;
+import org.apache.jena.atlas.lib.tuple.TupleMap ;
 import org.apache.jena.atlas.logging.LogCtl ;
 import org.apache.jena.atlas.logging.ProgressLogger ;
 import org.apache.jena.query.ARQ ;
 import org.apache.jena.riot.RIOT ;
 import org.seaborne.dboe.base.file.Location ;
 import org.seaborne.tdb2.TDB ;
-import org.seaborne.tdb2.migrate.ColumnMap ;
 import org.seaborne.tdb2.store.NodeId ;
 import org.seaborne.tdb2.store.tupletable.TupleIndex ;
 import org.slf4j.Logger ;
@@ -104,7 +104,7 @@ public class LZ_ShardIndex extends CmdARQ {
 
         String index = idx.getIndexName().toUpperCase() ;
         TupleIndex tupleIndex = IndexLib.connect(idx, primaryIndex) ;
-        ColumnMap mapper = tupleIndex.getColumnMap() ;
+        TupleMap mapper = tupleIndex.getMapping() ;
         
         TupleIndex[] shards = new TupleIndex[numShards] ;
         
@@ -131,7 +131,7 @@ public class LZ_ShardIndex extends CmdARQ {
         progress.start(); 
         Iterator<Tuple<NodeId>> srcIter = srcIndex.all() ;
         int N = shards.length ;
-        ColumnMap mapper = srcIndex.getColumnMap() ;
+        TupleMap mapper = srcIndex.getMapping() ;
         for (; srcIter.hasNext();) {
             Tuple<NodeId> tuple = srcIter.next() ;
             int x = (int)Shard.shardBySubject(mapper, N, tuple) ;

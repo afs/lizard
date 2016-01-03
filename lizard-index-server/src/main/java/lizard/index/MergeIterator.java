@@ -25,8 +25,8 @@ import java.util.List ;
 import org.apache.jena.atlas.iterator.IteratorSlotted ;
 import org.apache.jena.atlas.lib.InternalErrorException ;
 import org.apache.jena.atlas.lib.tuple.Tuple ;
+import org.apache.jena.atlas.lib.tuple.TupleMap ;
 import org.apache.jena.atlas.logging.LogCtl ;
-import org.seaborne.tdb2.migrate.ColumnMap ;
 import org.seaborne.tdb2.store.NodeId ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
@@ -44,7 +44,7 @@ public class MergeIterator extends IteratorSlotted<Tuple<NodeId>> {
     private final int N ;
     private final List<Iterator<Tuple<NodeId>>> iterators ;
     private final List<Tuple<NodeId>> headTuples ;
-    private final ColumnMap cmap ;
+    private final TupleMap tmap ;
     private final boolean distinct ;
     private Tuple<NodeId> lastYielded = null ;
     
@@ -53,7 +53,7 @@ public class MergeIterator extends IteratorSlotted<Tuple<NodeId>> {
     // @@ Yuk - we flip to sorted (index order) and back again.
     // Maybe network should be index order.
     
-    MergeIterator(List<Iterator<Tuple<NodeId>>> _iterators, ColumnMap cmap, boolean distinct) {
+    MergeIterator(List<Iterator<Tuple<NodeId>>> _iterators, TupleMap tmap, boolean distinct) {
         this.N = _iterators.size() ;
         this.iterators = Collections.unmodifiableList(_iterators) ;
         
@@ -62,7 +62,7 @@ public class MergeIterator extends IteratorSlotted<Tuple<NodeId>> {
 //            this.iterators.add(PeekIterator.create(it)) ;
         
         this.headTuples = new ArrayList<>(N) ;
-        this.cmap = cmap ;
+        this.tmap = tmap ;
         this.distinct = distinct ;
 
         // Initialize the front of each iterator, in *index/mapped order*, or null  
@@ -71,23 +71,23 @@ public class MergeIterator extends IteratorSlotted<Tuple<NodeId>> {
             Tuple<NodeId> t = null ;
             if ( iter.hasNext() ) {
                 t = iter.next() ;
-                t = sortedOrder(t, cmap) ;
+                t = sortedOrder(t, tmap) ;
                 countActive ++ ;
             }
             headTuples.add(t) ;
         }
     }
     
-    private static Tuple<NodeId> sortedOrder(Tuple<NodeId> t, ColumnMap cmap) {
-        if ( cmap == null )
+    private static Tuple<NodeId> sortedOrder(Tuple<NodeId> t, TupleMap tmap) {
+        if ( tmap == null )
             return t ;
-        return cmap.unmap(t) ;
+        return tmap.unmap(t) ;
     }
     
-    private static Tuple<NodeId> map(Tuple<NodeId> t, ColumnMap cmap) {
-        if ( cmap == null )
+    private static Tuple<NodeId> map(Tuple<NodeId> t, TupleMap tmap) {
+        if ( tmap == null )
             return t ;
-        return cmap.map(t) ;
+        return tmap.map(t) ;
     }
 
     // test debugging. Very verbose.
@@ -140,7 +140,7 @@ public class MergeIterator extends IteratorSlotted<Tuple<NodeId>> {
         move(idx) ;
 
         if ( DEBUG ) log.debug("**** "+current) ;
-        return map(current, cmap)  ;
+        return map(current, tmap)  ;
     }
 
     /** Move on, return null for no more elements, and change internal state  */
@@ -152,7 +152,7 @@ public class MergeIterator extends IteratorSlotted<Tuple<NodeId>> {
         Iterator<Tuple<NodeId>> iter = iterators.get(idx) ;
         while( iter.hasNext() ) {
             Tuple<NodeId> t = iter.next() ;
-            t = sortedOrder(t, cmap) ;
+            t = sortedOrder(t, tmap) ;
             if ( distinct && t0.equals(t) )
                 continue ;
             headTuples.set(idx, t) ;
@@ -200,19 +200,19 @@ public class MergeIterator extends IteratorSlotted<Tuple<NodeId>> {
     }
 
     /** Compare two tuples, using the columna mapping as provided. */  
-    private static int compare(Tuple<NodeId> t1, Tuple<NodeId> t2, ColumnMap cmap) {
+    private static int compare(Tuple<NodeId> t1, Tuple<NodeId> t2, TupleMap tmap) {
         if ( t1.len() != t2.len())
             throw new IllegalArgumentException("Tuples not the same length ("+t1.len()+" and "+t2.len()+")") ;
-        return compare$(t1, t2, cmap) ;
+        return compare$(t1, t2, tmap) ;
     }
 
     /** cmap may be null for "none" */
-    private static int compare$(Tuple<NodeId> t1, Tuple<NodeId> t2, ColumnMap cmap) {
+    private static int compare$(Tuple<NodeId> t1, Tuple<NodeId> t2, TupleMap tmap) {
         int N = Math.min(t1.len(), t2.len()) ;
         for ( int i = 0 ; i < N ; i++ ) {
-            int x = ( cmap == null ) 
+            int x = ( tmap == null ) 
                 ? compare(t1.get(i), t2.get(i)) 
-                : compare(cmap.mapSlot(i, t1), cmap.mapSlot(i, t2)) ;  
+                : compare(tmap.unmapSlot(i, t1), tmap.unmapSlot(i, t2)) ;  
             if ( x != 0 )
                 return x ;
         }

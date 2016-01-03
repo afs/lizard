@@ -25,24 +25,24 @@ import java.util.List ;
 import lizard.comms.CommsException ;
 import lizard.comms.ConnState ;
 import org.apache.jena.atlas.lib.tuple.Tuple ;
+import org.apache.jena.atlas.lib.tuple.TupleMap ;
 import org.apache.jena.atlas.logging.Log ;
 import org.apache.jena.ext.com.google.common.collect.ArrayListMultimap ;
 import org.apache.jena.ext.com.google.common.collect.ListMultimap ;
-import org.seaborne.tdb2.migrate.ColumnMap ;
 import org.seaborne.tdb2.store.NodeId ;
 
 /** Policy for the placement of triples (and finding them) partition by subject. */
 
 public class DistributorTuplesBySubject implements DistributorTupleIndex {
     private ListMultimap<Long, TupleIndexRemote> places = ArrayListMultimap.create() ;
-    private final ColumnMap mapper ;
+    private final TupleMap mapper ;
     private final int size ;
     private final String localVNode ;
     
     /** Create a DistributorTuplesBySubject of N replicas */
-    public DistributorTuplesBySubject(String localVNode, ColumnMap mapper, int N) {
+    public DistributorTuplesBySubject(String localVNode, TupleMap tmap, int N) {
         this.localVNode = localVNode ;
-        this.mapper = mapper ;
+        this.mapper = tmap ;
         this.size = N ;
     }
 

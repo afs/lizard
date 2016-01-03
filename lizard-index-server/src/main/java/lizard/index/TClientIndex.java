@@ -36,8 +36,8 @@ import lizard.system.ComponentTxn ;
 import lizard.system.RemoteControl ;
 import org.apache.jena.atlas.lib.tuple.Tuple ;
 import org.apache.jena.atlas.lib.tuple.TupleFactory ;
+import org.apache.jena.atlas.lib.tuple.TupleMap ;
 import org.apache.jena.atlas.logging.FmtLog ;
-import org.seaborne.tdb2.migrate.ColumnMap ;
 import org.seaborne.tdb2.store.NodeId ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
@@ -52,11 +52,11 @@ public class TClientIndex extends TxnClient<TLZ_Index.Client> implements TClient
     private final TLZ_IndexName indexName ;
     private final TLZ_ShardIndex shard ;    // remove.
 
-    public static TClientIndex create(String host, int port, String indexName, ColumnMap colMap) {
-        return new TClientIndex(host, port, indexName, colMap) ;
+    public static TClientIndex create(String host, int port, String indexName, TupleMap tMap) {
+        return new TClientIndex(host, port, indexName, tMap) ;
     }
     
-    private TClientIndex(String host, int port, String indexName, ColumnMap colMap) {
+    private TClientIndex(String host, int port, String indexName, TupleMap tmap) {
         this.client = new ThriftClient(host, port) ;
         this.indexName = TLZlib.indexToEnum(indexName) ;
         this.shard = new TLZ_ShardIndex(this.indexName, 0) ;

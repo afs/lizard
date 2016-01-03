@@ -26,8 +26,8 @@ import lizard.comms.CommsException ;
 import org.apache.jena.atlas.iterator.Iter ;
 import org.apache.jena.atlas.lib.tuple.Tuple ;
 import org.apache.jena.atlas.lib.tuple.TupleFactory ;
+import org.apache.jena.atlas.lib.tuple.TupleMap ;
 import org.apache.jena.atlas.logging.FmtLog ;
-import org.seaborne.tdb2.migrate.ColumnMap ;
 import org.seaborne.tdb2.store.NodeId ;
 import org.seaborne.tdb2.store.tupletable.TupleIndex ;
 import org.seaborne.tdb2.store.tupletable.TupleIndexBase ;
@@ -46,8 +46,8 @@ public class ClusterTupleIndex extends TupleIndexBase
     private Tuple<NodeId> anyTuple ;
     private DistributorTupleIndex distributor ;
 
-    public ClusterTupleIndex(DistributorTupleIndex distributor, int N, ColumnMap colMapping, String name) {
-        super(N, colMapping, name) ;
+    public ClusterTupleIndex(DistributorTupleIndex distributor, int N, TupleMap mapping, String name) {
+        super(N, mapping, name) ;
         
         //log.info(name+":"+colMapping.getLabel()+" "+distributor.toString()) ;
         log.info(distributor.toString()) ;
@@ -168,7 +168,7 @@ public class ClusterTupleIndex extends TupleIndexBase
         }
 
         // Merge 
-        Iterator<Tuple<NodeId>> iter = merge(incoming, getColumnMap()) ;
+        Iterator<Tuple<NodeId>> iter = merge(incoming, getMapping()) ;
         if ( log.isInfoEnabled() ) {
             if ( iter.hasNext() ) {
               List<Tuple<NodeId>> x = Iter.toList(iter) ;
@@ -191,9 +191,9 @@ public class ClusterTupleIndex extends TupleIndexBase
      * @param cmap
      * @return
      */
-    private static Iterator<Tuple<NodeId>> merge(List<Iterator<Tuple<NodeId>>> iterators, ColumnMap cmap) {
+    private static Iterator<Tuple<NodeId>> merge(List<Iterator<Tuple<NodeId>>> iterators, TupleMap tmap) {
         if ( iterators.size() == 1 )
             return iterators.get(0) ;
-        return new MergeIterator(iterators, cmap, false) ;
+        return new MergeIterator(iterators, tmap, false) ;
     }
 }

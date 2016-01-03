@@ -38,6 +38,7 @@ import lizard.system.Component ;
 import lizard.system.LizardException ;
 import migrate.TupleIndexEmpty ;
 import org.apache.jena.atlas.lib.StrUtils ;
+import org.apache.jena.atlas.lib.tuple.TupleMap ;
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.query.ARQ ;
 import org.apache.jena.query.Dataset ;
@@ -51,7 +52,6 @@ import org.apache.jena.sparql.engine.optimizer.reorder.ReorderLib ;
 import org.seaborne.dboe.base.file.Location ;
 import org.seaborne.dboe.sys.Names ;
 import org.seaborne.dboe.transaction.txn.* ;
-import org.seaborne.tdb2.migrate.ColumnMap ;
 import org.seaborne.tdb2.setup.StoreParams ;
 import org.seaborne.tdb2.store.DatasetGraphTDB ;
 import org.seaborne.tdb2.store.QuadTable ;
@@ -230,9 +230,10 @@ public class LzBuilderDataset {
         {
             String[] indexes = { Names.primaryIndexQuads, "SPOG" } ;
             TupleIndex[] quadIndexes = new TupleIndex[indexes.length] ;
+            logConf.info("No quad indexes");
             for ( int i = 0 ; i < indexes.length ; i++ ) {
                 String n = indexes[i] ;
-                quadIndexes[i] = new TupleIndexEmpty(new ColumnMap(Names.primaryIndexQuads, n), n) ;
+                quadIndexes[i] = new TupleIndexEmpty(TupleMap.create(Names.primaryIndexQuads, n), n) ;
             }
             tableQuads = new QuadTable(quadIndexes, nodeTable, policy) ;
             FmtLog.debug(logConf, "Quad table: %s :: %s", indexes[0], StrUtils.strjoin(",", indexes)) ; 
@@ -252,8 +253,8 @@ public class LzBuilderDataset {
             int N = idxOrder.length() ;
             if ( N != 3 && N != 4 )
                 FmtLog.warn(logConf, "Strange index size: %d (from '%s')", N, idxOrder) ;
-            ColumnMap cmap = new ColumnMap("SPO", idxOrder) ;
-            DistributorTuplesReplicate dist = new DistributorTuplesReplicate(hereVNode, cmap) ;  
+            TupleMap tmap = TupleMap.create("SPO", idxOrder) ;
+            DistributorTuplesReplicate dist = new DistributorTuplesReplicate(hereVNode, tmap) ;  
             List<TupleIndexRemote> indexes = new ArrayList<>() ;
             // Scan shards for index.
             confCluster.eltsIndex.stream().sequential()
@@ -263,13 +264,13 @@ public class LzBuilderDataset {
                     if ( x.addr.sameHost(hereVNode) )
                         logConf.info("HERE: Index: "+x.addr.getPort()) ;
                     NetAddr netAddr = x.addr.placement(confCluster.placements, x.addr.getPort()) ; 
-                    TupleIndexRemote idx = TupleIndexRemote.create(hereVNode, netAddr.getName(), netAddr.getPort(), idxOrder, cmap) ;
+                    TupleIndexRemote idx = TupleIndexRemote.create(hereVNode, netAddr.getName(), netAddr.getPort(), idxOrder, tmap) ;
                     indexes.add(idx) ;
                     startables.add(idx) ;
                 }) ;
             dist.add(indexes);
             // All shards, all replicas.
-            ClusterTupleIndex tupleIndex = new ClusterTupleIndex(dist, N, cmap, ci.indexOrder);
+            ClusterTupleIndex tupleIndex = new ClusterTupleIndex(dist, N, tmap, ci.indexOrder);
             return tupleIndex ;
         }
         

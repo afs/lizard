@@ -18,7 +18,7 @@
 package conf2;
 
 import lizard.conf.* ;
-import org.seaborne.tdb2.migrate.ColumnMap ;
+import org.apache.jena.atlas.lib.tuple.TupleMap ;
 
 /** An assortment of ConfCluster configurations */ 
 public class LzConfigDefault {
@@ -30,8 +30,8 @@ public class LzConfigDefault {
     
         // Dataset
         ConfNodeTable confNT = new ConfNodeTable(1, 1) ;
-        ConfIndex posIdx =  new ConfIndex(new ColumnMap("SPO", "POS"), "POS", 1, 1) ;
-        ConfIndex psoIdx =  new ConfIndex(new ColumnMap("SPO", "PSO"), "PSO", 1, 1) ;
+        ConfIndex posIdx =  new ConfIndex(TupleMap.create("SPO", "POS"), "POS", 1, 1) ;
+        ConfIndex psoIdx =  new ConfIndex(TupleMap.create("SPO", "PSO"), "PSO", 1, 1) ;
         ConfDataset confDatabase = new ConfDataset(confNT, posIdx, psoIdx) ;
         
         // Shards

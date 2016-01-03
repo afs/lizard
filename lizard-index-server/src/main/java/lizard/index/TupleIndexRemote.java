@@ -31,8 +31,8 @@ import lizard.system.RemoteControl ;
 import org.apache.jena.atlas.lib.NotImplemented ;
 import org.apache.jena.atlas.lib.tuple.Tuple ;
 import org.apache.jena.atlas.lib.tuple.TupleFactory ;
+import org.apache.jena.atlas.lib.tuple.TupleMap ;
 import org.apache.jena.query.ReadWrite ;
-import org.seaborne.tdb2.migrate.ColumnMap ;
 import org.seaborne.tdb2.store.NodeId ;
 import org.seaborne.tdb2.store.tupletable.TupleIndexBase ;
 import org.slf4j.Logger ;
@@ -42,11 +42,11 @@ import org.slf4j.LoggerFactory ;
 public final class TupleIndexRemote extends TupleIndexBase implements Component, ComponentTxn, RemoteControl, TxnClient.WireClient
 {
     // Relationship of TupleIndexRemote and TClientIndex
-    public static TupleIndexRemote create(String remoteVNode, String hostname, int port, String indexStr, ColumnMap cmap) {
+    public static TupleIndexRemote create(String remoteVNode, String hostname, int port, String indexStr, TupleMap tmap) {
         // localVNode indicates where the "remote" end is deployed.  
-        TClientIndex client = TClientIndex.create(hostname, port, indexStr, cmap) ;
+        TClientIndex client = TClientIndex.create(hostname, port, indexStr, tmap) ;
         String name = "Idx"+indexStr+"["+port+"]" ;
-        TupleIndexRemote index = new TupleIndexRemote(remoteVNode, client, indexStr, cmap, name) ;
+        TupleIndexRemote index = new TupleIndexRemote(remoteVNode, client, indexStr, tmap, name) ;
         return index ;
     }
     
@@ -58,8 +58,8 @@ public final class TupleIndexRemote extends TupleIndexBase implements Component,
     private final TClientIndex client ;
     private final String remoteVNode ;
 
-    public TupleIndexRemote(String remoteVNode, TClientIndex client, String indexStr, ColumnMap colMapping, String name) {
-        super(indexStr.length(), colMapping, name) ;
+    public TupleIndexRemote(String remoteVNode, TClientIndex client, String indexStr, TupleMap tmap, String name) {
+        super(indexStr.length(), tmap, name) ;
         this.remoteVNode = remoteVNode ;
         this.client = client ;
         RemoteAccessData access = new RemoteAccessData(client) ;

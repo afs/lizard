@@ -22,7 +22,7 @@ import com.google.common.hash.HashFunction ;
 import com.google.common.hash.Hashing ;
 
 import org.apache.jena.atlas.lib.tuple.Tuple ;
-import org.seaborne.tdb2.migrate.ColumnMap ;
+import org.apache.jena.atlas.lib.tuple.TupleMap ;
 import org.seaborne.tdb2.store.NodeId ;
 
 public class Shard {
@@ -36,8 +36,8 @@ public class Shard {
      * @param tuple
      * @return int
      */
-    public static long shardBySubject(ColumnMap mapper, int numShard, Tuple<NodeId> tuple) {
-        NodeId n = mapper.fetchSlot(0, tuple) ;
+    public static long shardBySubject(TupleMap mapper, int numShard, Tuple<NodeId> tuple) {
+        NodeId n = mapper.mapSlot(0, tuple) ;
         if ( NodeId.isAny(n) )
             return NO_SHARD ;
         long shard = shard(n, numShard) ;
