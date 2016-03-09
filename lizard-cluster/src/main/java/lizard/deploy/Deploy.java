@@ -17,29 +17,28 @@
  
 package lizard.deploy;
 
+import java.nio.file.Paths ;
+
 import lizard.build.LzBuildZk ;
 import lizard.build.LzDeploy ;
 import lizard.conf.ConfCluster ;
 import lizard.system.LizardException ;
-
-import java.nio.file.Paths ;
-
 import org.apache.jena.atlas.lib.FileOps ;
+import org.apache.jena.atlas.lib.ProgressMonitor ;
 import org.apache.jena.atlas.logging.FmtLog ;
-import org.apache.jena.atlas.logging.ProgressLogger ;
 import org.apache.jena.fuseki.Fuseki ;
 import org.apache.jena.fuseki.jetty.JettyFuseki ;
 import org.apache.jena.fuseki.jetty.JettyServerConfig ;
 import org.apache.jena.fuseki.server.FusekiEnv ;
 import org.apache.jena.fuseki.server.FusekiServerListener ;
 import org.apache.jena.fuseki.server.ServerInitialConfig ;
-import org.apache.jena.query.* ;
+import org.apache.jena.query.Dataset ;
 import org.apache.jena.riot.RDFDataMgr ;
+import org.apache.jena.riot.system.ProgressStreamRDF ;
 import org.apache.jena.riot.system.StreamRDF ;
 import org.apache.jena.sparql.core.DatasetGraph ;
 import org.seaborne.tdb2.lib.TDBTxn ;
 import org.seaborne.tdb2.loader.StreamRDFBatchSplit ;
-import org.seaborne.tdb2.loader.StreamRDFMonitor ;
 import org.seaborne.tdb2.store.DatasetGraphTDB ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
@@ -75,11 +74,12 @@ public class Deploy {
         DatasetGraphTDB dsg = (DatasetGraphTDB)ds.asDatasetGraph() ;
         StreamRDF s1 = new StreamRDFBatchSplit(dsg, 100) ;
         
-        ProgressLogger plog = new ProgressLogger(log, "Triples", 100000, 10) ;
-        StreamRDFMonitor sMonitor = new StreamRDFMonitor(s1, plog) ;
+        ProgressMonitor plog = ProgressMonitor.create(log, "Triples", 100000, 10) ;
+        ProgressStreamRDF sMonitor = new ProgressStreamRDF(s1, plog) ;
         StreamRDF s3 = sMonitor ;
     
-        sMonitor.startMonitor(); 
+        //plog.startMessage(); 
+        plog.start(); 
         TDBTxn.executeWrite(ds, () -> {
             for ( String fn : files ) {
                 if ( files.length > 1 )
@@ -87,7 +87,8 @@ public class Deploy {
                 RDFDataMgr.parse(s3, fn) ;
             }
         }) ;
-        sMonitor.finishMonitor();  
+        plog.finish();
+        plog.finishMessage();
     }
 
     public static void runFuseki(DatasetGraph dsg, int port) {

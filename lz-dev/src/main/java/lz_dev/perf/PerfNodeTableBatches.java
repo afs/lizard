@@ -26,11 +26,10 @@ import lizard.conf.* ;
 import lizard.node.NodeTableRemote ;
 import lizard.node.TClientNode ;
 import lizard.node.TServerNode ;
-
 import org.apache.jena.atlas.lib.FileOps ;
+import org.apache.jena.atlas.lib.ProgressMonitor ;
 import org.apache.jena.atlas.lib.Timer ;
 import org.apache.jena.atlas.logging.LogCtl ;
-import org.apache.jena.atlas.logging.ProgressLogger ;
 import org.apache.jena.graph.Node ;
 import org.apache.jena.graph.NodeFactory ;
 import org.apache.jena.query.ReadWrite ;
@@ -61,7 +60,7 @@ public class PerfNodeTableBatches {
         builder.getTxnCoord().start() ;
         builder.getTxnCoord().begin(ReadWrite.WRITE) ;
         
-        ProgressLogger plog = new ProgressLogger(LoggerFactory.getLogger("Dev"), "Nodes", 100000, 10) ;
+        ProgressMonitor plog = ProgressMonitor.create(LoggerFactory.getLogger("Dev"), "Nodes", 100000, 10) ;
         plog.start(); 
         int N = 2000000 ;
         for ( int i = 0 ; i < N ; i++ ) {

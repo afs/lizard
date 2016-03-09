@@ -26,7 +26,7 @@ import lizard.index.Shard ;
 import org.apache.jena.atlas.lib.tuple.Tuple ;
 import org.apache.jena.atlas.lib.tuple.TupleMap ;
 import org.apache.jena.atlas.logging.LogCtl ;
-import org.apache.jena.atlas.logging.ProgressLogger ;
+import org.apache.jena.atlas.lib.ProgressMonitor ;
 import org.apache.jena.query.ARQ ;
 import org.apache.jena.riot.RIOT ;
 import org.seaborne.dboe.base.file.Location ;
@@ -126,7 +126,7 @@ public class LZ_ShardIndex extends CmdARQ {
     private static int superTick = 10 ;
 
     public static void shardTupleIndex(Logger log, TupleIndex srcIndex, TupleIndex[] shards) {
-        ProgressLogger progress = new ProgressLogger(log, "tuples", tick, superTick) ;
+        ProgressMonitor progress = ProgressMonitor.create(log, "tuples", tick, superTick) ;
         progress.startMessage();
         progress.start(); 
         Iterator<Tuple<NodeId>> srcIter = srcIndex.all() ;
