@@ -20,7 +20,7 @@ package lizard.system;
 import java.util.UUID ;
 import java.util.concurrent.atomic.AtomicLong ;
 
-import org.apache.jena.shared.uuid.Bits ;
+import org.apache.jena.atlas.lib.BitsLong ;
 
 public class LzTxnId {
     public static final LzTxnId txnNil = new LzTxnId(LizardConst.uuidNil, 0) ;
@@ -45,7 +45,7 @@ public class LzTxnId {
         if ( this.equals(txnNil) )
             return 0L ;
         long x = uuid.getLeastSignificantBits() ;
-        x = Bits.clear(x, 32, 64) ;
+        x = BitsLong.clear(x, 32, 64) ;
         int y = (int)count ;
         x = x | count ;
         return x ;
