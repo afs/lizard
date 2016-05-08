@@ -26,9 +26,14 @@
   <groupId>org.seaborne.lizard</groupId>
   <artifactId>lizard-parent</artifactId>
   <packaging>pom</packaging>
-  <!-- <name>Lizard - Parent</name> -->
+  <name>Lizard (${project.artifactId})</name>
   <url>https://afs.github.io/lizard/</url>
-  <version>0.0.0-SNAPSHOT</version>
+
+ <parent>
+    <groupId>org.seaborne.lizard</groupId>
+    <artifactId>lizard</artifactId>
+    <version>0.0.0-SNAPSHOT</version>
+  </parent> 
 
   <licenses>
     <license>
@@ -38,9 +43,9 @@
   </licenses>
 
   <properties>
-    <ver.jena>3.1.0-SNAPSHOT</ver.jena>
+    <ver.jena>3.1.1-SNAPSHOT</ver.jena>
     <ver.tdb>${ver.jena}</ver.tdb>
-    <ver.fuseki>2.4.0-SNAPSHOT</ver.fuseki>
+    <ver.fuseki>2.4.1-SNAPSHOT</ver.fuseki>
     <ver.junit>4.12</ver.junit>
     <ver.slf4j>1.7.7</ver.slf4j>
     <ver.log4j>1.2.17</ver.log4j>
