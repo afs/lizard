@@ -30,7 +30,7 @@ import org.apache.jena.atlas.lib.ProgressMonitor ;
 import org.apache.jena.query.ARQ ;
 import org.apache.jena.riot.RIOT ;
 import org.seaborne.dboe.base.file.Location ;
-import org.seaborne.tdb2.TDB ;
+import org.seaborne.tdb2.TDB2 ;
 import org.seaborne.tdb2.store.NodeId ;
 import org.seaborne.tdb2.store.tupletable.TupleIndex ;
 import org.slf4j.Logger ;
@@ -53,7 +53,7 @@ public class LZ_ShardIndex extends CmdARQ {
         super(argv) ;
         super.modVersion.addClass(ARQ.class) ;
         super.modVersion.addClass(RIOT.class) ;
-        super.modVersion.addClass(TDB.class) ;
+        super.modVersion.addClass(TDB2.class) ;
         super.add(argLocation) ;
     }
 
