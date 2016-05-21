@@ -29,7 +29,7 @@
   <name>Lizard (${project.artifactId})</name>
   <url>https://afs.github.io/lizard/</url>
 
- <parent>
+  <parent>
     <groupId>org.seaborne.lizard</groupId>
     <artifactId>lizard</artifactId>
     <version>0.0.0-SNAPSHOT</version>
