@@ -110,7 +110,7 @@ public class DeployDev {
         //            
         //            s2.startMonitor();
         //            
-        //            TDBTxn.executeWrite(ds, () -> {
+        //            TDBTxn.execWrite(ds, () -> {
         //                RDFDataMgr.parse(s3, datafile) ;
         //            }) ;
         //            s2.finishMonitor();
