@@ -22,10 +22,9 @@ import java.util.concurrent.ConcurrentHashMap ;
 import java.util.function.Supplier ;
 
 import lizard.api.TLZ.TxnCtl ;
-
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.query.ReadWrite ;
-import org.seaborne.dboe.transaction.Txn ;
+import org.apache.jena.system.Txn ;
 import org.seaborne.dboe.transaction.txn.TransactionCoordinatorState ;
 import org.seaborne.dboe.transaction.txn.TransactionalSystem ;
 

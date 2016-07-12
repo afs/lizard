@@ -37,7 +37,7 @@ import org.apache.jena.riot.RDFDataMgr ;
 import org.apache.jena.riot.system.ProgressStreamRDF ;
 import org.apache.jena.riot.system.StreamRDF ;
 import org.apache.jena.sparql.core.DatasetGraph ;
-import org.seaborne.dboe.transaction.Txn ;
+import org.apache.jena.system.Txn ;
 import org.seaborne.tdb2.loader.StreamRDFBatchSplit ;
 import org.seaborne.tdb2.store.DatasetGraphTDB ;
 import org.slf4j.Logger ;
