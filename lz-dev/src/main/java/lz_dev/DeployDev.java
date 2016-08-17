@@ -19,29 +19,24 @@ package lz_dev;
 
 import java.nio.file.Paths ;
 
-import org.apache.jena.atlas.lib.FileOps ;
-import org.apache.jena.atlas.lib.Lib ;
-import org.apache.jena.atlas.lib.StrUtils ;
-import org.apache.jena.atlas.logging.LogCtl ;
-import org.apache.jena.fuseki.Fuseki ;
-import org.apache.jena.fuseki.cmd.FusekiCmd ;
-import org.apache.jena.fuseki.jetty.JettyFuseki ;
-import org.apache.jena.fuseki.jetty.JettyServerConfig ;
-import org.apache.jena.fuseki.server.FusekiEnv ;
-import org.apache.jena.fuseki.server.FusekiServerListener ;
-import org.apache.jena.fuseki.server.ServerInitialConfig ;
-import org.apache.jena.query.* ;
-import org.apache.jena.sparql.core.DatasetGraph ;
-import org.apache.jena.sparql.util.QueryExecUtils ;
-import org.slf4j.Logger ;
-import org.slf4j.LoggerFactory ;
-
 import lizard.deploy.Deploy ;
 import lizard.index.TServerIndex ;
 import lizard.node.ClusterNodeTable ;
 import lizard.node.TServerNode ;
 import lizard.query.LzDataset ;
 import lizard.system.RemoteControl ;
+import org.apache.jena.atlas.lib.FileOps ;
+import org.apache.jena.atlas.lib.Lib ;
+import org.apache.jena.atlas.lib.StrUtils ;
+import org.apache.jena.atlas.logging.LogCtl ;
+import org.apache.jena.fuseki.cmd.FusekiCmd ;
+import org.apache.jena.fuseki.embedded.FusekiEmbeddedServer ;
+import org.apache.jena.fuseki.server.FusekiEnv ;
+import org.apache.jena.query.* ;
+import org.apache.jena.sparql.core.DatasetGraph ;
+import org.apache.jena.sparql.util.QueryExecUtils ;
+import org.slf4j.Logger ;
+import org.slf4j.LoggerFactory ;
 
 public class DeployDev {
 
@@ -49,28 +44,13 @@ public class DeployDev {
 
     public static void runFuseki(DatasetGraph dsg, int port) {
         // -- Run fuseki
-        //FusekiServer.
-        ServerInitialConfig fuConf = new ServerInitialConfig() ;
-        fuConf.dsg = dsg ;
-        fuConf.datasetPath = "/ds" ;
-        fuConf.allowUpdate = true ;
         
-        FusekiServerListener.initialSetup = fuConf ;
-        System.setProperty("FUSEKI_HOME", "/home/afs/Jena/jena-fuseki2/jena-fuseki-core/") ;
-        FusekiEnv.FUSEKI_BASE = Paths.get("run").toAbsolutePath() ;
-        FileOps.ensureDir(FusekiEnv.FUSEKI_BASE.toString()) ;
-    
-        JettyServerConfig   jettyServerConfig = new JettyServerConfig() ;
-        jettyServerConfig.port = 3030 ;
-        jettyServerConfig.contextPath = "/" ;
-        jettyServerConfig.jettyConfigFile = null ;
-        jettyServerConfig.pages = Fuseki.PagesStatic ;
-        jettyServerConfig.enableCompression = true ;
-        jettyServerConfig.verboseLogging = false ;
-    
-        JettyFuseki.initializeServer(jettyServerConfig) ;
-        JettyFuseki.instance.start() ;
-        JettyFuseki.instance.join() ;
+        FusekiEmbeddedServer server = FusekiEmbeddedServer.create()
+            .setPort(port)
+            .add("/ds", dsg)
+            .build() ;
+        server.start();
+        server.join();
         System.exit(0) ;
     }
 
@@ -115,9 +95,9 @@ public class DeployDev {
         //            }) ;
         //            s2.finishMonitor();
                     
-                    LogCtl.set(ClusterNodeTable.class, "INFO") ;
-                    LogCtl.set(TServerNode.class, "INFO") ;
-                    LogCtl.set(TServerIndex.class, "INFO") ;
+                    LogCtl.setLevel(ClusterNodeTable.class, "INFO") ;
+                    LogCtl.setLevel(TServerNode.class, "INFO") ;
+                    LogCtl.setLevel(TServerIndex.class, "INFO") ;
                 }
                 log.info("LOAD : finish") ;
             }

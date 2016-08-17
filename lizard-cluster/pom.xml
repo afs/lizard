@@ -59,7 +59,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.jena</groupId>
-      <artifactId>jena-fuseki-core</artifactId>
+      <artifactId>jena-fuseki-embedded</artifactId>
     </dependency>
     <dependency>
       <groupId>org.yaml</groupId>
