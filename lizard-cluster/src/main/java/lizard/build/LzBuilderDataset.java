@@ -350,6 +350,9 @@ public class LzBuilderDataset {
             public void removeFromPrefixMap(String graphName, String prefix) {}
 
             @Override
+            public void removeAllFromPrefixMap(String graphName) {}
+
+            @Override
             public PrefixMapping getPrefixMapping() {
                 return new PrefixMappingImpl() ;
             }
