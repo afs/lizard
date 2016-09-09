@@ -154,16 +154,16 @@ public abstract class TxnHandler extends NodeHandler implements TxnCtl.Iface {
     private void autoCommit(long txnId, Runnable action, ReadWrite mode) {
         FmtLog.warn(logtxn(), "[Txn:%s:%d] autocommit(%s)", getLabel(), txnId, mode) ;
         switch(mode) {
-            case READ : Txn.execRead(transactional, action); break ;
-            case WRITE : Txn.execWrite(transactional, action); break ;
+            case READ : Txn.executeRead(transactional, action); break ;
+            case WRITE : Txn.executeWrite(transactional, action); break ;
         }
     }
 
     private <X> X autoCommitReturn(long txnId, Supplier<X> action, ReadWrite mode) {
         FmtLog.warn(logtxn(), "[Txn:%s:%d] autocommit(%s)", getLabel(), txnId, mode) ;
         switch(mode) {
-            case READ : return Txn.execReadRtn(transactional, action) ;
-            case WRITE : return Txn.execWriteRtn(transactional, action) ;
+            case READ : return Txn.calculateRead(transactional, action) ;
+            case WRITE : return Txn.calculateWrite(transactional, action) ;
         }
         return null ;   // Dummy
     }

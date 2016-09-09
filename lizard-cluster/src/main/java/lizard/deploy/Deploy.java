@@ -72,7 +72,7 @@ public class Deploy {
     
         //plog.startMessage(); 
         plog.start(); 
-        Txn.execWrite(ds, () -> {
+        Txn.executeWrite(ds, () -> {
             for ( String fn : files ) {
                 if ( files.length > 1 )
                     FmtLog.info(log, "File: %s",fn);
