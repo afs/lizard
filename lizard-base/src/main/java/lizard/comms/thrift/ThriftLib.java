@@ -19,14 +19,16 @@ package lizard.comms.thrift;
 
 import lizard.api.TLZ.TLZ_NodeId ;
 import lizard.system.LizardException ;
+import org.apache.jena.atlas.lib.Bytes ;
 import org.apache.jena.atlas.lib.InternalErrorException ;
 import org.apache.jena.graph.Node ;
 import org.apache.jena.riot.thrift.ThriftConvert ;
 import org.apache.jena.riot.thrift.wire.RDF_Term ;
+import org.apache.jena.tdb2.store.NodeId ;
+import org.apache.jena.tdb2.store.NodeIdFactory ;
 import org.apache.thrift.TException ;
 import org.apache.thrift.protocol.* ;
 import org.apache.thrift.transport.TTransport ;
-import org.seaborne.tdb2.store.NodeId ;
 
 public class ThriftLib {
 
@@ -73,13 +75,14 @@ public class ThriftLib {
     
     /** Thrift wire format to NodeId */
     public static TLZ_NodeId encodeToTLZ(NodeId nid) {
-        return new TLZ_NodeId().setNodeId(nid.getId()) ; 
+        return new TLZ_NodeId().setNodeId(nid.getPtrLocation());
     }
     
     /** Thrift wire format to NodeId */
     public static NodeId decodeFromTLZ(TLZ_NodeId tlzNodeId) {
         long idval = tlzNodeId.getNodeId() ;
-        NodeId nid = NodeId.create(idval) ;
+        System.err.println("WARNING: Update thrift for byte[] NodeIds");
+        NodeId nid = NodeIdFactory.get(Bytes.packLong(tlzNodeId.getNodeId()));
         return nid ; 
     }
 }

@@ -20,6 +20,7 @@ package lizard.query;
 import java.util.Iterator ;
 
 import org.apache.jena.atlas.lib.tuple.Tuple ;
+import org.apache.jena.tdb2.store.NodeId ;
 import org.seaborne.dboe.engine.PredicateObjectList ;
 import org.seaborne.dboe.engine.Row ;
 import org.seaborne.dboe.engine.Slot ;
@@ -28,7 +29,7 @@ import org.seaborne.dboe.engine.access.AccessorBase ;
 import org.seaborne.dboe.engine.tdb.AccessorTDB ;
 import org.seaborne.dboe.engine.tdb.AccessorTDBDebug ;
 import org.seaborne.dboe.engine.tdb.StorageTDB ;
-import org.seaborne.tdb2.store.NodeId ;
+
 
 public class AccessorRemote extends AccessorTDB implements Accessor<NodeId> {
     public static AccessorTDB create(StorageTDB db) {

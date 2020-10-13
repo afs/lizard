@@ -20,12 +20,11 @@ package lizard.comms.thrift;
 import lizard.system.Component ;
 import lizard.system.ComponentBase ;
 import lizard.system.LizardException ;
-
 import org.apache.jena.atlas.logging.Log ;
+import org.apache.jena.dboe.transaction.txn.TransactionalSystem ;
 import org.apache.thrift.TException ;
 import org.apache.thrift.transport.TServerSocket ;
 import org.apache.thrift.transport.TServerTransport ;
-import org.seaborne.dboe.transaction.txn.TransactionalSystem ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
@@ -50,7 +49,7 @@ public class ThriftServer extends ComponentBase implements Component {
     @Override
     public void start() {
         if (super.isRunning() ) {
-            Log.fatal(this, "Already started: "+getLabel()) ;
+            Log.error(this, "Already started: "+getLabel()) ;
             return ; 
         }
         super.start() ;

@@ -24,8 +24,8 @@
 
   <parent>
     <groupId>org.seaborne.lizard</groupId>
-    <artifactId>lizard-parent</artifactId>
-    <relativePath>../lizard-parent</relativePath>
+    <artifactId>lizard</artifactId>
+    <relativePath>..</relativePath>
     <version>0.0.0-SNAPSHOT</version>
   </parent>
 
@@ -42,18 +42,12 @@
 
   <dependencies>
 
-    <!--
     <dependency>
       <groupId>org.apache.jena</groupId>
       <artifactId>apache-jena-libs</artifactId>
       <type>pom</type>
     </dependency>
-    -->
-     <dependency>
-      <groupId>org.apache.jena</groupId>
-      <artifactId>jena-arq</artifactId>
-    </dependency>
-    
+
     <dependency>
       <groupId>org.apache.jena</groupId>
       <artifactId>jena-base</artifactId>
@@ -97,11 +91,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.thrift</groupId>
-      <artifactId>libthrift</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>org.apache.curator</groupId>
       <artifactId>curator-framework</artifactId>
     </dependency> 
@@ -109,11 +98,6 @@
     <dependency>
       <groupId>org.apache.curator</groupId>
       <artifactId>curator-recipes</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.seaborne.mantis</groupId>
-      <artifactId>tdb2</artifactId>
     </dependency>
 
   </dependencies>

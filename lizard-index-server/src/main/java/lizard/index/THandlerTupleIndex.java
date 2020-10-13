@@ -32,12 +32,12 @@ import lizard.api.TLZ.TLZ_TupleNodeId ;
 import lizard.system.LzLog ;
 import org.apache.jena.atlas.lib.tuple.Tuple ;
 import org.apache.jena.atlas.logging.FmtLog ;
+import org.apache.jena.dboe.trans.bplustree.BPlusTree ;
+import org.apache.jena.dboe.transaction.txn.TransactionalSystem ;
+import org.apache.jena.tdb2.store.NodeId ;
+import org.apache.jena.tdb2.store.tupletable.TupleIndex ;
+import org.apache.jena.tdb2.store.tupletable.TupleIndexRecord ;
 import org.apache.thrift.TException ;
-import org.seaborne.dboe.trans.bplustree.BPlusTree ;
-import org.seaborne.dboe.transaction.txn.TransactionalSystem ;
-import org.seaborne.tdb2.store.NodeId ;
-import org.seaborne.tdb2.store.tupletable.TupleIndex ;
-import org.seaborne.tdb2.store.tupletable.TupleIndexRecord ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 

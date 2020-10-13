@@ -17,7 +17,7 @@
 
 package lizard.system;
 
-import org.seaborne.dboe.DBOpEnvException ;
+import org.apache.jena.dboe.DBOpEnvException ;
 
 public class LizardException extends DBOpEnvException
 {

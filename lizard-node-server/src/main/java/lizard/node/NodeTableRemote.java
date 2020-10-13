@@ -25,14 +25,13 @@ import lizard.comms.ConnState ;
 import lizard.system.Component ;
 import lizard.system.ComponentTxn ;
 import lizard.system.RemoteControl ;
-
 import org.apache.jena.atlas.lib.NotImplemented ;
 import org.apache.jena.atlas.lib.Pair ;
+import org.apache.jena.dboe.transaction.txn.TransactionalComponent ;
 import org.apache.jena.graph.Node ;
 import org.apache.jena.query.ReadWrite ;
-import org.seaborne.dboe.transaction.txn.TransactionalComponent ;
-import org.seaborne.tdb2.store.NodeId ;
-import org.seaborne.tdb2.store.nodetable.NodeTable ;
+import org.apache.jena.tdb2.store.NodeId ;
+import org.apache.jena.tdb2.store.nodetable.NodeTable ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 

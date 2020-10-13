@@ -23,15 +23,14 @@ import lizard.conf.ConfCluster ;
 import lizard.system.LizardException ;
 import org.apache.jena.atlas.lib.ProgressMonitor ;
 import org.apache.jena.atlas.logging.FmtLog ;
-import org.apache.jena.fuseki.embedded.FusekiEmbeddedServer ;
+import org.apache.jena.fuseki.embedded.FusekiServer ;
 import org.apache.jena.query.Dataset ;
 import org.apache.jena.riot.RDFDataMgr ;
 import org.apache.jena.riot.system.ProgressStreamRDF ;
 import org.apache.jena.riot.system.StreamRDF ;
+import org.apache.jena.riot.system.StreamRDFLib ;
 import org.apache.jena.sparql.core.DatasetGraph ;
-import org.seaborne.dboe.jenax.Txn ;
-import org.seaborne.tdb2.loader.StreamRDFBatchSplit ;
-import org.seaborne.tdb2.store.DatasetGraphTDB ;
+import org.apache.jena.system.Txn ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
@@ -63,8 +62,12 @@ public class Deploy {
 
     public static void bulkLoad(Dataset ds, String ... files) {
         // c.f. TDB2 Loader.bulkLoad (which does not currently batch split).
-        DatasetGraphTDB dsg = (DatasetGraphTDB)ds.asDatasetGraph() ;
-        StreamRDF s1 = new StreamRDFBatchSplit(dsg, 100) ;
+        DatasetGraph dsg = ds.asDatasetGraph() ;
+        
+        System.err.println("FIX ME");
+        
+        //StreamRDF s1 = new StreamRDFBatchSplit(dsg, 100) ;
+        StreamRDF s1 = StreamRDFLib.dataset(dsg);
         
         ProgressMonitor plog = ProgressMonitor.create(log, "Triples", 100000, 10) ;
         ProgressStreamRDF sMonitor = new ProgressStreamRDF(s1, plog) ;
@@ -84,7 +87,7 @@ public class Deploy {
     }
 
     public static void runFuseki(DatasetGraph dsg, int port) {
-        FusekiEmbeddedServer server = FusekiEmbeddedServer.create()
+        FusekiServer server = FusekiServer.create()
             .setPort(port)
             .add("/ds", dsg)
             .build() ;

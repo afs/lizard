@@ -27,7 +27,7 @@ import org.apache.jena.atlas.lib.InternalErrorException ;
 import org.apache.jena.atlas.lib.tuple.Tuple ;
 import org.apache.jena.atlas.lib.tuple.TupleMap ;
 import org.apache.jena.atlas.logging.LogCtl ;
-import org.seaborne.tdb2.store.NodeId ;
+import org.apache.jena.tdb2.store.NodeId ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
@@ -173,22 +173,24 @@ public class MergeIterator extends IteratorSlotted<Tuple<NodeId>> {
     // ---- compare 
     
     public static int compare(NodeId n1, NodeId n2) {
-        // Unsigned compare.
-        long v1 = n1.getId() ;
-        long v2 = n2.getId() ;
-        
-        if ( v1 == v2 ) return 0 ;
-        
-        if ( v1 >= 0 && v2 >= 0 )
-            return Long.compare(v1, v2) ; 
-        if ( v1 < 0 && v2 >= 0 )
-            return 1 ;
-        if ( v1 >= 0 && v2 < 0 )
-            return -1 ;
-        // v1 <0 && v2 < 0
-        // Negative numbers encode so MAX unsigned (0xFF = -1) > (0xFE = -2 ) etc
-        // which is unsigned order.
-        return Long.compare(v1, v2) ;
+        return n1.compareTo(n2);
+//        
+//        // Unsigned compare.
+//        long v1 = n1.getId() ;
+//        long v2 = n2.getId() ;
+//        
+//        if ( v1 == v2 ) return 0 ;
+//        
+//        if ( v1 >= 0 && v2 >= 0 )
+//            return Long.compare(v1, v2) ; 
+//        if ( v1 < 0 && v2 >= 0 )
+//            return 1 ;
+//        if ( v1 >= 0 && v2 < 0 )
+//            return -1 ;
+//        // v1 <0 && v2 < 0
+//        // Negative numbers encode so MAX unsigned (0xFF = -1) > (0xFE = -2 ) etc
+//        // which is unsigned order.
+//        return Long.compare(v1, v2) ;
     }
     
     /** Compare two tuples assumed to be in natural order 

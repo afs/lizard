@@ -20,7 +20,7 @@ package lizard.conf.assembler;
 import org.apache.jena.assembler.Assembler ;
 import org.apache.jena.assembler.assemblers.AssemblerGroup ;
 import org.apache.jena.rdf.model.Resource ;
-import org.seaborne.tdb2.assembler.Vocab ;
+import org.apache.jena.tdb2.assembler.Vocab ;
 
 public class VocabLizard {
     public final static String namespace = "urn:lizard:ns#" ;

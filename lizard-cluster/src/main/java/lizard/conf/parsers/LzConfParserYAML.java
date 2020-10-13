@@ -25,7 +25,7 @@ import lizard.conf.* ;
 import org.apache.jena.atlas.io.IO ;
 import org.apache.jena.atlas.lib.NotImplemented ;
 import org.apache.jena.atlas.lib.tuple.TupleMap ;
-import org.seaborne.dboe.sys.Names ;
+import org.apache.jena.dboe.sys.Names ;
 import org.yaml.snakeyaml.Yaml ;
 
 /** Parser for thr YAML-based format */ 

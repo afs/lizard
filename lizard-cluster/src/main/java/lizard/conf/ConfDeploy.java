@@ -17,15 +17,14 @@
 
 package lizard.conf;
 
+import java.util.ArrayList;
 import java.util.List ;
-
-import org.apache.jena.atlas.lib.DS ;
 
 // Here : cf ConfCluster which is cluster wide.
 public class ConfDeploy {
     public ConfCluster confCluster = null ;
     public ConfZookeeper localZk = null ;
-    public List<ConfNodeTableElement> ntReplicas = DS.list() ;
-    public List<ConfIndexElement> idxReplicas  = DS.list() ;
+    public List<ConfNodeTableElement> ntReplicas = new ArrayList<>();
+    public List<ConfIndexElement> idxReplicas  = new ArrayList<>();
     public ConfDataset confDataset = null ;
 }

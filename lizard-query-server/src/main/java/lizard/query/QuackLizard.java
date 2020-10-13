@@ -17,15 +17,14 @@
 
 package lizard.query;
 
+import org.apache.jena.sparql.engine.ExecutionContext ;
+import org.apache.jena.sparql.engine.main.OpExecutor ;
+import org.apache.jena.sparql.engine.main.OpExecutorFactory ;
+import org.apache.jena.tdb2.store.DatasetGraphTDB ;
 import org.seaborne.dboe.engine.Quack ;
 import org.seaborne.dboe.engine.explain.Explain2 ;
 import org.seaborne.dboe.engine.tdb.* ;
 import org.seaborne.dboe.engine.tdb.OpExecutorQuackTDB.OpExecSetup ;
-
-import org.apache.jena.sparql.engine.ExecutionContext ;
-import org.apache.jena.sparql.engine.main.OpExecutor ;
-import org.apache.jena.sparql.engine.main.OpExecutorFactory ;
-import org.seaborne.tdb2.store.DatasetGraphTDB ;
 
 public class QuackLizard {
 

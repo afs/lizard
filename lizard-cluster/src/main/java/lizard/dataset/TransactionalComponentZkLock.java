@@ -18,10 +18,9 @@
 package lizard.dataset;
 
 import lizard.cluster.Cluster ;
-
-import org.seaborne.dboe.transaction.txn.ComponentId ;
-import org.seaborne.dboe.transaction.txn.TransactionalComponentBase ;
-import org.seaborne.dboe.transaction.txn.TxnId ;
+import org.apache.jena.dboe.transaction.txn.ComponentId ;
+import org.apache.jena.dboe.transaction.txn.TransactionalComponentBase ;
+import org.apache.jena.dboe.transaction.txn.TxnId ;
 import org.apache.jena.query.ReadWrite ;
 
 final public class TransactionalComponentZkLock extends TransactionalComponentBase<Object> {

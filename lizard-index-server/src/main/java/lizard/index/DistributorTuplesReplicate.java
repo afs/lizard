@@ -26,7 +26,7 @@ import lizard.comms.CommsException ;
 import lizard.comms.ConnState ;
 import org.apache.jena.atlas.lib.tuple.Tuple ;
 import org.apache.jena.atlas.lib.tuple.TupleMap ;
-import org.seaborne.tdb2.store.NodeId ;
+import org.apache.jena.tdb2.store.NodeId ;
 
 /** Policy for the placement of triples with multiple copies.
  *  For simplicity, for N replicas, R=1 W=N

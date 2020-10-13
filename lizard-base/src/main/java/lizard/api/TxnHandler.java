@@ -23,10 +23,10 @@ import java.util.function.Supplier ;
 
 import lizard.api.TLZ.TxnCtl ;
 import org.apache.jena.atlas.logging.FmtLog ;
+import org.apache.jena.dboe.transaction.txn.TransactionCoordinatorState ;
+import org.apache.jena.dboe.transaction.txn.TransactionalSystem ;
 import org.apache.jena.query.ReadWrite ;
-import org.seaborne.dboe.jenax.Txn ;
-import org.seaborne.dboe.transaction.txn.TransactionCoordinatorState ;
-import org.seaborne.dboe.transaction.txn.TransactionalSystem ;
+import org.apache.jena.system.Txn ;
 
 // Support for the server side. 
 public abstract class TxnHandler extends NodeHandler implements TxnCtl.Iface {

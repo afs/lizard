@@ -21,9 +21,8 @@ import java.util.Collection ;
 import java.util.List ;
 
 import lizard.system.Distributor ;
-
 import org.apache.jena.graph.Node ;
-import org.seaborne.tdb2.store.NodeId ;
+import org.apache.jena.tdb2.store.NodeId ;
 
 public interface DistributorNodes extends Distributor {
     /** W quorum of {@link NodeTableRemote} for storing a node */  

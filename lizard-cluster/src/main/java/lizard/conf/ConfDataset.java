@@ -17,13 +17,12 @@
 
 package lizard.conf;
 
+import java.util.ArrayList;
 import java.util.Arrays ;
 import java.util.List ;
 
-import org.apache.jena.atlas.lib.DS ;
-
 public class ConfDataset {
-    public final List<ConfIndex> indexes = DS.list() ;
+    public final List<ConfIndex> indexes = new ArrayList<>();
     public ConfNodeTable nodeTable ;
     
     public ConfDataset(ConfNodeTable nodeTable, ConfIndex... indexes) {

@@ -23,12 +23,11 @@ import java.util.concurrent.atomic.AtomicLong ;
 import lizard.api.TxnClient ;
 import lizard.dataset.TransactionalComponentRemote.TxnRemoteState ;
 import lizard.system.LzLog ;
-
+import org.apache.jena.dboe.transaction.txn.ComponentId ;
+import org.apache.jena.dboe.transaction.txn.TransactionException ;
+import org.apache.jena.dboe.transaction.txn.TransactionalComponentLifecycle ;
+import org.apache.jena.dboe.transaction.txn.TxnId ;
 import org.apache.jena.query.ReadWrite ;
-import org.seaborne.dboe.transaction.txn.ComponentId ;
-import org.seaborne.dboe.transaction.txn.TransactionException ;
-import org.seaborne.dboe.transaction.txn.TransactionalComponentLifecycle ;
-import org.seaborne.dboe.transaction.txn.TxnId ;
 import org.slf4j.Logger ;
 
 /** Transactional management for a TxnClient - that is, 
@@ -85,7 +84,7 @@ public class TransactionalComponentRemote<X extends TxnClient<?>> extends Transa
     }
 
     @Override
-    protected boolean _promote(TxnId txnId, TxnRemoteState state) {
+    protected TxnRemoteState _promote(TxnId txnId, TxnRemoteState state) {
         throw new TransactionException("Promote not implemented") ; 
     }
 

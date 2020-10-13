@@ -29,15 +29,16 @@ import lizard.api.TxnHandler ;
 import lizard.api.TLZ.TLZ_NodeId ;
 import lizard.api.TLZ.TLZ_NodeTable ;
 import lizard.system.LzLog ;
-
+import org.apache.jena.atlas.lib.Bytes ;
 import org.apache.jena.atlas.logging.FmtLog ;
+import org.apache.jena.dboe.transaction.txn.TransactionalSystem ;
 import org.apache.jena.graph.Node ;
 import org.apache.jena.riot.out.NodeFmtLib ;
 import org.apache.jena.riot.thrift.wire.RDF_Term ;
+import org.apache.jena.tdb2.store.NodeId ;
+import org.apache.jena.tdb2.store.NodeIdFactory ;
+import org.apache.jena.tdb2.store.nodetable.NodeTable ;
 import org.apache.thrift.TException ;
-import org.seaborne.dboe.transaction.txn.TransactionalSystem ;
-import org.seaborne.tdb2.store.NodeId ;
-import org.seaborne.tdb2.store.nodetable.NodeTable ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
@@ -71,7 +72,7 @@ import org.slf4j.LoggerFactory ;
         return txnAlwaysReturn(txnId, WRITE, ()-> {
             NodeId nid = nodeTable.getAllocateNodeId(n) ;
             TLZ_NodeId nidz = new TLZ_NodeId() ;
-            nidz.setNodeId(nid.getId()) ;
+            nidz.setNodeId(toLong(nid)) ;
             FmtLog.info(log, "[%d:%d] Node alloc request : %s => %s", id, txnId, n, nid) ;
             return nidz ;
         }) ;
@@ -86,7 +87,7 @@ import org.slf4j.LoggerFactory ;
             NodeId nid = nodeTable.getNodeIdForNode(n) ;
             // XXX Remove little structs
             TLZ_NodeId nidz = new TLZ_NodeId() ;
-            nidz.setNodeId(nid.getId()) ;
+            nidz.setNodeId(toLong(nid)) ;
             FmtLog.info(log, "[%d:%d] Node get request : %s => %s", id, txnId, n, nid) ;
             return nidz ;
         }) ;
@@ -96,7 +97,9 @@ import org.slf4j.LoggerFactory ;
     public RDF_Term findByNodeId(long id, long txnId, TLZ_NodeId nz) throws TException {
         //FmtLog.debug(log, "[%d] findByNodeId : txnId = %d", id, txnId) ;
         checkActive() ;
-        NodeId nid = NodeId.create(nz.getNodeId()) ;
+        //NodeId nid = NodeId.create(nz.getNodeId()) ;
+        NodeId nid = fromLong(nz.getNodeId());
+        
         return txnAlwaysReturn(txnId, READ, ()-> {
             Node n = nodeTable.getNodeForNodeId(nid) ;
             if ( n == null )
@@ -119,7 +122,7 @@ import org.slf4j.LoggerFactory ;
                 Node n = decodeFromTLZ(nz) ;
                 NodeId nid = nodeTable.getAllocateNodeId(n) ;
                 TLZ_NodeId nidz = new TLZ_NodeId() ;
-                nidz.setNodeId(nid.getId()) ;
+                nidz.setNodeId(toLong(nid)) ;
                 nodeids.add(nidz) ;
                 //FmtLog.info(log, "[%d:%d] Batched node alloc : %s => %s", id, txnId, n, nid) ;
             }
@@ -142,5 +145,19 @@ import org.slf4j.LoggerFactory ;
             }
             return nodes ;
         }) ;
+    }
+    
+    // [UPDATE] 
+    // Hack to make compilable.
+    static private long toLong(NodeId nid) {
+        byte[] b = new byte[8];
+        NodeIdFactory.set(nid, b);
+        long v = Bytes.getLong(b);
+        return v ;
+    }
+    
+    private NodeId fromLong(long nodeId) {
+        byte[] b = Bytes.packLong(nodeId);
+        return NodeIdFactory.get(b);
     }
 }

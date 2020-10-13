@@ -17,13 +17,13 @@
 
 package lizard.node ;
 
+import org.apache.jena.dboe.base.file.BinaryDataFile ;
 import org.apache.jena.riot.thrift.TRDF ;
 import org.apache.jena.riot.thrift.wire.RDF_Term ;
+import org.apache.jena.tdb2.TDBException ;
+import org.apache.jena.tdb2.store.nodetable.TReadAppendFileTransport ;
 import org.apache.thrift.TException ;
 import org.apache.thrift.protocol.TProtocol ;
-import org.seaborne.dboe.base.file.BinaryDataFile ;
-import org.seaborne.tdb2.TDBException ;
-import org.seaborne.tdb2.store.nodetable.TReadAppendFileTransport ;
 
 /** Thrift items :store and retrieve */ 
 

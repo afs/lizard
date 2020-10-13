@@ -23,15 +23,14 @@ import lizard.conf.ConfNodeTableElement ;
 import lizard.conf.Config ;
 import lizard.conf.NetHost ;
 import lizard.node.TServerNode ;
-
 import org.apache.jena.atlas.logging.FmtLog ;
-import org.seaborne.dboe.base.file.Location ;
-import org.seaborne.dboe.transaction.txn.TransactionCoordinator ;
-import org.seaborne.dboe.transaction.txn.TransactionalBase ;
-import org.seaborne.dboe.transaction.txn.TransactionalSystem ;
-import org.seaborne.tdb2.setup.StoreParams ;
-import org.seaborne.tdb2.setup.TDBBuilder ;
-import org.seaborne.tdb2.store.nodetable.NodeTable ;
+import org.apache.jena.dboe.base.file.Location ;
+import org.apache.jena.dboe.transaction.txn.TransactionCoordinator ;
+import org.apache.jena.dboe.transaction.txn.TransactionalBase ;
+import org.apache.jena.dboe.transaction.txn.TransactionalSystem ;
+import org.apache.jena.tdb2.setup.StoreParams ;
+import org.apache.jena.tdb2.setup.TDBBuilder ;
+import org.apache.jena.tdb2.store.nodetable.NodeTable ;
 import org.slf4j.Logger ;
 
 public class LzBuilderNodeServer {

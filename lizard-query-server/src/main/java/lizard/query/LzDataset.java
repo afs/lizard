@@ -21,9 +21,8 @@ import java.util.List ;
 
 import lizard.system.Component ;
 import lizard.system.LifeCycle ;
-
-import org.seaborne.dboe.transaction.txn.TransactionCoordinator ;
-import org.seaborne.tdb2.store.DatasetGraphTDB ;
+import org.apache.jena.dboe.transaction.txn.TransactionCoordinator ;
+import org.apache.jena.tdb2.store.DatasetGraphTDB ;
 
 /** The query platform for Lizard - a dataset and the local components (clients to index and nodes) */ 
 public class LzDataset implements LifeCycle {

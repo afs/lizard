@@ -24,11 +24,13 @@ import lizard.comms.thrift.ThriftLib ;
 import lizard.test.LzBaseTest ;
 import org.apache.jena.atlas.lib.tuple.Tuple ;
 import org.apache.jena.atlas.lib.tuple.TupleFactory ;
+import org.apache.jena.tdb2.store.NodeId ;
+import org.apache.jena.tdb2.store.NodeIdFactory ;
+import org.apache.jena.tdb2.store.NodeIdType ;
 import org.apache.thrift.protocol.TProtocol ;
 import org.apache.thrift.transport.TMemoryBuffer ;
 import org.apache.thrift.transport.TTransport ;
 import org.junit.Test ;
-import org.seaborne.tdb2.store.NodeId ;
 
 /**
  * This class is just a few test to make sure things look OK.
@@ -36,10 +38,10 @@ import org.seaborne.tdb2.store.NodeId ;
  */
 public class TestTLZ extends LzBaseTest {
     
-    static private NodeId nid1 = NodeId.create(10) ;
-    static private NodeId nid2 = NodeId.create(11) ;
-    static private NodeId nid3 = NodeId.create(12) ;
-    static private NodeId nid4 = NodeId.create(13) ;
+    static private NodeId nid1 = NodeIdFactory.createValue(NodeIdType.SPECIAL, 10) ;
+    static private NodeId nid2 = NodeIdFactory.createValue(NodeIdType.SPECIAL, 11) ;
+    static private NodeId nid3 = NodeIdFactory.createValue(NodeIdType.SPECIAL, 12) ;
+    static private NodeId nid4 = NodeIdFactory.createValue(NodeIdType.SPECIAL, 13) ;
     
     // TLZLib
     @Test public void data_01() {

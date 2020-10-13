@@ -17,14 +17,13 @@
 
 package lizard.build;
 
-import lizard.conf.* ;
+import lizard.conf.Config ;
 import lizard.system.LizardException ;
-
 import org.apache.curator.test.TestingServer ;
 import org.apache.jena.atlas.logging.FmtLog ;
+import org.apache.jena.dboe.migrate.L ;
 import org.apache.zookeeper.server.ServerConfig ;
 import org.apache.zookeeper.server.ZooKeeperServerMain ;
-import org.seaborne.dboe.migrate.L ;
 import org.slf4j.Logger ;
 
 public class LzBuildZk {
@@ -45,7 +44,7 @@ public class LzBuildZk {
         }) ;
     }
     
-    /** Run an empemeral zookeeper */
+    /** Run an ephemeral zookeeper */
     public static void zookeeperSimple(int port) {
         FmtLog.info(logConf, "Start Zookeeper (ephemeral): %d", port) ;
         try { zkTestServer = new TestingServer(port) ; }

@@ -26,7 +26,6 @@ import java.util.concurrent.TimeUnit ;
 import java.util.concurrent.atomic.AtomicBoolean ;
 
 import lizard.system.LizardException ;
-
 import org.apache.curator.RetryPolicy ;
 import org.apache.curator.framework.CuratorFramework ;
 import org.apache.curator.framework.CuratorFrameworkFactory ;
@@ -36,10 +35,10 @@ import org.apache.curator.framework.recipes.locks.InterProcessLock ;
 import org.apache.curator.framework.recipes.locks.InterProcessSemaphoreMutex ;
 import org.apache.curator.retry.ExponentialBackoffRetry ;
 import org.apache.jena.atlas.logging.FmtLog ;
+import org.apache.jena.dboe.transaction.txn.TxnIdGenerator ;
+import org.apache.jena.dboe.transaction.txn.TxnIdSimple ;
 import org.apache.zookeeper.CreateMode ;
 import org.apache.zookeeper.data.Stat ;
-import org.seaborne.dboe.transaction.txn.TxnIdGenerator ;
-import org.seaborne.dboe.transaction.txn.TxnIdSimple ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 /** Cluster management.

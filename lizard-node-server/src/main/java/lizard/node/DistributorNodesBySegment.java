@@ -24,17 +24,16 @@ import java.util.List ;
 
 import lizard.comms.CommsException ;
 import lizard.comms.ConnState ;
-
 import org.apache.jena.atlas.lib.BitsLong ;
 import org.apache.jena.atlas.lib.Bytes ;
 import org.apache.jena.atlas.lib.InternalErrorException ;
 import org.apache.jena.ext.com.google.common.collect.ArrayListMultimap ;
 import org.apache.jena.ext.com.google.common.collect.ListMultimap ;
 import org.apache.jena.graph.Node ;
-import org.seaborne.tdb2.lib.NodeLib ;
-import org.seaborne.tdb2.store.Hash ;
-import org.seaborne.tdb2.store.NodeId ;
-import org.seaborne.tdb2.sys.SystemTDB ;
+import org.apache.jena.tdb2.lib.NodeLib ;
+import org.apache.jena.tdb2.store.Hash ;
+import org.apache.jena.tdb2.store.NodeId ;
+import org.apache.jena.tdb2.sys.SystemTDB ;
 
 /** Distribute by segment (in Nodeid)
  *  OLD CODE
@@ -182,9 +181,10 @@ public class DistributorNodesBySegment implements DistributorNodes {
     }
 
     private long segment(NodeId nodeId) {
-        long x = BitsLong.unpack(nodeId.getId(), 48, 56) ;
+        //long x = BitsLong.unpack(nodeId.getId(), 48, 56) ;
+        long x = BitsLong.unpack(nodeId.getPtrLocation(), 48, 56);
         if ( x <= 0 || x > size )
-            throw new InternalErrorException("Node segement out of range (0X"+Long.toHexString(x)+")") ;
+            throw new InternalErrorException("Node segment out of range (0X"+Long.toHexString(x)+")") ;
         return x ;
     }
     

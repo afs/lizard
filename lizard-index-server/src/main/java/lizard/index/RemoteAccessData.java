@@ -20,8 +20,8 @@ package lizard.index;
 import java.util.Iterator ;
 
 import org.apache.jena.atlas.lib.tuple.Tuple ;
+import org.apache.jena.tdb2.store.NodeId ;
 import org.seaborne.dboe.engine.access.AccessData ;
-import org.seaborne.tdb2.store.NodeId ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 

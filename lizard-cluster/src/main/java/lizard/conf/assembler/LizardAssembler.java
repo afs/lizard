@@ -24,14 +24,13 @@ import lizard.conf.parsers.LzConfParserRDF ;
 import lizard.query.LizardQuery ;
 import lizard.query.LzDataset ;
 import lizard.sys.Lizard ;
-
 import org.apache.jena.assembler.Assembler ;
 import org.apache.jena.assembler.Mode ;
+import org.apache.jena.dboe.base.file.Location ;
 import org.apache.jena.query.Dataset ;
 import org.apache.jena.rdf.model.Resource ;
 import org.apache.jena.sparql.core.assembler.AssemblerUtils ;
 import org.apache.jena.sparql.core.assembler.DatasetAssembler ;
-import org.seaborne.dboe.base.file.Location ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 

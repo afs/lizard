@@ -23,8 +23,8 @@ import java.util.Iterator ;
 import org.apache.jena.atlas.iterator.Iter ;
 import org.apache.jena.atlas.lib.tuple.Tuple ;
 import org.apache.jena.atlas.lib.tuple.TupleMap ;
-import org.seaborne.tdb2.store.NodeId ;
-import org.seaborne.tdb2.store.tupletable.TupleIndexBase ;
+import org.apache.jena.tdb2.store.NodeId ;
+import org.apache.jena.tdb2.store.tupletable.TupleIndexBase ;
 
 /** An immutably empty tuple index - it is a sink (add provided but does nothing) */
 public class TupleIndexEmpty extends TupleIndexBase {

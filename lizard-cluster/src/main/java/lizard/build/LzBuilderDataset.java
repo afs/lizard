@@ -37,31 +37,28 @@ import lizard.query.QuackLizard ;
 import lizard.system.Component ;
 import lizard.system.LizardException ;
 import migrate.TupleIndexEmpty ;
-import org.apache.jena.atlas.lib.StrUtils ;
 import org.apache.jena.atlas.lib.tuple.TupleMap ;
 import org.apache.jena.atlas.logging.FmtLog ;
-import org.apache.jena.query.ARQ ;
-import org.apache.jena.query.Dataset ;
-import org.apache.jena.query.DatasetFactory ;
-import org.apache.jena.query.ReadWrite ;
+import org.apache.jena.dboe.base.file.Location ;
+import org.apache.jena.dboe.sys.Names ;
+import org.apache.jena.dboe.transaction.txn.* ;
+import org.apache.jena.query.* ;
 import org.apache.jena.shared.PrefixMapping ;
 import org.apache.jena.shared.impl.PrefixMappingImpl ;
 import org.apache.jena.sparql.core.DatasetPrefixStorage ;
 import org.apache.jena.sparql.engine.main.QC ;
 import org.apache.jena.sparql.engine.optimizer.reorder.ReorderLib ;
-import org.seaborne.dboe.base.file.Location ;
-import org.seaborne.dboe.sys.Names ;
-import org.seaborne.dboe.transaction.txn.* ;
-import org.seaborne.tdb2.setup.StoreParams ;
-import org.seaborne.tdb2.store.DatasetGraphTDB ;
-import org.seaborne.tdb2.store.QuadTable ;
-import org.seaborne.tdb2.store.TripleTable ;
-import org.seaborne.tdb2.store.nodetable.NodeTable ;
-import org.seaborne.tdb2.store.nodetable.NodeTableCache ;
-import org.seaborne.tdb2.store.nodetable.NodeTableInline ;
-import org.seaborne.tdb2.store.tupletable.TupleIndex ;
-import org.seaborne.tdb2.sys.DatasetControl ;
-import org.seaborne.tdb2.sys.DatasetControlNone ;
+import org.apache.jena.tdb.sys.DatasetControl ;
+import org.apache.jena.tdb.sys.DatasetControlNone ;
+import org.apache.jena.tdb2.setup.StoreParams ;
+import org.apache.jena.tdb2.store.DatasetGraphTDB ;
+import org.apache.jena.tdb2.store.DatasetPrefixesTDB ;
+import org.apache.jena.tdb2.store.QuadTable ;
+import org.apache.jena.tdb2.store.TripleTable ;
+import org.apache.jena.tdb2.store.nodetable.NodeTable ;
+import org.apache.jena.tdb2.store.nodetable.NodeTableCache ;
+import org.apache.jena.tdb2.store.nodetable.NodeTableInline ;
+import org.apache.jena.tdb2.store.tupletable.TupleIndex ;
 import org.slf4j.Logger ;
 
 public class LzBuilderDataset {
@@ -178,8 +175,13 @@ public class LzBuilderDataset {
             this.readPolicy = readPolicy ;
             this.writePolicy = writePolicy ;
         }
-        
+
         @Override
+        public ComponentGroup genQuorum(TxnType mode) {
+            return genQuorum(TxnType.convert(mode));
+        }
+        
+        //@Override
         public ComponentGroup genQuorum(ReadWrite mode) {
             switch(mode) {
                 case READ: return readPolicy.get() ;
@@ -197,6 +199,11 @@ public class LzBuilderDataset {
         }
         
         @Override
+        public ComponentGroup genQuorum(TxnType mode) {
+            return genQuorum(TxnType.convert(mode));
+        }
+        
+        //@Override
         public ComponentGroup genQuorum(ReadWrite mode) { 
             ComponentGroup cg = new ComponentGroup() ;
             elements.forEach(qc -> {
@@ -221,8 +228,8 @@ public class LzBuilderDataset {
                 indexes[i] = tripleIndexes[i].getName() ;
             }
 
-            tableTriples = new TripleTable(tripleIndexes, nodeTable, policy) ;
-            FmtLog.debug(logConf, "Triple table: %s :: %s", indexes[0], StrUtils.strjoin(",", indexes)) ;
+            tableTriples = new TripleTable(tripleIndexes, nodeTable) ;
+            FmtLog.debug(logConf, "Triple table: %s :: %s", indexes[0], String.join(",", indexes)) ;
         }
 
         // Special quad table : two empty placeholder indexes.
@@ -235,12 +242,13 @@ public class LzBuilderDataset {
                 String n = indexes[i] ;
                 quadIndexes[i] = new TupleIndexEmpty(TupleMap.create(Names.primaryIndexQuads, n), n) ;
             }
-            tableQuads = new QuadTable(quadIndexes, nodeTable, policy) ;
-            FmtLog.debug(logConf, "Quad table: %s :: %s", indexes[0], StrUtils.strjoin(",", indexes)) ; 
+            tableQuads = new QuadTable(quadIndexes, nodeTable) ;
+            FmtLog.debug(logConf, "Quad table: %s :: %s", indexes[0], String.join(",", indexes)) ; 
         }
         
         TransactionalSystem txnSys = new TransactionalBase(txnCoord) ;
-        DatasetGraphTDB dsg = new DatasetGraphTDB(txnSys, tableTriples, tableQuads, prefixes, ReorderLib.fixed(),location, params) ;
+        // [UPDATE] Cast is bad
+        DatasetGraphTDB dsg = new DatasetGraphTDB(txnSys, tableTriples, tableQuads, (DatasetPrefixesTDB)prefixes, ReorderLib.fixed(), location, params) ;
         // Development.
         dsg.getContext().set(ARQ.optFilterPlacementBGP, false);
         // Query engine.

@@ -23,15 +23,14 @@ import java.util.concurrent.atomic.AtomicInteger ;
 import lizard.conf.* ;
 import lizard.system.LizardException ;
 import migrate.Q ;
-
 import org.apache.jena.atlas.lib.StrUtils ;
 import org.apache.jena.atlas.logging.FmtLog ;
+import org.apache.jena.dboe.sys.Names ;
 import org.apache.jena.query.QuerySolution ;
 import org.apache.jena.rdf.model.Model ;
 import org.apache.jena.rdf.model.Resource ;
 import org.apache.jena.riot.system.PrefixMap ;
 import org.apache.jena.riot.system.PrefixMapFactory ;
-import org.seaborne.dboe.sys.Names ;
 import org.slf4j.Logger ;
 
 public class LzConfParserRDF {

@@ -19,10 +19,12 @@ package lizard.api;
 
 import lizard.api.TLZ.TLZ_IndexName ;
 import lizard.api.TLZ.TLZ_TupleNodeId ;
+import org.apache.jena.atlas.lib.Bytes ;
 import org.apache.jena.atlas.lib.InternalErrorException ;
 import org.apache.jena.atlas.lib.tuple.Tuple ;
 import org.apache.jena.atlas.lib.tuple.TupleFactory ;
-import org.seaborne.tdb2.store.NodeId ;
+import org.apache.jena.tdb2.store.NodeId ;
+import org.apache.jena.tdb2.store.NodeIdFactory ;
 
 public class TLZlib {
     public static TLZ_TupleNodeId build(Tuple<NodeId> tuple) {
@@ -46,21 +48,29 @@ public class TLZlib {
         NodeId n = tuple.get(idx) ; 
         if ( n == null )
             n = NodeId.NodeIdAny ;
-        return n.getId() ;
+        System.err.println("WARNING: Update thrift for byte[] NodeIds");
+        return 0L;
     }
     
     public static Tuple<NodeId> build(TLZ_TupleNodeId tnid) {
-        NodeId s = NodeId.create(tnid.getS()) ;
-        NodeId p = NodeId.create(tnid.getP()) ;
-        NodeId o = NodeId.create(tnid.getO()) ;
+        NodeId s = createNodeId(tnid.getS()) ;
+        NodeId p = createNodeId(tnid.getP()) ;
+        NodeId o = createNodeId(tnid.getO()) ;
         if (tnid.isSetG()) {
-            NodeId g = NodeId.create(tnid.getG()) ;
+            NodeId g = createNodeId(tnid.getG()) ;
             return TupleFactory.tuple(g, s, p, o) ;
         }
         else
             return TupleFactory.tuple(s, p, o) ; 
     }
+
     
+    
+    private static NodeId createNodeId(long x) {
+        System.err.println("WARNING: Update thrift for byte[] NodeIds");
+        return NodeIdFactory.get(Bytes.packLong(x));
+    }
+
     public static String indexEnumToName(TLZ_IndexName idxEnum) {
         switch(idxEnum) {
             case SPO : return "SPO" ;

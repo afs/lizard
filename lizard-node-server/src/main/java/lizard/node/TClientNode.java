@@ -34,7 +34,7 @@ import lizard.system.RemoteControl ;
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.graph.Node ;
 import org.apache.jena.riot.thrift.wire.RDF_Term ;
-import org.seaborne.tdb2.store.NodeId ;
+import org.apache.jena.tdb2.store.NodeId ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
  

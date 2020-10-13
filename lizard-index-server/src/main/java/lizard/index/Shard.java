@@ -23,7 +23,7 @@ import com.google.common.hash.Hashing ;
 
 import org.apache.jena.atlas.lib.tuple.Tuple ;
 import org.apache.jena.atlas.lib.tuple.TupleMap ;
-import org.seaborne.tdb2.store.NodeId ;
+import org.apache.jena.tdb2.store.NodeId ;
 
 public class Shard {
     // Copied from proto-lizard:DistributorTuplesBySubject
@@ -55,7 +55,8 @@ public class Shard {
         // Must use all bits (lower few are probably all zero)
         //byte[] b = new byte[NodeId.SIZE] ;
 
-        long v = n.getId() ;
+        System.err.println("Update for NdoieId bytes");
+        long v = 0L;
         int x = hash(v) & 0xFFFFFF ;
         return x % numShard ;
     }

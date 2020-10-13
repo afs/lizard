@@ -22,10 +22,9 @@ import lizard.cluster.Platform ;
 import lizard.conf.* ;
 import lizard.query.LzDataset ;
 import lizard.system.LizardException ;
-
+import org.apache.jena.dboe.base.file.Location ;
 import org.apache.jena.query.Dataset ;
-import org.seaborne.dboe.base.file.Location ;
-import org.seaborne.tdb2.setup.StoreParams ;
+import org.apache.jena.tdb2.setup.StoreParams ;
 import org.slf4j.Logger ;
 
 public class LzDeploy {

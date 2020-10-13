@@ -19,13 +19,12 @@ package lizard.index;
 
 import lizard.api.TLZ.TLZ_Index ;
 import lizard.comms.thrift.ThriftServer ;
-
 import org.apache.jena.atlas.logging.FmtLog ;
+import org.apache.jena.dboe.transaction.txn.TransactionalSystem ;
+import org.apache.jena.tdb2.store.tupletable.TupleIndex ;
 import org.apache.thrift.protocol.TCompactProtocol ;
 import org.apache.thrift.server.TServer ;
 import org.apache.thrift.server.TThreadPoolServer ;
-import org.seaborne.dboe.transaction.txn.TransactionalSystem ;
-import org.seaborne.tdb2.store.tupletable.TupleIndex ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 

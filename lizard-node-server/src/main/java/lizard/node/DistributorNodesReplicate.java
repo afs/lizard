@@ -24,9 +24,8 @@ import java.util.List ;
 
 import lizard.comms.CommsException ;
 import lizard.comms.ConnState ;
-
 import org.apache.jena.graph.Node ;
-import org.seaborne.tdb2.store.NodeId ;
+import org.apache.jena.tdb2.store.NodeId ;
 
 /** An implementation of DistributorNodes that provides a replicated, unsharded policy. */
 public class DistributorNodesReplicate implements DistributorNodes {

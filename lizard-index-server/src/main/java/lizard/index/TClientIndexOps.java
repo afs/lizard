@@ -26,7 +26,7 @@ import lizard.system.ComponentTxn ;
 import lizard.system.RemoteControl ;
 import org.apache.jena.atlas.lib.tuple.Tuple ;
 import org.apache.jena.atlas.lib.tuple.TupleFactory ;
-import org.seaborne.tdb2.store.NodeId ;
+import org.apache.jena.tdb2.store.NodeId ;
 
 interface TClientIndexOps extends Connection, ComponentTxn, RemoteControl 
 {

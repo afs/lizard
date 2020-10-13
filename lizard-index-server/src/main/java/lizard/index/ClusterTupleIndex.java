@@ -28,9 +28,9 @@ import org.apache.jena.atlas.lib.tuple.Tuple ;
 import org.apache.jena.atlas.lib.tuple.TupleFactory ;
 import org.apache.jena.atlas.lib.tuple.TupleMap ;
 import org.apache.jena.atlas.logging.FmtLog ;
-import org.seaborne.tdb2.store.NodeId ;
-import org.seaborne.tdb2.store.tupletable.TupleIndex ;
-import org.seaborne.tdb2.store.tupletable.TupleIndexBase ;
+import org.apache.jena.tdb2.store.NodeId ;
+import org.apache.jena.tdb2.store.tupletable.TupleIndex ;
+import org.apache.jena.tdb2.store.tupletable.TupleIndexBase ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 

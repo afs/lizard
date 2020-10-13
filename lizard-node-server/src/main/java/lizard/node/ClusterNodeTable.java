@@ -27,9 +27,9 @@ import org.apache.jena.atlas.lib.InternalErrorException ;
 import org.apache.jena.atlas.lib.Pair ;
 import org.apache.jena.atlas.logging.FmtLog ;
 import org.apache.jena.graph.Node ;
-import org.seaborne.tdb2.store.NodeId ;
-import org.seaborne.tdb2.store.nodetable.NodeTable ;
-import org.seaborne.tdb2.store.nodetable.NodeTableOps ;
+import org.apache.jena.tdb2.store.NodeId ;
+import org.apache.jena.tdb2.store.nodetable.NodeTable ;
+import org.apache.jena.tdb2.store.nodetable.NodeTableOps ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 

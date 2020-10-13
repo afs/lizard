@@ -13,12 +13,13 @@ INC=$HOME/Jena/jena-arq/Grammar/
 PKG="src/main/java/lizard/api/TLZ"
 rm -f $PKG/*.java
 
+THRIFT=$HOME/ASF/thrift-0.10.0/compiler/cpp/thrift
+
 # No -r : do not generate code for included files.
-thrift -I $INC -out src/main/java -gen java "$@"
+$THRIFT -I $INC -out src/main/java -gen java "$@"
 
 for f in $PKG/*.java
 do
-    perl -i.bak -p -e 's/^public (class|enum)/\@SuppressWarnings("all")\npublic $1/' $f
+    perl -i.bak -p -e 's/^\@SuppressWarnings.*$/\@SuppressWarnings("all")/' $f
     rm $f.bak
 done
-
