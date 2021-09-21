@@ -78,7 +78,7 @@
     <module>lizard-dist</module>
   </modules>
   <properties>
-    <ver.jena>3.14.0</ver.jena>
+    <ver.jena>4.2.0</ver.jena>
     <ver.tdb>${ver.jena}</ver.tdb>
     <ver.fuseki>${ver.jena}</ver.fuseki>
     <ver.junit>4.13.1</ver.junit>
